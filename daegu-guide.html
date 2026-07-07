@@ -182,7 +182,21 @@
   .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
   a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
-  footer { padding: 0 0 36px; font-size: 13px; color: var(--muted); text-align: center; }
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 40px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .f-brand { font-weight: 700; font-size: 15px; color: var(--ink); letter-spacing: -0.01em; }
+  .f-brand .dot { color: var(--pink); }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
@@ -288,7 +302,25 @@
 </main>
 
 <footer>
-  크래빗 아카데미 — CRABIT
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand">크래빗 아카데미<span class="dot">.</span></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
 </footer>
 
 <script>

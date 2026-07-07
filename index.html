@@ -71,10 +71,13 @@
   .brand .dot { color: var(--pink); }
   .nav-links {
     display: flex;
+    align-items: center;
     gap: 26px;
     font-size: 15px;
     font-weight: 500;
+    line-height: 1;
   }
+  .nav-links a { line-height: 1; }
   .nav-links a {
     color: var(--muted);
     text-decoration: none;
@@ -90,9 +93,11 @@
     font-family: inherit;
     font-size: 15px;
     font-weight: 500;
+    line-height: 1;
     color: var(--muted);
     padding: 0;
-    display: flex;
+    margin: 0;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     transition: color 0.15s;

@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>크래빗 아카데미 — 교육 현장을 위한 AI 실전 교육</title>
-<meta name="description" content="크래빗 아카데미는 학원과 교육 기관이 AI를 실제 업무에 바로 쓸 수 있도록 돕는 실습 중심 교육 브랜드입니다. 크래빗의 강의·웨비나와 올커니 협력 교육과정을 소개합니다." />
+<meta name="description" content="크래빗 아카데미는 학원과 교육 기관을 위한 실습 중심 교육 브랜드입니다. 크래빗과 올커니의 교육 일정, 웨비나 다시보기, 강의 자료를 한곳에서 만나보세요." />
 <meta property="og:title" content="크래빗 아카데미" />
-<meta property="og:description" content="교육 현장을 아는 사람들이 만드는 AI 실전 교육. 크래빗과 올커니의 교육과정을 만나보세요." />
+<meta property="og:description" content="교육 현장을 아는 사람들이 만드는 AI 실전 교육. 교육 일정, 웨비나 다시보기, 강의 자료를 한곳에서." />
 <meta property="og:type" content="website" />
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
   :root {
     --ground: #FBF7F8;
@@ -42,12 +42,15 @@
   header {
     border-bottom: 1px solid var(--line);
     background: var(--ground);
+    position: sticky;
+    top: 0;
+    z-index: 20;
   }
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 0;
+    padding: 18px 0;
   }
   .brand {
     font-weight: 700;
@@ -57,7 +60,7 @@
   .brand .dot { color: var(--pink); }
   .nav-links {
     display: flex;
-    gap: 28px;
+    gap: 26px;
     font-size: 14px;
     font-weight: 500;
   }
@@ -67,11 +70,11 @@
     transition: color 0.15s;
   }
   .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); }
-  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
   /* ---------- hero ---------- */
   .hero {
-    padding: 96px 0 88px;
+    padding: 88px 0 80px;
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
     gap: 48px;
@@ -94,10 +97,7 @@
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  h1 em {
-    font-style: normal;
-    color: var(--pink);
-  }
+  h1 em { font-style: normal; color: var(--pink); }
   .hero p {
     margin: 0 0 36px;
     max-width: 30em;
@@ -113,12 +113,12 @@
     font-size: 15px;
     font-weight: 600;
     text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
     transition: transform 0.15s, box-shadow 0.15s;
   }
-  .btn-primary {
-    background: var(--pink);
-    color: #fff;
-  }
+  .btn-primary { background: var(--pink); color: #fff; }
   .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.35); }
   .btn-ghost {
     border: 1px solid var(--line);
@@ -127,11 +127,7 @@
   }
   .btn-ghost:hover { border-color: var(--pink); color: var(--pink); }
 
-  /* hero visual: stacked class cards */
-  .hero-visual {
-    position: relative;
-    min-height: 300px;
-  }
+  .hero-visual { position: relative; min-height: 300px; }
   .float-card {
     position: absolute;
     background: var(--card);
@@ -159,11 +155,8 @@
   .fc3 { top: 225px; right: 10px; transform: rotate(1.5deg); }
 
   /* ---------- sections ---------- */
-  section { padding: 80px 0; }
-  .section-head {
-    margin-bottom: 44px;
-    max-width: 34em;
-  }
+  section { padding: 76px 0; }
+  .section-head { margin-bottom: 40px; max-width: 36em; }
   h2 {
     margin: 0 0 12px;
     font-size: clamp(24px, 3.4vw, 32px);
@@ -174,125 +167,275 @@
   }
   .section-head p { margin: 0; color: var(--muted); font-size: 16px; }
 
-  /* course grid */
-  .grid {
+  /* ---------- 올커니 band ---------- */
+  .allkeoni {
+    background: var(--ink);
+    color: #F6EEF0;
+    border-radius: 20px;
+    padding: 64px 56px;
+  }
+  .allkeoni .inner {
+    max-width: 620px;
+  }
+  .allkeoni .eyebrow { color: var(--pink); }
+  .allkeoni h2 { color: #fff; margin-bottom: 20px; }
+  .allkeoni p {
+    color: #C9BCC0;
+    font-size: 16.5px;
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+  .allkeoni p strong { color: #fff; font-weight: 600; }
+  .allkeoni .quote {
+    margin: 28px 0 0;
+    padding-left: 20px;
+    border-left: 3px solid var(--pink);
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.55;
+  }
+
+  /* ---------- weekly calendar ---------- */
+  .cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .cal-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-nav { display: flex; gap: 8px; }
+  .cal-btn {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .cal-btn:hover { border-color: var(--pink); color: var(--pink); }
+  .cal-btn.today-btn { width: auto; padding: 0 14px; font-size: 13px; font-weight: 600; }
+  .cal-scroll { overflow-x: auto; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(128px, 1fr));
+    gap: 8px;
+    min-width: 960px;
+    padding-bottom: 4px;
+  }
+  .cal-day {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cal-day.is-today { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink); }
+  .cal-day .d-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-day.is-today .d-label { color: var(--pink); }
+  .cal-day .d-label .dow { letter-spacing: 0.06em; }
+  .evt {
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    background: var(--tint);
+  }
+  .evt .evt-time { font-weight: 600; color: var(--pink); font-variant-numeric: tabular-nums; }
+  .evt .evt-title { font-weight: 600; color: var(--ink); display: block; }
+  .evt .evt-host {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 99px;
+    background: var(--pink);
+    color: #fff;
+  }
+  .evt.host-allkeoni { background: #F1EAEC; }
+  .evt.host-allkeoni .evt-time { color: var(--ink); }
+  .evt.host-allkeoni .evt-host { background: var(--ink); }
+  .cal-empty {
+    font-size: 12px;
+    color: var(--line);
+    margin: auto 0;
+    text-align: center;
+  }
+  .cal-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+  /* ---------- replay ---------- */
+  .replay-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
   }
-  .course {
+  .replay {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 28px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     transition: transform 0.18s, box-shadow 0.18s;
   }
-  .course:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(33, 26, 29, 0.08);
-  }
-  .course .meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--pink);
-  }
-  .course .meta::before {
-    content: "";
-    width: 18px;
-    height: 2px;
-    background: var(--pink);
-  }
-  .course h3 {
-    margin: 0;
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.4;
-  }
-  .course p {
-    margin: 0;
-    font-size: 14.5px;
-    color: var(--muted);
-    flex: 1;
-  }
-  .course .who {
-    font-size: 13px;
-    color: var(--ink);
+  .replay:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(33, 26, 29, 0.08); }
+  .replay .cover {
     background: var(--tint);
-    align-self: flex-start;
-    padding: 4px 12px;
-    border-radius: 99px;
-    font-weight: 500;
-  }
-
-  /* ---------- partner band ---------- */
-  .partner {
-    background: var(--ink);
-    color: #F6EEF0;
-    border-radius: 20px;
-    padding: 56px;
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: 48px;
-    align-items: center;
-  }
-  .partner .eyebrow { color: var(--pink); }
-  .partner h2 { color: #fff; }
-  .partner p { color: #C9BCC0; font-size: 15.5px; margin: 0 0 28px; }
-  .partner ul {
-    margin: 0; padding: 0;
-    list-style: none;
+    padding: 26px 24px;
+    min-height: 110px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    justify-content: flex-end;
   }
-  .partner li {
-    display: flex;
-    gap: 12px;
-    font-size: 15px;
-    align-items: baseline;
-  }
-  .partner li::before {
-    content: "";
-    flex: none;
-    width: 8px; height: 8px;
-    border-radius: 99px;
-    background: var(--pink);
-    transform: translateY(-1px);
-  }
-
-  /* ---------- steps ---------- */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-  }
-  .step {
-    border-top: 2px solid var(--ink);
-    padding-top: 20px;
-  }
-  .step .n {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--pink);
+  .replay .cover .k {
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 6px;
   }
-  .step h3 { margin: 8px 0 8px; font-size: 17px; font-weight: 700; }
-  .step p { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .replay .cover strong {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .replay .body {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .replay .body p { margin: 0; font-size: 14px; color: var(--muted); flex: 1; }
+  .replay .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .replay .date { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .replay a.watch, .replay span.soon {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .replay a.watch { color: var(--pink); }
+  .replay a.watch:hover { text-decoration: underline; }
+  .replay span.soon { color: var(--muted); }
 
-  /* ---------- contact ---------- */
-  .contact {
-    text-align: center;
-    padding: 88px 0 96px;
+  /* ---------- resources ---------- */
+  .res-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+    overflow: hidden;
   }
+  .res-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    background: none;
+    border-left: 0; border-right: 0; border-top: 0;
+    font-family: inherit;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .res-row:last-child { border-bottom: 0; }
+  .res-row:hover { background: var(--ground); }
+  .res-kind {
+    flex: none;
+    width: 82px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--pink);
+    text-transform: uppercase;
+  }
+  .res-main { flex: 1; min-width: 0; }
+  .res-main strong { display: block; font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .res-main span { font-size: 13px; color: var(--muted); }
+  .res-badge {
+    flex: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+  .res-badge.locked { background: var(--ink); color: #fff; }
+  .res-badge.open { background: var(--tint); color: var(--pink); }
+  .res-badge.soon { background: var(--ground); color: var(--muted); border: 1px solid var(--line); }
+
+  /* ---------- password modal ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 26, 29, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 60px rgba(33, 26, 29, 0.25);
+  }
+  .modal h3 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal .m-sub { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+  .modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--ground);
+    color: var(--ink);
+  }
+  .modal input:focus { outline: 2px solid var(--pink); outline-offset: 0; border-color: transparent; }
+  .modal .m-error {
+    min-height: 20px;
+    margin: 8px 0 12px;
+    font-size: 13px;
+    color: var(--pink);
+    font-weight: 500;
+  }
+  .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ---------- contact / footer ---------- */
+  .contact { text-align: center; padding: 84px 0 92px; }
   .contact h2 { margin-bottom: 16px; }
   .contact p { color: var(--muted); margin: 0 auto 32px; max-width: 30em; }
 
@@ -305,12 +448,12 @@
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   @media (max-width: 820px) {
-    .hero { grid-template-columns: 1fr; padding: 64px 0 56px; }
+    .hero { grid-template-columns: 1fr; padding: 56px 0 48px; }
     .hero-visual { display: none; }
-    .partner { grid-template-columns: 1fr; padding: 40px 28px; }
-    .steps { grid-template-columns: 1fr; }
+    .allkeoni { padding: 40px 28px; }
     section { padding: 56px 0; }
     .nav-links { display: none; }
+    .res-kind { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -324,15 +467,17 @@
   <div class="wrap nav">
     <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
     <nav class="nav-links">
-      <a href="#courses">교육과정</a>
-      <a href="#partner">올커니 협력과정</a>
-      <a href="#how">진행 방식</a>
+      <a href="#allkeoni">올커니</a>
+      <a href="#schedule">예정 일정</a>
+      <a href="#replay">웨비나 다시보기</a>
+      <a href="#resources">자료·인사이트</a>
       <a href="#contact">문의</a>
     </nav>
   </div>
 </header>
 
 <main>
+  <!-- 00. 크래빗 아카데미 소개 -->
   <div class="wrap">
     <div class="hero">
       <div>
@@ -340,12 +485,12 @@
         <h1>교육 현장을 아는 사람들이 만드는<br /><em>AI 실전 교육</em></h1>
         <p>
           크래빗 아카데미는 학원과 교육 기관이 AI를 실제 업무에 바로 쓸 수 있도록 돕는
-          실습 중심 교육 브랜드입니다. 크래빗이 직접 운영하는 강의와 웨비나,
-          그리고 올커니와 함께하는 협력 교육과정을 이곳에서 만나보세요.
+          실습 중심 교육 브랜드입니다. 크래빗과 올커니의 교육 일정, 웨비나 다시보기,
+          강의 자료를 이곳 한곳에서 만나보세요.
         </p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="#courses">교육과정 보기</a>
-          <a class="btn btn-ghost" href="#contact">교육 문의하기</a>
+          <a class="btn btn-primary" href="#schedule">예정 일정 보기</a>
+          <a class="btn btn-ghost" href="#resources">강의 자료 받기</a>
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
@@ -368,88 +513,142 @@
     </div>
   </div>
 
-  <section id="courses">
+  <!-- 01. 올커니 소개 -->
+  <section id="allkeoni">
     <div class="wrap">
-      <div class="section-head">
-        <h2>크래빗이 직접 진행하는 교육과정</h2>
-        <p>현장에서 바로 써먹을 수 있는 것만 다룹니다. 이론보다 실습, 개념보다 결과물.</p>
-      </div>
-      <div class="grid">
-        <article class="course">
-          <span class="meta">자동화 · 콘텐츠</span>
-          <h3>클로드 코드로 카드뉴스 자동화 에이전트 만들기</h3>
-          <p>홍보 카드뉴스 제작을 AI 에이전트에게 맡기는 방법을 처음부터 끝까지 실습합니다. 기초 설계부터 자동화 운영까지 가이드북과 함께 진행합니다.</p>
-          <span class="who">마케팅·콘텐츠 담당자</span>
-        </article>
-        <article class="course">
-          <span class="meta">웹 · 브랜딩</span>
-          <h3>우리 학원만의 랜딩페이지, 코딩 없이 한 번에 제작하기</h3>
-          <p>개발자 없이도 우리 기관을 소개하는 랜딩페이지를 직접 만들 수 있습니다. 기획부터 제작, 공개까지 한 번의 과정으로 완성합니다.</p>
-          <span class="who">학원 원장·운영자</span>
-        </article>
-        <article class="course">
-          <span class="meta">웨비나 · 운영</span>
-          <h3>학부모 소통전략 웨비나</h3>
-          <p>교육 기관의 신뢰는 소통에서 나옵니다. 학부모와의 소통을 체계화하는 전략과 실제 적용 사례를 다루는 온라인 웨비나입니다.</p>
-          <span class="who">교육 기관 운영진</span>
-        </article>
-        <article class="course">
-          <span class="meta">AI · 기초</span>
-          <h3>모두를 위한 클로드 코드 (Teachers Webinar)</h3>
-          <p>선생님과 교육 종사자를 위한 클로드 코드 입문 과정입니다. AI 도구가 처음이어도 수업 준비와 행정 업무에 바로 적용할 수 있게 안내합니다.</p>
-          <span class="who">교사·강사</span>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="partner">
-    <div class="wrap">
-      <div class="partner">
-        <div>
-          <span class="eyebrow">Partnership</span>
-          <h2>올커니와 함께하는 협력 교육과정</h2>
+      <div class="allkeoni">
+        <div class="inner">
+          <span class="eyebrow">올바른 교육 커뮤니티</span>
+          <h2>원장님을 위한 보상은,<br />더 좋은 학원이 되는 교육과정입니다</h2>
           <p>
-            크래빗 아카데미는 올커니와 함께 교육과정을 공동 기획하고 운영합니다.
-            양사의 전문성을 모아 더 깊이 있는 커리큘럼을 제공합니다.
+            크래빗은 원장님들께 단순한 보상 시스템이 아니라,
+            학원 운영에 지속적인 도움이 되는 <strong>좋은 교육 커뮤니티</strong>를 선물하고 싶습니다.
           </p>
-          <a class="btn btn-primary" href="#contact">협력과정 문의하기</a>
+          <p>
+            학생들의 보상은 크래빗 장학카드가 하고 있어요.
+            그렇다면 원장님들을 위한 보상은 무엇일까요?
+            우리는 그 답이 <strong>더 좋은 학원이 되기 위한 교육과정</strong>이라고 믿습니다.
+          </p>
+          <p>
+            그래서 올커니 — 올바른 교육 커뮤니티 — 의 교육과정과 행사를
+            크래빗 아카데미에서 함께 안내합니다.
+          </p>
+          <p class="quote">배움이 곧 보상이 되는 커뮤니티,<br />올커니에서 함께 성장하세요.</p>
         </div>
-        <ul>
-          <li>올커니 교육과정도 크래빗 아카데미에서 함께 안내합니다</li>
-          <li>공동 기획 과정은 오픈 시 이 페이지에서 가장 먼저 공개됩니다</li>
-          <li>기관 맞춤 교육이 필요하다면 협력과정으로 설계해 드립니다</li>
-        </ul>
       </div>
     </div>
   </section>
 
-  <section id="how">
+  <!-- 02. 예정 일정 -->
+  <section id="schedule">
     <div class="wrap">
       <div class="section-head">
-        <h2>이렇게 진행됩니다</h2>
-        <p>모든 과정은 같은 원칙으로 운영합니다. 배우고 끝나는 교육이 아니라, 남는 교육.</p>
+        <h2>예정 일정</h2>
+        <p>크래빗과 올커니의 강의·웨비나·행사 일정을 주간 캘린더로 확인하세요.</p>
       </div>
-      <div class="steps">
-        <div class="step">
-          <span class="n">01</span>
-          <h3>현장 기준 커리큘럼</h3>
-          <p>실제 학원·교육 기관에서 진행한 프로젝트를 바탕으로 커리큘럼을 만듭니다. 강의 예제가 곧 실무 사례입니다.</p>
+      <div class="cal-head">
+        <div class="cal-title" id="calTitle"></div>
+        <div class="cal-nav">
+          <button class="cal-btn" id="calPrev" aria-label="이전 주">&#8592;</button>
+          <button class="cal-btn today-btn" id="calToday">이번 주</button>
+          <button class="cal-btn" id="calNext" aria-label="다음 주">&#8594;</button>
         </div>
-        <div class="step">
-          <span class="n">02</span>
-          <h3>손으로 하는 실습</h3>
-          <p>듣기만 하는 시간은 최소화합니다. 강의가 끝나면 내 손으로 만든 결과물이 하나 남습니다.</p>
+      </div>
+      <div class="cal-scroll">
+        <div class="cal-grid" id="calGrid" role="grid" aria-label="주간 일정"></div>
+      </div>
+      <p class="cal-note">일정을 클릭할 필요 없이 한눈에 확인하실 수 있어요. 참가 신청이 필요한 일정은 하단 문의처로 연락 주세요.</p>
+    </div>
+  </section>
+
+  <!-- 03. 웨비나 다시보기 -->
+  <section id="replay">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>웨비나 다시보기</h2>
+        <p>지나간 강의와 웨비나를 다시 볼 수 있습니다. 놓치셨더라도 괜찮아요.</p>
+      </div>
+      <div class="replay-grid">
+        <article class="replay">
+          <div class="cover">
+            <div class="k">Webinar</div>
+            <strong>2026 학부모 소통전략 웨비나</strong>
+          </div>
+          <div class="body">
+            <p>교육 기관의 신뢰는 소통에서 나옵니다. 학부모와의 소통을 체계화하는 전략과 실제 적용 사례를 다뤘습니다.</p>
+            <div class="foot">
+              <span class="date">2026</span>
+              <span class="soon">다시보기 준비 중</span>
+            </div>
+          </div>
+        </article>
+        <article class="replay">
+          <div class="cover">
+            <div class="k">Lecture</div>
+            <strong>우리 학원만의 랜딩페이지, 코딩 없이 제작하기</strong>
+          </div>
+          <div class="body">
+            <p>개발자 없이 우리 기관 소개 페이지를 직접 만드는 실습 강의입니다. 기획부터 공개까지 한 번에 진행했습니다.</p>
+            <div class="foot">
+              <span class="date">2026.05</span>
+              <span class="soon">다시보기 준비 중</span>
+            </div>
+          </div>
+        </article>
+        <article class="replay">
+          <div class="cover">
+            <div class="k">Course</div>
+            <strong>모두를 위한 클로드 코드 (Teachers Webinar)</strong>
+          </div>
+          <div class="body">
+            <p>선생님과 교육 종사자를 위한 클로드 코드 입문 과정입니다. 수업 준비와 행정 업무에 바로 적용할 수 있게 안내합니다.</p>
+            <div class="foot">
+              <span class="date">2026</span>
+              <span class="soon">다시보기 준비 중</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04. 자료 / 인사이트 -->
+  <section id="resources">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>자료 / 인사이트</h2>
+        <p>강의 자료와 가이드북, 교육 인사이트를 모았습니다. 일부 자료는 수강생에게 안내된 비밀번호가 필요합니다.</p>
+      </div>
+      <div class="res-list">
+        <button class="res-row js-locked" type="button" data-title="대구 강의 자료">
+          <span class="res-kind">강의자료</span>
+          <span class="res-main">
+            <strong>대구 강의 자료</strong>
+            <span>강의에서 안내드린 비밀번호를 입력하면 자료 페이지로 이동합니다.</span>
+          </span>
+          <span class="res-badge locked">비밀번호</span>
+        </button>
+        <div class="res-row" style="cursor: default;">
+          <span class="res-kind">가이드북</span>
+          <span class="res-main">
+            <strong>카드뉴스 AI 에이전트 가이드북 (1·2편)</strong>
+            <span>기초·설계부터 클로드 코드 자동화 에이전트까지 다루는 가이드북입니다.</span>
+          </span>
+          <span class="res-badge soon">공개 예정</span>
         </div>
-        <div class="step">
-          <span class="n">03</span>
-          <h3>가이드북과 사후 지원</h3>
-          <p>강의 자료와 가이드북을 함께 제공해, 교육이 끝난 뒤에도 혼자서 반복하고 확장할 수 있습니다.</p>
+        <div class="res-row" style="cursor: default;">
+          <span class="res-kind">인사이트</span>
+          <span class="res-main">
+            <strong>교육 기관을 위한 AI 활용 인사이트</strong>
+            <span>현장에서 검증한 AI 활용 사례와 노하우를 연재합니다.</span>
+          </span>
+          <span class="res-badge soon">공개 예정</span>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- 05. 문의 -->
   <section class="contact" id="contact">
     <div class="wrap">
       <span class="eyebrow">Contact</span>
@@ -466,9 +665,148 @@
 <footer>
   <div class="wrap">
     <span>크래빗 아카데미 — CRABIT</span>
-    <span>올커니 협력 교육과정 운영</span>
+    <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
   </div>
 </footer>
+
+<!-- 비밀번호 모달 -->
+<div class="modal-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="modal">
+    <h3 id="pwTitle">비밀번호 입력</h3>
+    <p class="m-sub" id="pwSub">강의에서 안내드린 비밀번호를 입력해 주세요.</p>
+    <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+    <p class="m-error" id="pwError"></p>
+    <div class="m-actions">
+      <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
+      <button class="btn btn-primary" type="button" id="pwSubmit">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===============================================
+   예정 일정 데이터
+   - 여기 배열만 수정하면 캘린더에 자동 반영됩니다.
+   - date: YYYY-MM-DD / host: "크래빗" 또는 "올커니"
+   =============================================== */
+const EVENTS = [
+  { date: "2026-07-09", time: "19:00", title: "대구 원장님 대상 강의", host: "크래빗" },
+  { date: "2026-07-14", time: "20:00", title: "카드뉴스 제작 자동화 강의", host: "크래빗" },
+  { date: "2026-07-16", time: "19:30", title: "올커니 커뮤니티 모임", host: "올커니" },
+];
+
+/* ---------- 주간 캘린더 렌더링 ---------- */
+const DOW = ["월", "화", "수", "목", "금", "토", "일"];
+let weekOffset = 0;
+
+function mondayOf(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const day = (x.getDay() + 6) % 7; // 월=0
+  x.setDate(x.getDate() - day);
+  return x;
+}
+function ymd(d) {
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+}
+function fmtRange(a, b) {
+  const p = n => String(n).padStart(2, "0");
+  return a.getFullYear() + "." + p(a.getMonth() + 1) + "." + p(a.getDate())
+    + " – " + p(b.getMonth() + 1) + "." + p(b.getDate());
+}
+
+function renderWeek() {
+  const grid = document.getElementById("calGrid");
+  const start = mondayOf(new Date());
+  start.setDate(start.getDate() + weekOffset * 7);
+  const end = new Date(start); end.setDate(end.getDate() + 6);
+  document.getElementById("calTitle").textContent = fmtRange(start, end);
+
+  const todayKey = ymd(new Date());
+  grid.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    const key = ymd(d);
+    const cell = document.createElement("div");
+    cell.className = "cal-day" + (key === todayKey ? " is-today" : "");
+    cell.setAttribute("role", "gridcell");
+
+    const label = document.createElement("div");
+    label.className = "d-label";
+    label.innerHTML = '<span class="dow">' + DOW[i] + '</span><span>'
+      + (d.getMonth() + 1) + "." + String(d.getDate()).padStart(2, "0") + "</span>";
+    cell.appendChild(label);
+
+    const evts = EVENTS.filter(e => e.date === key)
+      .sort((a, b) => a.time.localeCompare(b.time));
+    if (evts.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "cal-empty";
+      empty.textContent = "·";
+      cell.appendChild(empty);
+    }
+    evts.forEach(e => {
+      const el = document.createElement("div");
+      el.className = "evt" + (e.host === "올커니" ? " host-allkeoni" : "");
+      el.innerHTML = '<span class="evt-time">' + e.time + '</span> '
+        + '<span class="evt-title"></span>'
+        + '<span class="evt-host">' + e.host + '</span>';
+      el.querySelector(".evt-title").textContent = e.title;
+      cell.appendChild(el);
+    });
+    grid.appendChild(cell);
+  }
+}
+document.getElementById("calPrev").addEventListener("click", () => { weekOffset--; renderWeek(); });
+document.getElementById("calNext").addEventListener("click", () => { weekOffset++; renderWeek(); });
+document.getElementById("calToday").addEventListener("click", () => { weekOffset = 0; renderWeek(); });
+renderWeek();
+
+/* ---------- 비밀번호 자료 접근 ----------
+   비밀번호의 SHA-256 해시 앞 16자리를 경로로 사용합니다.
+   올바른 비밀번호 → p/<해시16>/ 페이지로 이동.
+   경로가 코드에 남지 않아 비밀번호 없이는 접근할 수 없습니다. */
+const backdrop = document.getElementById("pwBackdrop");
+const pwInput = document.getElementById("pwInput");
+const pwError = document.getElementById("pwError");
+
+document.querySelectorAll(".js-locked").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.getElementById("pwTitle").textContent = btn.dataset.title;
+    pwInput.value = "";
+    pwError.textContent = "";
+    backdrop.classList.add("show");
+    pwInput.focus();
+  });
+});
+document.getElementById("pwCancel").addEventListener("click", () => backdrop.classList.remove("show"));
+backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
+pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+document.getElementById("pwSubmit").addEventListener("click", tryUnlock);
+
+async function sha256hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function tryUnlock() {
+  const pw = pwInput.value.trim();
+  if (!pw) { pwError.textContent = "비밀번호를 입력해 주세요."; return; }
+  const hash = (await sha256hex(pw)).slice(0, 16);
+  const path = "p/" + hash + "/";
+  try {
+    const res = await fetch(path, { method: "HEAD" });
+    if (res.ok) {
+      window.location.href = path;
+    } else {
+      pwError.textContent = "비밀번호가 올바르지 않습니다.";
+    }
+  } catch {
+    pwError.textContent = "확인 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요.";
+  }
+}
+</script>
 
 </body>
 </html>

@@ -166,31 +166,32 @@
   }
   .section-head p { margin: 0; color: var(--muted); font-size: 16px; }
 
-  /* ---------- 올커니 band (다크 섹션) ---------- */
-  .allkeoni {
-    background: var(--ink);
+  /* ---------- 크래빗 아카데미 소개 ---------- */
+  .about {
+    background: linear-gradient(135deg, #FEE9F4 0%, #FFFFFF 48%, #E9F4FF 100%);
     border-radius: 24px;
     padding: 64px 56px;
   }
-  .allkeoni .inner { max-width: 620px; }
-  .allkeoni .eyebrow { color: rgba(255, 255, 255, 0.6); }
-  .allkeoni h2 { margin-bottom: 20px; color: #fff; }
-  .allkeoni p {
-    color: rgba(255, 255, 255, 0.7);
+  .about .inner { max-width: 680px; }
+  .about .eyebrow { color: var(--pink); }
+  .about h2 { margin-bottom: 24px; }
+  .about p {
+    color: var(--muted);
     font-size: 16.5px;
     margin: 0 0 18px;
     text-wrap: pretty;
   }
-  .allkeoni p strong { color: #fff; font-weight: 600; }
-  .allkeoni .quote {
-    margin: 28px 0 0;
+  .about p strong { color: var(--ink); font-weight: 600; }
+  .about .quote {
+    margin: 32px 0 0;
     padding-left: 20px;
     border-left: 3px solid var(--pink);
     font-size: 18px;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.55;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.6;
   }
+  .about .quote strong { font-weight: 700; }
 
   /* ---------- weekly calendar ---------- */
   .cal-panel {
@@ -458,7 +459,7 @@
 
   @media (max-width: 820px) {
     .hero-banner { padding: 88px 0 96px; }
-    .allkeoni { padding: 40px 28px; }
+    .about { padding: 40px 28px; }
     .cal-panel { padding: 20px 16px 14px; border-radius: 20px; }
     section { padding: 56px 0; }
     .nav-links { display: none; }
@@ -476,7 +477,7 @@
   <div class="wrap nav">
     <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
     <nav class="nav-links">
-      <a href="#allkeoni">올커니</a>
+      <a href="#about">아카데미 소개</a>
       <a href="#schedule">예정 일정</a>
       <a href="#replay">웨비나 다시보기</a>
       <a href="#resources">자료·인사이트</a>
@@ -501,27 +502,38 @@
     </div>
   </div>
 
-  <!-- 01. 올커니 소개 -->
-  <section id="allkeoni">
+  <!-- 01. 크래빗 아카데미란? -->
+  <section id="about">
     <div class="wrap">
-      <div class="allkeoni">
+      <div class="about">
         <div class="inner">
-          <span class="eyebrow">올바른 교육 커뮤니티</span>
-          <h2>원장님을 위한 보상은,<br />더 좋은 학원이 되는 교육과정입니다</h2>
+          <span class="eyebrow">크래빗 아카데미란?</span>
+          <h2>학생의 성장을 만드는 공식,<br />이제는 원장님의 성장에도 적용합니다</h2>
           <p>
-            크래빗은 원장님들께 단순한 보상 시스템이 아니라,
-            학원 운영에 지속적인 도움이 되는 <strong>좋은 교육 커뮤니티</strong>를 선물하고 싶습니다.
+            크래빗은 학생의 노력을 보상하고, 그 보상이 동기부여가 되어
+            더 좋은 행동과 성장으로 이어지는 경험을 만들고 있습니다.
+            그리고 우리는 이 원리가 원장님에게도 똑같이 적용된다고 믿습니다.
           </p>
           <p>
-            학생들의 보상은 크래빗 장학카드가 하고 있어요.
-            그렇다면 원장님들을 위한 보상은 무엇일까요?
-            우리는 그 답이 <strong>더 좋은 학원이 되기 위한 교육과정</strong>이라고 믿습니다.
+            좋은 교육을 배우고, 실제 학원에 적용하고, 그 변화가 또 다른 성과와 성장으로 이어지는 것.
+            그래서 크래빗은 단순히 서비스를 제공하는 것을 넘어, 원장님들이 더 좋은 학원을
+            만들어갈 수 있도록 <strong>크래빗 아카데미</strong>를 운영하고 있습니다.
           </p>
           <p>
-            그래서 올커니 — 올바른 교육 커뮤니티 — 의 교육과정과 행사를
-            크래빗 아카데미에서 함께 안내합니다.
+            AI 활용, 학원 운영, 데이터 기반 교육, 마케팅 등 실제 현장에서 바로 적용할 수 있는
+            교육과 웨비나를 직접 기획하고, <strong>올커니(올바른 교육 커뮤니티)</strong>와 함께
+            다양한 교육 프로그램과 커뮤니티도 만들어가고 있습니다.
           </p>
-          <p class="quote">배움이 곧 보상이 되는 커뮤니티,<br />올커니에서 함께 성장하세요.</p>
+          <p>
+            그리고 배움이 끝으로 이어지지 않도록, <strong>행동하는 원장님께도 보상</strong>을 드립니다.
+            크래빗 아카데미 멤버스 카드를 발급해 드리고, 교육 내용을 학원에 적극적으로 적용하거나
+            우수한 후기와 사례를 공유해 주신 원장님들을 선정해 매월 장학금을 충전해 드리고 있습니다.
+          </p>
+          <p class="quote">
+            배움에서 끝나는 교육이 아니라,<br />
+            <strong>배움이 행동으로, 행동이 성장으로 이어지는 교육.</strong><br />
+            그것이 크래빗 아카데미가 만들고 싶은 문화입니다.
+          </p>
         </div>
       </div>
     </div>

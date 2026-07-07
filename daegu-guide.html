@@ -35,6 +35,7 @@
 
   header { padding: 20px 0; }
   .brand { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .brand img { height: 26px; display: block; }
   .brand .dot { color: var(--pink); }
 
   .hero { padding: 28px 0 8px; }
@@ -70,6 +71,15 @@
   .when .w-label { font-size: 12.5px; font-weight: 600; letter-spacing: 0.1em; color: #9CA5B0; text-transform: uppercase; }
   .when .w-main { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .when .w-sub { font-size: 14px; color: #C6CCD4; }
+  .when .w-link {
+    margin-top: 6px;
+    align-self: flex-start;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 
   h2 {
     margin: 0 0 6px;
@@ -207,7 +217,7 @@
 
 <header>
   <div class="wrap">
-    <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
+    <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
   </div>
 </header>
 
@@ -222,9 +232,9 @@
   </div>
 
   <div class="when">
-    <span class="w-label">일시</span>
+    <span class="w-label">일시·장소</span>
     <span class="w-main">2026년 7월 9일 (목) 오후 7시</span>
-    <span class="w-sub">장소는 안내 문자로 별도 공지드려요.</span>
+    <a class="w-link" href="https://naver.me/5vczvOjM" target="_blank" rel="noopener">네이버 지도에서 위치 보기 &#8250;</a>
   </div>
 
   <h2>오시기 전 체크리스트</h2>

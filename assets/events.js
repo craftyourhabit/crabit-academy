@@ -83,6 +83,7 @@ const EVENTS_DB = {
     host: "크래빗",
     title: "대구 원장님 대상 강의",
     date: "2026.07.09 (목) 19:00",
+    placeUrl: "https://naver.me/5vczvOjM",
     thumb: "assets/thumbs/daegu-lecture.svg",
     desc: "대구 지역 원장님들을 위한 오프라인 강의입니다. 학원 운영에 AI를 바로 적용하는 방법을 실습 중심으로 다룹니다.",
     points: [

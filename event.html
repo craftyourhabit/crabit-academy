@@ -30,6 +30,7 @@
   header { box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06); position: sticky; top: 0; background: rgba(255, 255, 255,0.92); backdrop-filter: blur(8px); z-index: 20; }
   .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
   .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand img { height: 26px; display: block; }
   .brand a { color: inherit; text-decoration: none; }
   .brand .dot { color: var(--pink); }
   .nav > a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
@@ -75,6 +76,12 @@
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     margin-bottom: 28px;
+  }
+  .date a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .desc { font-size: 16.5px; color: var(--ink); margin: 0 0 32px; max-width: 40em; text-wrap: pretty; }
 
@@ -144,7 +151,7 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand"><a href="./">크래빗 아카데미<span class="dot">.</span></a></div>
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
     <a href="./">홈으로 돌아가기</a>
   </div>
 </header>
@@ -215,7 +222,9 @@
     + statusBadge
     + '</div>'
     + '<h1>' + esc(ev.title) + '</h1>'
-    + '<div class="date">' + esc(ev.date) + '</div>'
+    + '<div class="date">' + esc(ev.date)
+    + (ev.placeUrl ? ' &nbsp;·&nbsp; <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : '')
+    + '</div>'
     + '<p class="desc">' + esc(ev.desc) + '</p>'
     + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
     + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")

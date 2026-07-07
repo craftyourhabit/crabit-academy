@@ -64,8 +64,21 @@
     gap: 16px;
     background: #FFFFFF;
     border-radius: 14px;
-    padding: 20px 24px;
+    padding: 16px 24px 16px 16px;
     box-shadow: 0 2px 8px rgba(25, 31, 40, 0.07);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  a.item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(25, 31, 40, 0.1); }
+  .item .mini {
+    flex: none;
+    width: 120px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    background: var(--fill);
+    display: block;
   }
   .item .kind {
     flex: none;
@@ -114,42 +127,42 @@
   </div>
 
   <div class="list">
-    <div class="item">
-      <span class="kind">Webinar</span>
+    <a class="item" href="../../event.html?id=parents-webinar">
+      <img class="mini" src="../../assets/thumbs/parents-webinar.svg" alt="" loading="lazy" />
       <span class="t">
         <strong>2026 학부모 소통전략 웨비나</strong>
         <span>학부모와의 소통을 체계화하는 전략과 실제 적용 사례</span>
       </span>
       <span class="date">2026</span>
-      <span class="act">준비 중</span>
-    </div>
-    <div class="item">
-      <span class="kind">Lecture</span>
+      <span class="act" style="color: var(--pink);">자세히 &#8250;</span>
+    </a>
+    <a class="item" href="../../event.html?id=landing-lecture">
+      <img class="mini" src="../../assets/thumbs/landing-lecture.svg" alt="" loading="lazy" />
       <span class="t">
         <strong>우리 학원만의 랜딩페이지, 코딩 없이 제작하기</strong>
         <span>기획부터 공개까지 한 번에 완성하는 실습 강의</span>
       </span>
       <span class="date">2026.05</span>
-      <span class="act">준비 중</span>
-    </div>
-    <div class="item">
-      <span class="kind">Course</span>
+      <span class="act" style="color: var(--pink);">자세히 &#8250;</span>
+    </a>
+    <a class="item" href="../../event.html?id=claude-code-teachers">
+      <img class="mini" src="../../assets/thumbs/claude-code-teachers.svg" alt="" loading="lazy" />
       <span class="t">
         <strong>모두를 위한 클로드 코드 (Teachers Webinar)</strong>
         <span>선생님과 교육 종사자를 위한 클로드 코드 입문 과정</span>
       </span>
       <span class="date">2026</span>
-      <span class="act">준비 중</span>
-    </div>
-    <div class="item">
-      <span class="kind">Lecture</span>
+      <span class="act" style="color: var(--pink);">자세히 &#8250;</span>
+    </a>
+    <a class="item" href="../../event.html?id=cardnews-automation">
+      <img class="mini" src="../../assets/thumbs/cardnews-automation.svg" alt="" loading="lazy" />
       <span class="t">
         <strong>클로드 코드로 카드뉴스 자동화 에이전트 만들기</strong>
         <span>기초 설계부터 자동화 운영까지, 가이드북과 함께하는 실습</span>
       </span>
       <span class="date">2026.07</span>
-      <span class="act">준비 중</span>
-    </div>
+      <span class="act" style="color: var(--pink);">자세히 &#8250;</span>
+    </a>
   </div>
 </main>
 

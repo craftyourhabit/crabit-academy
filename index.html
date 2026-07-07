@@ -272,13 +272,18 @@
   .cal-day.is-today .d-label { color: var(--pink); }
   .cal-day .d-label .dow { letter-spacing: 0.06em; }
   .evt {
+    display: block;
     border-radius: 10px;
     padding: 8px 10px;
     font-size: 12.5px;
     line-height: 1.45;
     background: var(--fill-soft);
     box-shadow: 0 1px 3px rgba(25, 31, 40, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, transform 0.15s;
   }
+  a.evt:hover { box-shadow: 0 3px 10px rgba(25, 31, 40, 0.12); transform: translateY(-1px); }
   .cal-day.is-today .evt { background: var(--bg); }
   .evt .evt-time { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
   .evt .evt-title { font-weight: 600; color: var(--ink); display: block; }
@@ -315,48 +320,41 @@
     flex-direction: column;
     box-shadow: 0 2px 10px rgba(25, 31, 40, 0.07);
     transition: transform 0.18s, box-shadow 0.18s;
+    text-decoration: none;
+    color: inherit;
   }
   .replay:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(25, 31, 40, 0.1); }
-  .replay .cover {
+  .replay .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
     background: var(--fill);
-    padding: 26px 24px;
-    min-height: 110px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  .replay .cover .k {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .replay .cover strong {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
   }
   .replay .body {
     padding: 20px 24px 24px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
+  }
+  .replay .body .k {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .replay .body strong {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
   }
   .replay .body p { margin: 0; font-size: 14px; color: var(--muted); flex: 1; }
   .replay .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .replay .date { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .replay a.watch, .replay span.soon {
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .replay a.watch { color: var(--pink); }
-  .replay a.watch:hover { text-decoration: underline; }
-  .replay span.soon { color: var(--muted); }
+  .replay .more { font-size: 14px; font-weight: 600; color: var(--pink); }
 
   /* ---------- resources ---------- */
   .res-list {
@@ -588,45 +586,42 @@
         <button class="link-all js-locked" type="button" data-title="웨비나 다시보기 전체">전체보기 &#8250;</button>
       </div>
       <div class="replay-grid">
-        <article class="replay">
-          <div class="cover">
-            <div class="k">Webinar</div>
-            <strong>2026 학부모 소통전략 웨비나</strong>
-          </div>
+        <a class="replay" href="event.html?id=parents-webinar">
+          <img class="thumb" src="assets/thumbs/parents-webinar.svg" alt="2026 학부모 소통전략 웨비나 썸네일" loading="lazy" />
           <div class="body">
+            <span class="k">Webinar</span>
+            <strong>2026 학부모 소통전략 웨비나</strong>
             <p>교육 기관의 신뢰는 소통에서 나옵니다. 학부모와의 소통을 체계화하는 전략과 실제 적용 사례를 다뤘습니다.</p>
             <div class="foot">
               <span class="date">2026</span>
-              <span class="soon">다시보기 준비 중</span>
+              <span class="more">자세히 보기 &#8250;</span>
             </div>
           </div>
-        </article>
-        <article class="replay">
-          <div class="cover">
-            <div class="k">Lecture</div>
-            <strong>우리 학원만의 랜딩페이지, 코딩 없이 제작하기</strong>
-          </div>
+        </a>
+        <a class="replay" href="event.html?id=landing-lecture">
+          <img class="thumb" src="assets/thumbs/landing-lecture.svg" alt="우리 학원만의 랜딩페이지 제작 강의 썸네일" loading="lazy" />
           <div class="body">
+            <span class="k">Lecture</span>
+            <strong>우리 학원만의 랜딩페이지, 코딩 없이 제작하기</strong>
             <p>개발자 없이 우리 기관 소개 페이지를 직접 만드는 실습 강의입니다. 기획부터 공개까지 한 번에 진행했습니다.</p>
             <div class="foot">
               <span class="date">2026.05</span>
-              <span class="soon">다시보기 준비 중</span>
+              <span class="more">자세히 보기 &#8250;</span>
             </div>
           </div>
-        </article>
-        <article class="replay">
-          <div class="cover">
-            <div class="k">Course</div>
-            <strong>모두를 위한 클로드 코드 (Teachers Webinar)</strong>
-          </div>
+        </a>
+        <a class="replay" href="event.html?id=claude-code-teachers">
+          <img class="thumb" src="assets/thumbs/claude-code-teachers.svg" alt="모두를 위한 클로드 코드 썸네일" loading="lazy" />
           <div class="body">
+            <span class="k">Course</span>
+            <strong>모두를 위한 클로드 코드 (Teachers Webinar)</strong>
             <p>선생님과 교육 종사자를 위한 클로드 코드 입문 과정입니다. 수업 준비와 행정 업무에 바로 적용할 수 있게 안내합니다.</p>
             <div class="foot">
               <span class="date">2026</span>
-              <span class="soon">다시보기 준비 중</span>
+              <span class="more">자세히 보기 &#8250;</span>
             </div>
           </div>
-        </article>
+        </a>
       </div>
     </div>
   </section>
@@ -712,9 +707,9 @@
    - date: YYYY-MM-DD / host: "크래빗" 또는 "올커니"
    =============================================== */
 const EVENTS = [
-  { date: "2026-07-09", time: "19:00", title: "대구 원장님 대상 강의", host: "크래빗" },
-  { date: "2026-07-14", time: "20:00", title: "카드뉴스 제작 자동화 강의", host: "크래빗" },
-  { date: "2026-07-16", time: "19:30", title: "올커니 커뮤니티 모임", host: "올커니" },
+  { date: "2026-07-09", time: "19:00", title: "대구 원장님 대상 강의", host: "크래빗", id: "daegu-lecture" },
+  { date: "2026-07-14", time: "20:00", title: "카드뉴스 제작 자동화 강의", host: "크래빗", id: "cardnews-automation" },
+  { date: "2026-07-16", time: "19:30", title: "올커니 커뮤니티 모임", host: "올커니", id: "allkeoni-meetup" },
 ];
 
 /* ---------- 주간 캘린더 렌더링 ---------- */
@@ -768,7 +763,8 @@ function renderWeek() {
       cell.appendChild(empty);
     }
     evts.forEach(e => {
-      const el = document.createElement("div");
+      const el = document.createElement(e.id ? "a" : "div");
+      if (e.id) el.href = "event.html?id=" + e.id;
       el.className = "evt" + (e.host === "올커니" ? " host-allkeoni" : "");
       el.innerHTML = '<span class="evt-time">' + e.time + '</span> '
         + '<span class="evt-title"></span>'

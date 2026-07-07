@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>행사 상세 — 크래빗 아카데미</title>
+<meta name="description" content="크래빗 아카데미의 웨비나·강의·행사 상세 정보" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --fill: #F4F6F8;
+    --fill-soft: #F9FAFB;
+    --ink: #191F28;
+    --muted: #6B7684;
+    --line: #E5E8EB;
+    --pink: #F06485;
+    --tint: #FDECF1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  header { box-shadow: 0 1px 4px rgba(25, 31, 40, 0.06); position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 20; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand a { color: inherit; text-decoration: none; }
+  .brand .dot { color: var(--pink); }
+  .nav > a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  main { padding: 48px 0 88px; }
+  .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(25, 31, 40, 0.09);
+    margin-bottom: 32px;
+    background: var(--fill);
+  }
+  .meta-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.04em;
+  }
+  .badge.type { background: var(--fill); color: var(--muted); text-transform: uppercase; }
+  .badge.host-crabit { background: var(--tint); color: var(--pink); }
+  .badge.host-allkeoni { background: var(--ink); color: #fff; }
+  .badge.status-upcoming { background: var(--fill); color: var(--ink); }
+  .badge.status-soon { background: var(--fill); color: var(--muted); }
+
+  h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 4.5vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .date {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 28px;
+  }
+  .desc { font-size: 16.5px; color: var(--ink); margin: 0 0 32px; max-width: 40em; text-wrap: pretty; }
+
+  .points {
+    background: var(--fill-soft);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 4px rgba(25, 31, 40, 0.05);
+  }
+  .points h2 { margin: 0 0 14px; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .points ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .points li { display: flex; gap: 12px; font-size: 15px; align-items: baseline; }
+  .points li::before {
+    content: "";
+    flex: none;
+    width: 7px; height: 7px;
+    border-radius: 99px;
+    background: var(--pink);
+    transform: translateY(-2px);
+  }
+  .audience { font-size: 14px; color: var(--muted); margin: 0 0 36px; }
+  .audience strong { color: var(--ink); font-weight: 600; }
+
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+  .btn-primary { background: var(--pink); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
+  .btn-ghost { background: var(--fill); color: var(--ink); }
+  .btn-ghost:hover { background: var(--line); }
+  .soon-note { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+  .notfound { text-align: center; padding: 80px 0; }
+  .notfound h1 { margin-bottom: 12px; }
+  .notfound p { color: var(--muted); margin: 0 0 28px; }
+
+  footer { border-top: 1px solid var(--line); padding: 24px 0; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./">크래빗 아카데미<span class="dot">.</span></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap">크래빗 아카데미 — CRABIT</div>
+</footer>
+
+<script src="assets/events.js"></script>
+<script>
+(function () {
+  const id = new URLSearchParams(location.search).get("id");
+  const ev = id && EVENTS_DB[id];
+  const main = document.getElementById("main");
+
+  if (!ev) {
+    main.innerHTML = '<div class="notfound">'
+      + '<h1>행사를 찾을 수 없어요</h1>'
+      + '<p>주소가 잘못되었거나, 종료되어 내려간 행사일 수 있습니다.</p>'
+      + '<a class="btn btn-primary" href="./">홈으로 돌아가기</a>'
+      + '</div>';
+    return;
+  }
+
+  document.title = ev.title + " — 크래빗 아카데미";
+
+  const hostClass = ev.host === "올커니" ? "host-allkeoni" : "host-crabit";
+  const statusBadge = ev.status === "upcoming"
+    ? '<span class="badge status-upcoming">예정</span>'
+    : (ev.status === "replay" ? "" : '<span class="badge status-soon">다시보기 준비 중</span>');
+
+  let cta;
+  if (ev.status === "replay" && ev.replayUrl) {
+    cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
+  } else if (ev.status === "upcoming") {
+    cta = '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
+  } else {
+    cta = '<span class="soon-note">다시보기 영상을 준비하고 있어요.</span>';
+  }
+
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  main.innerHTML =
+    '<img class="thumb" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + '<div class="meta-row">'
+    + '<span class="badge type">' + esc(ev.type) + '</span>'
+    + '<span class="badge ' + hostClass + '">' + esc(ev.host) + '</span>'
+    + statusBadge
+    + '</div>'
+    + '<h1>' + esc(ev.title) + '</h1>'
+    + '<div class="date">' + esc(ev.date) + '</div>'
+    + '<p class="desc">' + esc(ev.desc) + '</p>'
+    + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
+    + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")
+    + '</ul></div>'
+    + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
+    + '<div class="cta-row">' + cta
+    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a></div>';
+})();
+</script>
+
+</body>
+</html>

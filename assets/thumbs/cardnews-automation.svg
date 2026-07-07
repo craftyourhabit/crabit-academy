@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <rect width="800" height="450" fill="#F9FAFB"/>
+  <rect x="580" y="60" width="150" height="200" rx="20" fill="#FDECF1" transform="rotate(8 655 160)"/>
+  <rect x="610" y="90" width="150" height="200" rx="20" fill="#F4F6F8" stroke="#E5E8EB" transform="rotate(-4 685 190)"/>
+  <circle cx="600" cy="330" r="14" fill="#F06485"/>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#6B7684" font-weight="600">LECTURE</text>
+  <text x="64" y="222" font-size="54" fill="#191F28" font-weight="700">카드뉴스 제작</text>
+  <text x="64" y="290" font-size="54" fill="#191F28" font-weight="700">자동화</text>
+  <text x="64" y="386" font-size="22" fill="#6B7684" font-weight="500">크래빗 아카데미 · 2026.07</text>
+</svg>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>크래빗 아카데미 — 교육 현장을 위한 AI 실전 교육</title>
+<meta name="description" content="크래빗 아카데미는 학원과 교육 기관이 AI를 실제 업무에 바로 쓸 수 있도록 돕는 실습 중심 교육 브랜드입니다. 크래빗의 강의·웨비나와 올커니 협력 교육과정을 소개합니다." />
+<meta property="og:title" content="크래빗 아카데미" />
+<meta property="og:description" content="교육 현장을 아는 사람들이 만드는 AI 실전 교육. 크래빗과 올커니의 교육과정을 만나보세요." />
+<meta property="og:type" content="website" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --ground: #FBF7F8;
+    --ink: #211A1D;
+    --pink: #F06485;
+    --tint: #FBE4EA;
+    --muted: #8C7E83;
+    --line: #EBDDE1;
+    --card: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    border-bottom: 1px solid var(--line);
+    background: var(--ground);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .brand .dot { color: var(--pink); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); }
+  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 96px 0 88px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  h1 {
+    margin: 0 0 24px;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--pink);
+  }
+  .hero p {
+    margin: 0 0 36px;
+    max-width: 30em;
+    font-size: 17px;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary {
+    background: var(--pink);
+    color: #fff;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.35); }
+  .btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--ink);
+    background: var(--card);
+  }
+  .btn-ghost:hover { border-color: var(--pink); color: var(--pink); }
+
+  /* hero visual: stacked class cards */
+  .hero-visual {
+    position: relative;
+    min-height: 300px;
+  }
+  .float-card {
+    position: absolute;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 22px;
+    box-shadow: 0 12px 32px rgba(33, 26, 29, 0.07);
+    font-size: 14px;
+    width: 240px;
+  }
+  .float-card strong { display: block; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .float-card span { color: var(--muted); font-size: 13px; }
+  .float-card .tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .fc1 { top: 0; right: 40px; transform: rotate(2deg); }
+  .fc2 { top: 110px; right: 130px; transform: rotate(-2.5deg); z-index: 2; }
+  .fc3 { top: 225px; right: 10px; transform: rotate(1.5deg); }
+
+  /* ---------- sections ---------- */
+  section { padding: 80px 0; }
+  .section-head {
+    margin-bottom: 44px;
+    max-width: 34em;
+  }
+  h2 {
+    margin: 0 0 12px;
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .section-head p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  /* course grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .course {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .course:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(33, 26, 29, 0.08);
+  }
+  .course .meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .course .meta::before {
+    content: "";
+    width: 18px;
+    height: 2px;
+    background: var(--pink);
+  }
+  .course h3 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+  .course p {
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--muted);
+    flex: 1;
+  }
+  .course .who {
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--tint);
+    align-self: flex-start;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+
+  /* ---------- partner band ---------- */
+  .partner {
+    background: var(--ink);
+    color: #F6EEF0;
+    border-radius: 20px;
+    padding: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .partner .eyebrow { color: var(--pink); }
+  .partner h2 { color: #fff; }
+  .partner p { color: #C9BCC0; font-size: 15.5px; margin: 0 0 28px; }
+  .partner ul {
+    margin: 0; padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .partner li {
+    display: flex;
+    gap: 12px;
+    font-size: 15px;
+    align-items: baseline;
+  }
+  .partner li::before {
+    content: "";
+    flex: none;
+    width: 8px; height: 8px;
+    border-radius: 99px;
+    background: var(--pink);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- steps ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .step {
+    border-top: 2px solid var(--ink);
+    padding-top: 20px;
+  }
+  .step .n {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pink);
+    letter-spacing: 0.1em;
+  }
+  .step h3 { margin: 8px 0 8px; font-size: 17px; font-weight: 700; }
+  .step p { margin: 0; font-size: 14.5px; color: var(--muted); }
+
+  /* ---------- contact ---------- */
+  .contact {
+    text-align: center;
+    padding: 88px 0 96px;
+  }
+  .contact h2 { margin-bottom: 16px; }
+  .contact p { color: var(--muted); margin: 0 auto 32px; max-width: 30em; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; padding: 64px 0 56px; }
+    .hero-visual { display: none; }
+    .partner { grid-template-columns: 1fr; padding: 40px 28px; }
+    .steps { grid-template-columns: 1fr; }
+    section { padding: 56px 0; }
+    .nav-links { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
+    <nav class="nav-links">
+      <a href="#courses">교육과정</a>
+      <a href="#partner">올커니 협력과정</a>
+      <a href="#how">진행 방식</a>
+      <a href="#contact">문의</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Crabit Academy</span>
+        <h1>교육 현장을 아는 사람들이 만드는<br /><em>AI 실전 교육</em></h1>
+        <p>
+          크래빗 아카데미는 학원과 교육 기관이 AI를 실제 업무에 바로 쓸 수 있도록 돕는
+          실습 중심 교육 브랜드입니다. 크래빗이 직접 운영하는 강의와 웨비나,
+          그리고 올커니와 함께하는 협력 교육과정을 이곳에서 만나보세요.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#courses">교육과정 보기</a>
+          <a class="btn btn-ghost" href="#contact">교육 문의하기</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="float-card fc1">
+          <span class="tag">자동화 강의</span>
+          <strong>카드뉴스 제작 자동화</strong>
+          <span>클로드 코드로 만드는 콘텐츠 에이전트</span>
+        </div>
+        <div class="float-card fc2">
+          <span class="tag">웨비나</span>
+          <strong>학부모 소통전략</strong>
+          <span>교육 기관을 위한 소통 노하우</span>
+        </div>
+        <div class="float-card fc3">
+          <span class="tag">실습 강의</span>
+          <strong>랜딩페이지 제작</strong>
+          <span>코딩 없이 우리 학원 페이지 만들기</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="courses">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>크래빗이 직접 진행하는 교육과정</h2>
+        <p>현장에서 바로 써먹을 수 있는 것만 다룹니다. 이론보다 실습, 개념보다 결과물.</p>
+      </div>
+      <div class="grid">
+        <article class="course">
+          <span class="meta">자동화 · 콘텐츠</span>
+          <h3>클로드 코드로 카드뉴스 자동화 에이전트 만들기</h3>
+          <p>홍보 카드뉴스 제작을 AI 에이전트에게 맡기는 방법을 처음부터 끝까지 실습합니다. 기초 설계부터 자동화 운영까지 가이드북과 함께 진행합니다.</p>
+          <span class="who">마케팅·콘텐츠 담당자</span>
+        </article>
+        <article class="course">
+          <span class="meta">웹 · 브랜딩</span>
+          <h3>우리 학원만의 랜딩페이지, 코딩 없이 한 번에 제작하기</h3>
+          <p>개발자 없이도 우리 기관을 소개하는 랜딩페이지를 직접 만들 수 있습니다. 기획부터 제작, 공개까지 한 번의 과정으로 완성합니다.</p>
+          <span class="who">학원 원장·운영자</span>
+        </article>
+        <article class="course">
+          <span class="meta">웨비나 · 운영</span>
+          <h3>학부모 소통전략 웨비나</h3>
+          <p>교육 기관의 신뢰는 소통에서 나옵니다. 학부모와의 소통을 체계화하는 전략과 실제 적용 사례를 다루는 온라인 웨비나입니다.</p>
+          <span class="who">교육 기관 운영진</span>
+        </article>
+        <article class="course">
+          <span class="meta">AI · 기초</span>
+          <h3>모두를 위한 클로드 코드 (Teachers Webinar)</h3>
+          <p>선생님과 교육 종사자를 위한 클로드 코드 입문 과정입니다. AI 도구가 처음이어도 수업 준비와 행정 업무에 바로 적용할 수 있게 안내합니다.</p>
+          <span class="who">교사·강사</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="partner">
+    <div class="wrap">
+      <div class="partner">
+        <div>
+          <span class="eyebrow">Partnership</span>
+          <h2>올커니와 함께하는 협력 교육과정</h2>
+          <p>
+            크래빗 아카데미는 올커니와 함께 교육과정을 공동 기획하고 운영합니다.
+            양사의 전문성을 모아 더 깊이 있는 커리큘럼을 제공합니다.
+          </p>
+          <a class="btn btn-primary" href="#contact">협력과정 문의하기</a>
+        </div>
+        <ul>
+          <li>올커니 교육과정도 크래빗 아카데미에서 함께 안내합니다</li>
+          <li>공동 기획 과정은 오픈 시 이 페이지에서 가장 먼저 공개됩니다</li>
+          <li>기관 맞춤 교육이 필요하다면 협력과정으로 설계해 드립니다</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>이렇게 진행됩니다</h2>
+        <p>모든 과정은 같은 원칙으로 운영합니다. 배우고 끝나는 교육이 아니라, 남는 교육.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="n">01</span>
+          <h3>현장 기준 커리큘럼</h3>
+          <p>실제 학원·교육 기관에서 진행한 프로젝트를 바탕으로 커리큘럼을 만듭니다. 강의 예제가 곧 실무 사례입니다.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <h3>손으로 하는 실습</h3>
+          <p>듣기만 하는 시간은 최소화합니다. 강의가 끝나면 내 손으로 만든 결과물이 하나 남습니다.</p>
+        </div>
+        <div class="step">
+          <span class="n">03</span>
+          <h3>가이드북과 사후 지원</h3>
+          <p>강의 자료와 가이드북을 함께 제공해, 교육이 끝난 뒤에도 혼자서 반복하고 확장할 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="eyebrow">Contact</span>
+      <h2>교육이 필요하신가요?</h2>
+      <p>
+        기관 단체 교육, 강의 초청, 올커니 협력과정 문의 모두 환영합니다.
+        아래 메일로 연락 주시면 빠르게 답변드리겠습니다.
+      </p>
+      <a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr">hyunji@crabit.co.kr</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>크래빗 아카데미 — CRABIT</span>
+    <span>올커니 협력 교육과정 운영</span>
+  </div>
+</footer>
+
+</body>
+</html>

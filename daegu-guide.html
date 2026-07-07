@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>대구 강의 사전 준비가이드 — 크래빗 아카데미</title>
+<meta name="description" content="대구 원장님 대상 강의에 오시기 전, 5분이면 끝나는 사전 준비 안내입니다." />
+<meta property="og:title" content="대구 강의 사전 준비가이드" />
+<meta property="og:description" content="강의에서 바로 실습하실 수 있도록, 오시기 전 준비사항을 안내드려요." />
+<meta property="og:type" content="website" />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --page: #F4F6F8;
+    --bg: #FFFFFF;
+    --fill: #F4F6F8;
+    --fill-soft: #F9FAFB;
+    --ink: #191F28;
+    --muted: #6B7684;
+    --line: #E5E8EB;
+    --pink: #F06485;
+    --tint: #FDECF1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .brand { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .brand .dot { color: var(--pink); }
+
+  .hero { padding: 28px 0 8px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 6vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .hero p { margin: 0 0 28px; font-size: 16px; color: var(--muted); text-wrap: pretty; }
+
+  .when {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 18px;
+    padding: 22px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 40px;
+  }
+  .when .w-label { font-size: 12.5px; font-weight: 600; letter-spacing: 0.1em; color: #9CA5B0; text-transform: uppercase; }
+  .when .w-main { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .when .w-sub { font-size: 14px; color: #C6CCD4; }
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .sec-sub { margin: 0 0 18px; font-size: 14.5px; color: var(--muted); }
+
+  .checklist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 44px; }
+  .check {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .check:hover { box-shadow: 0 4px 14px rgba(25, 31, 40, 0.09); }
+  .check input {
+    appearance: none;
+    flex: none;
+    width: 24px; height: 24px;
+    border-radius: 8px;
+    background: var(--fill);
+    margin: 2px 0 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+  }
+  .check input:checked { background: var(--pink); }
+  .check input:checked::after {
+    content: "";
+    position: absolute;
+    left: 8px; top: 4px;
+    width: 6px; height: 11px;
+    border: solid #fff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .check input:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+  .check .c-body { flex: 1; }
+  .check .c-title { font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .check .c-desc { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+  .check .c-desc a { color: var(--pink); font-weight: 600; text-decoration: none; }
+  .check .c-desc a:hover { text-decoration: underline; }
+  .check.done .c-title { color: var(--muted); text-decoration: line-through; }
+
+  .steps-card {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 26px 20px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    margin-bottom: 44px;
+  }
+  .steps-card h3 { margin: 0 0 16px; font-size: 16px; font-weight: 700; }
+  .step { display: flex; gap: 14px; padding: 10px 0; align-items: flex-start; }
+  .step .n {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .step p { margin: 0; font-size: 14.5px; }
+  .step p span { color: var(--muted); font-size: 13.5px; display: block; }
+  .step a { color: var(--pink); font-weight: 600; text-decoration: none; }
+  .step a:hover { text-decoration: underline; }
+
+  .faq { display: flex; flex-direction: column; gap: 10px; margin-bottom: 44px; }
+  .qa {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+  }
+  .qa .q { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .qa .q::before { content: "Q. "; color: var(--pink); }
+  .qa .a { font-size: 14px; color: var(--muted); margin: 0; }
+
+  .contact {
+    text-align: center;
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 32px 24px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    margin-bottom: 40px;
+  }
+  .contact p { margin: 0 0 16px; font-size: 15px; color: var(--muted); }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--pink);
+    color: #fff;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
+  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  footer { padding: 0 0 36px; font-size: 13px; color: var(--muted); text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow">사전 준비가이드</span>
+    <h1>대구 원장님 대상 강의,<br />이것만 준비해 오세요</h1>
+    <p>
+      강의 시간에 바로 실습하실 수 있도록 미리 준비를 부탁드려요.
+      아래 체크리스트대로 하시면 5~10분이면 충분합니다.
+    </p>
+  </div>
+
+  <div class="when">
+    <span class="w-label">일시</span>
+    <span class="w-main">2026년 7월 9일 (목) 오후 7시</span>
+    <span class="w-sub">장소는 안내 문자로 별도 공지드려요.</span>
+  </div>
+
+  <h2>오시기 전 체크리스트</h2>
+  <p class="sec-sub">항목을 누르면 체크 표시가 저장돼요. 하나씩 완료해 보세요.</p>
+  <div class="checklist" id="checklist">
+    <label class="check">
+      <input type="checkbox" data-key="laptop" />
+      <span class="c-body">
+        <span class="c-title">노트북을 챙겨주세요 (충전기 포함)</span>
+        <span class="c-desc">실습 중심 강의라 노트북이 꼭 필요해요. 태블릿보다는 노트북을 권장드립니다.</span>
+      </span>
+    </label>
+    <label class="check">
+      <input type="checkbox" data-key="claude" />
+      <span class="c-body">
+        <span class="c-title">클로드(Claude) 계정을 만들어주세요</span>
+        <span class="c-desc"><a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에 접속해서 구글 계정으로 가입하면 1분이면 끝나요. 아래 상세 안내를 참고해 주세요.</span>
+      </span>
+    </label>
+    <label class="check">
+      <input type="checkbox" data-key="chrome" />
+      <span class="c-body">
+        <span class="c-title">크롬 브라우저를 설치해주세요</span>
+        <span class="c-desc">실습은 크롬 기준으로 진행돼요. 이미 설치돼 있다면 체크만 하고 넘어가세요.</span>
+      </span>
+    </label>
+    <label class="check">
+      <input type="checkbox" data-key="material" />
+      <span class="c-body">
+        <span class="c-title">우리 학원 소개 자료를 준비해주세요</span>
+        <span class="c-desc">학원 이름, 소개 문구 한두 줄, 로고나 사진이 있으면 실습 결과물이 훨씬 좋아져요. 없어도 참여에는 문제없습니다.</span>
+      </span>
+    </label>
+  </div>
+
+  <h2>클로드 가입, 이렇게 하세요</h2>
+  <p class="sec-sub">처음이신 분들을 위한 상세 안내예요.</p>
+  <div class="steps-card">
+    <h3>가입 절차 (약 1분)</h3>
+    <div class="step">
+      <span class="n">1</span>
+      <p>크롬에서 <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에 접속해요.</p>
+    </div>
+    <div class="step">
+      <span class="n">2</span>
+      <p>"Continue with Google"을 눌러 구글 계정으로 가입해요.<span>평소 쓰시는 구글 계정이면 어떤 것이든 괜찮아요.</span></p>
+    </div>
+    <div class="step">
+      <span class="n">3</span>
+      <p>가입 후 첫 화면에서 아무 질문이나 한번 입력해보세요.<span>"우리 학원 홍보 문구 만들어줘" 같은 것도 좋아요. 여기까지 되면 준비 완료입니다.</span></p>
+    </div>
+  </div>
+
+  <h2>자주 묻는 질문</h2>
+  <p class="sec-sub">&nbsp;</p>
+  <div class="faq">
+    <div class="qa">
+      <div class="q">AI를 한 번도 써본 적이 없는데 따라갈 수 있을까요?</div>
+      <p class="a">네, 걱정하지 않으셔도 돼요. 처음 쓰시는 분 기준으로 하나씩 함께 진행합니다.</p>
+    </div>
+    <div class="qa">
+      <div class="q">노트북이 없으면 참여할 수 없나요?</div>
+      <p class="a">참관은 가능하지만 실습은 어려워요. 가능하다면 데스크가 아닌 노트북으로 준비해 주시고, 어려우시면 미리 알려주세요.</p>
+    </div>
+    <div class="qa">
+      <div class="q">강의 자료는 따로 받을 수 있나요?</div>
+      <p class="a">네, 강의가 끝나면 수강생 전용 자료 페이지 링크와 비밀번호를 안내드려요.</p>
+    </div>
+  </div>
+
+  <div class="contact">
+    <p>준비하시다 막히는 부분이 있다면 편하게 연락 주세요.</p>
+    <a class="btn" href="mailto:hyunji@crabit.co.kr?subject=%5B대구%20강의%5D%20사전%20준비%20문의">문의하기</a>
+  </div>
+</main>
+
+<footer>
+  크래빗 아카데미 — CRABIT
+</footer>
+
+<script>
+/* 체크리스트 상태를 이 기기에 저장 */
+document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb => {
+  const key = "daegu-guide-" + cb.dataset.key;
+  if (localStorage.getItem(key) === "1") {
+    cb.checked = true;
+    cb.closest(".check").classList.add("done");
+  }
+  cb.addEventListener("change", () => {
+    localStorage.setItem(key, cb.checked ? "1" : "0");
+    cb.closest(".check").classList.toggle("done", cb.checked);
+  });
+});
+</script>
+
+</body>
+</html>

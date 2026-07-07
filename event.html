@@ -83,7 +83,29 @@
     text-decoration: underline;
     text-underline-offset: 3px;
   }
-  .desc { font-size: 16.5px; color: var(--ink); margin: 0 0 32px; max-width: 40em; text-wrap: pretty; }
+  .desc { font-size: 16.5px; color: var(--ink); margin: 0 0 28px; max-width: 40em; text-wrap: pretty; }
+
+  .speaker { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 28px; }
+  .speaker .s-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--pink);
+    text-transform: uppercase;
+  }
+  .speaker strong { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .speaker .s-role { font-size: 14px; color: var(--muted); }
+
+  .prep { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 32px; }
+  .prep .p-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
+  .prep .chip {
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--fill-soft);
+    padding: 6px 14px;
+    border-radius: 99px;
+    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.06);
+  }
 
   .points {
     background: var(--fill-soft);
@@ -223,12 +245,23 @@
     + '</div>'
     + '<h1>' + esc(ev.title) + '</h1>'
     + '<div class="date">' + esc(ev.date)
+    + (ev.place ? '<br />' + esc(ev.place) : '')
     + (ev.placeUrl ? ' &nbsp;·&nbsp; <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : '')
     + '</div>'
     + '<p class="desc">' + esc(ev.desc) + '</p>'
+    + (ev.speaker
+        ? '<p class="speaker"><span class="s-label">Speaker</span><strong>' + esc(ev.speaker) + '</strong>'
+          + (ev.speakerRole ? '<span class="s-role">' + esc(ev.speakerRole) + '</span>' : '')
+          + '</p>'
+        : '')
     + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
     + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")
     + '</ul></div>'
+    + (ev.prep
+        ? '<div class="prep"><span class="p-label">준비물</span>'
+          + ev.prep.map(p => '<span class="chip">' + esc(p) + '</span>').join("")
+          + '</div>'
+        : '')
     + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
     + '<div class="cta-row">' + cta
     + '<a class="btn btn-ghost" href="./">다른 일정 보기</a></div>';

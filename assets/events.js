@@ -79,18 +79,23 @@ const EVENTS_DB = {
   },
   "daegu-lecture": {
     type: "Lecture",
-    category: "학원 운영",
+    category: "AI·자동화",
     host: "크래빗",
-    title: "대구 원장님 대상 강의",
-    date: "2026.07.09 (목) 19:00",
+    title: "우리 학원만의 AI 마케터 고용하기",
+    date: "2026.07.09 (목) 10:00 – 12:00",
+    place: "대구학원연합회 · 대구 달서구 상화북로 191, 6층",
     placeUrl: "https://naver.me/5vczvOjM",
-    thumb: "assets/thumbs/daegu-lecture.svg",
-    desc: "대구 지역 원장님들을 위한 오프라인 강의입니다. 학원 운영에 AI를 바로 적용하는 방법을 실습 중심으로 다룹니다.",
+    thumb: "assets/thumbs/daegu-lecture.jpg",
+    desc: "콘텐츠 기획부터 카드뉴스까지, 원장님 대신 일하는 AI 마케터를 직접 구축하는 실습형 강의입니다. 콘텐츠 자동화 시스템을 구축해놓으시면, 매번 무엇을 어떻게 만들지 고민을 아끼실 수 있어요.",
     points: [
-      "학원 운영에 바로 쓰는 AI 활용법",
-      "현장 사례 중심의 실습",
-      "수강생 전용 강의 자료 제공"
+      "노션에 한 줄 적으면, AI가 콘텐츠 기획안으로 정리",
+      "기획안만 있으면, AI가 학원 카드뉴스를 자동 제작",
+      "완성된 결과물을 내 컴퓨터 폴더에 바로 저장",
+      "코딩·디자인 지식 Zero여도 따라 할 수 있는 단계별 가이드"
     ],
+    speaker: "김현지",
+    speakerRole: "크래빗 장학카드 대표",
+    prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입", "Figma 가입"],
     audience: "대구 지역 학원 원장님",
     status: "upcoming",
     replayUrl: ""

@@ -265,6 +265,7 @@
   .replay .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .replay .date { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .replay .more { font-size: 15px; font-weight: 600; color: var(--pink); }
+  .replay .more.arrow { font-size: 24px; line-height: 1; font-weight: 600; }
 
   /* ---------- resources ---------- */
   .res-list {
@@ -600,7 +601,7 @@ document.addEventListener("click", () => {
       + '<span class="k">' + (ev.host === "올커니" ? "올커니" : ev.type) + '</span>'
       + '<strong></strong>'
       + '<p></p>'
-      + '<div class="foot"><span class="date"></span><span class="more">자세히 보기 &#8250;</span></div>'
+      + '<div class="foot"><span class="date"></span><span class="more arrow">&#8250;</span></div>'
       + '</div>';
     a.querySelector("strong").textContent = ev.title;
     a.querySelector(".body p").textContent = ev.desc;

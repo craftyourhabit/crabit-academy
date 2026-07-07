@@ -11,13 +11,6 @@
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
-  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
-  @font-face {
-    font-family: "Elice Digital Baeum";
-    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
-    font-weight: 700;
-    font-display: swap;
-  }
   :root {
     --page: #F2F3F6;
     --bg: #FFFFFF;
@@ -41,142 +34,110 @@
   .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px; }
 
   header { padding: 20px 0; }
-  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
   .brand img { height: 26px; display: block; }
-  .brand .dot { color: var(--pink); }
 
   .hero { padding: 28px 0 8px; }
   .eyebrow {
     display: inline-block;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     letter-spacing: 0.12em;
-    color: var(--muted);
+    color: var(--pink);
     text-transform: uppercase;
     margin-bottom: 14px;
   }
   h1 {
-    margin: 0 0 14px;
-    font-size: clamp(28px, 6vw, 36px);
+    margin: 0 0 16px;
+    font-size: clamp(30px, 7vw, 40px);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.3;
     text-wrap: balance;
   }
-  .hero p { margin: 0 0 28px; font-size: 17px; color: var(--muted); text-wrap: pretty; }
+  .hero p { margin: 0 0 28px; font-size: 18px; color: var(--ink); text-wrap: pretty; }
 
   .when {
     background: var(--ink);
     color: #fff;
     border-radius: 18px;
-    padding: 22px 26px;
+    padding: 24px 28px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-bottom: 40px;
+    gap: 5px;
+    margin-bottom: 48px;
   }
-  .when .w-label { font-size: 13.5px; font-weight: 600; letter-spacing: 0.1em; color: #9CA5B0; text-transform: uppercase; }
-  .when .w-main { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .when .w-sub { font-size: 15px; color: #C6CCD4; }
+  .when .w-label { font-size: 13.5px; font-weight: 700; letter-spacing: 0.1em; color: #fff; opacity: 0.75; text-transform: uppercase; }
+  .when .w-main { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .when .w-sub { font-size: 16.5px; color: #fff; opacity: 0.92; }
   .when .w-link {
-    margin-top: 6px;
+    margin-top: 8px;
     align-self: flex-start;
     color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 15.5px;
+    font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
   h2 {
-    margin: 0 0 6px;
-    font-size: 21px;
+    margin: 0 0 8px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
-  .sec-sub { margin: 0 0 18px; font-size: 15.5px; color: var(--muted); }
+  .sec-sub { margin: 0 0 20px; font-size: 17px; color: var(--ink); }
 
-  .checklist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 44px; }
-  .check {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
+  .faq { display: flex; flex-direction: column; gap: 12px; margin-bottom: 52px; }
+  .qa {
     background: var(--bg);
     border-radius: 16px;
-    padding: 18px 20px;
+    padding: 20px 24px;
     box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
-    cursor: pointer;
-    transition: box-shadow 0.15s;
   }
-  .check:hover { box-shadow: 0 4px 14px rgba(22, 25, 42, 0.09); }
-  .check input {
-    appearance: none;
-    flex: none;
-    width: 24px; height: 24px;
-    border-radius: 8px;
-    background: var(--fill);
-    margin: 2px 0 0;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.15s;
-  }
-  .check input:checked { background: var(--pink); }
-  .check input:checked::after {
-    content: "";
-    position: absolute;
-    left: 8px; top: 4px;
-    width: 6px; height: 11px;
-    border: solid #fff;
-    border-width: 0 2.5px 2.5px 0;
-    transform: rotate(45deg);
-  }
-  .check input:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
-  .check .c-body { flex: 1; }
-  .check .c-title { font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
-  .check .c-desc { font-size: 14.5px; color: var(--muted); margin-top: 2px; }
-  .check .c-desc a { color: var(--pink); font-weight: 600; text-decoration: none; }
-  .check .c-desc a:hover { text-decoration: underline; }
-  .check.done .c-title { color: var(--muted); text-decoration: line-through; }
+  .qa .q { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .qa .q::before { content: "Q. "; color: var(--pink); }
+  .qa .a { font-size: 16.5px; color: var(--ink); margin: 0; }
 
-  .steps-card {
+  /* ---------- 오시기 전 리마인드 ---------- */
+  .remind { display: flex; flex-direction: column; gap: 14px; margin-bottom: 52px; }
+  .r-item {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
     background: var(--bg);
     border-radius: 18px;
-    padding: 26px 26px 20px;
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
-    margin-bottom: 44px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
   }
-  .steps-card h3 { margin: 0 0 16px; font-size: 17px; font-weight: 700; }
-  .step { display: flex; gap: 14px; padding: 10px 0; align-items: flex-start; }
-  .step .n {
+  .r-num {
     flex: none;
-    width: 26px; height: 26px;
+    width: 34px; height: 34px;
     border-radius: 99px;
-    background: var(--tint);
-    color: var(--pink);
-    font-size: 14px;
+    background: var(--pink);
+    color: #fff;
+    font-size: 17px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1px;
+    margin-top: 2px;
   }
-  .step p { margin: 0; font-size: 15.5px; }
-  .step p span { color: var(--muted); font-size: 14.5px; display: block; }
-  .step a { color: var(--pink); font-weight: 600; text-decoration: none; }
-  .step a:hover { text-decoration: underline; }
+  .r-body { flex: 1; min-width: 0; }
+  .r-body h3 { margin: 2px 0 8px; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; }
+  .r-body p { margin: 0 0 14px; font-size: 17.5px; color: var(--ink); text-wrap: pretty; }
+  .r-body p:last-child { margin-bottom: 0; }
+  .r-body a { color: var(--pink); font-weight: 700; text-decoration: none; }
+  .r-body a:hover { text-decoration: underline; }
 
-  .table-note { margin: 12px 2px 0; font-size: 13.5px; color: var(--muted); }
-
-  /* 데스크탑 앱 다운로드 */
-  .os-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .os-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .os-card {
     flex: 1;
-    min-width: 220px;
-    background: var(--bg);
+    min-width: 200px;
+    background: var(--fill-soft);
     border-radius: 16px;
     padding: 20px 22px;
     box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
-    text-decoration: none;
+    text-decoration: none !important;
     color: inherit;
     display: flex;
     flex-direction: column;
@@ -184,41 +145,29 @@
     transition: box-shadow 0.15s, transform 0.15s;
   }
   .os-card:hover { box-shadow: 0 6px 16px rgba(22, 25, 42, 0.1); transform: translateY(-1px); }
-  .os-card .os-name { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
-  .os-card .os-name::after { content: " \2197"; color: var(--pink); font-weight: 600; }
-  .os-card .os-desc { font-size: 13.5px; color: var(--muted); }
+  .os-card .os-name { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .os-card .os-name::after { content: " \2197"; color: var(--pink); font-weight: 700; }
+  .os-card .os-desc { font-size: 15.5px; color: var(--ink); }
 
-  .contact-phone { margin: 0 0 18px !important; }
+  .contact {
+    text-align: center;
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 36px 24px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
+    margin-bottom: 44px;
+  }
+  .contact p { margin: 0 0 14px; font-size: 18px; color: var(--ink); }
+  .contact-phone { margin: 0 0 20px !important; }
   .contact-phone a {
-    font-size: 22px;
+    font-size: 25px;
     font-weight: 700;
     color: var(--ink);
     text-decoration: none;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
   }
-  .contact-phone span { font-size: 14.5px; color: var(--muted); margin-left: 6px; }
-
-  .faq { display: flex; flex-direction: column; gap: 10px; margin-bottom: 44px; }
-  .qa {
-    background: var(--bg);
-    border-radius: 16px;
-    padding: 18px 22px;
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
-  }
-  .qa .q { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-  .qa .q::before { content: "Q. "; color: var(--pink); }
-  .qa .a { font-size: 15px; color: var(--muted); margin: 0; }
-
-  .contact {
-    text-align: center;
-    background: var(--bg);
-    border-radius: 18px;
-    padding: 32px 24px;
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
-    margin-bottom: 40px;
-  }
-  .contact p { margin: 0 0 16px; font-size: 16px; color: var(--muted); }
+  .contact-phone span { font-size: 16px; color: var(--ink); margin-left: 6px; }
   .btn {
     display: inline-block;
     padding: 14px 28px;
@@ -241,7 +190,6 @@
   }
   .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
   .f-brand img { height: 22px; display: block; }
-  .f-brand .dot { color: var(--pink); }
   .f-sns { display: flex; gap: 18px; }
   .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
   .f-sns a:hover { color: var(--ink); }
@@ -279,76 +227,6 @@
     <a class="w-link" href="https://naver.me/5vczvOjM" target="_blank" rel="noopener">네이버 지도에서 위치 보기 &#8250;</a>
   </div>
 
-  <h2>오시기 전 체크리스트</h2>
-  <p class="sec-sub">항목을 누르면 체크 표시가 저장돼요. 하나씩 완료해 보세요.</p>
-  <div class="checklist" id="checklist">
-    <label class="check">
-      <input type="checkbox" data-key="laptop" />
-      <span class="c-body">
-        <span class="c-title">노트북을 챙겨주세요 (충전기 포함)</span>
-        <span class="c-desc">실습 중심 강의라 노트북이 꼭 필요해요.</span>
-      </span>
-    </label>
-    <label class="check">
-      <input type="checkbox" data-key="claude-pro" />
-      <span class="c-body">
-        <span class="c-title">Claude 유료 구독을 준비해주세요 (필수)</span>
-        <span class="c-desc">강의에서 클로드의 <strong>Cowork 기능</strong>을 사용하는데, 이 기능은 유료 플랜에서만 쓸 수 있어요. 가장 저렴한 <strong>Pro 플랜</strong>이면 충분합니다. 아래 요금제표와 상세 안내를 참고해 주세요.</span>
-      </span>
-    </label>
-    <label class="check">
-      <input type="checkbox" data-key="claude-app" />
-      <span class="c-body">
-        <span class="c-title">클로드 데스크탑 앱을 설치해주세요</span>
-        <span class="c-desc">Cowork 기능은 데스크탑 앱에서 사용해요. 아래에서 내 컴퓨터(윈도우/맥)에 맞는 앱을 설치해 주세요.</span>
-      </span>
-    </label>
-    <label class="check">
-      <input type="checkbox" data-key="notion" />
-      <span class="c-body">
-        <span class="c-title">Notion에 가입해주세요</span>
-        <span class="c-desc"><a href="https://www.notion.so" target="_blank" rel="noopener">notion.so</a>에서 무료 계정으로 가입하면 돼요. 콘텐츠 기획안 실습에 사용합니다.</span>
-      </span>
-    </label>
-  </div>
-
-  <h2>Claude 가입과 유료 구독, 이렇게 하세요</h2>
-  <p class="sec-sub">강의에서 쓰는 <strong>Cowork 기능은 유료 플랜 전용</strong>이라 구독이 꼭 필요해요. 가장 저렴한 Pro 플랜을 권해드립니다.</p>
-
-  <div class="steps-card">
-    <h3>가입 + 구독 절차 (약 3분)</h3>
-    <div class="step">
-      <span class="n">1</span>
-      <p>브라우저에서 <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에 접속해요.</p>
-    </div>
-    <div class="step">
-      <span class="n">2</span>
-      <p>"Continue with Google"을 눌러 구글 계정으로 가입해요.<span>평소 쓰시는 구글 계정이면 어떤 것이든 괜찮아요.</span></p>
-    </div>
-    <div class="step">
-      <span class="n">3</span>
-      <p>화면의 업그레이드(Upgrade) 메뉴에서 Pro 플랜을 구독해요.<span>실습 당일 전까지 완료해 주시면 돼요. 결제 카드가 필요합니다.</span></p>
-    </div>
-    <div class="step">
-      <span class="n">4</span>
-      <p>첫 화면에서 아무 질문이나 한번 입력해보세요.<span>"우리 학원 홍보 문구 만들어줘" 같은 것도 좋아요. 여기까지 되면 준비 완료입니다.</span></p>
-    </div>
-  </div>
-
-  <h2>클로드 데스크탑 앱 설치</h2>
-  <p class="sec-sub">Cowork 기능은 데스크탑 앱에서 사용해요. 내 컴퓨터에 맞는 버전을 설치해 주세요.</p>
-  <div class="os-row">
-    <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
-      <span class="os-name">Windows용 다운로드</span>
-      <span class="os-desc">윈도우 노트북·PC를 쓰시는 분</span>
-    </a>
-    <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
-      <span class="os-name">Mac용 다운로드</span>
-      <span class="os-desc">맥북·아이맥을 쓰시는 분</span>
-    </a>
-  </div>
-  <p class="table-note" style="margin-bottom: 44px;">설치 후 가입하신 계정으로 로그인까지 해두시면 강의 진행이 훨씬 수월해요.</p>
-
   <h2>자주 묻는 질문</h2>
   <p class="sec-sub">&nbsp;</p>
   <div class="faq">
@@ -358,11 +236,49 @@
     </div>
     <div class="qa">
       <div class="q">노트북이 없으면 참여할 수 없나요?</div>
-      <p class="a">참관은 가능하지만 실습은 어려워요. 가능하다면 데스크가 아닌 노트북으로 준비해 주시고, 어려우시면 미리 알려주세요.</p>
+      <p class="a">참관은 가능하지만 실습은 어려워요. 꼭 노트북(충전기 포함)으로 준비해 주시고, 어려우시면 미리 알려주세요.</p>
     </div>
     <div class="qa">
       <div class="q">강의 자료는 따로 받을 수 있나요?</div>
       <p class="a">네, 강의 자료는 프린트물로도 드릴 예정이에요. 그리고 강의 후에 안내드리는 페이지에서 참석자 전용 자료와 프롬프트 모음집 등 다양한 자료에 접속하실 수 있는 경로와 비밀번호를 안내드립니다.</p>
+    </div>
+  </div>
+
+  <h2>오시기 전 리마인드!</h2>
+  <p class="sec-sub">아래 두 가지만 미리 해두시면 강의 준비 끝이에요.</p>
+  <div class="remind">
+    <div class="r-item">
+      <span class="r-num">1</span>
+      <div class="r-body">
+        <h3>노션에 가입해주세요</h3>
+        <p>
+          <a href="https://www.notion.so" target="_blank" rel="noopener">notion.so</a>에 접속해서
+          구글 계정이나 이메일로 가입하면 돼요. <strong>무료 계정이면 충분</strong>하고, 1분이면 끝납니다.
+          콘텐츠 기획안 실습에 사용해요.
+        </p>
+      </div>
+    </div>
+    <div class="r-item">
+      <span class="r-num">2</span>
+      <div class="r-body">
+        <h3>클로드에 가입 후 데스크탑 앱을 다운로드해주세요</h3>
+        <p>
+          <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에서 구글 계정으로 가입해주세요.
+          강의에서 쓰는 <strong>Cowork 기능은 유료 플랜 전용</strong>이라, 가장 저렴한
+          <strong>Pro 플랜</strong> 구독까지 부탁드려요.
+        </p>
+        <p>가입이 끝나면 내 컴퓨터에 맞는 데스크탑 앱을 설치하고 로그인까지 해주세요.</p>
+        <div class="os-row">
+          <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
+            <span class="os-name">Windows용 다운로드</span>
+            <span class="os-desc">윈도우 노트북을 쓰시는 분</span>
+          </a>
+          <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
+            <span class="os-name">Mac용 다운로드</span>
+            <span class="os-desc">맥북을 쓰시는 분</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -394,21 +310,6 @@
     </div>
   </div>
 </footer>
-
-<script>
-/* 체크리스트 상태를 이 기기에 저장 */
-document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb => {
-  const key = "daegu-guide-" + cb.dataset.key;
-  if (localStorage.getItem(key) === "1") {
-    cb.checked = true;
-    cb.closest(".check").classList.add("done");
-  }
-  cb.addEventListener("change", () => {
-    localStorage.setItem(key, cb.checked ? "1" : "0");
-    cb.closest(".check").classList.toggle("done", cb.checked);
-  });
-});
-</script>
 
 </body>
 </html>

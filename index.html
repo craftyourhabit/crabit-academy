@@ -103,7 +103,14 @@
     transition: color 0.15s;
   }
   .drop-btn:hover, .dropdown.open .drop-btn { color: var(--ink); }
-  .drop-btn .caret { font-size: 10px; transform: translateY(1px); }
+  .drop-btn .caret {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.15s;
+  }
+  .drop-btn .caret svg { width: 100%; height: 100%; }
+  .dropdown.open .drop-btn .caret { transform: rotate(180deg); }
   .drop-menu {
     position: absolute;
     top: calc(100% + 12px);
@@ -404,7 +411,7 @@
       <a href="about.html">아카데미 소개</a>
       <a href="schedule.html">예정 일정</a>
       <div class="dropdown" id="contentDrop">
-        <button class="drop-btn" type="button" aria-expanded="false" aria-haspopup="true">콘텐츠 <span class="caret">&#9662;</span></button>
+        <button class="drop-btn" type="button" aria-expanded="false" aria-haspopup="true">콘텐츠 <span class="caret"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
         <div class="drop-menu">
           <a href="webinars.html">웨비나</a>
           <a href="resources.html">자료 / 인사이트</a>

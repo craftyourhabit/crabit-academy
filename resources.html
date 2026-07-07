@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>자료 / 인사이트 — 크래빗 아카데미</title>
+<meta name="description" content="크래빗 아카데미의 강의 자료, 가이드북, 교육 인사이트 전체 목록." />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --page: #F4F6F8;
+    --bg: #FFFFFF;
+    --fill: #F4F6F8;
+    --fill-soft: #F9FAFB;
+    --ink: #191F28;
+    --muted: #6B7684;
+    --line: #E5E8EB;
+    --pink: #F06485;
+    --tint: #FDECF1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    background: rgba(244, 246, 248, 0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand a { color: inherit; text-decoration: none; }
+  .brand .dot { color: var(--pink); }
+  .nav > a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .page-head { padding: 36px 0 24px; }
+  .page-head h1 { margin: 0 0 6px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-head p { margin: 0; font-size: 15px; color: var(--muted); }
+
+  .panel {
+    background: var(--bg);
+    border-radius: 24px;
+    padding: 12px 40px 24px;
+    box-shadow: 0 1px 4px rgba(25, 31, 40, 0.05);
+    margin-bottom: 56px;
+  }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 20px 0 8px; }
+  .tab {
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 10px 16px;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { background: var(--fill); color: var(--ink); }
+
+  .rows { display: flex; flex-direction: column; }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 36px 0;
+    text-decoration: none;
+    color: inherit;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+  }
+  .row.static { cursor: default; }
+  .row .info { flex: 1; min-width: 0; }
+  .badges { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: var(--tint);
+    color: var(--pink);
+  }
+  .pill.gray { background: var(--fill); color: var(--muted); }
+  .pill.ink { background: var(--ink); color: #fff; }
+  .cat { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .row h2 {
+    margin: 0 0 12px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    transition: color 0.15s;
+  }
+  .row:not(.static):hover h2 { color: var(--pink); }
+  .row .sub { font-size: 14px; color: var(--muted); }
+  .row .thumb {
+    flex: none;
+    width: 240px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 16px;
+    background: var(--fill);
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.08);
+    display: block;
+  }
+  .empty { padding: 48px 0; text-align: center; color: var(--muted); font-size: 15px; }
+
+  footer { padding: 0 0 40px; font-size: 13px; color: var(--muted); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* password modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(25, 31, 40, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 60px rgba(25, 31, 40, 0.25);
+  }
+  .modal h3 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal .m-sub { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+  .modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--fill);
+    color: var(--ink);
+  }
+  .modal input:focus { outline: 2px solid var(--pink); outline-offset: 0; }
+  .modal .m-error { min-height: 20px; margin: 8px 0 12px; font-size: 13px; color: var(--pink); font-weight: 500; }
+  .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+  .btn-primary { background: var(--pink); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
+  .btn-ghost { background: var(--fill); color: var(--ink); }
+  .btn-ghost:hover { background: var(--line); }
+
+  @media (max-width: 720px) {
+    .panel { padding: 8px 20px 16px; border-radius: 20px; }
+    .row { flex-direction: column-reverse; align-items: stretch; gap: 18px; padding: 28px 0; }
+    .row .thumb { width: 100%; }
+    .row h2 { font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./">크래빗 아카데미<span class="dot">.</span></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>자료 / 인사이트</h1>
+    <p>강의 자료와 가이드북, 교육 인사이트를 모았어요.</p>
+  </div>
+  <div class="panel">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="rows" id="rows"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>크래빗 아카데미 — CRABIT</span>
+    <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+  </div>
+</footer>
+
+<!-- 비밀번호 모달: 일부공개 자료 전용 -->
+<div class="modal-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="modal">
+    <h3 id="pwTitle">비밀번호 입력</h3>
+    <p class="m-sub">일부공개 자료예요. 안내받으신 비밀번호를 입력해 주세요.</p>
+    <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+    <p class="m-error" id="pwError"></p>
+    <div class="m-actions">
+      <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
+      <button class="btn btn-primary" type="button" id="pwSubmit">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===============================================
+   자료 / 인사이트 데이터
+   - access: "public"(공개, href로 이동)
+             "protected"(일부공개, 비밀번호 입력 후 이동)
+             "soon"(공개 예정, 클릭 불가)
+   =============================================== */
+const RESOURCES = [
+  {
+    category: "강의자료",
+    title: "대구 강의 자료",
+    sub: "강의 슬라이드 · 실습 가이드북 · 실습 템플릿",
+    thumb: "assets/thumbs/daegu-lecture.svg",
+    access: "protected"
+  },
+  {
+    category: "가이드북",
+    title: "카드뉴스 AI 에이전트 가이드북 (1·2편)",
+    sub: "기초·설계부터 클로드 코드 자동화 에이전트까지",
+    thumb: "assets/thumbs/guidebook.svg",
+    access: "soon"
+  },
+  {
+    category: "인사이트",
+    title: "교육 기관을 위한 AI 활용 인사이트",
+    sub: "현장에서 검증한 AI 활용 사례와 노하우 연재",
+    thumb: "assets/thumbs/insight.svg",
+    access: "soon"
+  }
+];
+
+(function () {
+  const CATEGORIES = ["전체", "강의자료", "가이드북", "인사이트"];
+  let active = "전체";
+
+  const tabsEl = document.getElementById("tabs");
+  const rowsEl = document.getElementById("rows");
+
+  function badge(r) {
+    if (r.access === "protected") return '<span class="pill ink">일부공개</span>';
+    if (r.access === "soon") return '<span class="pill gray">공개 예정</span>';
+    return '<span class="pill">공개</span>';
+  }
+
+  function renderTabs() {
+    tabsEl.innerHTML = "";
+    CATEGORIES.forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "tab" + (c === active ? " active" : "");
+      b.textContent = c;
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", c === active ? "true" : "false");
+      b.addEventListener("click", () => { active = c; renderTabs(); renderRows(); });
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function renderRows() {
+    const items = RESOURCES.filter(r => active === "전체" || r.category === active);
+    rowsEl.innerHTML = "";
+    if (items.length === 0) {
+      rowsEl.innerHTML = '<div class="empty">이 카테고리의 자료를 준비하고 있어요.</div>';
+      return;
+    }
+    items.forEach(r => {
+      let el;
+      if (r.access === "public" && r.href) {
+        el = document.createElement("a");
+        el.href = r.href;
+        el.className = "row";
+      } else if (r.access === "protected") {
+        el = document.createElement("button");
+        el.type = "button";
+        el.className = "row";
+        el.addEventListener("click", () => openModal(r.title));
+      } else {
+        el = document.createElement("div");
+        el.className = "row static";
+      }
+      el.innerHTML =
+        '<div class="info">'
+        + '<div class="badges">' + badge(r)
+        + '<span class="cat">' + r.category + '</span></div>'
+        + '<h2></h2>'
+        + '<div class="sub"></div>'
+        + '</div>'
+        + '<img class="thumb" src="' + r.thumb + '" alt="" loading="lazy" />';
+      el.querySelector("h2").textContent = r.title;
+      el.querySelector(".sub").textContent = r.sub;
+      rowsEl.appendChild(el);
+    });
+  }
+
+  /* ---------- 비밀번호 모달 (일부공개 자료) ---------- */
+  const backdrop = document.getElementById("pwBackdrop");
+  const pwInput = document.getElementById("pwInput");
+  const pwError = document.getElementById("pwError");
+
+  window.openModal = function (title) {
+    document.getElementById("pwTitle").textContent = title;
+    pwInput.value = "";
+    pwError.textContent = "";
+    backdrop.classList.add("show");
+    pwInput.focus();
+  };
+  document.getElementById("pwCancel").addEventListener("click", () => backdrop.classList.remove("show"));
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
+  pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+  document.getElementById("pwSubmit").addEventListener("click", tryUnlock);
+
+  async function sha256hex(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function tryUnlock() {
+    const pw = pwInput.value.trim();
+    if (!pw) { pwError.textContent = "비밀번호를 입력해 주세요."; return; }
+    const hash = (await sha256hex(pw)).slice(0, 16);
+    const path = "p/" + hash + "/";
+    try {
+      const res = await fetch(path, { method: "HEAD" });
+      if (res.ok) {
+        window.location.href = path;
+      } else {
+        pwError.textContent = "비밀번호가 올바르지 않습니다.";
+      }
+    } catch {
+      pwError.textContent = "확인 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요.";
+    }
+  }
+
+  renderTabs();
+  renderRows();
+})();
+</script>
+
+</body>
+</html>

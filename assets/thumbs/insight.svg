@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <rect width="800" height="450" fill="#F9FAFB"/>
+  <rect x="560" y="290" width="44" height="90" rx="10" fill="#E5E8EB"/>
+  <rect x="620" y="240" width="44" height="140" rx="10" fill="#FDECF1"/>
+  <rect x="680" y="180" width="44" height="200" rx="10" fill="#F06485"/>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#6B7684" font-weight="600">INSIGHT</text>
+  <text x="64" y="222" font-size="54" fill="#191F28" font-weight="700">교육 기관을 위한</text>
+  <text x="64" y="290" font-size="54" fill="#191F28" font-weight="700">AI 활용 인사이트</text>
+  <text x="64" y="386" font-size="22" fill="#6B7684" font-weight="500">크래빗 아카데미 · 연재</text>
+</svg>

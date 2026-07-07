@@ -11,6 +11,7 @@
 const EVENTS_DB = {
   "parents-webinar": {
     type: "Webinar",
+    category: "학원 운영",
     host: "크래빗",
     title: "2026 학부모 소통전략 웨비나",
     date: "2026",
@@ -27,6 +28,7 @@ const EVENTS_DB = {
   },
   "landing-lecture": {
     type: "Lecture",
+    category: "마케팅·브랜딩",
     host: "크래빗",
     title: "우리 학원만의 랜딩페이지, 코딩 없이 한 번에 제작하기",
     date: "2026.05",
@@ -43,6 +45,7 @@ const EVENTS_DB = {
   },
   "claude-code-teachers": {
     type: "Course",
+    category: "AI·자동화",
     host: "크래빗",
     title: "모두를 위한 클로드 코드 (Teachers Webinar)",
     date: "2026",
@@ -59,6 +62,7 @@ const EVENTS_DB = {
   },
   "cardnews-automation": {
     type: "Lecture",
+    category: "AI·자동화",
     host: "크래빗",
     title: "클로드 코드로 카드뉴스 자동화 에이전트 만들기",
     date: "2026.07.14 (화) 20:00",
@@ -75,6 +79,7 @@ const EVENTS_DB = {
   },
   "daegu-lecture": {
     type: "Lecture",
+    category: "학원 운영",
     host: "크래빗",
     title: "대구 원장님 대상 강의",
     date: "2026.07.09 (목) 19:00",
@@ -91,6 +96,7 @@ const EVENTS_DB = {
   },
   "allkeoni-meetup": {
     type: "Community",
+    category: "올커니",
     host: "올커니",
     title: "올커니 커뮤니티 모임",
     date: "2026.07.16 (목) 19:30",

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <rect width="800" height="450" fill="#F4F6F8"/>
+  <rect x="560" y="90" width="190" height="260" rx="16" fill="#FFFFFF"/>
+  <rect x="540" y="70" width="190" height="260" rx="16" fill="#FDECF1"/>
+  <rect x="572" y="110" width="120" height="10" rx="5" fill="#F06485"/>
+  <rect x="572" y="140" width="90" height="10" rx="5" fill="#E5E8EB"/>
+  <rect x="572" y="170" width="110" height="10" rx="5" fill="#E5E8EB"/>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#6B7684" font-weight="600">GUIDEBOOK</text>
+  <text x="64" y="222" font-size="54" fill="#191F28" font-weight="700">카드뉴스 AI</text>
+  <text x="64" y="290" font-size="54" fill="#191F28" font-weight="700">에이전트 가이드북</text>
+  <text x="64" y="386" font-size="22" fill="#6B7684" font-weight="500">크래빗 아카데미 · 1·2편</text>
+</svg>

@@ -27,7 +27,7 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-  header { border-bottom: 1px solid var(--line); }
+  header { box-shadow: 0 1px 4px rgba(25, 31, 40, 0.06); }
   .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
   .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
   .brand .dot { color: var(--pink); }
@@ -62,15 +62,15 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    background: var(--card);
-    border: 1px solid var(--line);
+    background: #FFFFFF;
     border-radius: 12px;
     padding: 18px 22px;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.07);
+    transition: box-shadow 0.15s, transform 0.15s;
   }
-  .file:hover { border-color: var(--pink); transform: translateY(-1px); }
+  .file:hover { box-shadow: 0 6px 16px rgba(25, 31, 40, 0.1); transform: translateY(-1px); }
   .file .kind {
     flex: none;
     font-size: 12px;
@@ -85,7 +85,7 @@
   .file .t span { font-size: 13px; color: var(--muted); }
   .file .dl { flex: none; font-size: 14px; font-weight: 600; color: var(--pink); }
   .file.pending { cursor: default; }
-  .file.pending:hover { border-color: var(--line); transform: none; }
+  .file.pending:hover { box-shadow: 0 2px 8px rgba(25, 31, 40, 0.07); transform: none; }
   .file.pending .dl { color: var(--muted); font-weight: 500; }
 
   footer { border-top: 1px solid var(--line); padding: 24px 0; font-size: 13px; color: var(--muted); }

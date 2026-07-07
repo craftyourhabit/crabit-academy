@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>웨비나 다시보기 전체 — 크래빗 아카데미</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --ground: #FFFFFF;
+    --ink: #191F28;
+    --pink: #F06485;
+    --tint: #FDECF1;
+    --fill: #F4F6F8;
+    --muted: #6B7684;
+    --line: #E5E8EB;
+    --card: #F9FAFB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 0 24px; }
+  header { box-shadow: 0 1px 4px rgba(25, 31, 40, 0.06); }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand .dot { color: var(--pink); }
+  .nav a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav a:hover { color: var(--ink); }
+  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .head { padding: 64px 0 40px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 38px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+  .head p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  .notice {
+    background: var(--fill);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .notice strong { font-weight: 600; }
+
+  .list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; }
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.07);
+  }
+  .item .kind {
+    flex: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    width: 72px;
+  }
+  .item .t { flex: 1; }
+  .item .t strong { display: block; font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .item .t span { font-size: 13px; color: var(--muted); }
+  .item .date { flex: none; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item .act { flex: none; font-size: 14px; font-weight: 600; }
+  .item a.act { color: var(--pink); text-decoration: none; }
+  .item a.act:hover { text-decoration: underline; }
+  .item span.act { color: var(--muted); font-weight: 500; }
+
+  footer { border-top: 1px solid var(--line); padding: 24px 0; font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .item { flex-wrap: wrap; }
+    .item .kind { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
+    <a href="../../">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="head">
+    <span class="eyebrow">수강생 전용</span>
+    <h1>웨비나 다시보기 전체</h1>
+    <p>크래빗 아카데미의 모든 강의·웨비나 다시보기를 이곳에서 볼 수 있습니다.</p>
+  </div>
+
+  <div class="notice">
+    <strong>안내</strong> — 이 페이지는 수강생 전용입니다. 링크와 비밀번호를 외부에 공유하지 말아 주세요.
+  </div>
+
+  <div class="list">
+    <div class="item">
+      <span class="kind">Webinar</span>
+      <span class="t">
+        <strong>2026 학부모 소통전략 웨비나</strong>
+        <span>학부모와의 소통을 체계화하는 전략과 실제 적용 사례</span>
+      </span>
+      <span class="date">2026</span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">Lecture</span>
+      <span class="t">
+        <strong>우리 학원만의 랜딩페이지, 코딩 없이 제작하기</strong>
+        <span>기획부터 공개까지 한 번에 완성하는 실습 강의</span>
+      </span>
+      <span class="date">2026.05</span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">Course</span>
+      <span class="t">
+        <strong>모두를 위한 클로드 코드 (Teachers Webinar)</strong>
+        <span>선생님과 교육 종사자를 위한 클로드 코드 입문 과정</span>
+      </span>
+      <span class="date">2026</span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">Lecture</span>
+      <span class="t">
+        <strong>클로드 코드로 카드뉴스 자동화 에이전트 만들기</strong>
+        <span>기초 설계부터 자동화 운영까지, 가이드북과 함께하는 실습</span>
+      </span>
+      <span class="date">2026.07</span>
+      <span class="act">준비 중</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">크래빗 아카데미 — CRABIT</div>
+</footer>
+
+</body>
+</html>

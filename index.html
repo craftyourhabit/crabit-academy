@@ -156,7 +156,27 @@
 
   /* ---------- sections ---------- */
   section { padding: 76px 0; }
+  .section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
   .section-head { margin-bottom: 40px; max-width: 36em; }
+  .link-all {
+    flex: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 6px 0;
+    margin-top: 6px;
+    transition: color 0.15s;
+  }
+  .link-all:hover { color: var(--ink); }
   h2 {
     margin: 0 0 12px;
     font-size: clamp(24px, 3.4vw, 32px);
@@ -560,9 +580,12 @@
   <!-- 03. 웨비나 다시보기 -->
   <section id="replay">
     <div class="wrap">
-      <div class="section-head">
-        <h2>웨비나 다시보기</h2>
-        <p>지나간 강의와 웨비나를 다시 볼 수 있습니다. 놓치셨더라도 괜찮아요.</p>
+      <div class="section-top">
+        <div class="section-head">
+          <h2>웨비나 다시보기</h2>
+          <p>지나간 강의와 웨비나를 다시 볼 수 있습니다. 놓치셨더라도 괜찮아요.</p>
+        </div>
+        <button class="link-all js-locked" type="button" data-title="웨비나 다시보기 전체">전체보기 &#8250;</button>
       </div>
       <div class="replay-grid">
         <article class="replay">
@@ -611,9 +634,12 @@
   <!-- 04. 자료 / 인사이트 -->
   <section id="resources">
     <div class="wrap">
-      <div class="section-head">
-        <h2>자료 / 인사이트</h2>
-        <p>강의 자료와 가이드북, 교육 인사이트를 모았습니다. 일부 자료는 수강생에게 안내된 비밀번호가 필요합니다.</p>
+      <div class="section-top">
+        <div class="section-head">
+          <h2>자료 / 인사이트</h2>
+          <p>강의 자료와 가이드북, 교육 인사이트를 모았습니다. 일부 자료는 수강생에게 안내된 비밀번호가 필요합니다.</p>
+        </div>
+        <button class="link-all js-locked" type="button" data-title="자료 / 인사이트 전체">전체보기 &#8250;</button>
       </div>
       <div class="res-list">
         <button class="res-row js-locked" type="button" data-title="대구 강의 자료">
@@ -669,7 +695,7 @@
 <div class="modal-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
   <div class="modal">
     <h3 id="pwTitle">비밀번호 입력</h3>
-    <p class="m-sub" id="pwSub">강의에서 안내드린 비밀번호를 입력해 주세요.</p>
+    <p class="m-sub" id="pwSub">안내받으신 비밀번호를 입력해 주세요.</p>
     <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
     <p class="m-error" id="pwError"></p>
     <div class="m-actions">

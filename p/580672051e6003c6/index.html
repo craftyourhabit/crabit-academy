@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>자료 / 인사이트 전체 — 크래빗 아카데미</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --ground: #FFFFFF;
+    --ink: #191F28;
+    --pink: #F06485;
+    --tint: #FDECF1;
+    --fill: #F4F6F8;
+    --muted: #6B7684;
+    --line: #E5E8EB;
+    --card: #F9FAFB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 0 24px; }
+  header { box-shadow: 0 1px 4px rgba(25, 31, 40, 0.06); }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand .dot { color: var(--pink); }
+  .nav a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav a:hover { color: var(--ink); }
+  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .head { padding: 64px 0 40px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 38px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+  .head p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  .notice {
+    background: var(--fill);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .notice strong { font-weight: 600; }
+
+  .list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; }
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.07);
+  }
+  .item .kind {
+    flex: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    width: 72px;
+  }
+  .item .t { flex: 1; }
+  .item .t strong { display: block; font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .item .t span { font-size: 13px; color: var(--muted); }
+  .item .act { flex: none; font-size: 14px; font-weight: 600; }
+  .item a.act { color: var(--pink); text-decoration: none; }
+  .item a.act:hover { text-decoration: underline; }
+  .item span.act { color: var(--muted); font-weight: 500; }
+
+  footer { border-top: 1px solid var(--line); padding: 24px 0; font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .item { flex-wrap: wrap; }
+    .item .kind { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">크래빗 아카데미<span class="dot">.</span></div>
+    <a href="../../">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="head">
+    <span class="eyebrow">수강생 전용</span>
+    <h1>자료 / 인사이트 전체</h1>
+    <p>강의 자료, 가이드북, 교육 인사이트 전체 목록입니다.</p>
+  </div>
+
+  <div class="notice">
+    <strong>안내</strong> — 이 페이지는 수강생 전용입니다. 링크와 비밀번호를 외부에 공유하지 말아 주세요.
+  </div>
+
+  <div class="list">
+    <div class="item">
+      <span class="kind">강의자료</span>
+      <span class="t">
+        <strong>대구 강의 자료</strong>
+        <span>강의 슬라이드, 실습 가이드북, 실습 템플릿</span>
+      </span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">가이드북</span>
+      <span class="t">
+        <strong>카드뉴스 AI 에이전트 가이드북 (1편 — 기초&설계)</strong>
+        <span>카드뉴스 자동화 에이전트의 기초와 설계를 다루는 가이드북</span>
+      </span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">가이드북</span>
+      <span class="t">
+        <strong>카드뉴스 AI 에이전트 가이드북 (2편 — 클로드코드 자동화)</strong>
+        <span>클로드 코드로 카드뉴스 자동화 에이전트를 만드는 실전편</span>
+      </span>
+      <span class="act">준비 중</span>
+    </div>
+    <div class="item">
+      <span class="kind">인사이트</span>
+      <span class="t">
+        <strong>교육 기관을 위한 AI 활용 인사이트</strong>
+        <span>현장에서 검증한 AI 활용 사례와 노하우 연재</span>
+      </span>
+      <span class="act">준비 중</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">크래빗 아카데미 — CRABIT</div>
+</footer>
+
+</body>
+</html>

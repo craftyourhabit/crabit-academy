@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>제휴 업체 — 크래빗 아카데미</title>
+<meta name="description" content="원장님들께 필요한 서비스·툴·교육을 크래빗이 좋은 가격에 가져왔어요. 필요한 혜택이 있다면 알려주세요." />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --deco: rgba(22, 25, 42, 0.30);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    background: rgba(244, 246, 248, 0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .page-head { padding: 36px 0 24px; max-width: 40em; }
+  .page-head h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-head p { margin: 0; font-size: 15.5px; color: var(--muted); text-wrap: pretty; }
+
+  .panel {
+    background: var(--bg);
+    border-radius: 24px;
+    padding: 32px 40px;
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05);
+    margin-bottom: 20px;
+  }
+
+  /* 제휴 혜택 카드 */
+  .partners { display: flex; flex-direction: column; }
+  .partner-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+  }
+  .partner-row:last-child { border-bottom: 0; }
+  .partner-row .info { flex: 1; min-width: 0; }
+  .partner-row .cat {
+    display: inline-block;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--fill);
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .partner-row h2 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .partner-row .desc { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .partner-row .benefit {
+    flex: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pink);
+    background: var(--tint);
+    padding: 8px 16px;
+    border-radius: 99px;
+  }
+  .empty {
+    text-align: center;
+    padding: 48px 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .empty strong { display: block; color: var(--ink); font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+  /* 혜택 요청 */
+  .request { padding: 40px; }
+  .request h2 { margin: 0 0 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .request .sub { margin: 0 0 24px; font-size: 15px; color: var(--muted); max-width: 38em; text-wrap: pretty; }
+  .request textarea {
+    width: 100%;
+    min-height: 110px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--fill-soft);
+    padding: 16px 18px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    resize: vertical;
+    box-shadow: inset 0 1px 3px rgba(22, 25, 42, 0.04);
+  }
+  .request textarea:focus { outline: 2px solid var(--pink); }
+  .request .row2 { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .request input {
+    flex: 1;
+    min-width: 220px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--fill-soft);
+    padding: 13px 16px;
+    font-size: 14.5px;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .request input:focus { outline: 2px solid var(--pink); }
+  .req-note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 0 44px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 36px;
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 720px) {
+    .panel, .request { padding: 24px 20px; border-radius: 20px; }
+    .partner-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>제휴 업체</h1>
+    <p>
+      원장님들께 필요한 다양한 서비스를 좋은 가격에 사용해보실 수 있도록,
+      크래빗이 좋은 조건으로 가져왔어요.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="partners" id="partners"></div>
+  </div>
+
+  <div class="panel request">
+    <h2>받아보고 싶은 혜택이 있나요?</h2>
+    <p class="sub">
+      혹시 또 다른 서비스·툴·교육 중에서 할인가에 받아보고 싶으신 게 있다면 아래에 적어주세요.
+      최선을 다해 도움되는 혜택으로 가져올게요.
+    </p>
+    <textarea id="reqText" placeholder="예) 학원 문자 발송 서비스, 출결 관리 툴, 상담 교육 등 — 자유롭게 적어주세요."></textarea>
+    <div class="row2">
+      <input id="reqContact" type="text" placeholder="학원명과 연락처 (선택)" />
+      <button class="btn btn-primary" type="button" id="reqSend">요청 보내기</button>
+    </div>
+    <p class="req-note">보내기를 누르면 메일 앱이 열려요. 카카오톡이 편하시면 <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener" style="color: var(--pink); font-weight: 600; text-decoration: none;">크래빗 채널</a>로 보내주셔도 됩니다.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===============================================
+   제휴 혜택 목록
+   - 여기에 항목을 추가하면 카드가 자동으로 생깁니다.
+   - url이 있으면 카드 전체가 링크가 됩니다.
+   예시:
+   { category: "문자 발송", name: "OO메시지", desc: "학원 알림·상담 문자 발송 서비스",
+     benefit: "크래빗가 20% 할인", url: "https://..." }
+   =============================================== */
+const PARTNERS = [];
+
+(function () {
+  const box = document.getElementById("partners");
+  if (PARTNERS.length === 0) {
+    box.innerHTML = '<div class="empty">'
+      + '<strong>첫 제휴 혜택을 협의하고 있어요</strong>'
+      + '확정되는 대로 이곳에서 가장 먼저 공개할게요. 필요한 서비스가 있다면 아래에 남겨주세요.'
+      + '</div>';
+    return;
+  }
+  PARTNERS.forEach(p => {
+    const el = document.createElement(p.url ? "a" : "div");
+    if (p.url) { el.href = p.url; el.target = "_blank"; el.rel = "noopener"; }
+    el.className = "partner-row";
+    el.innerHTML = '<div class="info">'
+      + '<span class="cat"></span>'
+      + '<h2></h2>'
+      + '<p class="desc"></p>'
+      + '</div>'
+      + '<span class="benefit"></span>';
+    el.querySelector(".cat").textContent = p.category;
+    el.querySelector("h2").textContent = p.name;
+    el.querySelector(".desc").textContent = p.desc;
+    el.querySelector(".benefit").textContent = p.benefit;
+    box.appendChild(el);
+  });
+})();
+
+/* 혜택 요청 → 메일 */
+document.getElementById("reqSend").addEventListener("click", () => {
+  const text = document.getElementById("reqText").value.trim();
+  const contact = document.getElementById("reqContact").value.trim();
+  if (!text) {
+    document.getElementById("reqText").focus();
+    return;
+  }
+  const body = "받아보고 싶은 혜택:\n" + text + (contact ? "\n\n학원명/연락처: " + contact : "");
+  window.location.href = "mailto:hyunji@crabit.co.kr"
+    + "?subject=" + encodeURIComponent("[제휴 혜택 요청] 크래빗 아카데미")
+    + "&body=" + encodeURIComponent(body);
+});
+</script>
+
+</body>
+</html>

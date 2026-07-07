@@ -74,6 +74,48 @@
   }
   .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+  .dropdown { position: relative; }
+  .drop-btn {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .drop-btn:hover, .dropdown.open .drop-btn { color: var(--ink); }
+  .drop-btn .caret { font-size: 10px; transform: translateY(1px); }
+  .drop-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 8px 28px rgba(22, 25, 42, 0.14);
+    display: none;
+    min-width: 168px;
+    z-index: 30;
+  }
+  .dropdown.open .drop-menu { display: block; }
+  .drop-menu a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.15s;
+  }
+  .drop-menu a:hover { background: var(--fill-soft); }
 
   /* ---------- hero banner ---------- */
   .hero-banner {
@@ -461,8 +503,14 @@
     <nav class="nav-links">
       <a href="#about">아카데미 소개</a>
       <a href="schedule.html">예정 일정</a>
-      <a href="#replay">웨비나 다시보기</a>
-      <a href="#resources">자료·인사이트</a>
+      <div class="dropdown" id="contentDrop">
+        <button class="drop-btn" type="button" aria-expanded="false" aria-haspopup="true">콘텐츠 <span class="caret">&#9662;</span></button>
+        <div class="drop-menu">
+          <a href="webinars.html">웨비나</a>
+          <a href="resources.html">자료 / 인사이트</a>
+        </div>
+      </div>
+      <a href="partners.html">제휴 업체</a>
       <a href="#contact">문의</a>
     </nav>
   </div>
@@ -701,6 +749,18 @@
 </div>
 
 <script>
+/* ---------- 콘텐츠 드롭다운 ---------- */
+const drop = document.getElementById("contentDrop");
+drop.querySelector(".drop-btn").addEventListener("click", e => {
+  e.stopPropagation();
+  const open = drop.classList.toggle("open");
+  drop.querySelector(".drop-btn").setAttribute("aria-expanded", open ? "true" : "false");
+});
+document.addEventListener("click", () => {
+  drop.classList.remove("open");
+  drop.querySelector(".drop-btn").setAttribute("aria-expanded", "false");
+});
+
 /* ---------- 스크롤 리빌 ---------- */
 function checkReveal() {
   document.querySelectorAll(".reveal:not(.visible)").forEach(el => {

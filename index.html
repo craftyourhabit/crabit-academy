@@ -214,6 +214,11 @@
   }
 
   /* ---------- weekly calendar ---------- */
+  .cal-panel {
+    background: var(--fill);
+    border-radius: 24px;
+    padding: 28px 28px 20px;
+  }
   .cal-head {
     display: flex;
     align-items: center;
@@ -233,14 +238,15 @@
     width: 38px; height: 38px;
     border-radius: 10px;
     border: 0;
-    background: var(--fill);
+    background: var(--bg);
     color: var(--ink);
     font-size: 16px;
     cursor: pointer;
     line-height: 1;
+    box-shadow: 0 1px 3px rgba(25, 31, 40, 0.06);
     transition: background 0.15s;
   }
-  .cal-btn:hover { background: var(--line); }
+  .cal-btn:hover { background: var(--fill-soft); }
   .cal-btn.today-btn { width: auto; padding: 0 14px; font-size: 13px; font-weight: 600; }
   .cal-scroll { overflow-x: auto; }
   .cal-grid {
@@ -466,6 +472,7 @@
     .hero { grid-template-columns: 1fr; padding: 56px 0 48px; }
     .hero-visual { display: none; }
     .allkeoni { padding: 40px 28px; }
+    .cal-panel { padding: 20px 16px 14px; border-radius: 20px; }
     section { padding: 56px 0; }
     .nav-links { display: none; }
     .res-kind { display: none; }
@@ -561,18 +568,20 @@
         <h2>예정 일정</h2>
         <p>크래빗과 올커니의 강의·웨비나·행사 일정을 주간 캘린더로 확인하세요.</p>
       </div>
-      <div class="cal-head">
-        <div class="cal-title" id="calTitle"></div>
-        <div class="cal-nav">
-          <button class="cal-btn" id="calPrev" aria-label="이전 주">&#8592;</button>
-          <button class="cal-btn today-btn" id="calToday">이번 주</button>
-          <button class="cal-btn" id="calNext" aria-label="다음 주">&#8594;</button>
+      <div class="cal-panel">
+        <div class="cal-head">
+          <div class="cal-title" id="calTitle"></div>
+          <div class="cal-nav">
+            <button class="cal-btn" id="calPrev" aria-label="이전 주">&#8592;</button>
+            <button class="cal-btn today-btn" id="calToday">이번 주</button>
+            <button class="cal-btn" id="calNext" aria-label="다음 주">&#8594;</button>
+          </div>
         </div>
+        <div class="cal-scroll">
+          <div class="cal-grid" id="calGrid" role="grid" aria-label="주간 일정"></div>
+        </div>
+        <p class="cal-note">일정을 클릭하면 상세페이지로 이동해요. 참가 신청이 필요한 일정은 하단 문의처로 연락 주세요.</p>
       </div>
-      <div class="cal-scroll">
-        <div class="cal-grid" id="calGrid" role="grid" aria-label="주간 일정"></div>
-      </div>
-      <p class="cal-note">일정을 클릭할 필요 없이 한눈에 확인하실 수 있어요. 참가 신청이 필요한 일정은 하단 문의처로 연락 주세요.</p>
     </div>
   </section>
 

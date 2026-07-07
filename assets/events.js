@@ -118,3 +118,14 @@ const EVENTS_DB = {
     replayUrl: ""
   }
 };
+
+/* ===============================================
+   예정 일정 (schedule.html 먼슬리 캘린더에서 사용)
+   - id가 EVENTS_DB에 있으면 제목·주최·썸네일을 자동으로 가져옵니다.
+   - date: YYYY-MM-DD / time: HH:MM
+   =============================================== */
+const SCHEDULE = [
+  { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
+  { date: "2026-07-14", time: "20:00", id: "cardnews-automation" },
+  { date: "2026-07-16", time: "19:30", id: "allkeoni-meetup" },
+];

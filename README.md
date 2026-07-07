@@ -5,13 +5,12 @@
 - 배포 주소: https://craftyourhabit.github.io/crabit-academy/
 - 배포 방식: GitHub Pages (main 브랜치에 푸시하면 1~2분 내 자동 반영)
 
-## 홈화면 구성
+## 페이지 구성
 
-1. 크래빗 아카데미 소개 (히어로)
-2. 올커니 소개
-3. 예정 일정 (주간 캘린더)
-4. 웨비나 다시보기
-5. 자료 / 인사이트
+- 홈(`index.html`): 히어로 배너 → 크래빗 아카데미 소개(그라데이션 박스 + 프로그램 카드: 아카데미 교육 / 습관연구소 / 올커니 / 멤버스 보상) → 웨비나 다시보기 → 자료/인사이트 → 문의
+- 예정 일정(`schedule.html`): 월간 캘린더. 일정 클릭 → 모달 → 상세페이지 이동
+- 전체보기: `webinars.html`, `resources.html`
+- 행사 상세: `event.html?id=<키>`
 
 ## 행사 상세페이지와 썸네일
 
@@ -19,22 +18,24 @@
 
 - 이벤트 정보는 전부 `assets/events.js`의 `EVENTS_DB`에서 관리합니다. 여기에 항목을 추가하면 상세페이지가 자동으로 생깁니다.
 - 썸네일은 `assets/thumbs/<이벤트키>.svg`에 있습니다. 실제 이미지(jpg/png)로 바꾸려면 파일을 넣고 `events.js`의 `thumb` 경로만 수정하면 됩니다.
-- 홈의 다시보기 카드, 주간 캘린더 일정, 전체보기 목록이 모두 상세페이지로 연결됩니다.
-- 캘린더 일정(`index.html`의 `EVENTS`)에 `id`를 넣으면 클릭 시 해당 상세페이지로 이동합니다.
+- 홈의 다시보기 카드, 월간 캘린더 일정(모달 경유), 전체보기 목록이 모두 상세페이지로 연결됩니다.
 
 ## 일정 수정하는 법
 
-`index.html`에서 `EVENTS` 배열을 찾아 수정합니다. 이 배열만 고치면 캘린더에 자동 반영됩니다.
+`assets/events.js` 맨 아래의 `SCHEDULE` 배열을 수정합니다. 월간 캘린더(schedule.html)에 자동 반영됩니다.
 
 ```js
-const EVENTS = [
-  { date: "2026-07-09", time: "19:00", title: "대구 원장님 대상 강의", host: "크래빗" },
-  { date: "2026-07-16", time: "19:30", title: "올커니 커뮤니티 모임", host: "올커니" },
+const SCHEDULE = [
+  { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
 ];
 ```
 
-- `date`: `YYYY-MM-DD` 형식
-- `host`: `"크래빗"` 또는 `"올커니"` (올커니 일정은 어두운 배지로 표시됩니다)
+- `date`: `YYYY-MM-DD` / `time`: `HH:MM`
+- `id`: `EVENTS_DB`의 키 — 제목·주최·썸네일·설명을 자동으로 가져오고, 클릭 시 모달과 상세페이지로 연결됩니다
+
+## 멤버스 카드 이미지 넣는 법
+
+홈의 "행동하는 원장님께도 보상합니다" 카드에 점선 자리(`card-slot`)가 있습니다. 카드 디자인이 나오면 `index.html`에서 `<div class="card-slot">...</div>`를 `<img class="card-img" src="assets/members-card.png" alt="크래빗 아카데미 멤버스 카드" />`로 바꾸고 이미지를 `assets/`에 넣으면 됩니다.
 
 ## 전체보기 페이지 (공개)
 

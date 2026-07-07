@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>예정 일정 — 크래빗 아카데미</title>
+<meta name="description" content="크래빗과 올커니의 강의·웨비나·행사 일정을 월간 캘린더로 확인하세요." />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --deco: rgba(22, 25, 42, 0.30);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    background: rgba(244, 246, 248, 0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .page-head { padding: 36px 0 24px; }
+  .page-head h1 { margin: 0 0 6px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-head p { margin: 0; font-size: 15px; color: var(--muted); }
+
+  .panel {
+    background: var(--bg);
+    border-radius: 24px;
+    padding: 28px 32px 32px;
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05);
+    margin-bottom: 56px;
+  }
+  .cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .cal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .cal-nav { display: flex; gap: 8px; }
+  .cal-btn {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 0;
+    background: var(--fill);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s;
+  }
+  .cal-btn:hover { background: var(--line); }
+  .cal-btn.today-btn { width: auto; padding: 0 14px; font-size: 13px; font-weight: 600; }
+
+  .cal-scroll { overflow-x: auto; }
+  .cal-inner { min-width: 880px; }
+  .dow-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .dow {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 4px 4px 0 10px;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  .day {
+    background: var(--fill-soft);
+    border-radius: 12px;
+    min-height: 104px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .day .num {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 2px 4px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .day.other { background: transparent; }
+  .day.other .num { color: var(--deco); }
+  .day.today { background: var(--tint); }
+  .day.today .num { color: var(--pink); }
+  .evt {
+    border: 0;
+    font-family: inherit;
+    text-align: left;
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    padding: 6px 9px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    background: var(--bg);
+    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.08);
+    color: var(--ink);
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .evt:hover { box-shadow: 0 3px 10px rgba(22, 25, 42, 0.14); transform: translateY(-1px); }
+  .evt .t { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .evt.host-allkeoni { background: var(--ink); color: #fff; }
+  .evt.host-allkeoni .t { color: rgba(255, 255, 255, 0.6); }
+  .cal-note { margin-top: 16px; font-size: 13px; color: var(--muted); }
+
+  /* ---------- event modal ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 25, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 460px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.25);
+  }
+  .modal img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: var(--fill); }
+  .modal .m-body { padding: 24px 28px 28px; }
+  .m-badges { display: flex; gap: 8px; margin-bottom: 12px; }
+  .m-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+  }
+  .m-badge.allkeoni { background: var(--ink); color: #fff; }
+  .modal h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.35; }
+  .m-date { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; margin-bottom: 14px; }
+  .m-desc { font-size: 14.5px; color: var(--muted); margin: 0 0 22px; }
+  .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #F0F0F0; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 0 44px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 720px) {
+    .panel { padding: 20px 16px 24px; border-radius: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>예정 일정</h1>
+    <p>크래빗과 올커니의 강의·웨비나·행사 일정을 월간 캘린더로 확인하세요.</p>
+  </div>
+  <div class="panel">
+    <div class="cal-head">
+      <div class="cal-title" id="calTitle"></div>
+      <div class="cal-nav">
+        <button class="cal-btn" id="calPrev" aria-label="이전 달">&#8592;</button>
+        <button class="cal-btn today-btn" id="calToday">이번 달</button>
+        <button class="cal-btn" id="calNext" aria-label="다음 달">&#8594;</button>
+      </div>
+    </div>
+    <div class="cal-scroll">
+      <div class="cal-inner">
+        <div class="dow-row">
+          <span class="dow">월</span><span class="dow">화</span><span class="dow">수</span><span class="dow">목</span><span class="dow">금</span><span class="dow">토</span><span class="dow">일</span>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+    </div>
+    <p class="cal-note">일정을 클릭하면 자세한 내용을 볼 수 있어요.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 일정 모달 -->
+<div class="modal-backdrop" id="evtBackdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal">
+    <img id="mThumb" src="" alt="" />
+    <div class="m-body">
+      <div class="m-badges" id="mBadges"></div>
+      <h3 id="mTitle"></h3>
+      <div class="m-date" id="mDate"></div>
+      <p class="m-desc" id="mDesc"></p>
+      <div class="m-actions">
+        <button class="btn btn-ghost" type="button" id="mClose">닫기</button>
+        <a class="btn btn-primary" id="mLink" href="#">상세페이지 보기</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/events.js"></script>
+<script>
+(function () {
+  let monthOffset = 0;
+  const grid = document.getElementById("calGrid");
+  const titleEl = document.getElementById("calTitle");
+
+  const p2 = n => String(n).padStart(2, "0");
+  const ymd = d => d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+
+  function render() {
+    const now = new Date();
+    const base = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+    titleEl.textContent = base.getFullYear() + "년 " + (base.getMonth() + 1) + "월";
+
+    const firstDow = (base.getDay() + 6) % 7; // 월요일 시작
+    const start = new Date(base);
+    start.setDate(1 - firstDow);
+    const todayKey = ymd(now);
+
+    grid.innerHTML = "";
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const key = ymd(d);
+      const cell = document.createElement("div");
+      const isOther = d.getMonth() !== base.getMonth();
+      cell.className = "day" + (isOther ? " other" : "") + (key === todayKey ? " today" : "");
+
+      const num = document.createElement("div");
+      num.className = "num";
+      num.textContent = d.getDate();
+      cell.appendChild(num);
+
+      SCHEDULE.filter(s => s.date === key)
+        .sort((a, b) => a.time.localeCompare(b.time))
+        .forEach(s => {
+          const ev = EVENTS_DB[s.id];
+          if (!ev) return;
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "evt" + (ev.host === "올커니" ? " host-allkeoni" : "");
+          chip.innerHTML = '<span class="t">' + s.time + '</span>';
+          chip.appendChild(document.createTextNode(ev.title));
+          chip.addEventListener("click", () => openModal(s));
+          cell.appendChild(chip);
+        });
+      grid.appendChild(cell);
+    }
+  }
+
+  document.getElementById("calPrev").addEventListener("click", () => { monthOffset--; render(); });
+  document.getElementById("calNext").addEventListener("click", () => { monthOffset++; render(); });
+  document.getElementById("calToday").addEventListener("click", () => { monthOffset = 0; render(); });
+
+  /* ---------- 일정 모달 ---------- */
+  const backdrop = document.getElementById("evtBackdrop");
+
+  function openModal(s) {
+    const ev = EVENTS_DB[s.id];
+    document.getElementById("mThumb").src = ev.thumb;
+    document.getElementById("mThumb").alt = ev.title + " 썸네일";
+    document.getElementById("mBadges").innerHTML =
+      '<span class="m-badge' + (ev.host === "올커니" ? " allkeoni" : "") + '">' + ev.host + '</span>';
+    document.getElementById("mTitle").textContent = ev.title;
+    document.getElementById("mDate").textContent = ev.date + (ev.place ? " · " + ev.place : "");
+    document.getElementById("mDesc").textContent = ev.desc;
+    document.getElementById("mLink").href = "event.html?id=" + s.id;
+    backdrop.classList.add("show");
+  }
+  document.getElementById("mClose").addEventListener("click", () => backdrop.classList.remove("show"));
+  backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

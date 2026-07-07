@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>아카데미 소개 — 크래빗 아카데미</title>
+<meta name="description" content="학생의 성장을 만드는 공식, 이제는 원장님의 성장에도 적용합니다. 크래빗 아카데미가 만드는 교육과 커뮤니티를 소개합니다." />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  .page-head h1 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  header {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .page-head { padding: 40px 0 28px; }
+  .page-head h1 { margin: 0 0 8px; font-size: 25px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-head p { margin: 0; font-size: 16px; color: var(--muted); }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: clamp(26px, 3.4vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  /* ---------- 크래빗 아카데미 소개 ---------- */
+  .eyebrow {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .about {
+    background: linear-gradient(135deg, #FEE9F4 0%, #FFFFFF 48%, #E9F4FF 100%);
+    border-radius: 24px;
+    padding: 64px 56px;
+  }
+  .about .inner { max-width: 680px; }
+  .about h2 { margin-bottom: 24px; }
+  .about p {
+    color: var(--muted);
+    font-size: 17.5px;
+    margin: 0 0 18px;
+    text-wrap: pretty;
+  }
+  .about p strong { color: var(--ink); font-weight: 600; }
+  .about .quote {
+    margin: 0 0 22px;
+    padding-left: 20px;
+    border-left: 3px solid var(--pink);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .about .quote strong { font-weight: 700; }
+
+  /* ---------- 프로그램 카드 ---------- */
+  .programs {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 72px;
+  }
+  .program {
+    background: var(--fill-soft);
+    border-radius: 20px;
+    padding: 36px 40px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.06);
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .program .p-body { max-width: 620px; }
+  .program .p-tag {
+    display: inline-block;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+  }
+  .program h3 {
+    margin: 14px 0 10px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .program p { margin: 0 0 18px; font-size: 16.5px; color: var(--muted); text-wrap: pretty; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chips span {
+    font-size: 14px;
+    font-weight: 500;
+    background: var(--bg);
+    padding: 6px 14px;
+    border-radius: 99px;
+    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.06);
+  }
+  .program-reward .card-slot {
+    flex: none;
+    width: 250px;
+    aspect-ratio: 1.586;
+    border-radius: 16px;
+    border: 2px dashed var(--line);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .programs-quote {
+    margin: 28px 0 0;
+    padding-left: 20px;
+    border-left: 3px solid var(--pink);
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .programs-quote strong { font-weight: 700; }
+
+  /* 스크롤 리빌 */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  footer {
+    background: var(--fill);
+    border-top: 1px solid var(--line);
+    padding: 40px 0 44px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 820px) {
+    .about { padding: 40px 28px; }
+    .program { flex-direction: column; align-items: stretch; padding: 28px 24px; gap: 20px; }
+    .program-reward .card-slot { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>아카데미 소개</h1>
+    <p>크래빗 아카데미가 만드는 교육과 커뮤니티를 소개합니다.</p>
+  </div>
+
+  <div class="about">
+    <div class="inner">
+      <span class="eyebrow">크래빗 아카데미란?</span>
+      <h2>학생의 성장을 만드는 공식,<br />이제는 원장님의 성장에도 적용합니다</h2>
+      <p class="quote">
+        크래빗은 학생에게 <strong>보상 &#8594; 동기부여 &#8594; 행동 &#8594; 성장</strong>을 만들고 있습니다.<br />
+        그리고 우리는 이 원리가 원장님에게도 똑같이 적용된다고 믿습니다.
+      </p>
+      <p>
+        좋은 교육을 배우고, 실제 학원에 적용하고, 그 변화가 또 다른 성과와 성장으로 이어지는 것.
+        그래서 크래빗은 단순히 서비스를 제공하는 것을 넘어, 원장님들이 더 좋은 학원을
+        만들어갈 수 있도록 <strong>크래빗 아카데미</strong>를 운영하고 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <div class="programs">
+    <article class="program reveal">
+      <div class="p-body">
+        <span class="p-tag">크래빗 아카데미</span>
+        <h3>원장님의 성장을 위한 교육</h3>
+        <p>실제 현장에서 바로 적용할 수 있는 교육과 웨비나를 직접 기획합니다.</p>
+        <div class="chips">
+          <span>AI 활용</span><span>학원 운영</span><span>데이터 기반 교육</span><span>마케팅</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="program reveal">
+      <div class="p-body">
+        <span class="p-tag">크래빗 습관연구소</span>
+        <h3>원장님들의 보상·동기부여 사례 공유</h3>
+        <p>크래빗 장학카드를 사용하시는 원장님들이 학생들의 보상과 동기부여를
+          어떻게 만들어가고 계신지, 실제 운영 사례를 나눕니다.</p>
+        <div class="chips">
+          <span>보상 설계</span><span>동기부여</span><span>운영 사례</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="program reveal">
+      <div class="p-body">
+        <span class="p-tag">올커니 · 올바른 교육 커뮤니티</span>
+        <h3>필요한 교육만 쏙쏙 골라 듣는 커뮤니티</h3>
+        <p>학원 실전에 바로 적용할 수 있는 실무 교육부터 AI 교육까지,
+          학원에 필요한 교육과 툴을 종류별로 소개해 드려요.
+          원하시는 것만 쏙쏙 골라 들으실 수 있습니다.</p>
+        <div class="chips">
+          <span>실무 교육</span><span>AI 교육</span><span>입시·비교과</span><span>콘텐츠</span><span>추천 툴</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="program program-reward reveal">
+      <div class="p-body">
+        <span class="p-tag">멤버스 보상</span>
+        <h3>행동하는 원장님께도 보상합니다</h3>
+        <p>크래빗 아카데미 멤버스 카드를 발급해 드리고, 교육을 실제 학원에 적용하거나
+          우수 사례를 공유해 주신 원장님께는 매월 장학금을 충전해 드리고 있습니다.</p>
+      </div>
+      <div class="card-slot" aria-hidden="true">
+        <span>멤버스 카드<br />디자인 준비 중</span>
+      </div>
+    </article>
+
+    <p class="programs-quote reveal">
+      배움이 행동으로, 행동이 성장으로 이어지는 교육.<br />
+      <strong>그것이 크래빗 아카데미가 만들고 싶은 문화입니다.</strong>
+    </p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* 스크롤 리빌 */
+function checkReveal() {
+  document.querySelectorAll(".reveal:not(.visible)").forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.9 && r.bottom > 0) el.classList.add("visible");
+  });
+}
+window.addEventListener("scroll", checkReveal, { passive: true });
+window.addEventListener("resize", checkReveal, { passive: true });
+window.addEventListener("load", checkReveal);
+checkReveal();
+</script>
+
+</body>
+</html>

@@ -12,15 +12,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
   :root {
-    --page: #F4F6F8;
+    --page: #F2F3F6;
     --bg: #FFFFFF;
-    --fill: #F4F6F8;
-    --fill-soft: #F9FAFB;
-    --ink: #191F28;
-    --muted: #6B7684;
-    --line: #E5E8EB;
-    --pink: #F06485;
-    --tint: #FDECF1;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
   }
   * { box-sizing: border-box; }
   body {
@@ -87,11 +87,11 @@
     background: var(--bg);
     border-radius: 16px;
     padding: 18px 20px;
-    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
     cursor: pointer;
     transition: box-shadow 0.15s;
   }
-  .check:hover { box-shadow: 0 4px 14px rgba(25, 31, 40, 0.09); }
+  .check:hover { box-shadow: 0 4px 14px rgba(22, 25, 42, 0.09); }
   .check input {
     appearance: none;
     flex: none;
@@ -125,7 +125,7 @@
     background: var(--bg);
     border-radius: 18px;
     padding: 26px 26px 20px;
-    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
     margin-bottom: 44px;
   }
   .steps-card h3 { margin: 0 0 16px; font-size: 16px; font-weight: 700; }
@@ -153,7 +153,7 @@
     background: var(--bg);
     border-radius: 16px;
     padding: 18px 22px;
-    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
   }
   .qa .q { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .qa .q::before { content: "Q. "; color: var(--pink); }
@@ -164,22 +164,22 @@
     background: var(--bg);
     border-radius: 18px;
     padding: 32px 24px;
-    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.06);
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
     margin-bottom: 40px;
   }
   .contact p { margin: 0 0 16px; font-size: 15px; color: var(--muted); }
   .btn {
     display: inline-block;
-    padding: 13px 26px;
+    padding: 14px 28px;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 600;
     text-decoration: none;
-    background: var(--pink);
+    background: var(--ink);
     color: #fff;
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition: background 0.15s;
   }
-  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
+  .btn:hover { background: #333333; }
   a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
   footer {

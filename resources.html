@@ -8,15 +8,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
   :root {
-    --page: #F4F6F8;
+    --page: #F2F3F6;
     --bg: #FFFFFF;
-    --fill: #F4F6F8;
-    --fill-soft: #F9FAFB;
-    --ink: #191F28;
-    --muted: #6B7684;
-    --line: #E5E8EB;
-    --pink: #F06485;
-    --tint: #FDECF1;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
   }
   * { box-sizing: border-box; }
   body {
@@ -52,7 +52,7 @@
     background: var(--bg);
     border-radius: 24px;
     padding: 12px 40px 24px;
-    box-shadow: 0 1px 4px rgba(25, 31, 40, 0.05);
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05);
     margin-bottom: 56px;
   }
   .tabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 20px 0 8px; }
@@ -118,7 +118,7 @@
     object-fit: cover;
     border-radius: 16px;
     background: var(--fill);
-    box-shadow: 0 2px 8px rgba(25, 31, 40, 0.08);
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.08);
     display: block;
   }
   .empty { padding: 48px 0; text-align: center; color: var(--muted); font-size: 15px; }
@@ -143,7 +143,7 @@
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(25, 31, 40, 0.55);
+    background: rgba(22, 25, 42, 0.55);
     display: none;
     align-items: center;
     justify-content: center;
@@ -157,7 +157,7 @@
     padding: 32px;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 24px 60px rgba(25, 31, 40, 0.25);
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.25);
   }
   .modal h3 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
   .modal .m-sub { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
@@ -176,7 +176,7 @@
   .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
   .btn {
     display: inline-block;
-    padding: 13px 26px;
+    padding: 14px 28px;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 600;
@@ -186,10 +186,10 @@
     font-family: inherit;
     transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
   }
-  .btn-primary { background: var(--pink); color: #fff; }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240, 100, 133, 0.3); }
-  .btn-ghost { background: var(--fill); color: var(--ink); }
-  .btn-ghost:hover { background: var(--line); }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #F0F0F0; }
 
   @media (max-width: 720px) {
     .panel { padding: 8px 20px 16px; border-radius: 20px; }

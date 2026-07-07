@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <rect width="800" height="450" fill="#F4F6F8"/>
-  <circle cx="720" cy="60" r="170" fill="#FDECF1"/>
-  <circle cx="640" cy="140" r="14" fill="#F06485"/>
-  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#6B7684" font-weight="600">WEBINAR</text>
-  <text x="64" y="222" font-size="54" fill="#191F28" font-weight="700">학부모 소통전략</text>
-  <text x="64" y="290" font-size="54" fill="#191F28" font-weight="700">웨비나</text>
-  <text x="64" y="386" font-size="22" fill="#6B7684" font-weight="500">크래빗 아카데미 · 2026</text>
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <circle cx="720" cy="60" r="170" fill="#FEE9F4"/>
+  <circle cx="640" cy="140" r="14" fill="#FB75BB"/>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">WEBINAR</text>
+  <text x="64" y="222" font-size="54" fill="#16192A" font-weight="700">학부모 소통전략</text>
+  <text x="64" y="290" font-size="54" fill="#16192A" font-weight="700">웨비나</text>
+  <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 · 2026</text>
 </svg>

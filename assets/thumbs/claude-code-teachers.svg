@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <rect width="800" height="450" fill="#F4F6F8"/>
-  <circle cx="740" cy="380" r="180" fill="#FDECF1"/>
-  <circle cx="660" cy="300" r="14" fill="#F06485"/>
-  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#6B7684" font-weight="600">COURSE</text>
-  <text x="64" y="222" font-size="54" fill="#191F28" font-weight="700">모두를 위한</text>
-  <text x="64" y="290" font-size="54" fill="#191F28" font-weight="700">클로드 코드</text>
-  <text x="64" y="386" font-size="22" fill="#6B7684" font-weight="500">크래빗 아카데미 · Teachers Webinar</text>
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <circle cx="740" cy="380" r="180" fill="#FEE9F4"/>
+  <circle cx="660" cy="300" r="14" fill="#FB75BB"/>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">COURSE</text>
+  <text x="64" y="222" font-size="54" fill="#16192A" font-weight="700">모두를 위한</text>
+  <text x="64" y="290" font-size="54" fill="#16192A" font-weight="700">클로드 코드</text>
+  <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 · Teachers Webinar</text>
 </svg>

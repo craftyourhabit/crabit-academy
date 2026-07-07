@@ -77,6 +77,10 @@ const EVENTS = [
 
 ## 작업 규칙
 
-- 진한 핑크는 `#F06485`만 사용
-- 폰트 굵기는 최대 700 (Pretendard)
+`~/Desktop/CRABIT/브랜드가이드.md`를 따른다. 핵심:
+
+- 배경 `#FFFFFF` / 텍스트 `#16192A` / 보조 텍스트 55% / 카드 배경 `#F9FAFC` / 보더 `#E8E8E8` / 다크 섹션 `#16192A`
+- 브랜드 핑크 `#FB75BB`는 포인트 전용 (CTA 버튼은 다크가 기본)
+- 폰트 Pretendard Variable, 굵기 최대 700
+- 버튼: Primary 다크(hover `#333333`) / Secondary 흰 배경+보더(hover `#F0F0F0`) / Ghost는 hover 시 배경만 변경
 - 이모티콘 사용 최소화

@@ -150,6 +150,65 @@
     color: var(--ink);
   }
 
+  /* 가입 화면 모션 그래픽 */
+  .shot {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(22, 25, 42, 0.14);
+    margin: 4px 0 10px;
+  }
+  .shot img { width: 100%; display: block; }
+  .shot .pulse {
+    position: absolute;
+    width: 40px; height: 40px;
+    margin: -20px 0 0 -20px;
+    border-radius: 99px;
+    border: 3px solid var(--pink);
+    animation: pulseRing 1.8s ease-out infinite;
+  }
+  .shot .pulse::after {
+    content: "";
+    position: absolute;
+    inset: 11px;
+    border-radius: 99px;
+    background: var(--pink);
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.55); opacity: 1; }
+    70% { transform: scale(2.2); opacity: 0; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  .click-tip {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: var(--pink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 99px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(251, 117, 187, 0.45);
+    animation: tipBob 1.8s ease-in-out infinite;
+  }
+  .click-tip::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 100%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--pink);
+  }
+  @keyframes tipBob {
+    0%, 100% { transform: translate(-50%, -100%); }
+    50% { transform: translate(-50%, calc(-100% - 8px)); }
+  }
+  .shot-cap { font-size: 15px !important; margin: 0 0 18px !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .shot .pulse, .click-tip { animation: none !important; }
+  }
+
   .os-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .os-card {
     flex: 1;
@@ -276,29 +335,52 @@
           구글 계정이나 이메일로 가입하면 돼요. <strong>무료 계정이면 충분</strong>하고, 1분이면 끝납니다.
           콘텐츠 기획안 실습에 사용해요.
         </p>
+        <div class="shot" aria-hidden="true">
+          <img src="assets/guide/notion-signup.jpg" alt="" />
+          <span class="pulse" style="left: 42.1%; top: 67.8%;"></span>
+          <span class="click-tip" style="left: 42.1%; top: 60.5%;">여기를 눌러주세요!</span>
+        </div>
+        <p class="shot-cap">notion.so 가입 화면 — <strong>Google 버튼</strong>을 누르면 구글 계정으로 바로 가입돼요.</p>
       </div>
     </div>
+
     <div class="r-item">
       <span class="r-num">2</span>
       <div class="r-body">
-        <h3>클로드에 가입 후 데스크탑 앱을 다운로드해주세요</h3>
+        <h3>클로드에 가입해주세요</h3>
         <p>
-          <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에서 구글 계정으로 가입해주세요.
+          <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에 접속해서
+          <strong>Continue with Google</strong> 버튼을 누르고 구글 계정으로 가입해주세요.
           강의에서 쓰는 <strong>Cowork 기능은 유료 플랜 전용</strong>이라, 가장 저렴한
           <strong>Pro 플랜</strong> 구독까지 부탁드려요.
         </p>
-        <p>
-          가입이 끝나면 <strong>데스크탑 앱 설치는 필수예요!</strong>
-          강의 실습이 전부 데스크탑 앱에서 진행됩니다.
-        </p>
+        <div class="shot" aria-hidden="true">
+          <img src="assets/guide/claude-signup.jpg" alt="" />
+          <span class="pulse" style="left: 26.8%; top: 66.8%;"></span>
+          <span class="click-tip" style="left: 26.8%; top: 59.5%;">여기를 눌러주세요!</span>
+        </div>
+        <p class="shot-cap">claude.ai 첫 화면 — <strong>Continue with Google</strong>을 누르면 가입이 시작돼요.</p>
+      </div>
+    </div>
+
+    <div class="r-item">
+      <span class="r-num">3</span>
+      <div class="r-body">
+        <h3>클로드 데스크탑 앱을 다운로드해주세요 (필수!)</h3>
+        <p>강의 실습이 전부 데스크탑 앱에서 진행되기 때문에, <strong>앱 설치는 꼭 필요해요.</strong></p>
         <div class="easy-box">
-          <strong>웹이랑 앱, 뭐가 다른가요?</strong>
-          웹은 인터넷 창에서 클로드와 <strong>대화만</strong> 할 수 있어요.
+          <strong>그냥 GPT 쓰듯 웹사이트에 들어가서 쓰는 것과 뭐가 다른가요?</strong>
+          인터넷 창에 주소를 쳐서 들어가 쓰는 게 '웹'이에요. 웹에서는 클로드와 <strong>대화만</strong> 할 수 있어요.
           데스크탑 앱은 카카오톡처럼 <strong>내 컴퓨터에 설치하는 프로그램</strong>이라서,
           클로드가 내 컴퓨터 안의 폴더와 파일을 직접 열고, 만들고, 정리해줄 수 있어요.
-          강의에서 쓰는 Cowork 기능이 바로 이 기능이라 앱이 꼭 필요합니다.
+          강의에서 쓰는 <strong>Cowork 기능이 바로 이 기능</strong>이라 앱이 꼭 필요합니다.
         </div>
-        <p>설치 후 가입하신 계정으로 로그인까지 해주세요.</p>
+        <div class="shot" aria-hidden="true">
+          <img src="assets/guide/claude-download.jpg" alt="" />
+          <span class="pulse" style="left: 49.4%; top: 55.7%;"></span>
+          <span class="click-tip" style="left: 49.4%; top: 48.5%;">여기를 눌러주세요!</span>
+        </div>
+        <p class="shot-cap">claude.ai/download 화면 — 가운데 검은 버튼을 누르면 <strong>내 컴퓨터에 맞는 버전이 자동으로</strong> 받아져요.</p>
         <div class="os-row">
           <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
             <span class="os-name">Windows용 다운로드</span>
@@ -309,6 +391,7 @@
             <span class="os-desc">맥북을 쓰시는 분</span>
           </a>
         </div>
+        <p style="margin-top: 14px;">설치 후 가입하신 계정으로 로그인까지 해주세요.</p>
       </div>
     </div>
   </div>

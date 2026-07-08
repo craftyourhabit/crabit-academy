@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료 — 크래빗 아카데미</title>
+<meta name="description" content="강의 자료부터 프롬프트 모음집, 핵심 자료 파일까지. 참석자 전용 후속 자료 페이지입니다." />
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  /* 공개 영역: 썸네일 + 일부 정보 */
+  .head { padding: 20px 0 8px; }
+  .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.1);
+    margin-bottom: 26px;
+    background: var(--fill);
+  }
+  .badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+  }
+  .pill.ink { background: var(--ink); color: #fff; }
+  h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 5.5vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+  .meta { font-size: 16px; color: var(--ink); margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+  .intro { font-size: 17.5px; color: var(--ink); margin: 0 0 36px; text-wrap: pretty; }
+
+  /* 잠금 영역: 블러 처리된 본문 미리보기 */
+  .lock-wrap { position: relative; margin-bottom: 48px; }
+  .locked-zone {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+  }
+  h2 { margin: 0 0 14px; font-size: 25px; font-weight: 700; letter-spacing: -0.01em; }
+  .locked-zone section { margin-bottom: 44px; }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
+    margin-bottom: 12px;
+  }
+  .file .kind { flex: none; font-size: 13px; font-weight: 600; color: var(--pink); text-transform: uppercase; width: 64px; }
+  .file .t { flex: 1; }
+  .file .t strong { display: block; font-size: 16.5px; font-weight: 600; }
+  .file .t span { font-size: 14.5px; }
+  .prompt-preview {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
+    margin-bottom: 12px;
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
+
+  .lock-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(242, 243, 246, 0.15) 0%, rgba(242, 243, 246, 0.88) 60%, rgba(242, 243, 246, 0.98) 100%);
+    border-radius: 18px;
+    padding: 24px;
+  }
+  .lock-overlay .lock-msg { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .lock-overlay .lock-sub { font-size: 15.5px; color: var(--ink); margin: -6px 0 4px; }
+  .unlock-btn {
+    border: 0;
+    background: var(--ink);
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .unlock-btn:hover { background: #333333; }
+
+  /* 비밀번호 모달 */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 25, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.25);
+  }
+  .modal h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal .m-sub { margin: 0 0 20px; font-size: 15px; color: var(--ink); }
+  .modal input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--fill);
+    color: var(--ink);
+  }
+  .modal input:focus { outline: 2px solid var(--pink); }
+  .modal .m-error { min-height: 20px; margin: 8px 0 12px; font-size: 14px; color: var(--pink); font-weight: 500; }
+  .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn {
+    display: inline-block;
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-size: 15.5px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #F0F0F0; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 40px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 공개 영역 -->
+  <div class="head">
+    <img class="thumb" src="assets/thumbs/daegu-lecture.jpg" alt="우리 학원만의 AI 마케터 고용하기 썸네일" />
+    <div class="badges">
+      <span class="pill">강의자료</span>
+      <span class="pill ink">참석자 전용</span>
+    </div>
+    <h1>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료</h1>
+    <p class="meta">2026년 7월 9일 (목) 진행 · 대구학원연합회 · Speaker 김현지 (크래빗 장학카드 대표)</p>
+    <p class="intro">
+      강의에 참석해 주셔서 감사합니다. 강의 자료부터 프롬프트 모음집,
+      핵심 자료 파일까지 전부 이 페이지에서 받아보실 수 있어요.
+      강의에서 안내드린 비밀번호를 입력하면 전체 내용이 열립니다.
+    </p>
+  </div>
+
+  <!-- 잠금 영역 (블러 미리보기) -->
+  <div class="lock-wrap">
+    <div class="locked-zone" aria-hidden="true">
+      <section>
+        <h2>강의 자료</h2>
+        <div class="file">
+          <span class="kind">PDF</span>
+          <span class="t"><strong>강의 슬라이드</strong><span>강의에서 사용한 발표 자료 전체</span></span>
+        </div>
+        <div class="file">
+          <span class="kind">Guide</span>
+          <span class="t"><strong>실습 가이드북</strong><span>혼자서도 처음부터 따라 할 수 있는 단계별 안내서</span></span>
+        </div>
+      </section>
+      <section>
+        <h2>프롬프트 모음집</h2>
+        <div class="prompt-preview">
+          우리 학원의 이름은 OOO이고, 주요 대상은 OOO입니다. 이번 주에 홍보할 내용은 OOO입니다.
+          아래 조건에 맞춰 콘텐츠 기획안을 작성해 주세요. 첫째, 학부모님이 신뢰할 수 있는 어조로.
+          둘째, 핵심 메시지는 한 문장으로. 셋째, 카드뉴스 3장 구성으로 나눠서.
+        </div>
+        <div class="prompt-preview">
+          위 기획안을 바탕으로 카드뉴스 3장의 문구를 작성해 주세요. 각 장마다 헤드라인과
+          본문 2줄, 마지막 장에는 학원 연락처 안내를 포함해 주세요.
+        </div>
+      </section>
+      <section>
+        <h2>핵심 자료 파일</h2>
+        <div class="file">
+          <span class="kind">Sheet</span>
+          <span class="t"><strong>마스터 시트 템플릿</strong><span>콘텐츠 기획-제작 흐름을 관리하는 시트</span></span>
+        </div>
+      </section>
+    </div>
+    <div class="lock-overlay">
+      <span class="lock-msg">참석자 전용 자료입니다</span>
+      <span class="lock-sub">강의에서 안내드린 비밀번호를 입력하면 전체 본문이 열려요.</span>
+      <button class="unlock-btn" type="button" id="unlockBtn">비밀번호 입력하고 전체 보기</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 비밀번호 모달 -->
+<div class="modal-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="modal">
+    <h3 id="pwTitle">비밀번호 입력</h3>
+    <p class="m-sub">강의에서 안내드린 비밀번호를 입력해 주세요.</p>
+    <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+    <p class="m-error" id="pwError"></p>
+    <div class="m-actions">
+      <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
+      <button class="btn btn-primary" type="button" id="pwSubmit">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 비밀번호의 SHA-256 해시 앞 16자리가 곧 본문 페이지 경로입니다.
+   경로가 코드에 남지 않아 비밀번호 없이는 본문에 접근할 수 없어요. */
+const backdrop = document.getElementById("pwBackdrop");
+const pwInput = document.getElementById("pwInput");
+const pwError = document.getElementById("pwError");
+
+function openModal() {
+  pwInput.value = "";
+  pwError.textContent = "";
+  backdrop.classList.add("show");
+  pwInput.focus();
+}
+document.getElementById("unlockBtn").addEventListener("click", openModal);
+document.getElementById("pwCancel").addEventListener("click", () => backdrop.classList.remove("show"));
+backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
+pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+document.getElementById("pwSubmit").addEventListener("click", tryUnlock);
+
+async function sha256hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function tryUnlock() {
+  const pw = pwInput.value.trim();
+  if (!pw) { pwError.textContent = "비밀번호를 입력해 주세요."; return; }
+  const hash = (await sha256hex(pw)).slice(0, 16);
+  const path = "p/" + hash + "/";
+  try {
+    const res = await fetch(path, { method: "HEAD" });
+    if (res.ok) {
+      window.location.href = path;
+    } else {
+      pwError.textContent = "비밀번호가 올바르지 않습니다.";
+    }
+  } catch {
+    pwError.textContent = "확인 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요.";
+  }
+}
+
+/* 페이지 진입 시 모달 자동 표시 */
+window.addEventListener("load", () => { setTimeout(openModal, 400); });
+</script>
+
+</body>
+</html>

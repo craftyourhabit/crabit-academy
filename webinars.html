@@ -266,8 +266,11 @@
     });
   }
 
-  renderTabs();
-  renderRows();
+  /* 다시보기 오픈 시 아래 두 줄로 복원: renderTabs(); renderRows(); */
+  tabsEl.style.display = "none";
+  rowsEl.innerHTML = '<div class="empty" style="padding: 80px 0;">'
+    + '<strong style="display:block; font-family: \'Elice Digital Baeum\', Pretendard, sans-serif; font-size: 27px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Coming soon</strong>'
+    + '웨비나 다시보기를 준비하고 있어요. 조금만 기다려주세요!</div>';
 })();
 </script>
 

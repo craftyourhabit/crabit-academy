@@ -277,10 +277,11 @@
 const RESOURCES = [
   {
     category: "강의자료",
-    title: "대구 강의 자료",
-    sub: "강의 슬라이드 · 실습 가이드북 · 실습 템플릿",
-    thumb: "assets/thumbs/daegu-lecture.svg",
-    access: "protected"
+    title: "[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료",
+    sub: "강의 자료 · 프롬프트 모음집 · 핵심 자료 파일 전부 전달",
+    thumb: "assets/thumbs/daegu-lecture.jpg",
+    access: "protected",
+    href: "daegu-followup.html"
   },
   {
     category: "가이드북",
@@ -334,7 +335,7 @@ const RESOURCES = [
     }
     items.forEach(r => {
       let el;
-      if (r.access === "public" && r.href) {
+      if (r.href) {
         el = document.createElement("a");
         el.href = r.href;
         el.className = "row";

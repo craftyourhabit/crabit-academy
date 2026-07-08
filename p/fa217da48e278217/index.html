@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료 — 크래빗 아카데미</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: ../../assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("../../assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .head { padding: 20px 0 8px; }
+  .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.1);
+    margin-bottom: 26px;
+    background: var(--fill);
+  }
+  .badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    background: var(--tint);
+    color: var(--pink);
+  }
+  .pill.ink { background: var(--ink); color: #fff; }
+  h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 5.5vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+  .meta { font-size: 16px; color: var(--ink); margin-bottom: 24px; font-variant-numeric: tabular-nums; }
+
+  .notice {
+    background: var(--tint);
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-size: 15.5px;
+    margin-bottom: 44px;
+  }
+  .notice strong { font-weight: 700; }
+
+  h2 { margin: 0 0 14px; font-size: 25px; font-weight: 700; letter-spacing: -0.01em; }
+  .sec-sub { margin: 0 0 18px; font-size: 16.5px; color: var(--ink); }
+  section { margin-bottom: 48px; }
+
+  .files { display: flex; flex-direction: column; gap: 12px; }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px 22px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
+  }
+  .file .kind {
+    flex: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--pink);
+    text-transform: uppercase;
+    width: 64px;
+  }
+  .file .t { flex: 1; }
+  .file .t strong { display: block; font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .file .t span { font-size: 14.5px; color: var(--ink); }
+  .file .dl { flex: none; font-size: 15px; font-weight: 600; color: var(--muted); }
+  a.file .dl { color: var(--pink); }
+  a.file:hover { box-shadow: 0 6px 16px rgba(22, 25, 42, 0.11); }
+
+  .prompt {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
+    margin-bottom: 12px;
+  }
+  .prompt .p-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .prompt .p-title { font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .prompt pre {
+    margin: 0;
+    background: var(--fill-soft);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 14.5px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .copy-btn {
+    flex: none;
+    border: 0;
+    background: var(--ink);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: #333333; }
+  .pending-note { font-size: 15px; color: var(--ink); background: var(--fill-soft); border-radius: 10px; padding: 14px 18px; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 40px;
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 24px;
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="../../"><img src="../../assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="../../">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="head">
+    <img class="thumb" src="../../assets/thumbs/daegu-lecture.jpg" alt="우리 학원만의 AI 마케터 고용하기 썸네일" />
+    <div class="badges">
+      <span class="pill">강의자료</span>
+      <span class="pill ink">참석자 전용</span>
+    </div>
+    <h1>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료</h1>
+    <p class="meta">2026년 7월 9일 (목) 진행 · 대구학원연합회 · Speaker 김현지 (크래빗 장학카드 대표)</p>
+  </div>
+
+  <div class="notice">
+    <strong>안내</strong> — 강의에 참석해 주셔서 감사합니다. 이 페이지는 참석자 전용이에요.
+    링크와 비밀번호를 외부에 공유하지 말아 주세요.
+  </div>
+
+  <section>
+    <h2>강의 자료</h2>
+    <p class="sec-sub">강의에서 사용한 자료를 내려받으실 수 있어요.</p>
+    <div class="files">
+      <div class="file">
+        <span class="kind">PDF</span>
+        <span class="t">
+          <strong>강의 슬라이드</strong>
+          <span>강의에서 사용한 발표 자료 전체</span>
+        </span>
+        <span class="dl">준비 중</span>
+      </div>
+      <div class="file">
+        <span class="kind">Guide</span>
+        <span class="t">
+          <strong>실습 가이드북</strong>
+          <span>강의 실습을 혼자서도 처음부터 따라 할 수 있는 단계별 안내서</span>
+        </span>
+        <span class="dl">준비 중</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>프롬프트 모음집</h2>
+    <p class="sec-sub">강의에서 사용한 프롬프트예요. 복사해서 바로 붙여넣어 쓰시면 됩니다.</p>
+    <div class="prompt">
+      <div class="p-head">
+        <span class="p-title">콘텐츠 기획안 프롬프트</span>
+        <button class="copy-btn" type="button">복사</button>
+      </div>
+      <pre>프롬프트 준비 중이에요. 곧 업데이트됩니다.</pre>
+    </div>
+    <div class="prompt">
+      <div class="p-head">
+        <span class="p-title">카드뉴스 자동 제작 프롬프트</span>
+        <button class="copy-btn" type="button">복사</button>
+      </div>
+      <pre>프롬프트 준비 중이에요. 곧 업데이트됩니다.</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>핵심 자료 파일</h2>
+    <p class="sec-sub">실습에 사용한 템플릿과 시트 파일이에요.</p>
+    <div class="files">
+      <div class="file">
+        <span class="kind">Sheet</span>
+        <span class="t">
+          <strong>마스터 시트 템플릿</strong>
+          <span>콘텐츠 기획-제작 흐름을 관리하는 시트</span>
+        </span>
+        <span class="dl">준비 중</span>
+      </div>
+      <div class="file">
+        <span class="kind">Link</span>
+        <span class="t">
+          <strong>실습 템플릿 모음</strong>
+          <span>강의에서 안내한 템플릿과 예제 링크</span>
+        </span>
+        <span class="dl">준비 중</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="../../assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll(".copy-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const text = btn.closest(".prompt").querySelector("pre").textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "복사됨";
+      setTimeout(() => { btn.textContent = "복사"; }, 1500);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

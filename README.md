@@ -8,7 +8,7 @@
 ## 페이지 구성
 
 - 홈(`index.html`): 히어로 배너 → 예정 교육(EVENTS_DB의 upcoming 자동 표시) → 웨비나 다시보기 → 자료/인사이트
-- 아카데미 소개(`about.html`): 그라데이션 소개 박스 + 프로그램 카드(아카데미 교육 / 습관연구소 / 올커니 / 멤버스 보상)
+- 아카데미 소개(`about.html`): 인트로 타이틀 + 성장 공식 인터랙티브 루프(학생/원장님 토글, 자동 순환) + 마무리 선언문
 - 예정 일정(`schedule.html`): 월간 캘린더. 일정 클릭 → 모달 → 상세페이지 이동
 - 콘텐츠(메뉴 토글): `webinars.html`(웨비나), `resources.html`(자료/인사이트)
 - 행사 상세: `event.html?id=<키>`
@@ -36,10 +36,6 @@ const SCHEDULE = [
 
 - `date`: `YYYY-MM-DD` / `time`: `HH:MM`
 - `id`: `EVENTS_DB`의 키 — 제목·주최·썸네일·설명을 자동으로 가져오고, 클릭 시 모달과 상세페이지로 연결됩니다
-
-## 멤버스 카드 이미지 넣는 법
-
-홈의 "행동하는 원장님께도 보상합니다" 카드에 점선 자리(`card-slot`)가 있습니다. 카드 디자인이 나오면 `index.html`에서 `<div class="card-slot">...</div>`를 `<img class="card-img" src="assets/members-card.png" alt="크래빗 아카데미 멤버스 카드" />`로 바꾸고 이미지를 `assets/`에 넣으면 됩니다.
 
 ## 전체보기 페이지 (공개)
 

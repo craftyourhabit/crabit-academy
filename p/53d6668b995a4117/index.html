@@ -63,6 +63,43 @@
   }
   .hero p { margin: 0 0 26px; font-size: 17.5px; color: var(--ink); text-wrap: pretty; }
 
+  .flow {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    margin-bottom: 20px;
+  }
+  .flow h2 { margin: 0 0 14px; font-size: 21px; font-weight: 700; }
+  .flow ol { margin: 0; padding-left: 0; list-style: none; counter-reset: step; }
+  .flow li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 16px;
+  }
+  .flow li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .flow li::before {
+    content: counter(step);
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 99px;
+    background: var(--pink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .flow li strong { display: block; }
+  .flow li .f-sub { color: var(--muted); font-size: 14.5px; }
+  .flow .f-now { color: var(--pink); font-weight: 700; }
+
   .check {
     background: var(--bg);
     border-radius: 18px;
@@ -161,6 +198,19 @@
       아래 <strong>"프롬프트 전체 복사하기"</strong> 버튼을 누르고, 클로드 코워크 채팅창에
       붙여넣기(Ctrl+V / Cmd+V) 한 뒤 전송하세요. 빈칸을 채울 필요가 전혀 없어요.
     </p>
+  </div>
+
+  <div class="flow">
+    <h2>오늘 실습, 전체 흐름은 이렇습니다</h2>
+    <ol>
+      <li><div><strong>세팅 폴더 받기·저장</strong><span class="f-sub">디자인 템플릿이 든 폴더를 컴퓨터에 저장 + 로고 파일 넣기</span></div></li>
+      <li><div><strong>노션 빈 페이지 만들고 클로드에 연결</strong><span class="f-sub">노션 계정이 여러 개라면 평소 쓰는 계정으로</span></div></li>
+      <li><div><strong>코워크 열고 작업 폴더 지정</strong><span class="f-sub">1번에서 만든 폴더 선택 — 채팅창에 폴더 이름이 보이면 성공</span></div></li>
+      <li><div><strong class="f-now">아래 프롬프트 복사해서 붙여넣기 ← 지금 이 단계</strong><span class="f-sub">빈칸 없이 그대로 전송하면 됩니다</span></div></li>
+      <li><div><strong>클로드의 인터뷰에 답하기</strong><span class="f-sub">학원 소개를 대화하듯 편하게 — 끝나면 학원 프로필이 만들어져요</span></div></li>
+      <li><div><strong>자동 세팅 확인</strong><span class="f-sub">노션 캘린더·콘텐츠 보드 + 자동 스케줄 3개가 등록됩니다</span></div></li>
+      <li><div><strong>첫 카드뉴스 같이 만들어보기</strong><span class="f-sub">"이번 주 주제 추천해줘" 한마디면 시작</span></div></li>
+    </ol>
   </div>
 
   <div class="check">

@@ -11,6 +11,14 @@
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  .eyebrow, h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
   :root {
     --page: #F2F3F6;
     --bg: #FFFFFF;
@@ -128,6 +136,20 @@
   .r-body p:last-child { margin-bottom: 0; }
   .r-body a { color: var(--pink); font-weight: 700; text-decoration: none; }
   .r-body a:hover { text-decoration: underline; }
+  .easy-box {
+    background: var(--tint);
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 16.5px;
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+  .easy-box > strong:first-child {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 17px;
+    color: var(--ink);
+  }
 
   .os-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .os-card {
@@ -267,7 +289,18 @@
           강의에서 쓰는 <strong>Cowork 기능은 유료 플랜 전용</strong>이라, 가장 저렴한
           <strong>Pro 플랜</strong> 구독까지 부탁드려요.
         </p>
-        <p>가입이 끝나면 내 컴퓨터에 맞는 데스크탑 앱을 설치하고 로그인까지 해주세요.</p>
+        <p>
+          가입이 끝나면 <strong>데스크탑 앱 설치는 필수예요!</strong>
+          강의 실습이 전부 데스크탑 앱에서 진행됩니다.
+        </p>
+        <div class="easy-box">
+          <strong>웹이랑 앱, 뭐가 다른가요?</strong>
+          웹은 인터넷 창에서 클로드와 <strong>대화만</strong> 할 수 있어요.
+          데스크탑 앱은 카카오톡처럼 <strong>내 컴퓨터에 설치하는 프로그램</strong>이라서,
+          클로드가 내 컴퓨터 안의 폴더와 파일을 직접 열고, 만들고, 정리해줄 수 있어요.
+          강의에서 쓰는 Cowork 기능이 바로 이 기능이라 앱이 꼭 필요합니다.
+        </div>
+        <p>설치 후 가입하신 계정으로 로그인까지 해주세요.</p>
         <div class="os-row">
           <a class="os-card" href="https://claude.ai/download" target="_blank" rel="noopener">
             <span class="os-name">Windows용 다운로드</span>

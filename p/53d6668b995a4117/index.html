@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>당일 강의 프롬프트 — 크래빗 아카데미</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: ../../assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("../../assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  .eyebrow, h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .hero { padding: 26px 0 8px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--pink);
+    margin-bottom: 12px;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(28px, 6.5vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .hero p { margin: 0 0 26px; font-size: 17.5px; color: var(--ink); text-wrap: pretty; }
+
+  .check {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    margin-bottom: 20px;
+  }
+  .check h2 { margin: 0 0 12px; font-size: 21px; font-weight: 700; }
+  .check ol { margin: 0; padding-left: 22px; font-size: 16.5px; }
+  .check li { margin-bottom: 8px; }
+  .check li:last-child { margin-bottom: 0; }
+  .check .hint { color: var(--muted); font-size: 15px; }
+
+  .how {
+    background: var(--tint);
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 16.5px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .how strong { display: block; margin-bottom: 4px; }
+
+  .copybar {
+    position: sticky;
+    top: 12px;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .copy-btn {
+    flex: 1;
+    background: var(--ink);
+    color: #fff;
+    border: 0;
+    border-radius: 14px;
+    padding: 18px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(22, 25, 42, 0.22);
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: #333333; }
+  .copy-btn.done { background: var(--pink); }
+
+  .prompt-box {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    margin-bottom: 44px;
+  }
+  .prompt-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    font-family: inherit;
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0 36px;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand"><img src="../../assets/logo.png" alt="Crabit 아카데미" /></div>
+      <a href="../../daegu-guide.html">준비가이드로 돌아가기</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow">당일 강의 프롬프트</span>
+    <h1>복사해서 붙여넣기만 하면,<br />클로드가 알아서 질문합니다</h1>
+    <p>
+      아래 <strong>"프롬프트 전체 복사하기"</strong> 버튼을 누르고, 클로드 코워크 채팅창에
+      붙여넣기(Ctrl+V / Cmd+V) 한 뒤 전송하세요. 빈칸을 채울 필요가 전혀 없어요.
+    </p>
+  </div>
+
+  <div class="check">
+    <h2>전송 전에 딱 2가지만 확인하세요</h2>
+    <ol>
+      <li>
+        코워크의 <strong>작업 폴더</strong>가 "디자인 템플릿"이 들어 있는 폴더로 지정되어 있나요?
+        <span class="hint">— 채팅창에 폴더 이름이 보이면 성공</span>
+      </li>
+      <li>
+        <strong>노션</strong>이 클로드에 연결되어 있고, 콘텐츠용 빈 페이지 1개에 접근이 허용되어 있나요?
+        <span class="hint">— 채팅에서 "노션 페이지 확인해줘"로 확인</span>
+      </li>
+    </ol>
+  </div>
+
+  <div class="how">
+    <strong>전송하면 이렇게 진행돼요</strong>
+    클로드가 우리 학원에 대해 한 번에 하나씩 질문합니다. 옆자리 직원에게 학원을
+    소개하듯 편하게 답해주시면, 클로드가 학원 프로필과 노션 캘린더, 자동 스케줄까지
+    알아서 세팅해 드려요.
+  </div>
+
+  <div class="copybar">
+    <button class="copy-btn" type="button" id="copyBtn">프롬프트 전체 복사하기</button>
+  </div>
+
+  <div class="prompt-box">
+<pre id="promptText">너는 오늘부터 우리 학원의 AI 마케터야.
+나는 컴퓨터와 전문용어를 잘 몰라. 항상 쉬운 말로, 결정할 일은 한 번에 하나씩만 물어봐줘.
+
+[0. 시작 전 점검]
+먼저 아래 두 가지를 확인하고, 문제가 있으면 진행하기 전에 나에게 해결 방법을 쉬운 말로 안내해줘.
+- 이 폴더 안에 "디자인 템플릿"이 있는지 확인해줘. 없으면 나에게 알려줘.
+- 연결된 노션 페이지가 있는지 확인해줘. 없으면 노션 연결 방법을 안내해줘.
+
+[1. 우리 학원 파악 인터뷰 — 가장 먼저 할 일]
+지금 나에게 아무것도 요구하지 말고, 네가 먼저 아래 순서대로 진행해줘.
+
+1. 이 폴더 안에 "학원 프로필.md" 파일이 이미 있는지 확인해줘.
+   - 없으면: 새로 만들 거야. 아래 인터뷰를 처음부터 진행해줘.
+   - 이미 있으면: 내용을 읽고 나에게 요약해서 보여준 다음, 비어 있거나 오래됐거나 확실하지 않은 항목만 골라서 질문해줘. 이미 답이 있는 걸 다시 묻지 마.
+2. 인터뷰는 한 번에 질문 하나씩, 내가 답하면 다음 질문으로 넘어가는 방식으로 해줘. 아래 주제를 꼭 다뤄줘.
+   - 학원 기본 정보: 학원 이름, 가르치는 과목·프로그램, 주요 타겟 학생(예: 초등 고학년, 중등)
+   - 우리 학원은 어떤 곳인지: 학원 위치와 동네, 아이들이 주로 다니는 학교, 다른 학원과 다른 우리만의 강점 2~3가지 (내가 말로 풀어서 설명하면 네가 홍보 포인트로 정리해줘)
+   - 말투·분위기(톤앤매너): "따뜻하고 다정하게 / 전문적이고 신뢰 있게 / 밝고 발랄하게" 같은 보기를 주고 고르게 해줘. 슬로건이 있으면 알려달라고 하고, 없으면 나중에 같이 만들자고 제안해줘.
+   - SNS 운영: 운영 중인 채널(인스타그램, 네이버 블로그 등), 카드뉴스를 올리고 싶은 요일과 시간
+   - 학부모님이 요즘 자주 묻는 질문 2가지 (콘텐츠 소재로 쓸 거야)
+   - 디자인 규칙: 우리 학원이 주로 쓰는 색상 (간판, 로고, 인테리어 색 — 나는 "파란색이요"처럼 편하게 답할게. 네가 정확한 색 코드로 정리해줘.) 그리고 카드뉴스에서 피하고 싶은 느낌이 있는지도 물어봐줘.
+   - 로고 파일: 로고 파일을 이 폴더에 넣어달라고 안내하고, 넣으면 파일 위치를 기록해줘. 지금 없으면 "나중에 추가"로 표시해줘.
+   - 다가오는 일정: 앞으로 두세 달 안의 학원 일정(개강, 시험 대비, 특강, 행사)과 주변 학교 일정(시험, 방학)을 물어봐줘.
+3. 인터뷰가 끝나면 답을 정리해서 이 폴더 안에 "학원 프로필.md" 파일로 저장해줘(이미 있으면 업데이트). 파일 맨 위에 최종 업데이트 날짜를 적어줘. 앞으로 만드는 모든 콘텐츠는 이 프로필을 따라야 해.
+4. 저장한 프로필을 나에게 보여주고 "혹시 고칠 부분 있나요?"라고 확인받아줘.
+
+[2. 프로필 확인이 끝나면 이어서 세팅해줘]
+1. 연결된 노션 페이지 안에 아래 두 가지를 인라인으로 만들어줘. 만들고 나서 내가 보기 편하게 뷰까지 설정해줘.
+   - "학원 일정" 데이터베이스 — 개강, 시험 대비, 특강, 행사 같은 우리 학원 일정을 기록하는 곳. 캘린더 뷰로 보이게 해줘. 인터뷰에서 내가 알려준 일정을 여기에 바로 등록해줘.
+   - "콘텐츠 관리" 데이터베이스 — 속성: 제목, 상태(아이디어 / 제작 중 / 컨펌 대기 / 게시 완료), 게시 예정일, 채널, 카드뉴스 저장 위치, 캡션 문구. 상태별 보드 뷰로 보이게 해줘.
+2. 이 폴더 안에 "카드뉴스 완성본" 폴더를 만들어줘. 앞으로 완성된 카드뉴스는 "날짜_주제" 이름의 하위 폴더로 정리해서 저장해.
+3. 아래 스케줄(예약) 3개를 등록해줘. 이게 제일 중요해.
+   - 매주 일요일 오전 9시 — 다음 주 콘텐츠 플래닝: 노션 "학원 일정" 캘린더를 보고 다음 주에 올리면 좋을 주제를 2~3개 추천해줘. 내가 원하는 키워드가 있는지도 물어봐줘. 서로 조율해서 주제가 정해지면 나에게 "이 주제로 만들까요?"라고 물어봐줘 — 나는 "네"라고만 하면 돼. 승인하면 바로 카드뉴스를 만들어서 "카드뉴스 완성본" 폴더에 저장하고, 노션 "콘텐츠 관리"에 게시 예정일·캡션 문구까지 작성한 다음, 내가 바로 확인할 수 있게 파일 위치를 알려줘.
+   - 매주 게시일 아침 — 게시 안내: 오늘 올릴 카드뉴스의 완성본 파일 위치와 노션에 적어둔 캡션 문구를 나에게 정리해서 알려줘. 나는 그 파일과 글을 그대로 SNS에 올리기만 하면 되게 해줘. (게시일은 인터뷰에서 내가 정한 요일로 등록해줘.)
+   - 매월 마지막 주 일요일 — 다음 달 일정 수집: 나에게 다음 달 학원 일정과 주요 학교 일정(시험, 방학, 행사)을 물어봐줘. 내가 알려주면 노션 "학원 일정" 캘린더에 네가 직접 등록해줘.
+4. 전부 끝나면 아래 순서로 마무리해줘.
+   - 뭘 만들었는지 한눈에 보이게 정리해서 알려줘.
+   - 스케줄은 그 시간에 컴퓨터가 켜져 있어야 실행된다는 것을 꼭 알려줘 (밥솥 예약취사처럼).
+   - "다음 주 일요일 오전 9시에 제가 먼저 말을 걸어드릴게요"라고 안내해줘.
+   - 마지막으로 "지금 첫 카드뉴스를 하나 같이 만들어볼까요?"라고 제안해줘. 내가 좋다고 하면 학부모님이 자주 묻는 질문 중 하나를 주제로 바로 만들어줘.
+
+[학원 프로필은 살아있는 문서야 — 꼭 지켜줘]
+- 앞으로 대화 중에 우리 학원에 대한 새로운 정보(새 반 개설, 일정 변경, 슬로건 확정, 색상 변경 등)를 알게 되면, 나에게 "프로필에 추가할까요?"라고 물어본 뒤 "학원 프로필.md"에 바로 반영하고 최종 업데이트 날짜를 고쳐줘.
+- 카드뉴스를 만들다가 프로필에 없는 정보가 필요하면, 추측하지 말고 나에게 물어보고 그 답도 프로필에 추가해줘.
+
+[카드뉴스를 만들 때마다 꼭 지켜줘]
+- 디자인은 이 폴더의 "디자인 템플릿" 스타일을 그대로 따라줘. 색만 우리 학원 색상으로 바꿔서 써.
+- 글자와 요소는 큼직큼직하게, 화면을 꽉 채워줘. 여백이 휑하게 남는 디자인은 안 돼. 멀리서도 읽히게 글자는 크게.
+- 모든 카드뉴스에 우리 학원 로고를 넣어줘 (표지 왼쪽 위가 기본).
+- 입시·교육 정보를 다룰 때는 반드시 진로N, 에듀플러스, EBS 같은 공식 웹사이트와 아티클을 검색해서 참조하고, 카드뉴스 모서리에 출처를 작게 표기해줘. 확인 안 된 정보는 절대 넣지 마.
+- 카드뉴스를 만든 뒤에는 각 카드를 직접 열어 글자 잘림·줄바꿈·색 대비·전체 일관성을 스스로 검수하고, 문제가 있으면 고친 다음 나에게 보여줘.
+- 나에게 뭔가 결정을 받아야 할 때는 한 번에 하나씩 물어봐줘. 나는 "네"라고 승인만 하면 되게.
+- 나는 전문용어를 잘 몰라. 항상 쉬운 말로 설명해줘.
+- 카드뉴스를 인스타 등 SNS에 직접 올리지 마. 만들어 두기만 하고, 올릴지 말지는 항상 내가 결정해.
+- 확실하지 않은 건 추측하지 말고 나에게 물어봐줘.</pre>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">&copy; 2026 CRABIT. All rights reserved.</div>
+</footer>
+
+<script>
+const copyBtn = document.getElementById("copyBtn");
+const promptText = document.getElementById("promptText");
+
+copyBtn.addEventListener("click", async () => {
+  const text = promptText.textContent;
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch {
+    /* 구형 브라우저 대비 */
+    const range = document.createRange();
+    range.selectNodeContents(promptText);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    ok = document.execCommand("copy");
+    sel.removeAllRanges();
+  }
+  if (ok) {
+    copyBtn.textContent = "복사 완료! 코워크 채팅창에 붙여넣으세요";
+    copyBtn.classList.add("done");
+    setTimeout(() => {
+      copyBtn.textContent = "프롬프트 전체 복사하기";
+      copyBtn.classList.remove("done");
+    }, 3000);
+  } else {
+    copyBtn.textContent = "복사가 안 되면 아래 글을 손으로 드래그해 복사해 주세요";
+  }
+});
+</script>
+
+</body>
+</html>

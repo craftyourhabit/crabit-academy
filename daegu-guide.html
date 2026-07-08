@@ -31,6 +31,101 @@
     --tint: #FEE9F4;
   }
   * { box-sizing: border-box; }
+
+  /* ---------- 당일 강의 프롬프트 띠배너 ---------- */
+  .day-banner {
+    background: var(--ink);
+    color: #fff;
+    padding: 26px 0;
+  }
+  .day-banner .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .db-text { flex: 1; min-width: 240px; }
+  .db-label {
+    display: inline-block;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--pink);
+    margin-bottom: 6px;
+  }
+  .db-title {
+    margin: 0;
+    font-size: clamp(19px, 4.5vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    color: #fff;
+  }
+  .db-sub { margin: 6px 0 0; font-size: 15.5px; color: #fff; opacity: 0.85; }
+  .db-cta {
+    flex: none;
+    display: inline-block;
+    background: #fff;
+    color: var(--ink);
+    border: 0;
+    border-radius: 14px;
+    padding: 16px 28px;
+    font-size: 17px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .db-cta::after { content: " \2197"; color: var(--pink); font-weight: 700; }
+  .db-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3); }
+  @media (max-width: 560px) {
+    .day-banner .wrap { flex-direction: column; align-items: stretch; text-align: center; }
+    .db-cta { width: 100%; }
+  }
+
+  /* ---------- 비밀번호 모달 ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 25, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.25);
+  }
+  .modal h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal .m-sub { margin: 0 0 20px; font-size: 15px; color: var(--ink); }
+  .modal input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--fill);
+    color: var(--ink);
+  }
+  .modal input:focus { outline: 2px solid var(--pink); }
+  .modal .m-error { min-height: 20px; margin: 8px 0 12px; font-size: 14px; color: var(--pink); font-weight: 500; }
+  .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal .btn-primary { background: var(--ink); color: #fff; border: 0; cursor: pointer; font-family: inherit; }
+  .modal .btn-primary:hover { background: #333333; }
+  .modal .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); cursor: pointer; font-family: inherit; }
+  .modal .btn-ghost:hover { background: #F0F0F0; }
+
   body {
     margin: 0;
     background: var(--page);
@@ -297,6 +392,17 @@
 </head>
 <body>
 
+<div class="day-banner">
+  <div class="wrap">
+    <div class="db-text">
+      <span class="db-label">오늘 강의에 오신 원장님</span>
+      <p class="db-title">실습에 쓸 온보딩 프롬프트,<br />여기서 바로 받아가세요</p>
+      <p class="db-sub">강의에서 안내드린 비밀번호 4자리를 입력하면 열립니다.</p>
+    </div>
+    <button class="db-cta" type="button" id="dayPromptBtn">당일 강의 프롬프트 받기</button>
+  </div>
+</div>
+
 <header>
   <div class="wrap">
     <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
@@ -439,6 +545,63 @@
     </div>
   </div>
 </footer>
+
+<!-- 비밀번호 모달: 당일 강의 프롬프트 -->
+<div class="modal-backdrop" id="pwBackdrop" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="modal">
+    <h3 id="pwTitle">비밀번호 입력</h3>
+    <p class="m-sub">강의에서 안내드린 비밀번호 4자리를 입력해 주세요.</p>
+    <input type="password" id="pwInput" autocomplete="off" inputmode="numeric" placeholder="비밀번호" />
+    <p class="m-error" id="pwError"></p>
+    <div class="m-actions">
+      <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
+      <button class="btn btn-primary" type="button" id="pwSubmit">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 비밀번호의 SHA-256 해시 앞 16자리가 곧 본문 페이지 경로입니다.
+   경로가 코드에 남지 않아 비밀번호 없이는 본문에 접근할 수 없어요. */
+const backdrop = document.getElementById("pwBackdrop");
+const pwInput = document.getElementById("pwInput");
+const pwError = document.getElementById("pwError");
+
+function openModal() {
+  pwInput.value = "";
+  pwError.textContent = "";
+  backdrop.classList.add("show");
+  pwInput.focus();
+}
+document.getElementById("dayPromptBtn").addEventListener("click", openModal);
+document.getElementById("pwCancel").addEventListener("click", () => backdrop.classList.remove("show"));
+backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
+pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+document.getElementById("pwSubmit").addEventListener("click", tryUnlock);
+
+async function sha256hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function tryUnlock() {
+  const pw = pwInput.value.trim();
+  if (!pw) { pwError.textContent = "비밀번호를 입력해 주세요."; return; }
+  const hash = (await sha256hex(pw)).slice(0, 16);
+  const path = "p/" + hash + "/";
+  try {
+    const res = await fetch(path, { method: "HEAD" });
+    if (res.ok) {
+      window.location.href = path;
+    } else {
+      pwError.textContent = "비밀번호가 올바르지 않습니다.";
+    }
+  } catch {
+    pwError.textContent = "확인 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요.";
+  }
+}
+</script>
 
 </body>
 </html>

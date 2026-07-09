@@ -284,25 +284,11 @@ const RESOURCES = [
     thumb: "assets/thumbs/daegu-lecture.jpg",
     access: "protected",
     href: "daegu-followup.html"
-  },
-  {
-    category: "가이드북",
-    title: "카드뉴스 AI 에이전트 가이드북 (1·2편)",
-    sub: "기초·설계부터 클로드 코드 자동화 에이전트까지",
-    thumb: "assets/thumbs/guidebook.svg",
-    access: "soon"
-  },
-  {
-    category: "인사이트",
-    title: "교육 기관을 위한 AI 활용 인사이트",
-    sub: "현장에서 검증한 AI 활용 사례와 노하우 연재",
-    thumb: "assets/thumbs/insight.svg",
-    access: "soon"
   }
 ];
 
 (function () {
-  const CATEGORIES = ["전체", "강의자료", "가이드북", "인사이트"];
+  const CATEGORIES = ["전체", "강의자료"];
   let active = "전체";
 
   const tabsEl = document.getElementById("tabs");

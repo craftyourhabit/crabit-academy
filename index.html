@@ -278,6 +278,7 @@
     gap: 10px;
     flex: 1;
   }
+  .replay .k-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .replay .body .k {
     font-size: 13px;
     font-weight: 600;
@@ -285,6 +286,17 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+  .status-tag {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 3px 11px;
+    border-radius: 99px;
+    letter-spacing: 0;
+    line-height: 1.5;
+  }
+  .status-tag.upcoming { background: var(--tint); color: var(--pink); }
+  .status-tag.closed { background: var(--fill); color: var(--muted); }
+  .replay.is-closed .thumb { opacity: 0.62; }
   .replay .body strong {
     font-size: 18px;
     font-weight: 700;
@@ -455,13 +467,13 @@
     </div>
   </div>
 
-  <!-- 01. 예정 교육 -->
+  <!-- 01. 교육 일정 -->
   <section id="upcoming">
     <div class="wrap">
       <div class="section-top">
         <div class="section-head">
-          <h2>예정 교육</h2>
-          <p>지금 신청할 수 있는 교육과 행사입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
+          <h2>교육 일정</h2>
+          <p>크래빗이 진행하는 교육과 행사입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
         </div>
         <a class="link-all" href="schedule.html">전체 일정 보기 &#8250;</a>
       </div>
@@ -504,22 +516,6 @@
           </span>
           <span class="res-badge locked">일부공개</span>
         </a>
-        <div class="res-row" style="cursor: default;">
-          <span class="res-kind">가이드북</span>
-          <span class="res-main">
-            <strong>카드뉴스 AI 에이전트 가이드북 (1·2편)</strong>
-            <span>기초·설계부터 클로드 코드 자동화 에이전트까지 다루는 가이드북입니다.</span>
-          </span>
-          <span class="res-badge soon">공개 예정</span>
-        </div>
-        <div class="res-row" style="cursor: default;">
-          <span class="res-kind">인사이트</span>
-          <span class="res-main">
-            <strong>교육 기관을 위한 AI 활용 인사이트</strong>
-            <span>현장에서 검증한 AI 활용 사례와 노하우를 연재합니다.</span>
-          </span>
-          <span class="res-badge soon">공개 예정</span>
-        </div>
       </div>
     </div>
   </section>
@@ -576,26 +572,33 @@ document.addEventListener("click", () => {
   drop.querySelector(".drop-btn").setAttribute("aria-expanded", "false");
 });
 
-/* ---------- 예정 교육 카드 렌더링 (assets/events.js 데이터 사용) ---------- */
+/* ---------- 교육 일정 카드 렌더링 (assets/events.js 데이터 사용) ----------
+   우선은 크래빗이 진행하는 교육만 노출합니다. (host === "크래빗")
+   진행 전(status "upcoming")은 '예정', 지난 교육은 '마감' 태그를 답니다. */
 (function () {
   const grid = document.getElementById("upcomingGrid");
-  const entries = Object.entries(EVENTS_DB).filter(([, ev]) => ev.status === "upcoming");
+  const entries = Object.entries(EVENTS_DB)
+    .filter(([, ev]) => ev.host === "크래빗")
+    .sort((a, b) => (a[1].status === "upcoming" ? 0 : 1) - (b[1].status === "upcoming" ? 0 : 1));
   if (entries.length === 0) {
-    grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">예정된 교육이 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
+    grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
     return;
   }
   entries.forEach(([id, ev]) => {
+    const upcoming = ev.status === "upcoming";
     const a = document.createElement("a");
-    a.className = "replay";
+    a.className = "replay" + (upcoming ? "" : " is-closed");
     a.href = "event.html?id=" + id;
     a.innerHTML =
       '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
       + '<div class="body">'
-      + '<span class="k">' + (ev.host === "올커니" ? "올커니" : ev.type) + '</span>'
+      + '<div class="k-row"><span class="k"></span>'
+      + '<span class="status-tag ' + (upcoming ? "upcoming" : "closed") + '">' + (upcoming ? "예정" : "마감") + '</span></div>'
       + '<strong></strong>'
       + '<p></p>'
       + '<div class="foot"><span class="date"></span><span class="more arrow">&#8250;</span></div>'
       + '</div>';
+    a.querySelector(".k").textContent = ev.type;
     a.querySelector("strong").textContent = ev.title;
     a.querySelector(".body p").textContent = ev.desc;
     a.querySelector(".date").textContent = ev.date;

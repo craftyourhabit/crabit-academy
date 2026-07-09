@@ -95,7 +95,7 @@ const EVENTS_DB = {
     ],
     speaker: "김현지",
     speakerRole: "크래빗 장학카드 대표",
-    prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입", "Figma 가입"],
+    prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입"],
     audience: "대구 지역 학원 원장님",
     status: "closed",
     replayUrl: ""

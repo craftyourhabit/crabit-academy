@@ -46,7 +46,8 @@
   .nav > a:hover { color: var(--ink); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
-  main { padding: 72px 0 128px; }
+  /* main은 .wrap도 함께 쓰므로 .wrap의 padding:0 24px에 눌리지 않도록 특이도를 높인다 */
+  main.wrap { padding-top: 56px; padding-bottom: 140px; }
   .thumb {
     width: 100%;
     aspect-ratio: 16 / 9;

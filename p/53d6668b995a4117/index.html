@@ -63,6 +63,47 @@
   }
   .hero p { margin: 0 0 26px; font-size: 17.5px; color: var(--ink); text-wrap: pretty; }
 
+  .dl {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .dl-ico {
+    flex: none;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .dl-text { flex: 1; min-width: 200px; }
+  .dl-text .dl-t { font-size: 18px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .dl-text .dl-d { font-size: 14.5px; color: rgba(255, 255, 255, 0.7); margin: 0; line-height: 1.5; }
+  .dl-btn {
+    flex: none;
+    display: inline-block;
+    background: #fff;
+    color: var(--ink);
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 15.5px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.15s;
+  }
+  .dl-btn:hover { transform: translateY(-1px); }
+  .dl-btn::before { content: "\2193  "; color: var(--pink); font-weight: 700; }
+  @media (max-width: 560px) {
+    .dl-btn { width: 100%; text-align: center; }
+  }
+
   .flow {
     background: var(--bg);
     border-radius: 18px;
@@ -198,6 +239,15 @@
       아래 <strong>"프롬프트 전체 복사하기"</strong> 버튼을 누르고, 클로드 코워크 채팅창에
       붙여넣기(Ctrl+V / Cmd+V) 한 뒤 전송하세요. 빈칸을 채울 필요가 전혀 없어요.
     </p>
+  </div>
+
+  <div class="dl">
+    <div class="dl-ico" aria-hidden="true">🎨</div>
+    <div class="dl-text">
+      <p class="dl-t">카드뉴스 디자인 템플릿 내려받기</p>
+      <p class="dl-d">실습에 쓰는 디자인 템플릿 6장(zip)이에요. 압축을 풀어 "세팅 폴더" 안에 넣어두면 됩니다.</p>
+    </div>
+    <a class="dl-btn" href="crabit-card-design-template.zip" download>디자인 템플릿 zip 받기</a>
   </div>
 
   <div class="flow">

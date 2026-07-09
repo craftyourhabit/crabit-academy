@@ -5,7 +5,7 @@
    - thumb: 썸네일 경로 (사이트 루트 기준).
      실제 이미지로 교체하려면 같은 경로에 파일을 넣고
      경로만 바꾸면 됩니다. (jpg/png 가능)
-   - status: "upcoming"(예정) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
+   - status: "upcoming"(예정) | "closed"(마감) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
    - replayUrl: status가 "replay"일 때 영상 링크
    =============================================== */
 const EVENTS_DB = {
@@ -97,7 +97,7 @@ const EVENTS_DB = {
     speakerRole: "크래빗 장학카드 대표",
     prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입", "Figma 가입"],
     audience: "대구 지역 학원 원장님",
-    status: "upcoming",
+    status: "closed",
     replayUrl: ""
   },
   "allkeoni-meetup": {

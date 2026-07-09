@@ -573,12 +573,13 @@ document.addEventListener("click", () => {
 });
 
 /* ---------- 교육 일정 카드 렌더링 (assets/events.js 데이터 사용) ----------
-   우선은 크래빗이 진행하는 교육만 노출합니다. (host === "크래빗")
-   진행 전(status "upcoming")은 '예정', 지난 교육은 '마감' 태그를 답니다. */
+   SHOW_IDS에 나열한 교육만 노출합니다. (지금은 대구 강의 하나)
+   진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */
 (function () {
+  const SHOW_IDS = ["daegu-lecture"];
   const grid = document.getElementById("upcomingGrid");
   const entries = Object.entries(EVENTS_DB)
-    .filter(([, ev]) => ev.host === "크래빗")
+    .filter(([id]) => SHOW_IDS.includes(id))
     .sort((a, b) => (a[1].status === "upcoming" ? 0 : 1) - (b[1].status === "upcoming" ? 0 : 1));
   if (entries.length === 0) {
     grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';

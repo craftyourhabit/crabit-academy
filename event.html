@@ -232,13 +232,16 @@
   const hostClass = ev.host === "올커니" ? "host-allkeoni" : "host-crabit";
   const statusBadge = ev.status === "upcoming"
     ? '<span class="badge status-upcoming">예정</span>'
-    : (ev.status === "replay" ? "" : '<span class="badge status-soon">다시보기 준비 중</span>');
+    : (ev.status === "closed" ? '<span class="badge status-soon">마감</span>'
+    : (ev.status === "replay" ? "" : '<span class="badge status-soon">다시보기 준비 중</span>'));
 
   let cta;
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
   } else if (ev.status === "upcoming") {
     cta = '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
+  } else if (ev.status === "closed") {
+    cta = '<span class="soon-note">마감된 교육이에요.</span>';
   } else {
     cta = '<span class="soon-note">다시보기 영상을 준비하고 있어요.</span>';
   }

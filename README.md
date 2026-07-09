@@ -10,11 +10,12 @@
 - 홈(`index.html`): 히어로 배너 → 예정 교육(EVENTS_DB의 upcoming 자동 표시) → 웨비나 다시보기 → 자료/인사이트
 - 아카데미 소개(`about.html`): 인트로 타이틀 + 성장 공식 인터랙티브 루프(학생/원장님 토글, 자동 순환) + 마무리 선언문
 - 예정 일정(`schedule.html`): 월간 캘린더. 일정 클릭 → 모달 → 상세페이지 이동
-- 콘텐츠(메뉴 토글): `webinars.html`(웨비나), `resources.html`(자료/인사이트)
+- 자료 · 인사이트(`resources.html`): 나브에서 직접 링크
 - 행사 상세: `event.html?id=<키>`
 - 제휴 업체 페이지는 보류 중 — 필요해지면 git 히스토리의 `partners.html`(커밋 a27538c)을 복원하면 됩니다
 - 웨비나 다시보기는 Coming soon 상태 — 오픈하려면 `index.html`의 coming-soon 블록을 카드로 되돌리고, `webinars.html` 스크립트 하단의 주석대로 `renderTabs(); renderRows();`를 복원
-- 대구 후속 자료: 미리보기(`daegu-followup.html`, 블러+비밀번호 모달) → 본문(`p/fa217da48e278217/`). 실제 파일·프롬프트는 본문 페이지의 "준비 중" 자리에 채워 넣으면 됩니다
+- 대구 후속 자료: 미리보기(`daegu-followup.html`, 블러+비밀번호 모달, 비번 `daegu0709`) → 본문(`p/fa217da48e278217/`) = 유튜브 임베드(클릭 차단, youtube-nocookie, iframe pointer-events:none) + 핸드아웃 PDF(`handout.pdf`) 다운로드/미리보기. 영상 교체는 본문 index.html의 `VIDEO_ID` 수정
+- 웨비나 다시보기(홈 섹션·콘텐츠 드롭다운)는 삭제됨 — 되살리려면 git 히스토리에서 `id="replay"` 섹션과 콘텐츠 드롭다운 nav를 복원
 
 ## 행사 상세페이지와 썸네일
 

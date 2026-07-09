@@ -37,7 +37,7 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px; }
 
   header { padding: 20px 0; }
   .nav { display: flex; align-items: center; justify-content: space-between; }
@@ -46,17 +46,7 @@
   .nav > a:hover { color: var(--ink); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
-  .head { padding: 20px 0 8px; }
-  .thumb {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    display: block;
-    border-radius: 18px;
-    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.1);
-    margin-bottom: 26px;
-    background: var(--fill);
-  }
+  .head { padding: 16px 0 24px; }
   .badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .pill {
     font-size: 13px;
@@ -69,91 +59,145 @@
   .pill.ink { background: var(--ink); color: #fff; }
   h1 {
     margin: 0 0 10px;
-    font-size: clamp(26px, 5.5vw, 34px);
+    font-size: clamp(24px, 5vw, 32px);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.35;
     text-wrap: balance;
   }
-  .meta { font-size: 16px; color: var(--ink); margin-bottom: 24px; font-variant-numeric: tabular-nums; }
+  .meta { font-size: 15.5px; color: var(--ink); font-variant-numeric: tabular-nums; }
 
   .notice {
     background: var(--tint);
     border-radius: 14px;
-    padding: 16px 20px;
-    font-size: 15.5px;
-    margin-bottom: 44px;
+    padding: 14px 18px;
+    font-size: 14.5px;
+    margin-bottom: 28px;
   }
   .notice strong { font-weight: 700; }
 
-  h2 { margin: 0 0 14px; font-size: 25px; font-weight: 700; letter-spacing: -0.01em; }
-  .sec-sub { margin: 0 0 18px; font-size: 16.5px; color: var(--ink); }
+  /* ---------- 클릭-차단 유튜브 플레이어 ---------- */
   section { margin-bottom: 48px; }
-
-  .files { display: flex; flex-direction: column; gap: 12px; }
-  .file {
+  .player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(22, 25, 42, 0.18);
+    user-select: none;
+  }
+  /* iframe 자체는 클릭 불가 → 유튜브 로고·제목·'YouTube에서 보기' 링크로 나갈 수 없음 */
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+  .player .overlay {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    background: transparent;
+    z-index: 2;
+  }
+  .player .big-play {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 76px; height: 76px;
+    border-radius: 99px;
+    background: rgba(22, 25, 42, 0.6);
+    backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .player.playing .big-play { opacity: 0; }
+  .player .big-play svg { width: 30px; height: 30px; margin-left: 4px; }
+  .player .controls {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 4;
     display: flex;
     align-items: center;
-    gap: 16px;
-    background: var(--bg);
-    border-radius: 14px;
-    padding: 18px 22px;
-    text-decoration: none;
-    color: inherit;
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
+    gap: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
   }
-  .file .kind {
+  .controls button {
+    border: 0; background: none; padding: 0; cursor: pointer;
+    color: #fff; display: flex; align-items: center; justify-content: center;
     flex: none;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: var(--pink);
-    text-transform: uppercase;
-    width: 64px;
   }
-  .file .t { flex: 1; }
-  .file .t strong { display: block; font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
-  .file .t span { font-size: 14.5px; color: var(--ink); }
-  .file .dl { flex: none; font-size: 15px; font-weight: 600; color: var(--muted); }
-  a.file .dl { color: var(--pink); }
-  a.file:hover { box-shadow: 0 6px 16px rgba(22, 25, 42, 0.11); }
-
-  .prompt {
-    background: var(--bg);
-    border-radius: 14px;
-    padding: 20px 22px;
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.07);
-    margin-bottom: 12px;
-  }
-  .prompt .p-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-  .prompt .p-title { font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; }
-  .prompt pre {
-    margin: 0;
-    background: var(--fill-soft);
-    border-radius: 10px;
-    padding: 16px 18px;
-    font-size: 14.5px;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-family: inherit;
-    color: var(--ink);
-  }
-  .copy-btn {
-    flex: none;
-    border: 0;
-    background: var(--ink);
-    color: #fff;
-    font-family: inherit;
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 8px 16px;
+  .controls button svg { width: 22px; height: 22px; }
+  .controls .time { color: #fff; font-size: 13px; font-variant-numeric: tabular-nums; flex: none; min-width: 88px; }
+  .controls .track {
+    flex: 1;
+    height: 6px;
     border-radius: 99px;
+    background: rgba(255,255,255,0.3);
     cursor: pointer;
+    position: relative;
+  }
+  .controls .track .fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: var(--pink);
+    border-radius: 99px;
+  }
+
+  /* ---------- 핸드아웃 ---------- */
+  .sec-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  h2 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+  .sec-sub { margin: 0 0 18px; font-size: 16px; color: var(--muted); }
+  .handout {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .handout .doc {
+    flex: none;
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--tint);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .handout .doc svg { width: 24px; height: 24px; }
+  .handout .info { flex: 1; min-width: 180px; }
+  .handout .info strong { display: block; font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .handout .info span { font-size: 14px; color: var(--muted); }
+  .handout .acts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
     transition: background 0.15s;
   }
-  .copy-btn:hover { background: #333333; }
-  .pending-note { font-size: 15px; color: var(--ink); background: var(--fill-soft); border-radius: 10px; padding: 14px 18px; }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #F0F0F0; }
+
+  .pdf-preview { margin-top: 14px; display: none; }
+  .pdf-preview.open { display: block; }
+  .pdf-preview iframe {
+    width: 100%;
+    height: 78vh;
+    min-height: 480px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--fill);
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.08);
+  }
 
   footer {
     border-top: 1px solid var(--line);
@@ -183,82 +227,62 @@
 
 <main class="wrap">
   <div class="head">
-    <img class="thumb" src="../../assets/thumbs/daegu-lecture.jpg" alt="우리 학원만의 AI 마케터 고용하기 썸네일" />
     <div class="badges">
-      <span class="pill">강의자료</span>
+      <span class="pill">강의 다시보기</span>
       <span class="pill ink">참석자 전용</span>
     </div>
     <h1>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료</h1>
-    <p class="meta">2026년 7월 9일 (목) 진행 · 대구학원연합회 · Speaker 김현지 (크래빗 장학카드 대표)</p>
+    <p class="meta">2026년 7월 9일 진행 · 대구학원연합회 · Speaker 김현지 (크래빗 장학카드 대표)</p>
   </div>
 
   <div class="notice">
-    <strong>안내</strong> — 강의에 참석해 주셔서 감사합니다. 이 페이지는 참석자 전용이에요.
+    <strong>안내</strong> — 이 페이지는 참석자 전용이에요. 강의 영상은 이 사이트 안에서만 보실 수 있고,
     링크와 비밀번호를 외부에 공유하지 말아 주세요.
   </div>
 
+  <!-- 강의 영상 (사이트 안에서만 재생) -->
   <section>
-    <h2>강의 자료</h2>
-    <p class="sec-sub">강의에서 사용한 자료를 내려받으실 수 있어요.</p>
-    <div class="files">
-      <div class="file">
-        <span class="kind">PDF</span>
-        <span class="t">
-          <strong>강의 슬라이드</strong>
-          <span>강의에서 사용한 발표 자료 전체</span>
-        </span>
-        <span class="dl">준비 중</span>
+    <div class="player" id="player">
+      <div id="ytframe"></div>
+      <div class="overlay" id="overlay"></div>
+      <div class="big-play" id="bigPlay">
+        <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
       </div>
-      <div class="file">
-        <span class="kind">Guide</span>
-        <span class="t">
-          <strong>실습 가이드북</strong>
-          <span>강의 실습을 혼자서도 처음부터 따라 할 수 있는 단계별 안내서</span>
-        </span>
-        <span class="dl">준비 중</span>
+      <div class="controls">
+        <button id="playBtn" aria-label="재생/일시정지">
+          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <span class="time" id="time">0:00 / 0:00</span>
+        <div class="track" id="track"><div class="fill" id="fill"></div></div>
+        <button id="muteBtn" aria-label="음소거">
+          <svg id="muteIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+        </button>
+        <button id="fsBtn" aria-label="전체화면">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
       </div>
     </div>
   </section>
 
+  <!-- 핸드아웃 가이드 -->
   <section>
-    <h2>프롬프트 모음집</h2>
-    <p class="sec-sub">강의에서 사용한 프롬프트예요. 복사해서 바로 붙여넣어 쓰시면 됩니다.</p>
-    <div class="prompt">
-      <div class="p-head">
-        <span class="p-title">콘텐츠 기획안 프롬프트</span>
-        <button class="copy-btn" type="button">복사</button>
-      </div>
-      <pre>프롬프트 준비 중이에요. 곧 업데이트됩니다.</pre>
+    <div class="sec-title"><h2>원장님 핸드아웃 가이드</h2></div>
+    <p class="sec-sub">강의 내용을 정리한 핸드아웃이에요. 다운받거나 아래에서 바로 미리보실 수 있어요.</p>
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-7-7z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 2v7h7" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>카드뉴스 자동화 강의 — 원장님 핸드아웃</strong>
+        <span>PDF · 강의 요약 가이드</span>
+      </span>
+      <span class="acts">
+        <a class="btn btn-primary" href="handout.pdf" download="카드뉴스 자동화 강의 - 원장님 핸드아웃.pdf">다운로드</a>
+        <button class="btn btn-ghost" type="button" id="previewBtn">미리보기</button>
+      </span>
     </div>
-    <div class="prompt">
-      <div class="p-head">
-        <span class="p-title">카드뉴스 자동 제작 프롬프트</span>
-        <button class="copy-btn" type="button">복사</button>
-      </div>
-      <pre>프롬프트 준비 중이에요. 곧 업데이트됩니다.</pre>
-    </div>
-  </section>
-
-  <section>
-    <h2>핵심 자료 파일</h2>
-    <p class="sec-sub">실습에 사용한 템플릿과 시트 파일이에요.</p>
-    <div class="files">
-      <div class="file">
-        <span class="kind">Sheet</span>
-        <span class="t">
-          <strong>마스터 시트 템플릿</strong>
-          <span>콘텐츠 기획-제작 흐름을 관리하는 시트</span>
-        </span>
-        <span class="dl">준비 중</span>
-      </div>
-      <div class="file">
-        <span class="kind">Link</span>
-        <span class="t">
-          <strong>실습 템플릿 모음</strong>
-          <span>강의에서 안내한 템플릿과 예제 링크</span>
-        </span>
-        <span class="dl">준비 중</span>
-      </div>
+    <div class="pdf-preview" id="pdfPreview">
+      <iframe id="pdfFrame" title="핸드아웃 미리보기" src="about:blank"></iframe>
     </div>
   </section>
 </main>
@@ -286,14 +310,111 @@
 </footer>
 
 <script>
-document.querySelectorAll(".copy-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const text = btn.closest(".prompt").querySelector("pre").textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = "복사됨";
-      setTimeout(() => { btn.textContent = "복사"; }, 1500);
-    });
+/* ================= 클릭-차단 유튜브 플레이어 =================
+   - iframe에 pointer-events:none → 유튜브 로고/제목/'YouTube에서 보기'로 나갈 수 없음
+   - 재생/일시정지·탐색·음량·전체화면은 모두 이 사이트의 커스텀 컨트롤로만 조작
+   - youtube-nocookie 도메인 + rel/modestbranding/fs 비활성화 */
+var VIDEO_ID = "owW_XXhIBlY";
+var player, ready = false, timer = null;
+
+var tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player("ytframe", {
+    videoId: VIDEO_ID,
+    host: "https://www.youtube-nocookie.com",
+    playerVars: {
+      controls: 0, disablekb: 1, rel: 0, modestbranding: 1,
+      fs: 0, playsinline: 1, iv_load_policy: 3, origin: location.origin
+    },
+    events: {
+      onReady: function () { ready = true; updateTime(); },
+      onStateChange: onState
+    }
   });
+}
+
+var wrap = document.getElementById("player");
+var playIcon = document.getElementById("playIcon");
+function setPlayIcon(playing) {
+  playIcon.innerHTML = playing
+    ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+}
+function onState(e) {
+  var playing = e.data === YT.PlayerState.PLAYING;
+  wrap.classList.toggle("playing", playing);
+  setPlayIcon(playing);
+  if (playing) { startTimer(); } else { stopTimer(); }
+}
+function toggle() {
+  if (!ready) return;
+  var s = player.getPlayerState();
+  if (s === YT.PlayerState.PLAYING) player.pauseVideo();
+  else player.playVideo();
+}
+document.getElementById("overlay").addEventListener("click", toggle);
+document.getElementById("playBtn").addEventListener("click", toggle);
+
+/* 음소거 */
+var muteIcon = document.getElementById("muteIcon");
+document.getElementById("muteBtn").addEventListener("click", function () {
+  if (!ready) return;
+  if (player.isMuted()) {
+    player.unMute();
+    muteIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/>';
+  } else {
+    player.mute();
+    muteIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z" opacity="0.9"/><path d="M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+  }
+});
+
+/* 전체화면 (사이트 컨테이너 기준 → 유튜브로 이동하지 않음) */
+document.getElementById("fsBtn").addEventListener("click", function () {
+  if (document.fullscreenElement) { document.exitFullscreen(); return; }
+  if (wrap.requestFullscreen) wrap.requestFullscreen();
+  else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+});
+
+/* 탐색바 */
+var track = document.getElementById("track");
+var fill = document.getElementById("fill");
+var timeEl = document.getElementById("time");
+track.addEventListener("click", function (e) {
+  if (!ready) return;
+  var r = track.getBoundingClientRect();
+  var frac = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  player.seekTo(frac * player.getDuration(), true);
+});
+function fmt(t) {
+  t = Math.floor(t || 0);
+  var m = Math.floor(t / 60), s = t % 60;
+  return m + ":" + (s < 10 ? "0" : "") + s;
+}
+function updateTime() {
+  if (!ready) return;
+  var cur = player.getCurrentTime(), dur = player.getDuration();
+  if (dur > 0) fill.style.width = (cur / dur * 100) + "%";
+  timeEl.textContent = fmt(cur) + " / " + fmt(dur);
+}
+function startTimer() { stopTimer(); timer = setInterval(updateTime, 250); }
+function stopTimer() { if (timer) { clearInterval(timer); timer = null; } updateTime(); }
+
+/* ================= 핸드아웃 미리보기 ================= */
+var pv = document.getElementById("pdfPreview");
+var pf = document.getElementById("pdfFrame");
+var pvBtn = document.getElementById("previewBtn");
+pvBtn.addEventListener("click", function () {
+  var open = pv.classList.toggle("open");
+  if (open) {
+    if (pf.getAttribute("src") === "about:blank") pf.src = "handout.pdf#view=FitH";
+    pvBtn.textContent = "미리보기 닫기";
+    pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } else {
+    pvBtn.textContent = "미리보기";
+  }
 });
 </script>
 

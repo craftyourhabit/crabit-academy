@@ -232,6 +232,40 @@
   .pm-actions { padding: 16px 24px 22px; }
   .pm-actions .btn { width: 100%; }
 
+  /* 진행 단계 모달 본문 */
+  .steps-body { padding: 4px 24px 24px; overflow: auto; }
+  .flow, .check { background: var(--fill-soft); border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+  .flow h2, .check h2 { margin: 0 0 12px; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .flow ol { margin: 0; padding-left: 0; list-style: none; counter-reset: step; }
+  .flow li {
+    counter-increment: step;
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .flow li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .flow li::before {
+    content: counter(step);
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 99px;
+    background: var(--pink);
+    color: #fff;
+    font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .flow li.step-key::before { background: var(--ink); }
+  .flow li strong { display: block; font-size: 16px; }
+  .flow li .f-sub { display: block; color: var(--muted); font-size: 14.5px; margin-top: 2px; }
+  .flow .f-key { color: var(--ink); font-weight: 700; }
+  .check ol { margin: 0; padding-left: 22px; font-size: 15.5px; line-height: 1.6; }
+  .check li { margin-bottom: 8px; }
+  .check li:last-child { margin-bottom: 0; }
+  .check .hint { color: var(--muted); font-size: 14px; }
+  .how { background: var(--tint); border-radius: 14px; padding: 18px 20px; font-size: 15.5px; line-height: 1.7; }
+  .how strong { display: block; margin-bottom: 4px; }
+
   /* ---------- 핸드아웃 ---------- */
   .sec-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
   .gift-title { align-items: center; gap: 12px; }
@@ -415,8 +449,8 @@
 
   <!-- 세팅용 프롬프트 + 디자인 템플릿 -->
   <section>
-    <div class="sec-title"><h2>세팅용 프롬프트</h2></div>
-    <p class="sec-sub">아래 프롬프트를 복사해서 클로드 코워크 채팅창에 붙여넣으면, 클로드가 알아서 하나씩 질문하며 세팅을 도와줘요.</p>
+    <div class="sec-title"><h2>세팅에 필요한 자료</h2></div>
+    <p class="sec-sub">세팅에 사용할 프롬프트와 디자인 템플릿이에요. 프롬프트를 복사해 클로드 코워크에 붙여넣으면, 클로드가 하나씩 질문하며 세팅을 도와줘요.</p>
     <div class="handout">
       <span class="doc" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -539,6 +573,63 @@
       <iframe id="coworkFrame" title="클로드 코워크 자료 미리보기" src="about:blank"></iframe>
     </div>
   </section>
+
+  <!-- 복습 진행 단계 -->
+  <section>
+    <div class="sec-title"><h2>복습 시 아래 단계대로 진행해주세요!</h2></div>
+    <p class="sec-sub">강의 때 진행한 세팅 순서예요. 다시 세팅하실 때 이 순서대로 따라 하시면 됩니다.</p>
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6h11M9 12h11M9 18h11" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.6" fill="#FB75BB"/><circle cx="4.5" cy="12" r="1.6" fill="#FB75BB"/><circle cx="4.5" cy="18" r="1.6" fill="#FB75BB"/></svg>
+      </span>
+      <span class="info">
+        <strong>세팅 진행 단계</strong>
+        <span>전체 흐름 7단계 · 전송 전 확인 2가지</span>
+      </span>
+      <span class="acts">
+        <button class="btn btn-primary" type="button" id="stepsBtn">단계 보기</button>
+      </span>
+    </div>
+  </section>
+
+  <!-- 진행 단계 모달 -->
+  <div class="modal-backdrop" id="stepsBackdrop" role="dialog" aria-modal="true" aria-labelledby="stepsTitle">
+    <div class="prompt-modal">
+      <div class="pm-head">
+        <h3 id="stepsTitle">세팅 진행 단계</h3>
+        <button class="pm-close" type="button" id="stepsClose" aria-label="닫기">&#10005;</button>
+      </div>
+      <div class="steps-body">
+        <div class="flow">
+          <h2>오늘 실습, 전체 흐름은 이렇습니다</h2>
+          <ol>
+            <li><div><strong>세팅 폴더 받기·저장</strong><span class="f-sub">디자인 템플릿이 든 폴더를 컴퓨터에 저장 + 로고 파일 넣기</span></div></li>
+            <li><div><strong>노션 빈 페이지 만들고 클로드에 연결</strong><span class="f-sub">노션 계정이 여러 개라면 평소 쓰는 계정으로</span></div></li>
+            <li><div><strong>코워크 열고 작업 폴더 지정</strong><span class="f-sub">1번에서 만든 폴더 선택 — 채팅창에 폴더 이름이 보이면 성공</span></div></li>
+            <li class="step-key"><div><strong class="f-key">프롬프트 복사해서 붙여넣기</strong><span class="f-sub">위 '세팅에 필요한 자료'의 프롬프트를 복사해 그대로 전송하면 됩니다</span></div></li>
+            <li><div><strong>클로드의 인터뷰에 답하기</strong><span class="f-sub">학원 소개를 대화하듯 편하게 — 끝나면 학원 프로필이 만들어져요</span></div></li>
+            <li><div><strong>자동 세팅 확인</strong><span class="f-sub">노션 캘린더·콘텐츠 보드 + 자동 스케줄 3개가 등록됩니다</span></div></li>
+            <li><div><strong>첫 카드뉴스 같이 만들어보기</strong><span class="f-sub">"이번 주 주제 추천해줘" 한마디면 시작</span></div></li>
+          </ol>
+        </div>
+
+        <div class="check">
+          <h2>전송 전에 딱 2가지만 확인하세요</h2>
+          <ol>
+            <li>코워크의 <strong>작업 폴더</strong>가 "디자인 템플릿"이 들어 있는 폴더로 지정되어 있나요? <span class="hint">— 채팅창에 폴더 이름이 보이면 성공</span></li>
+            <li><strong>노션</strong>이 클로드에 연결되어 있고, 콘텐츠용 빈 페이지 1개에 접근이 허용되어 있나요? <span class="hint">— 채팅에서 "노션 페이지 확인해줘"로 확인</span></li>
+          </ol>
+        </div>
+
+        <div class="how">
+          <strong>전송하면 이렇게 진행돼요</strong>
+          클로드가 우리 학원에 대해 한 번에 하나씩 질문합니다. 옆자리 직원에게 학원을
+          소개하듯 편하게 답해주시면, 클로드가 학원 프로필과 노션 캘린더, 자동 스케줄까지
+          알아서 세팅해 드려요.
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -777,8 +868,24 @@ document.getElementById("promptClose").addEventListener("click", function () {
 promptBackdrop.addEventListener("click", function (e) {
   if (e.target === promptBackdrop) promptBackdrop.classList.remove("show");
 });
+
+/* ================= 진행 단계 모달 ================= */
+var stepsBackdrop = document.getElementById("stepsBackdrop");
+document.getElementById("stepsBtn").addEventListener("click", function () {
+  stepsBackdrop.classList.add("show");
+});
+document.getElementById("stepsClose").addEventListener("click", function () {
+  stepsBackdrop.classList.remove("show");
+});
+stepsBackdrop.addEventListener("click", function (e) {
+  if (e.target === stepsBackdrop) stepsBackdrop.classList.remove("show");
+});
+
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") promptBackdrop.classList.remove("show");
+  if (e.key === "Escape") {
+    promptBackdrop.classList.remove("show");
+    stepsBackdrop.classList.remove("show");
+  }
 });
 </script>
 

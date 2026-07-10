@@ -193,6 +193,44 @@
     word-break: break-word;
     color: var(--ink);
   }
+  #copyBtn.done { background: var(--pink) !important; }
+
+  /* 프롬프트 미리보기 모달 */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 25, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .prompt-modal {
+    background: var(--bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.28);
+  }
+  .pm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 24px 14px; }
+  .pm-head h3 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .pm-close {
+    flex: none; border: 0; background: none; cursor: pointer;
+    font-size: 16px; color: var(--muted);
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .pm-close:hover { background: var(--fill); color: var(--ink); }
+  .prompt-modal #promptText { margin: 0 24px; max-height: none; flex: 1; min-height: 0; }
+  .pm-actions { padding: 16px 24px 22px; }
+  .pm-actions .btn { width: 100%; }
 
   /* ---------- 핸드아웃 ---------- */
   .sec-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
@@ -379,11 +417,28 @@
   <section>
     <div class="sec-title"><h2>세팅용 프롬프트</h2></div>
     <p class="sec-sub">아래 프롬프트를 복사해서 클로드 코워크 채팅창에 붙여넣으면, 클로드가 알아서 하나씩 질문하며 세팅을 도와줘요.</p>
-    <div class="prompt-card">
-      <div class="prompt-top">
-        <button class="btn btn-primary" type="button" id="copyBtn">프롬프트 전체 복사하기</button>
-      </div>
-      <pre id="promptText">너는 오늘부터 우리 학원의 AI 마케터야.
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>클로드 코워크 세팅 프롬프트</strong>
+        <span>복사해서 코워크 채팅창에 붙여넣으세요</span>
+      </span>
+      <span class="acts">
+        <button class="btn btn-primary" type="button" id="copyBtn">복사하기</button>
+        <button class="btn btn-ghost" type="button" id="promptPreviewBtn">미리보기</button>
+      </span>
+    </div>
+
+    <!-- 프롬프트 미리보기 모달 -->
+    <div class="modal-backdrop" id="promptBackdrop" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+      <div class="prompt-modal">
+        <div class="pm-head">
+          <h3 id="pmTitle">세팅용 프롬프트</h3>
+          <button class="pm-close" type="button" id="promptClose" aria-label="닫기">&#10005;</button>
+        </div>
+        <pre id="promptText">너는 오늘부터 우리 학원의 AI 마케터야.
 나는 컴퓨터와 전문용어를 잘 몰라. 항상 쉬운 말로, 결정할 일은 한 번에 하나씩만 물어봐줘.
 
 [0. 시작 전 점검]
@@ -442,6 +497,10 @@
 - 나는 전문용어를 잘 몰라. 항상 쉬운 말로 설명해줘.
 - 카드뉴스를 인스타 등 SNS에 직접 올리지 마. 만들어 두기만 하고, 올릴지 말지는 항상 내가 결정해.
 - 확실하지 않은 건 추측하지 말고 나에게 물어봐줘.</pre>
+        <div class="pm-actions">
+          <button class="btn btn-primary" type="button" id="modalCopyBtn">프롬프트 전체 복사하기</button>
+        </div>
+      </div>
     </div>
 
     <div class="handout" style="margin-top: 24px;">
@@ -670,32 +729,56 @@ cpvBtn.addEventListener("click", function () {
   }
 });
 
-/* ================= 세팅용 프롬프트 복사 ================= */
-var copyBtn = document.getElementById("copyBtn");
+/* ================= 세팅용 프롬프트 복사 + 미리보기 모달 ================= */
 var promptText = document.getElementById("promptText");
-copyBtn.addEventListener("click", function () {
+var copyBtn = document.getElementById("copyBtn");
+var modalCopyBtn = document.getElementById("modalCopyBtn");
+
+/* 버튼별 기본 라벨 */
+copyBtn.dataset.label = "복사하기";
+modalCopyBtn.dataset.label = "프롬프트 전체 복사하기";
+
+function copyPrompt(btn) {
   var text = promptText.textContent;
   function done() {
-    copyBtn.textContent = "복사 완료! 코워크 채팅창에 붙여넣으세요";
-    copyBtn.classList.add("done");
+    btn.textContent = "복사 완료! 코워크 채팅창에 붙여넣으세요";
+    btn.classList.add("done");
     setTimeout(function () {
-      copyBtn.textContent = "프롬프트 전체 복사하기";
-      copyBtn.classList.remove("done");
+      btn.textContent = btn.dataset.label;
+      btn.classList.remove("done");
     }, 3000);
   }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(done).catch(fallback);
-  } else { fallback(); }
   function fallback() {
     var range = document.createRange();
     range.selectNodeContents(promptText);
     var sel = window.getSelection();
     sel.removeAllRanges(); sel.addRange(range);
     try { document.execCommand("copy"); done(); } catch (e) {
-      copyBtn.textContent = "위 글을 손으로 드래그해 복사해 주세요";
+      btn.textContent = "위 글을 손으로 드래그해 복사해 주세요";
     }
     sel.removeAllRanges();
   }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else { fallback(); }
+}
+copyBtn.addEventListener("click", function () { copyPrompt(copyBtn); });
+modalCopyBtn.addEventListener("click", function () { copyPrompt(modalCopyBtn); });
+
+/* 미리보기 모달 */
+var promptBackdrop = document.getElementById("promptBackdrop");
+document.getElementById("promptPreviewBtn").addEventListener("click", function () {
+  promptText.scrollTop = 0;
+  promptBackdrop.classList.add("show");
+});
+document.getElementById("promptClose").addEventListener("click", function () {
+  promptBackdrop.classList.remove("show");
+});
+promptBackdrop.addEventListener("click", function (e) {
+  if (e.target === promptBackdrop) promptBackdrop.classList.remove("show");
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") promptBackdrop.classList.remove("show");
 });
 </script>
 

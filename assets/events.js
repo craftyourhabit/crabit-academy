@@ -126,6 +126,4 @@ const EVENTS_DB = {
    =============================================== */
 const SCHEDULE = [
   { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
-  { date: "2026-07-14", time: "20:00", id: "cardnews-automation" },
-  { date: "2026-07-16", time: "19:30", id: "allkeoni-meetup" },
 ];

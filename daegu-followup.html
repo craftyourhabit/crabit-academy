@@ -164,9 +164,10 @@
   }
   .modal h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
   .modal .m-sub { margin: 0 0 20px; font-size: 15px; color: var(--ink); }
+  .pw-field { position: relative; }
   .modal input {
     width: 100%;
-    padding: 13px 15px;
+    padding: 13px 46px 13px 15px;
     border: 0;
     border-radius: 10px;
     font-size: 16px;
@@ -175,6 +176,25 @@
     color: var(--ink);
   }
   .modal input:focus { outline: 2px solid var(--pink); }
+  .pw-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pw-toggle:hover { color: var(--ink); background: rgba(22, 25, 42, 0.05); }
+  .pw-toggle svg { width: 21px; height: 21px; }
   .modal .m-error { min-height: 20px; margin: 8px 0 12px; font-size: 14px; color: var(--pink); font-weight: 500; }
   .modal .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
   .btn {
@@ -305,7 +325,16 @@
   <div class="modal">
     <h3 id="pwTitle">비밀번호 입력</h3>
     <p class="m-sub">강의에서 안내드린 비밀번호를 입력해 주세요.</p>
-    <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+    <div class="pw-field">
+      <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+      <button type="button" class="pw-toggle" id="pwToggle" aria-label="비밀번호 표시" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="eye-open" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="eye-open" cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <path class="eye-off" d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none"/>
+        </svg>
+      </button>
+    </div>
     <p class="m-error" id="pwError"></p>
     <div class="m-actions">
       <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
@@ -321,8 +350,22 @@ const backdrop = document.getElementById("pwBackdrop");
 const pwInput = document.getElementById("pwInput");
 const pwError = document.getElementById("pwError");
 
+/* 비밀번호 보기/숨기기 토글 (눈은 항상, 보이는 상태일 때만 사선 표시) */
+const pwToggle = document.getElementById("pwToggle");
+function setPwVisible(visible) {
+  pwInput.type = visible ? "text" : "password";
+  pwToggle.setAttribute("aria-pressed", visible ? "true" : "false");
+  pwToggle.setAttribute("aria-label", visible ? "비밀번호 숨기기" : "비밀번호 표시");
+  pwToggle.querySelector(".eye-off").style.display = visible ? "" : "none";
+}
+pwToggle.addEventListener("click", () => {
+  setPwVisible(pwInput.type === "password");
+  pwInput.focus();
+});
+
 function openModal() {
   pwInput.value = "";
+  setPwVisible(false);
   pwError.textContent = "";
   backdrop.classList.add("show");
   pwInput.focus();

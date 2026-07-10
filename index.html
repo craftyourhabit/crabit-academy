@@ -439,9 +439,9 @@
   <div class="wrap nav">
     <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
     <nav class="nav-links">
-      <a href="about.html">아카데미 소개</a>
-      <a href="schedule.html">예정 일정</a>
-      <a href="resources.html">자료 · 인사이트</a>
+      <a href="about">아카데미 소개</a>
+      <a href="schedule">예정 일정</a>
+      <a href="resources">자료 · 인사이트</a>
     </nav>
   </div>
 </header>
@@ -457,7 +457,7 @@
         도와주는 퀄리티 높은 교육과 도구라 생각합니다.
       </p>
       <div class="cta-row">
-        <a class="btn btn-ghost" href="schedule.html">예정 일정 보기</a>
+        <a class="btn btn-ghost" href="schedule">예정 일정 보기</a>
       </div>
     </div>
   </div>
@@ -470,7 +470,7 @@
           <h2>교육 일정</h2>
           <p>크래빗이 진행하는 교육과 행사입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
         </div>
-        <a class="link-all" href="schedule.html">전체 일정 보기 &#8250;</a>
+        <a class="link-all" href="schedule">전체 일정 보기 &#8250;</a>
       </div>
       <div class="replay-grid" id="upcomingGrid"></div>
     </div>
@@ -484,10 +484,10 @@
           <h2>자료 / 인사이트</h2>
           <p>강의 자료와 가이드북, 교육 인사이트를 모았습니다. 일부 자료는 수강생에게 안내된 비밀번호가 필요합니다.</p>
         </div>
-        <a class="link-all" href="resources.html">전체보기 &#8250;</a>
+        <a class="link-all" href="resources">전체보기 &#8250;</a>
       </div>
       <div class="res-list">
-        <a class="res-row" href="daegu-followup.html">
+        <a class="res-row" href="daegu-followup">
           <span class="res-kind">강의자료</span>
           <span class="res-main">
             <strong>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료</strong>
@@ -556,7 +556,7 @@
     const upcoming = ev.status === "upcoming";
     const a = document.createElement("a");
     a.className = "replay" + (upcoming ? "" : " is-closed");
-    a.href = "event.html?id=" + id;
+    a.href = "event?id=" + id;
     a.innerHTML =
       '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
       + '<div class="body">'

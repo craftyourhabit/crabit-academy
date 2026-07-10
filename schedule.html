@@ -368,7 +368,7 @@
     document.getElementById("mTitle").textContent = ev.title;
     document.getElementById("mDate").textContent = ev.date + (ev.place ? " · " + ev.place : "");
     document.getElementById("mDesc").textContent = ev.desc;
-    document.getElementById("mLink").href = "event.html?id=" + s.id;
+    document.getElementById("mLink").href = "event?id=" + s.id;
     backdrop.classList.add("show");
   }
   document.getElementById("mClose").addEventListener("click", () => backdrop.classList.remove("show"));

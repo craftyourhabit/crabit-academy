@@ -439,6 +439,23 @@
         <a class="btn btn-primary" href="crabit-card-design-template.zip" download="crabit-card-design-template.zip">디자인 템플릿 zip 받기</a>
       </span>
     </div>
+
+    <div class="handout" style="margin-top: 12px;">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-7-7z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 2v7h7" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>클로드 코워크로 학원 실무업무 자동화하기</strong>
+        <span>PDF · 추가 제공 자료</span>
+      </span>
+      <span class="acts">
+        <a class="btn btn-primary" href="cowork-automation-guide.pdf" download="클로드 코워크로 학원 실무업무 자동화하기.pdf">다운로드</a>
+        <button class="btn btn-ghost" type="button" id="coworkPreviewBtn">미리보기</button>
+      </span>
+    </div>
+    <div class="pdf-preview" id="coworkPreview">
+      <iframe id="coworkFrame" title="클로드 코워크 자료 미리보기" src="about:blank"></iframe>
+    </div>
   </section>
 </main>
 
@@ -612,6 +629,21 @@ pvBtn.addEventListener("click", function () {
     pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
   } else {
     pvBtn.textContent = "미리보기";
+  }
+});
+
+/* ================= 코워크 자동화 자료 미리보기 ================= */
+var cpv = document.getElementById("coworkPreview");
+var cpf = document.getElementById("coworkFrame");
+var cpvBtn = document.getElementById("coworkPreviewBtn");
+cpvBtn.addEventListener("click", function () {
+  var open = cpv.classList.toggle("open");
+  if (open) {
+    if (cpf.getAttribute("src") === "about:blank") cpf.src = "cowork-automation-guide.pdf#view=FitH";
+    cpvBtn.textContent = "미리보기 닫기";
+    cpv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } else {
+    cpvBtn.textContent = "미리보기";
   }
 });
 

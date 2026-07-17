@@ -107,13 +107,14 @@ const EVENTS_DB = {
     title: "학원 홈페이지형 블로그 마스터 과정",
     date: "2026.07.18 (토) 10:00 – 17:00",
     place: "광명 GIDC · 경기도 광명시 일직로 43 C동 1715호 (한경아교육장)",
-    thumb: "assets/thumbs/homepage-blog-master.svg",
+    thumb: "assets/events/homepage-blog-master/hero.jpg",
     desc: "홈페이지 · 블로그 · SNS를 하나로 연결하는 '홈페이지형 블로그'를 하루 만에 직접 완성하는 올커니 원데이 특강입니다. 검색에서 상담까지 이어지는, 우리 학원만의 평생 온라인 자산을 원장님이 직접 구축하고 이후에도 스스로 운영합니다.",
+    /* 세션별 내용은 아래 sessions에서 다루므로, 여기에는 성과 중심으로만 적는다 */
     points: [
-      "Session 1. 검색에서 선택까지 — 학원 온라인 자산 전략 (조연심 대표)",
-      "Session 2. 바이브 코딩으로 완성하는 콘텐츠 자동화 — 우리 학원 AI 마케터 만들기 (김현지 대표 · 크래빗)",
-      "Session 3. 온라인 자산이 되는 홈페이지형 블로그 만들기 실습 (최유정 대표 · 캐다)",
-      "수료 후에도 계속 쓰는 실무 운영자료 8종 · 피드백 Zoom 강의 1회 제공"
+      "학부모가 검색해서 찾아오는 학원 온라인 자산 설계하기",
+      "바이브 코딩으로 카드뉴스·콘텐츠 제작 자동화하기",
+      "홈페이지형 블로그를 그 자리에서 직접 구축하기",
+      "수료 후 피드백 Zoom 강의 1회로 끝까지 완성하기"
     ],
     speaker: "조연심 · 김현지 · 최유정",
     speakerRole: "올커니 · 크래빗 · 캐다 3인 3세션",
@@ -121,6 +122,59 @@ const EVENTS_DB = {
     audience: "학원 원장·운영자 (오프라인 25명 / 온라인 30명, 선착순)",
     status: "upcoming",
     applyUrl: "https://forms.gle/k6C2iuo5jSQXYL358",
+    contact: { name: "조경이 대표", tel: "010-8394-0484" },
+    /* 세션별 커리큘럼 — event.html의 커리큘럼 섹션에서 사용 */
+    sessions: [
+      {
+        no: "01",
+        title: "검색에서 선택까지, 학원 온라인 자산 전략",
+        speaker: "조연심",
+        speakerRole: "퍼스널브랜딩그룹 엠유(MU) 대표 · AI 퍼스널 브랜딩 전문가",
+        points: ["학부모가 선택하는 학원 브랜딩", "검색되는 기록이 신뢰가 되는 시대"],
+        poster: "assets/events/homepage-blog-master/session-01.jpg"
+      },
+      {
+        no: "02",
+        title: "바이브 코딩으로 완성하는 콘텐츠 자동화",
+        speaker: "김현지",
+        speakerRole: "에듀핀테크 회사 크래빗(Crabit) 대표 · 콘텐츠 자동화 시스템 구축 전문가",
+        points: ["AI 활용 카드뉴스 자동 제작", "검색되는 블로그 키워드 찾는 방법"],
+        poster: "assets/events/homepage-blog-master/session-02.jpg"
+      },
+      {
+        no: "03",
+        title: "온라인 자산이 되는 홈페이지형 블로그 만들기 실습",
+        speaker: "최유정",
+        speakerRole: "브랜드 콘텐츠 스튜디오 캐다(KEDA) 대표 · 브랜드 디자인·콘텐츠 기획자",
+        points: ["홈페이지형 블로그 구축 실습", "실무자를 위한 블로그 운영 시스템"],
+        poster: "assets/events/homepage-blog-master/session-03.jpg"
+      }
+    ],
+    /* 제공 자료 8종 */
+    materials: [
+      { name: "홈페이지형 블로그 템플릿 3종", note: "캔바 편집 링크 제공" },
+      { name: "홈페이지형 블로그 템플릿별 위젯 코드북" },
+      { name: "홈페이지형 블로그 설계 워크북" },
+      { name: "홈페이지형 블로그 구축 가이드북" },
+      { name: "학원 프로필 소개글 50선 레퍼런스북" },
+      { name: "학원 블로그 콘텐츠 AI 프롬프트북" },
+      { name: "학원 온라인 광고 교육청 가이드라인", note: "SNS 운영 시 필수 준수사항" },
+      { name: "학원 온라인 콘텐츠 브리프", note: "실무자 전달용 기획서" }
+    ],
+    /* '자세히 보기'로 펼쳐지는 카드뉴스 상세 — alt는 이미지 속 문구를 그대로 담아
+       검색엔진·스크린리더에서도 내용이 읽히게 합니다. */
+    detailImages: [
+      { src: "assets/events/homepage-blog-master/detail-01.jpg", alt: "혹시 지금 블로그 이런 모습인가요? 글만 계속 쌓이고 있다. 학원 소개가 한눈에 보이지 않는다. 홈페이지 대신 쓰기에는 부족하다. 상담까지 연결되지 않는다. 블로그 하나만 바꿔도 학원의 첫인상이 달라집니다." },
+      { src: "assets/events/homepage-blog-master/detail-02.jpg", alt: "잘 만든 블로그 하나가 우리 학원의 온라인 허브가 됩니다. 홈페이지, 인스타그램, 유튜브, 카카오톡, 공지사항, 상담을 하나의 블로그에서 연결하는 '홈페이지형 블로그'를 직접 구축합니다." },
+      { src: "assets/events/homepage-blog-master/detail-03.jpg", alt: "\"디자인은 할 줄 모르는데요.\" 걱정하지 않으셔도 됩니다. 모든 수강생분들께 홈페이지형 블로그 템플릿 3종 제공. 캔바 편집 링크 제공, 사진만 교체, 텍스트만 수정, 우리 학원 정보만 입력. 복잡한 디자인 작업은 필요 없습니다." },
+      { src: "assets/events/homepage-blog-master/detail-04.jpg", alt: "\"코드? 위젯? 그런 건 전혀 모르는데요.\" 그래서 준비했습니다. 홈페이지형 블로그 위젯 코드북. 템플릿별 코드 제공, 링크만 교체, 복사 후 붙여넣기, 새창 열기 및 현재창 이동 버전 제공. 코드를 배우는 과정이 아니라 그대로 사용하는 자료입니다." },
+      { src: "assets/events/homepage-blog-master/detail-05.jpg", alt: "\"우리 블로그도 괜찮은 것 같은데...\" 정말 그럴까요? 홈페이지형 블로그 설계 워크북으로 현재 블로그를 진단해보고 부족한 부분, 개선해야 할 부분, 반드시 추가해야 하는 요소를 직접 확인합니다." },
+      { src: "assets/events/homepage-blog-master/detail-06.jpg", alt: "\"교육이 끝나면 혼자 다시 할 수 있을까요?\" 물론입니다! 홈페이지형 블로그 구축 가이드북을 수강생 전원에게 제공합니다. 처음부터 끝까지 순서대로 따라 하기만 하면 언제든 다시 구축할 수 있습니다." },
+      { src: "assets/events/homepage-blog-master/detail-07.jpg", alt: "프로필 소개글 하나가 학원의 첫인상을 결정합니다. 무슨 말을 써야 할지 고민되셨나요? 그래서 학원 프로필 소개글 레퍼런스북을 제공합니다. 소개글 샘플 50선, AI 프롬프트 포함, 우리 학원 스타일에 맞게 수정 가능." },
+      { src: "assets/events/homepage-blog-master/detail-08.jpg", alt: "\"블로그는 만들었는데 계속 운영할 시간이 없습니다.\" 그래서 준비했습니다. 학원 블로그 콘텐츠 AI 프롬프트북. 복사해서 붙여넣기만 하면 학원 소개, 학생 후기, 시험기간 콘텐츠, 설명회 모집, 방학특강, 학부모 콘텐츠까지 하루 10분이면 작성할 수 있습니다." },
+      { src: "assets/events/homepage-blog-master/detail-09.jpg", alt: "혹시 알고 계셨나요? 학원 온라인 광고에는 교육청 광고 심의 기준과 반드시 표시해야 하는 내용이 있습니다. 잘못 운영하면 수정 요청이나 행정상 문제가 발생할 수도 있습니다. 그래서 최신 교육청 광고 가이드라인 자료도 함께 제공합니다." },
+      { src: "assets/events/homepage-blog-master/detail-10.jpg", alt: "\"실무자가 들어야 하는 교육 아닌가요?\" 아닙니다. 원장님이 방향을 정하면 실무자는 실행하면 됩니다. 학원 온라인 콘텐츠 브리프를 원장님들께 제공합니다. 누구에게, 어떤 내용을, 왜 올리는지, 어떤 CTA를 넣을지 한 장으로 전달할 수 있는 실무자용 콘텐츠 기획서입니다." }
+    ],
     replayUrl: ""
   },
   "allkeoni-meetup": {

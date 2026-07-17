@@ -138,6 +138,95 @@
   .audience { font-size: 15px; color: var(--muted); margin: 0 0 36px; }
   .audience strong { color: var(--ink); font-weight: 600; }
 
+  /* ---------- 커리큘럼 (세션별 안내) ---------- */
+  .sec-h { margin: 0 0 14px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .sessions { margin: 0 0 32px; }
+  .s-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 720px) { .s-grid { grid-template-columns: 1fr; } }
+  .s-card {
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .s-card img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1190 / 1684;
+    object-fit: cover;
+    background: var(--fill);
+  }
+  .s-body { padding: 16px 18px 20px; }
+  .s-no { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); }
+  .s-title { font-size: 16px; font-weight: 700; margin: 6px 0 12px; letter-spacing: -0.01em; line-height: 1.4; text-wrap: pretty; }
+  .s-who { font-size: 14px; font-weight: 600; margin: 0; }
+  .s-who span { display: block; margin-top: 3px; font-size: 12.5px; font-weight: 400; color: var(--muted); line-height: 1.5; }
+  .s-pts { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .s-pts li { font-size: 13.5px; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+  .s-pts li::before {
+    content: "";
+    flex: none;
+    width: 5px; height: 5px;
+    border-radius: 99px;
+    background: rgba(22, 25, 42, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- 제공 자료 (다크 섹션) ---------- */
+  .materials { background: var(--ink); border-radius: 16px; padding: 28px 30px 30px; margin-bottom: 32px; }
+  .materials h2 { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+  .materials .m-sub { margin: 0 0 18px; font-size: 14px; color: rgba(255, 255, 255, 0.55); }
+  .m-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (max-width: 600px) { .m-grid { grid-template-columns: 1fr; } }
+  .m-item {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .m-num { flex: none; font-size: 12px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
+  .m-name { font-size: 14.5px; font-weight: 600; color: #fff; line-height: 1.45; }
+  .m-note { display: block; margin-top: 3px; font-size: 12.5px; font-weight: 400; color: rgba(255, 255, 255, 0.55); }
+
+  /* ---------- 자세히 보기 (카드뉴스 상세) ---------- */
+  .detail { margin: 0 0 36px; }
+  .detail-toggle {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .detail-toggle:hover { background: #F0F0F0; }
+  .detail-toggle .chev { display: inline-block; transition: transform 0.2s; font-size: 11px; color: var(--muted); }
+  .detail-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .detail-strip {
+    display: none;
+    max-width: 600px;
+    margin: 20px auto 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(22, 25, 42, 0.08);
+  }
+  .detail-strip.open { display: block; }
+  /* 흰 배경 카드뉴스를 여백 없이 이어 붙여 한 장의 상세페이지처럼 보이게 한다 */
+  .detail-strip img { width: 100%; display: block; margin: 0; }
+
+  /* 신청 버튼 옆 담당자 문의 */
+  .contact-note { font-size: 14.5px; color: var(--muted); font-weight: 500; }
+  .contact-note a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
   .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .btn {
     display: inline-block;
@@ -242,6 +331,8 @@
 
   document.title = ev.title + " — 크래빗 아카데미";
 
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
   const hostClass = ev.host === "올커니" ? "host-allkeoni" : "host-crabit";
   const statusBadge = ev.status === "upcoming"
     ? '<span class="badge status-upcoming">예정</span>'
@@ -261,7 +352,52 @@
     cta = '<span class="soon-note">다시보기 영상을 준비하고 있어요.</span>';
   }
 
-  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const sessionsHtml = ev.sessions
+    ? '<section class="sessions"><h2 class="sec-h">커리큘럼</h2><div class="s-grid">'
+      + ev.sessions.map(s =>
+          '<article class="s-card">'
+          + (s.poster ? '<img src="' + s.poster + '" alt="' + esc("SESSION " + s.no + " " + s.title + " — " + s.speaker) + '" loading="lazy" />' : '')
+          + '<div class="s-body">'
+          + '<div class="s-no">SESSION ' + esc(s.no) + '</div>'
+          + '<h3 class="s-title">' + esc(s.title) + '</h3>'
+          + '<p class="s-who">' + esc(s.speaker)
+          + (s.speakerRole ? '<span>' + esc(s.speakerRole) + '</span>' : '')
+          + '</p>'
+          + (s.points ? '<ul class="s-pts">' + s.points.map(p => '<li>' + esc(p) + '</li>').join("") + '</ul>' : '')
+          + '</div></article>'
+        ).join("")
+      + '</div></section>'
+    : '';
+
+  const materialsHtml = ev.materials
+    ? '<section class="materials">'
+      + '<h2>제공 자료 ' + ev.materials.length + '종</h2>'
+      + '<p class="m-sub">수강생 전원에게 실무에 바로 쓰는 운영자료를 드려요.</p>'
+      + '<div class="m-grid">'
+      + ev.materials.map((m, i) =>
+          '<div class="m-item"><span class="m-num">' + String(i + 1).padStart(2, "0") + '</span>'
+          + '<span class="m-name">' + esc(m.name)
+          + (m.note ? '<span class="m-note">' + esc(m.note) + '</span>' : '')
+          + '</span></div>'
+        ).join("")
+      + '</div></section>'
+    : '';
+
+  const detailHtml = ev.detailImages
+    ? '<section class="detail">'
+      + '<button class="detail-toggle" type="button" aria-expanded="false" aria-controls="detail-strip">'
+      + '<span class="t-label">자세히 보기</span><span class="chev">▼</span>'
+      + '</button>'
+      + '<div class="detail-strip" id="detail-strip">'
+      + ev.detailImages.map(d => '<img src="' + d.src + '" alt="' + esc(d.alt) + '" loading="lazy" />').join("")
+      + '</div></section>'
+    : '';
+
+  // 주최사 담당자가 따로 있으면 신청 버튼 옆에 문의처를 함께 안내한다
+  const contactHtml = (ev.contact && ev.status === "upcoming")
+    ? '<span class="contact-note">문의 ' + esc(ev.contact.name) + ' '
+      + '<a href="tel:' + esc(ev.contact.tel.replace(/-/g, "")) + '">' + esc(ev.contact.tel) + '</a></span>'
+    : '';
 
   main.innerHTML =
     '<img class="thumb" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
@@ -284,20 +420,36 @@
     + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
     + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")
     + '</ul></div>'
+    + sessionsHtml
+    + materialsHtml
     + (ev.prep
         ? '<div class="prep"><span class="p-label">준비물</span>'
           + ev.prep.map(p => '<span class="chip">' + esc(p) + '</span>').join("")
           + '</div>'
         : '')
     + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
+    + detailHtml
     + '<div class="cta-row">' + cta
-    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a></div>'
+    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a>'
+    + contactHtml + '</div>'
     + (ev.status === "closed"
         ? '<div class="closed-note" id="closedNote" hidden>'
           + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'
           + '<a class="btn btn-primary" href="schedule">다른 교육 일정 보기</a>'
           + '</div>'
         : '');
+
+  const toggle = main.querySelector(".detail-toggle");
+  if (toggle) {
+    const strip = main.querySelector("#detail-strip");
+    toggle.addEventListener("click", function () {
+      const open = strip.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.querySelector(".t-label").textContent = open ? "접기" : "자세히 보기";
+      // 접을 때는 토글 버튼이 화면 밖으로 밀려나므로 다시 보이는 위치로 데려온다
+      if (!open) toggle.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }
 
   const closedBtn = document.getElementById("closedApply");
   if (closedBtn) {

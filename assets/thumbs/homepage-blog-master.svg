@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <rect width="800" height="450" fill="#16192A"/>
-  <circle cx="720" cy="70" r="180" fill="#272A3D"/>
-  <circle cx="628" cy="150" r="14" fill="#FB75BB"/>
-  <text x="64" y="120" font-size="20" letter-spacing="5" fill="#9A9DA9" font-weight="600">ONE-DAY COURSE</text>
-  <text x="64" y="212" font-size="52" fill="#FFFFFF" font-weight="700">홈페이지형 블로그</text>
-  <text x="64" y="280" font-size="52" fill="#FFFFFF" font-weight="700">마스터 과정</text>
-  <text x="64" y="386" font-size="22" fill="#9A9DA9" font-weight="500">올커니 원데이 특강 · 2026.07.18</text>
-</svg>

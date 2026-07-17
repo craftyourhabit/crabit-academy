@@ -227,7 +227,28 @@
   .contact-note { font-size: 14.5px; color: var(--muted); font-weight: 500; }
   .contact-note a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
-  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  /* ---------- 하단 고정 신청 바 ----------
+     실행 가능한 CTA(신청·문의·다시보기)가 있을 때만 렌더된다.
+     '다시보기 준비 중'처럼 누를 게 없는 상태는 본문에 문구로만 남긴다. */
+  .apply-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    padding: 14px 0 calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .apply-bar .bar-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .apply-bar .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 18px 28px;
+    font-size: 17px;
+    border-radius: 14px;
+  }
+  .apply-bar .contact-note { font-size: 14px; }
   .btn {
     display: inline-block;
     padding: 14px 28px;
@@ -242,8 +263,6 @@
   }
   .btn-primary { background: var(--ink); color: #fff; }
   .btn-primary:hover { background: #333333; }
-  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
-  .btn-ghost:hover { background: #F0F0F0; }
   .soon-note { font-size: 15px; color: var(--muted); font-weight: 500; }
   .closed-note {
     margin-top: 20px;
@@ -339,7 +358,8 @@
     : (ev.status === "closed" ? '<span class="badge status-soon">마감</span>'
     : (ev.status === "replay" ? "" : '<span class="badge status-soon">다시보기 준비 중</span>'));
 
-  let cta;
+  // ctaAction: 누를 수 있는 CTA가 있으면 하단 고정 바로, 없으면 본문에 문구로만 남긴다
+  let cta = "", ctaAction = true;
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
   } else if (ev.status === "upcoming") {
@@ -349,7 +369,7 @@
   } else if (ev.status === "closed") {
     cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
   } else {
-    cta = '<span class="soon-note">다시보기 영상을 준비하고 있어요.</span>';
+    ctaAction = false;
   }
 
   const sessionsHtml = ev.sessions
@@ -429,15 +449,24 @@
         : '')
     + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
     + detailHtml
-    + '<div class="cta-row">' + cta
-    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a>'
-    + contactHtml + '</div>'
+    + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
     + (ev.status === "closed"
         ? '<div class="closed-note" id="closedNote" hidden>'
           + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'
           + '<a class="btn btn-primary" href="schedule">다른 교육 일정 보기</a>'
           + '</div>'
         : '');
+
+  if (ctaAction) {
+    const bar = document.createElement("div");
+    bar.className = "apply-bar";
+    bar.innerHTML = '<div class="wrap bar-inner">' + cta + contactHtml + '</div>';
+    document.body.appendChild(bar);
+    // 고정 바가 푸터를 가리지 않도록 바 높이만큼 본문 아래 여백을 확보한다
+    const padForBar = () => { document.body.style.paddingBottom = bar.offsetHeight + "px"; };
+    padForBar();
+    window.addEventListener("resize", padForBar);
+  }
 
   const toggle = main.querySelector(".detail-toggle");
   if (toggle) {

@@ -66,8 +66,6 @@
     border-radius: 99px;
     letter-spacing: 0.04em;
   }
-  .badge.host-crabit { background: var(--tint); color: var(--pink); }
-  .badge.host-allkeoni { background: var(--ink); color: #fff; }
   /* 교육/설명회 — 상태 배지 왼쪽의 분류. 채운 배지들과 구분되게 외곽선만 */
   .badge.kind { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
   .badge.status-upcoming { background: var(--fill); color: var(--ink); }
@@ -98,38 +96,41 @@
   }
   .desc { font-size: 17.5px; color: var(--ink); margin: 0 0 28px; max-width: 40em; text-wrap: pretty; }
 
-  .speaker { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 28px; }
+  .speaker { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+  .speaker:last-of-type { margin-bottom: 28px; }
   .speaker .s-label {
+    flex: none;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--pink);
     text-transform: uppercase;
   }
+  /* 스페셜 조교는 연사보다 한 단계 낮은 정보라 라벨을 회색으로 */
+  .speaker.assist .s-label { color: var(--muted); letter-spacing: 0; }
   .speaker strong { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .speaker.assist strong { font-size: 16px; font-weight: 600; }
   .speaker .s-role { font-size: 15px; color: var(--muted); }
 
-  .prep { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 32px; }
-  .prep .p-label { font-size: 14px; font-weight: 600; color: var(--muted); margin-right: 4px; }
-  .prep .chip {
-    font-size: 14px;
-    font-weight: 500;
-    background: var(--fill-soft);
-    padding: 6px 14px;
-    border-radius: 99px;
-    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.06);
+  /* 섹션 제목 — 홈과 같이 엘리스 배움체로, 본문보다 확실히 크게 */
+  .sec-h, .points h2, .materials h2 {
+    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
   }
 
   .points {
     background: var(--fill-soft);
     border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 32px;
+    padding: 30px 34px;
+    margin-bottom: 36px;
     box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05);
   }
-  .points h2 { margin: 0 0 14px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
-  .points ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .points li { display: flex; gap: 12px; font-size: 16px; align-items: baseline; }
+  .points h2 { margin: 0 0 18px; }
+  .points ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .points li { display: flex; gap: 12px; font-size: 17px; align-items: baseline; }
   .points li::before {
     content: "";
     flex: none;
@@ -138,36 +139,52 @@
     background: var(--pink);
     transform: translateY(-2px);
   }
-  .audience { font-size: 15px; color: var(--muted); margin: 0 0 36px; }
-  .audience strong { color: var(--ink); font-weight: 600; }
+  /* 준비물·추천 대상 — 같은 콜아웃 안에서 구분선으로만 나눈다 */
+  .p-extra { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px; }
+  .pe-row { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .pe-label { flex: none; width: 68px; font-size: 14px; font-weight: 600; color: var(--muted); }
+  .pe-body { flex: 1; min-width: 200px; }
+  .pe-body .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pe-body .chip {
+    font-size: 15px;
+    font-weight: 500;
+    background: var(--bg);
+    padding: 7px 15px;
+    border-radius: 99px;
+    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.06);
+  }
+  .pe-note { margin: 10px 0 0; font-size: 14.5px; color: var(--muted); line-height: 1.6; text-wrap: pretty; }
+  .pe-text { font-size: 16px; font-weight: 600; }
 
-  /* ---------- 커리큘럼 (세션별 안내) ---------- */
-  .sec-h { margin: 0 0 14px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
-  .sessions { margin: 0 0 32px; }
-  .s-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 720px) { .s-grid { grid-template-columns: 1fr; } }
+  /* ---------- 커리큘럼 (세션별 안내) ----------
+     포스터를 왼쪽에 두고 오른쪽에 설명을 세우는 가로형. 좁은 화면에서는 위아래로 쌓는다. */
+  .sec-h { margin: 0 0 16px; }
+  .sessions { margin: 0 0 36px; }
+  .s-grid { display: flex; flex-direction: column; gap: 16px; }
   .s-card {
     background: var(--fill-soft);
     border: 1px solid var(--line);
     border-radius: 16px;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: stretch;
   }
   .s-card img {
-    width: 100%;
+    flex: none;
+    width: 270px;
     display: block;
     aspect-ratio: 1190 / 1684;
     object-fit: cover;
     background: var(--fill);
   }
-  .s-body { padding: 16px 18px 20px; }
-  .s-no { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); }
-  .s-title { font-size: 16px; font-weight: 700; margin: 6px 0 12px; letter-spacing: -0.01em; line-height: 1.4; text-wrap: pretty; }
-  .s-who { font-size: 14px; font-weight: 600; margin: 0; }
-  .s-who span { display: block; margin-top: 3px; font-size: 12.5px; font-weight: 400; color: var(--muted); line-height: 1.5; }
-  .s-pts { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  .s-pts li { font-size: 13.5px; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+  .s-body { flex: 1; min-width: 0; padding: 28px 30px; display: flex; flex-direction: column; justify-content: center; }
+  .s-no { font-size: 13.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); }
+  .s-title { font-size: 22px; font-weight: 700; margin: 8px 0 16px; letter-spacing: -0.01em; line-height: 1.35; text-wrap: pretty; }
+  .s-who { font-size: 17px; font-weight: 700; margin: 0; }
+  .s-who span { display: block; margin-top: 4px; font-size: 14.5px; font-weight: 400; color: var(--muted); line-height: 1.55; }
+  .s-pts { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .s-pts li { font-size: 15.5px; color: var(--muted); display: flex; gap: 9px; align-items: baseline; }
   .s-pts li::before {
     content: "";
     flex: none;
@@ -176,53 +193,38 @@
     background: rgba(22, 25, 42, 0.3);
     transform: translateY(-2px);
   }
+  @media (max-width: 640px) {
+    .s-card { flex-direction: column; }
+    .s-card img { width: 100%; }
+    .s-body { padding: 22px 24px 26px; }
+  }
 
   /* ---------- 제공 자료 (다크 섹션) ---------- */
-  .materials { background: var(--ink); border-radius: 16px; padding: 28px 30px 30px; margin-bottom: 32px; }
-  .materials h2 { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
-  .materials .m-sub { margin: 0 0 18px; font-size: 14px; color: rgba(255, 255, 255, 0.55); }
-  .m-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .materials { background: var(--ink); border-radius: 18px; padding: 34px 34px 36px; margin-bottom: 36px; }
+  .materials h2 { margin: 0 0 6px; color: #fff; }
+  .materials .m-sub { margin: 0 0 22px; font-size: 15.5px; color: rgba(255, 255, 255, 0.55); }
+  .m-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
   @media (max-width: 600px) { .m-grid { grid-template-columns: 1fr; } }
   .m-item {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     align-items: baseline;
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
-    padding: 12px 14px;
-  }
-  .m-num { flex: none; font-size: 12px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
-  .m-name { font-size: 14.5px; font-weight: 600; color: #fff; line-height: 1.45; }
-  .m-note { display: block; margin-top: 3px; font-size: 12.5px; font-weight: 400; color: rgba(255, 255, 255, 0.55); }
-
-  /* ---------- 자세히 보기 (카드뉴스 상세) ---------- */
-  .detail { margin: 0 0 36px; }
-  .detail-toggle {
-    width: 100%;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 16px;
     border-radius: 12px;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    cursor: pointer;
-    transition: background 0.15s;
+    padding: 18px 20px;
   }
-  .detail-toggle:hover { background: #F0F0F0; }
-  .detail-toggle .chev { display: inline-block; transition: transform 0.2s; font-size: 11px; color: var(--muted); }
-  .detail-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .m-num { flex: none; font-size: 13.5px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
+  .m-name { font-size: 16.5px; font-weight: 600; color: #fff; line-height: 1.45; }
+  .m-note { display: block; margin-top: 5px; font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.55); }
+
+  /* ---------- 카드뉴스 상세 ---------- */
+  .detail { margin: 0 0 36px; }
   .detail-strip {
-    display: none;
     max-width: 600px;
-    margin: 20px auto 0;
+    margin: 0 auto;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 14px rgba(22, 25, 42, 0.08);
   }
-  .detail-strip.open { display: block; }
   /* 흰 배경 카드뉴스를 여백 없이 이어 붙여 한 장의 상세페이지처럼 보이게 한다 */
   .detail-strip img { width: 100%; display: block; margin: 0; }
 
@@ -355,7 +357,6 @@
 
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-  const hostClass = ev.host === "올커니" ? "host-allkeoni" : "host-crabit";
   const BADGE_CLS = { today: "status-today", upcoming: "status-upcoming", closed: "status-soon" };
   let statusBadge;
   if (ev.status === "replay") {
@@ -417,13 +418,35 @@
     : '';
 
   const detailHtml = ev.detailImages
-    ? '<section class="detail">'
-      + '<button class="detail-toggle" type="button" aria-expanded="false" aria-controls="detail-strip">'
-      + '<span class="t-label">자세히 보기</span><span class="chev">▼</span>'
-      + '</button>'
-      + '<div class="detail-strip" id="detail-strip">'
+    ? '<section class="detail"><div class="detail-strip">'
       + ev.detailImages.map(d => '<img src="' + d.src + '" alt="' + esc(d.alt) + '" loading="lazy" />').join("")
       + '</div></section>'
+    : '';
+
+  // 연사와 스페셜 조교
+  const speakerHtml = (ev.speaker
+      ? '<p class="speaker"><span class="s-label">Speaker</span><strong>' + esc(ev.speaker) + '</strong>'
+        + (ev.speakerRole ? '<span class="s-role">' + esc(ev.speakerRole) + '</span>' : '')
+        + '</p>'
+      : '')
+    + (ev.assistant
+        ? '<p class="speaker assist"><span class="s-label">스페셜 조교</span><strong>' + esc(ev.assistant) + '</strong></p>'
+        : '');
+
+  // 준비물·추천 대상은 '이런 내용을 다뤄요' 콜아웃 안에 함께 담는다
+  const extraHtml = (ev.prep || ev.audience)
+    ? '<div class="p-extra">'
+      + (ev.prep
+          ? '<div class="pe-row"><span class="pe-label">준비물</span><div class="pe-body">'
+            + '<div class="chips">' + ev.prep.map(p => '<span class="chip">' + esc(p) + '</span>').join("") + '</div>'
+            + (ev.prepNote ? '<p class="pe-note">' + esc(ev.prepNote) + '</p>' : '')
+            + '</div></div>'
+          : '')
+      + (ev.audience
+          ? '<div class="pe-row"><span class="pe-label">추천 대상</span>'
+            + '<div class="pe-body"><span class="pe-text">' + esc(ev.audience) + '</span></div></div>'
+          : '')
+      + '</div>'
     : '';
 
   // 주최사 담당자가 따로 있으면 신청 버튼 옆에 문의처를 함께 안내한다
@@ -435,7 +458,6 @@
   main.innerHTML =
     '<img class="thumb" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
     + '<div class="meta-row">'
-    + '<span class="badge ' + hostClass + '">' + esc(ev.host) + '</span>'
     + kindBadge
     + statusBadge
     + '</div>'
@@ -445,22 +467,12 @@
     + (ev.placeUrl ? ' &nbsp;·&nbsp; <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : '')
     + '</div>'
     + '<p class="desc">' + esc(ev.desc) + '</p>'
-    + (ev.speaker
-        ? '<p class="speaker"><span class="s-label">Speaker</span><strong>' + esc(ev.speaker) + '</strong>'
-          + (ev.speakerRole ? '<span class="s-role">' + esc(ev.speakerRole) + '</span>' : '')
-          + '</p>'
-        : '')
+    + speakerHtml
     + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
     + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")
-    + '</ul></div>'
+    + '</ul>' + extraHtml + '</div>'
     + sessionsHtml
     + materialsHtml
-    + (ev.prep
-        ? '<div class="prep"><span class="p-label">준비물</span>'
-          + ev.prep.map(p => '<span class="chip">' + esc(p) + '</span>').join("")
-          + '</div>'
-        : '')
-    + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
     + detailHtml
     + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
     + (isClosedFlow
@@ -479,18 +491,6 @@
     const padForBar = () => { document.body.style.paddingBottom = bar.offsetHeight + "px"; };
     padForBar();
     window.addEventListener("resize", padForBar);
-  }
-
-  const toggle = main.querySelector(".detail-toggle");
-  if (toggle) {
-    const strip = main.querySelector("#detail-strip");
-    toggle.addEventListener("click", function () {
-      const open = strip.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.querySelector(".t-label").textContent = open ? "접기" : "자세히 보기";
-      // 접을 때는 토글 버튼이 화면 밖으로 밀려나므로 다시 보이는 위치로 데려온다
-      if (!open) toggle.scrollIntoView({ block: "center", behavior: "smooth" });
-    });
   }
 
   const closedBtn = document.getElementById("closedApply");

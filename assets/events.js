@@ -10,6 +10,8 @@
    - kind: "교육" | "설명회" — 카드·상세에서 상태 태그 왼쪽에 붙는 분류
    - startDate: "YYYY-MM-DD" — 당일이면 '예정' 대신 '오늘'로 표시.
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
+   - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
+   - prep / prepNote / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
    =============================================== */
 const EVENTS_DB = {
   "parents-webinar": {
@@ -128,9 +130,10 @@ const EVENTS_DB = {
       "홈페이지형 블로그를 그 자리에서 직접 구축하기",
       "수료 후 피드백 Zoom 강의 1회로 끝까지 완성하기"
     ],
-    speaker: "조연심 · 김현지 · 최유정",
-    speakerRole: "올커니 · 크래빗 · 캐다 3인 3세션",
-    prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입"],
+    speaker: "MU 조연심 대표 · 크래빗 김현지 대표 · 캐다 최유정 대표",
+    assistant: "올커니 조경이 대표 · 캐다 최지호 매니저",
+    prep: ["노트북", "학원 로고 이미지 파일 (PNG·JPG 등)"],
+    prepNote: "로고 파일이 있으시면 미리 노트북에 저장해 오시면 실습이 더 편합니다. 파일이 없으셔도 괜찮아요 — 로고 사진이나 텍스트만 있어도 AI로 함께 만들 수 있게 준비해두었습니다.",
     audience: "학원 원장·운영자 (오프라인 25명 / 온라인 30명, 선착순)",
     status: "upcoming",
     applyUrl: "https://forms.gle/k6C2iuo5jSQXYL358",

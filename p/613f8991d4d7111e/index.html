@@ -47,6 +47,16 @@
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
   .head { padding: 16px 0 24px; }
+  .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.1);
+    margin-bottom: 26px;
+    background: var(--fill);
+  }
   .badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .pill {
     font-size: 13px;
@@ -240,6 +250,7 @@
 
 <main class="wrap">
   <div class="head">
+    <img class="thumb" src="../../assets/events/homepage-blog-master/hero.jpg" alt="학원 홈페이지형 블로그 마스터 과정 썸네일" />
     <div class="badges">
       <span class="pill">강의자료</span>
       <span class="pill ink">참석자 전용</span>

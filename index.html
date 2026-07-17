@@ -309,7 +309,6 @@
     color: var(--ink);
     box-shadow: inset 0 0 0 1px var(--line);
   }
-  .replay.is-closed .thumb { opacity: 0.62; }
   .replay .body strong {
     font-size: 18px;
     font-weight: 700;
@@ -482,7 +481,7 @@
           <h2>교육 / 설명회</h2>
           <p>크래빗과 올커니가 진행하는 교육과 설명회입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
         </div>
-        <a class="link-all" href="schedule">전체 일정 보기 &#8250;</a>
+        <a class="link-all" href="courses">전체보기 &#8250;</a>
       </div>
       <div class="replay-grid" id="upcomingGrid"></div>
     </div>
@@ -573,10 +572,9 @@
     return;
   }
   entries.forEach(([id, ev]) => {
-    const upcoming = !isEventOver(ev);
     const tag = eventStatusTag(ev);
     const a = document.createElement("a");
-    a.className = "replay" + (upcoming ? "" : " is-closed");
+    a.className = "replay";
     a.href = "event?id=" + id;
     a.innerHTML =
       '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'

@@ -278,6 +278,14 @@
    =============================================== */
 const RESOURCES = [
   {
+    category: "인사이트",
+    title: "원장님을 위한 클로드 코워크 시작하기 — 윈도우 설치 가이드",
+    sub: "가장 강력한 AI 도구 클로드 코워크, 윈도우 설치가 막막하셨다면 화면 그대로 한 단계씩",
+    thumb: "assets/thumbs/claude-cowork-windows.svg",
+    access: "public",
+    href: "claude-code-windows"
+  },
+  {
     category: "강의자료",
     title: "[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료",
     sub: "강의 자료 · 프롬프트 모음집 · 핵심 자료 파일 전부 전달",
@@ -288,7 +296,7 @@ const RESOURCES = [
 ];
 
 (function () {
-  const CATEGORIES = ["전체", "강의자료"];
+  const CATEGORIES = ["전체", "강의자료", "인사이트"];
   let active = "전체";
 
   const tabsEl = document.getElementById("tabs");

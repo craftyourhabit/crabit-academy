@@ -204,14 +204,6 @@
   .qa .a { font-size: 16px; color: var(--ink); margin: 0; }
   .qa .a strong { font-weight: 700; }
 
-  /* 개발자용 접기 */
-  .adv { margin-top: 18px; background: var(--fill-soft); border: 1px solid var(--line); border-radius: 14px; padding: 6px 20px; }
-  .adv summary { cursor: pointer; font-size: 15px; font-weight: 700; padding: 14px 0; color: var(--ink); list-style: none; }
-  .adv summary::-webkit-details-marker { display: none; }
-  .adv summary::before { content: "＋ "; color: var(--pink); font-weight: 700; }
-  .adv[open] summary::before { content: "－ "; }
-  .adv .adv-body { padding: 0 0 16px; font-size: 15px; color: var(--ink); }
-  .adv code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13.5px; background: #0d1020; color: #e7e9f5; border-radius: 6px; padding: 3px 8px; display: inline-block; }
 
   footer { border-top: 1px solid var(--line); padding: 30px 0 40px; font-size: 14px; color: var(--muted); }
   .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -262,9 +254,7 @@
     .qa { padding: 16px 18px; }
     .qa .q { font-size: 15.5px; }
     .qa .a { font-size: 14.5px; }
-    .adv { padding: 4px 16px; }
-    .adv .adv-body code { font-size: 12px; word-break: break-all; white-space: normal; }
-    footer { font-size: 13px; }
+        footer { font-size: 13px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -430,15 +420,6 @@
       </div>
 
     </div>
-
-    <details class="adv">
-      <summary>컴퓨터를 잘 다루시는 분을 위한 방법 (선택 사항)</summary>
-      <div class="adv-body">
-        터미널(파워셸)에 익숙하시다면, 앱 없이 명령어 한 줄로도 설치할 수 있어요.
-        파워셸을 열고 <code>irm https://claude.ai/install.ps1 | iex</code> 를 붙여넣어 실행하면 됩니다.
-        Node.js나 WSL 없이도 설치돼요. (원장님이라면 위의 앱 설치만으로 충분해요.)
-      </div>
-    </details>
   </section>
 
   <!-- 마무리: 코워크로 할 수 있는 일 (크래빗 연결) -->

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>윈도우에서 클로드 코드 설치하기 — 크래빗 아카데미</title>
+<meta name="description" content="윈도우 노트북에 클로드 코드(Claude Code)를 설치하는 방법을 한 단계씩 그대로 따라 하도록 안내합니다. 2026년 7월 최신 기준." />
+<meta property="og:title" content="윈도우에서 클로드 코드 설치하기 (2026 최신)" />
+<meta property="og:description" content="터미널이 처음이어도 괜찮아요. 화면 그대로, 한 단계씩 따라 하면 5~10분이면 끝납니다." />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/favicon.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  .eyebrow, h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+    --clay: #D97757;
+    --mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo, Consolas, "D2Coding", monospace;
+  }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .brand img { height: 26px; display: block; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 26px 0 8px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--pink);
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0 0 16px;
+    font-size: clamp(29px, 6.6vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.28;
+    text-wrap: balance;
+  }
+  .hero-lead { margin: 0 0 20px; font-size: 18px; color: var(--ink); text-wrap: pretty; }
+  .hero-lead .code-name { font-weight: 700; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 7px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .chip .dot { width: 7px; height: 7px; border-radius: 99px; background: var(--pink); }
+
+  /* ---------- what's new callout ---------- */
+  .whatsnew {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 18px;
+    padding: 22px 26px;
+    margin-bottom: 44px;
+  }
+  .whatsnew .wn-label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; color: var(--pink); text-transform: uppercase; }
+  .whatsnew h3 { margin: 6px 0 8px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; color: #fff; }
+  .whatsnew p { margin: 0; font-size: 15.5px; color: #fff; opacity: 0.9; }
+  .whatsnew p strong { color: #fff; }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .sec { margin-bottom: 54px; }
+  .sec-sub { margin: 0 0 22px; font-size: 17px; color: var(--ink); text-wrap: pretty; }
+
+  /* ---------- 준비물 ---------- */
+  .prep { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .prep-card {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
+  }
+  .prep-card .pc-t { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .prep-card .pc-d { font-size: 14.5px; color: var(--muted); }
+  .prep-card.need { border: 1.5px solid var(--pink); }
+  .prep-card.need .pc-t::after { content: " · 필수"; color: var(--pink); font-size: 13px; }
+  @media (max-width: 520px) { .prep { grid-template-columns: 1fr; } }
+
+  /* ---------- 방법 선택 카드 ---------- */
+  .paths { display: flex; flex-direction: column; gap: 14px; }
+  .path-card {
+    display: flex; gap: 18px; align-items: flex-start;
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 24px 26px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .path-card:hover { box-shadow: 0 8px 20px rgba(22, 25, 42, 0.1); transform: translateY(-1px); }
+  .path-badge {
+    flex: none; width: 46px; height: 46px; border-radius: 13px;
+    background: var(--tint); color: var(--pink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+  }
+  .path-card .pcx { flex: 1; min-width: 0; }
+  .path-tag { font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; color: var(--pink); text-transform: uppercase; }
+  .path-card h3 { margin: 3px 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .path-card h3::after { content: " \2193"; color: var(--pink); font-weight: 700; }
+  .path-card p { margin: 0; font-size: 15.5px; color: var(--ink); }
+  .path-rec {
+    display: inline-block; margin-top: 10px;
+    font-size: 13px; font-weight: 700; color: var(--ink);
+    background: var(--tint); border-radius: 99px; padding: 4px 12px;
+  }
+
+  /* ---------- 단계 (steps) ---------- */
+  .method-head {
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 0 6px;
+  }
+  .method-kicker {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+    color: #fff; background: var(--ink);
+    border-radius: 99px; padding: 5px 14px;
+  }
+  .steps { display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+  }
+  .step-num {
+    flex: none; width: 34px; height: 34px; border-radius: 99px;
+    background: var(--pink); color: #fff;
+    font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; min-width: 0; }
+  .step-body h4 { margin: 2px 0 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; }
+  .step-body p { margin: 0 0 14px; font-size: 16.5px; color: var(--ink); text-wrap: pretty; }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body a.inline { color: var(--pink); font-weight: 700; text-decoration: none; }
+  .step-body a.inline:hover { text-decoration: underline; }
+  .step-body strong { font-weight: 700; }
+  .kbd {
+    font-family: var(--mono); font-size: 13.5px;
+    background: var(--fill); border: 1px solid var(--line); border-radius: 6px;
+    padding: 2px 7px; white-space: nowrap;
+  }
+
+  .note-box {
+    background: var(--tint); border-radius: 12px;
+    padding: 14px 16px; font-size: 15px; line-height: 1.6;
+    margin: 0 0 14px;
+  }
+  .note-box strong:first-child { display: block; margin-bottom: 4px; }
+  .warn-box {
+    background: #FFF6E9; border: 1px solid #F3D9A8; border-radius: 12px;
+    padding: 14px 16px; font-size: 15px; line-height: 1.6; margin: 0 0 14px;
+  }
+  .warn-box b { color: #9A6A16; }
+
+  /* ---------- 명령어 코드블록 + 복사 ---------- */
+  .cmd {
+    position: relative;
+    background: #0d1020; border-radius: 12px;
+    padding: 16px 96px 16px 18px;
+    margin: 0 0 14px;
+    overflow-x: auto;
+  }
+  .cmd code {
+    font-family: var(--mono); font-size: 15px; line-height: 1.6;
+    color: #E7E9F5; white-space: pre; display: block;
+  }
+  .cmd .prompt { color: #6ED6A6; user-select: none; }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(255,255,255,0.1); color: #fff;
+    border: 0; border-radius: 8px; padding: 7px 12px;
+    font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); }
+  .copy-btn.done { background: var(--pink); }
+
+  /* ---------- 실제 UI 사진 (모션 핀) ---------- */
+  .shot {
+    position: relative; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(22, 25, 42, 0.14);
+    margin: 4px 0 8px;
+  }
+  .shot img { width: 100%; display: block; }
+  .shot .pulse {
+    position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px;
+    border-radius: 99px; border: 3px solid var(--pink);
+    animation: pulseRing 1.8s ease-out infinite;
+  }
+  .shot .pulse::after { content: ""; position: absolute; inset: 11px; border-radius: 99px; background: var(--pink); }
+  @keyframes pulseRing {
+    0% { transform: scale(0.55); opacity: 1; }
+    70%,100% { transform: scale(2.2); opacity: 0; }
+  }
+  .click-tip {
+    position: absolute; transform: translate(-50%, -100%);
+    background: var(--pink); color: #fff; font-size: 13.5px; font-weight: 700;
+    padding: 7px 13px; border-radius: 99px; white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(251, 117, 187, 0.45);
+    animation: tipBob 1.8s ease-in-out infinite;
+  }
+  .click-tip::after {
+    content: ""; position: absolute; left: 50%; top: 100%;
+    transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--pink);
+  }
+  @keyframes tipBob {
+    0%,100% { transform: translate(-50%, -100%); }
+    50% { transform: translate(-50%, calc(-100% - 8px)); }
+  }
+  .shot-cap { font-size: 14.5px !important; color: var(--muted) !important; margin: 0 0 16px !important; }
+  .shot-cap strong { color: var(--ink); }
+
+  /* ---------- 화면 재현(mockup) 공통 ---------- */
+  .mock {
+    border-radius: 12px; overflow: hidden; margin: 4px 0 8px;
+    box-shadow: 0 6px 22px rgba(22, 25, 42, 0.18);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .mock-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; font-size: 12.5px; font-weight: 600;
+  }
+  .mock-dots { display: flex; gap: 6px; }
+  .mock-dots i { width: 11px; height: 11px; border-radius: 99px; display: block; }
+  .mock-title { color: rgba(255,255,255,0.65); font-family: var(--mono); font-size: 12px; }
+  .mock-body {
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.75;
+    padding: 16px 18px; overflow-x: auto; white-space: pre;
+  }
+  /* PowerShell / Windows Terminal */
+  .term { background: #0c0c14; }
+  .term .mock-bar { background: #1b1b2b; }
+  .term .mock-body { color: #d6d9e6; }
+  .term .ps { color: #6ea8fe; }     /* PS 프롬프트 파랑 */
+  .term .path { color: #e6c07b; }    /* 경로 */
+  .term .cmd-in { color: #ffffff; }  /* 입력 명령 */
+  .term .ok { color: #6ED6A6; }      /* 성공 */
+  .term .dim { color: #8b90a3; }     /* 부가 설명 */
+  .term .arrow { color: var(--pink); }
+  .cursor { display: inline-block; width: 8px; height: 16px; background: #d6d9e6; vertical-align: -3px; animation: blink 1.1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Claude Code 환영 박스 */
+  .cc-welcome {
+    background: #0c0c14; padding: 20px 18px 22px;
+    font-family: var(--mono); overflow-x: auto;
+  }
+  .cc-box {
+    border: 1px solid #35384a; border-radius: 10px;
+    padding: 16px 18px; max-width: 460px;
+    background: linear-gradient(180deg, rgba(217,119,87,0.06), transparent);
+  }
+  .cc-box .cc-title { color: #fff; font-size: 14px; }
+  .cc-box .star { color: var(--clay); }
+  .cc-box .cc-line { color: #9aa0b5; font-size: 12.5px; margin-top: 8px; }
+  .cc-box .cc-cwd { color: #6ea8fe; }
+  .cc-input {
+    margin-top: 14px; max-width: 460px;
+    border: 1px solid #4a4d63; border-radius: 10px;
+    padding: 11px 14px; color: #d6d9e6; font-size: 13.5px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .cc-input .chev { color: var(--clay); font-weight: 700; }
+  .cc-hint { color: #6b7086; font-size: 12px; margin-top: 8px; font-family: var(--mono); }
+
+  /* 데스크탑 앱 재현 */
+  .app { background: #f4f4f7; border: 1px solid #d9d9e2; }
+  .app .mock-bar { background: #ececf1; border-bottom: 1px solid #dcdce4; }
+  .app .mock-dots i.r { background: #ff5f57; } .app .mock-dots i.y { background: #febc2e; } .app .mock-dots i.g { background: #28c840; }
+  .app-tabs {
+    display: flex; gap: 4px; justify-content: center;
+    background: #ececf1; padding: 0 12px 10px;
+  }
+  .app-tab {
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    padding: 7px 18px; border-radius: 9px; color: #6a6a78;
+  }
+  .app-tab.active { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .app-tab .badge-new { color: var(--pink); font-size: 10px; margin-left: 4px; vertical-align: 2px; }
+  .app-stage { display: flex; min-height: 190px; background: #fff; }
+  .app-side {
+    width: 132px; flex: none; background: #f7f7fa; border-right: 1px solid #ececf1;
+    padding: 14px 12px; font-size: 12px; color: #6a6a78; line-height: 2;
+  }
+  .app-side .s-h { font-weight: 700; color: var(--ink); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .app-side .s-item.on { color: var(--ink); font-weight: 700; }
+  .app-main { flex: 1; min-width: 0; padding: 18px 20px; display: flex; flex-direction: column; }
+  .app-main .a-crumb { font-size: 12px; color: #9a9aa8; font-family: var(--mono); margin-bottom: 12px; }
+  .app-bubble { background: #f4f4f7; border-radius: 12px; padding: 11px 14px; font-size: 13px; color: var(--ink); max-width: 90%; margin-bottom: 10px; }
+  .app-diff { font-family: var(--mono); font-size: 12px; background: #fbfbfd; border: 1px solid #ececf1; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+  .app-diff .add { color: #1a7f37; background: #e6ffec; display: block; }
+  .app-diff .del { color: #cf222e; background: #ffebe9; display: block; }
+  .app-prompt {
+    margin-top: auto; display: flex; align-items: center; gap: 10px;
+    border: 1.5px solid #d9d9e2; border-radius: 12px; padding: 10px 14px;
+    font-size: 13px; color: #9a9aa8;
+  }
+  .app-send { flex: none; margin-left: auto; width: 26px; height: 26px; border-radius: 8px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  @media (max-width: 520px) {
+    .app-side { display: none; }
+    .mock-body, .cc-welcome, .app-tabs { font-size: 12px; }
+  }
+
+  /* ---------- 세 가지 탭 설명 ---------- */
+  .trio { display: flex; flex-direction: column; gap: 12px; }
+  .trio-item {
+    background: var(--fill-soft); border-radius: 14px; padding: 18px 22px;
+    border-left: 4px solid var(--pink);
+  }
+  .trio-item h4 { margin: 0 0 4px; font-size: 17px; font-weight: 700; }
+  .trio-item h4 .en { font-family: var(--mono); font-size: 13px; color: var(--muted); font-weight: 600; margin-left: 6px; }
+  .trio-item p { margin: 0; font-size: 15.5px; color: var(--ink); }
+
+  /* ---------- 문제 해결 ---------- */
+  .trouble { display: flex; flex-direction: column; gap: 10px; }
+  .trb {
+    background: var(--bg); border-radius: 14px; padding: 18px 22px;
+    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06);
+  }
+  .trb .t-q { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+  .trb .t-q .err { font-family: var(--mono); font-size: 13px; background: var(--fill); border-radius: 6px; padding: 2px 7px; color: #cf222e; }
+  .trb .t-a { font-size: 15.5px; color: var(--ink); margin: 0; }
+  .trb .t-a code { font-family: var(--mono); font-size: 13.5px; background: var(--fill); border-radius: 6px; padding: 1px 6px; }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: flex; flex-direction: column; gap: 12px; }
+  .qa { background: var(--bg); border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06); }
+  .qa .q { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .qa .q::before { content: "Q. "; color: var(--pink); }
+  .qa .a { font-size: 16px; color: var(--ink); margin: 0; }
+
+  /* ---------- contact ---------- */
+  .contact {
+    text-align: center; background: var(--bg); border-radius: 18px;
+    padding: 36px 24px; box-shadow: 0 2px 8px rgba(22, 25, 42, 0.06); margin-bottom: 44px;
+  }
+  .contact p { margin: 0 0 14px; font-size: 18px; color: var(--ink); }
+  .contact-phone { margin: 0 0 20px !important; }
+  .contact-phone a { font-size: 25px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .contact-phone span { font-size: 16px; color: var(--ink); margin-left: 6px; }
+  .btn { display: inline-block; padding: 14px 28px; border-radius: 12px; font-size: 16px; font-weight: 600; text-decoration: none; background: var(--ink); color: #fff; transition: background 0.15s; }
+  .btn:hover { background: #333333; }
+  a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  footer { border-top: 1px solid var(--line); padding: 32px 0 40px; font-size: 14px; color: var(--muted); }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .f-note { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow">윈도우 설치 가이드</span>
+    <h1>윈도우에서<br />클로드 코드 설치하기</h1>
+    <p class="hero-lead">
+      <span class="code-name">클로드 코드(Claude Code)</span>는 클로드가 내 컴퓨터의 폴더와 파일을 직접
+      열고·만들고·정리해주는 도구예요. 터미널이 처음이어도 괜찮습니다.
+      아래 <strong>화면 그대로</strong> 한 단계씩 따라 하면 5~10분이면 끝나요.
+    </p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span>2026년 7월 최신 기준</span>
+      <span class="chip"><span class="dot"></span>Windows 10 · 11</span>
+      <span class="chip"><span class="dot"></span>WSL 없이 설치</span>
+    </div>
+  </div>
+
+  <div class="whatsnew">
+    <span class="wn-label">최근에 바뀐 점</span>
+    <h3>이제 채팅과 코워크가 한 화면으로 합쳐졌어요</h3>
+    <p>
+      2026년 7월, 클로드 앱에서 <strong>채팅(Chat)</strong>과 <strong>코워크(Cowork)</strong>가
+      하나의 홈 화면으로 통합됐어요. 코워크 작업이 클라우드에서도 돌아가서
+      <strong>노트북을 닫아도 백그라운드로 계속</strong> 진행되고, 휴대폰으로 결과를 확인할 수 있습니다.
+      이 가이드는 그 최신 화면 기준으로 안내드려요.
+    </p>
+  </div>
+
+  <!-- 준비물 -->
+  <section class="sec">
+    <h2>먼저, 이것만 준비돼 있으면 돼요</h2>
+    <p class="sec-sub">설치 자체는 몇 분이면 끝나요. 다만 두 가지는 꼭 확인해 주세요.</p>
+    <div class="prep">
+      <div class="prep-card need">
+        <div class="pc-t">클로드 유료 플랜</div>
+        <div class="pc-d">Pro·Max·Team 중 하나. 무료 플랜에서는 클로드 코드를 쓸 수 없어요.</div>
+      </div>
+      <div class="prep-card need">
+        <div class="pc-t">윈도우 10 또는 11</div>
+        <div class="pc-d">Windows 10 (1809 이상) / 11. RAM 4GB 이상.</div>
+      </div>
+      <div class="prep-card">
+        <div class="pc-t">인터넷 연결</div>
+        <div class="pc-d">설치와 로그인에 필요해요.</div>
+      </div>
+      <div class="prep-card">
+        <div class="pc-t">Git for Windows <span style="font-weight:400;color:var(--muted)">(선택)</span></div>
+        <div class="pc-d">있으면 더 많은 명령을 쓸 수 있어요. 없어도 설치·실행은 됩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 방법 선택 -->
+  <section class="sec">
+    <h2>설치 방법은 두 가지예요</h2>
+    <p class="sec-sub">둘 중 편한 쪽으로 하나만 하시면 돼요. 터미널이 낯설면 <strong>방법 A</strong>를 추천드려요.</p>
+    <div class="paths">
+      <a class="path-card" href="#method-a">
+        <span class="path-badge">A</span>
+        <span class="pcx">
+          <span class="path-tag">데스크탑 앱</span>
+          <h3>클로드 앱으로 설치하기</h3>
+          <p>클릭만으로 설치. 검은 화면(터미널) 없이, 클로드 앱 안의 <strong>Code 탭</strong>에서 바로 사용해요.</p>
+          <span class="path-rec">터미널이 처음인 분께 추천</span>
+        </span>
+      </a>
+      <a class="path-card" href="#method-b">
+        <span class="path-badge">B</span>
+        <span class="pcx">
+          <span class="path-tag">터미널(PowerShell)</span>
+          <h3>명령어 한 줄로 설치하기</h3>
+          <p>PowerShell에 명령어 한 줄을 붙여넣어 설치해요. <span class="kbd">claude</span> 명령을 터미널에서 직접 쓰고 싶은 분께.</p>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= 방법 A ================= -->
+  <section class="sec" id="method-a">
+    <div class="method-head">
+      <span class="method-kicker">방법 A</span>
+    </div>
+    <h2>클로드 앱으로 설치하기</h2>
+    <p class="sec-sub">터미널을 열 필요가 없어요. 카카오톡 설치하듯 앱을 깔고, 앱 안에서 클로드 코드를 씁니다.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <h4>클로드에 가입하고 유료 플랜을 준비해요</h4>
+          <p>
+            <a class="inline" href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>에 접속해
+            <strong>Continue with Google</strong>로 가입하세요. 클로드 코드는
+            <strong>유료 플랜(Pro 이상)</strong>이 필요해요. 무료 플랜에서는 이 기능이 안 열립니다.
+          </p>
+          <div class="shot" aria-hidden="true">
+            <img src="assets/guide/claude-signup.jpg" alt="" />
+            <span class="pulse" style="left: 26.8%; top: 66.8%;"></span>
+            <span class="click-tip" style="left: 26.8%; top: 59.5%;">여기를 눌러주세요!</span>
+          </div>
+          <p class="shot-cap">claude.ai 첫 화면 — <strong>Continue with Google</strong>을 누르면 가입이 시작돼요.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <h4>윈도우용 데스크탑 앱을 내려받아요</h4>
+          <p>
+            <a class="inline" href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a>에
+            접속하면 <strong>내 컴퓨터에 맞는 버전(Windows)</strong>이 자동으로 안내돼요.
+            가운데 검은 버튼을 누르면 설치 파일이 받아집니다.
+          </p>
+          <div class="shot" aria-hidden="true">
+            <img src="assets/guide/claude-download.jpg" alt="" />
+            <span class="pulse" style="left: 49.4%; top: 55.7%;"></span>
+            <span class="click-tip" style="left: 49.4%; top: 48.5%;">여기를 눌러주세요!</span>
+          </div>
+          <p class="shot-cap">claude.ai/download 화면 — 검은 버튼을 누르면 윈도우용 설치 파일이 받아져요.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <h4>설치 파일을 실행하고 로그인해요</h4>
+          <p>
+            다운로드 폴더의 설치 파일(예: <span class="kbd">Claude-Setup.exe</span>)을 더블클릭하면
+            설치가 진행돼요. 끝나면 <strong>시작 메뉴</strong>에서 <strong>Claude</strong>를 실행하고,
+            1단계에서 가입한 계정으로 로그인하세요.
+          </p>
+          <div class="note-box">
+            <strong>Git이 필요할 수 있어요</strong>
+            윈도우에서 내 컴퓨터의 파일을 직접 다루는 <strong>로컬(Local)</strong> 세션을 쓰려면
+            <a class="inline" href="https://git-scm.com/downloads/win" target="_blank" rel="noopener">Git for Windows</a>가
+            설치돼 있어야 해요. 없다면 지금 함께 설치해 두면 편합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <h4>상단의 세 가지 탭을 알아둬요</h4>
+          <p>
+            앱 위쪽 가운데에 <strong>Chat · Cowork · Code</strong> 탭이 있어요.
+            우리가 쓸 <strong>클로드 코드는 「Code」 탭</strong>이에요. 그 옆의 채팅과 코워크는
+            최근 한 홈 화면으로 합쳐지고 있는 중이고요.
+          </p>
+          <!-- 데스크탑 앱 화면 재현 -->
+          <div class="mock app" aria-hidden="true">
+            <div class="mock-bar">
+              <span class="mock-dots"><i class="r"></i><i class="y"></i><i class="g"></i></span>
+              <span class="mock-title" style="margin-left:8px;">Claude</span>
+            </div>
+            <div class="app-tabs">
+              <span class="app-tab">Chat</span>
+              <span class="app-tab">Cowork<span class="badge-new">NEW</span></span>
+              <span class="app-tab active">Code</span>
+            </div>
+            <div class="app-stage">
+              <div class="app-side">
+                <div class="s-h">세션</div>
+                <div class="s-item on">· my-project</div>
+                <div class="s-item">· 새 세션 +</div>
+              </div>
+              <div class="app-main">
+                <div class="a-crumb">Local · C:\Users\hyunji\my-project</div>
+                <div class="app-bubble">무엇을 도와드릴까요? 폴더를 고르고 할 일을 적어주세요.</div>
+                <div class="app-prompt">
+                  <span>할 일을 입력하세요…</span>
+                  <span class="app-send">↑</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="shot-cap">데스크탑 앱 재현 화면 — 상단 <strong>Code</strong> 탭이 클로드 코드예요.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-body">
+          <h4>첫 세션을 시작해요</h4>
+          <p>
+            <strong>Code</strong> 탭에서 순서대로 눌러주세요.
+          </p>
+          <p style="margin-bottom:8px;">
+            ① <strong>Local</strong>(내 컴퓨터) 선택 → ② <strong>Select folder</strong>로 작업할 폴더 선택 →
+            ③ 보낼 곳 옆에서 <strong>모델</strong> 선택 → ④ 할 일을 입력 (예: <em>"이 폴더에 CLAUDE.md를 만들어줘"</em>) →
+            ⑤ 클로드가 제안한 변경사항을 <strong>초록/빨강 diff</strong>로 확인하고 <strong>Accept</strong>로 승인!
+          </p>
+          <div class="mock app" aria-hidden="true">
+            <div class="mock-bar">
+              <span class="mock-dots"><i class="r"></i><i class="y"></i><i class="g"></i></span>
+              <span class="mock-title" style="margin-left:8px;">Claude — Code</span>
+            </div>
+            <div class="app-stage">
+              <div class="app-side">
+                <div class="s-h">세션</div>
+                <div class="s-item on">· my-project</div>
+              </div>
+              <div class="app-main">
+                <div class="a-crumb">Local · 모델: Claude Opus</div>
+                <div class="app-bubble">CLAUDE.md 파일을 만들었어요. 아래 변경사항을 확인해 주세요.</div>
+                <div class="app-diff">
+                  <span style="color:#6a6a78">CLAUDE.md  +3 -0</span>
+                  <span class="add">+ # 프로젝트 안내</span>
+                  <span class="add">+ 이 폴더는 크래빗 실습용입니다.</span>
+                </div>
+                <div class="app-prompt">
+                  <span>Accept 를 눌러 변경을 적용하세요</span>
+                  <span class="app-send">↑</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="shot-cap">기본은 <strong>수동 모드</strong>라, 내가 <strong>승인(Accept)</strong>하기 전까지 파일은 바뀌지 않아요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 방법 B ================= -->
+  <section class="sec" id="method-b">
+    <div class="method-head">
+      <span class="method-kicker">방법 B</span>
+    </div>
+    <h2>터미널(PowerShell)로 설치하기</h2>
+    <p class="sec-sub">
+      명령어 <strong>한 줄</strong>이면 끝나요. 예전과 달리 <strong>Node.js도, WSL도 필요 없어요.</strong>
+      단일 실행파일을 내려받아 자동으로 설치되고, 이후 업데이트도 알아서 됩니다.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <h4>PowerShell을 열어요</h4>
+          <p>
+            윈도우 <strong>시작 버튼</strong>을 누르고 <strong>PowerShell</strong>이라고 검색한 뒤,
+            <strong>Windows PowerShell</strong>을 클릭해 실행하세요. <strong>관리자 권한은 필요 없어요.</strong>
+          </p>
+          <div class="note-box">
+            <strong>PowerShell이 맞는지 확인하는 법</strong>
+            검은(또는 파란) 창의 맨 앞이 <span class="kbd">PS C:\Users\...&gt;</span> 처럼
+            <strong>PS</strong>로 시작하면 PowerShell이 맞아요. <span class="kbd">C:\Users\...&gt;</span>
+            처럼 PS가 없으면 그건 CMD예요(방법이 조금 달라요 — 아래 문제 해결 참고).
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <h4>설치 명령어를 붙여넣고 Enter를 눌러요</h4>
+          <p>아래 명령어를 복사해서 PowerShell 창에 붙여넣고(마우스 오른쪽 클릭 = 붙여넣기) <strong>Enter</strong>를 누르세요.</p>
+          <div class="cmd">
+            <button class="copy-btn" type="button" data-copy="irm https://claude.ai/install.ps1 | iex">복사하기</button>
+            <code><span class="prompt">PS&gt; </span>irm https://claude.ai/install.ps1 | iex</code>
+          </div>
+          <p>그러면 아래처럼 설치가 진행돼요.</p>
+          <div class="mock term" aria-hidden="true">
+            <div class="mock-bar">
+              <span class="mock-dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
+              <span class="mock-title" style="margin-left:8px;">Windows PowerShell</span>
+            </div>
+            <div class="mock-body"><span class="ps">PS C:\Users\hyunji&gt;</span> <span class="cmd-in">irm https://claude.ai/install.ps1 | iex</span>
+<span class="dim">Downloading Claude Code…</span>
+<span class="dim">Installing to</span> <span class="path">C:\Users\hyunji\.local\bin</span>
+<span class="dim">Adding to PATH…</span>
+<span class="ok">✓ Claude Code installed successfully!</span>
+<span class="dim">Restart your terminal, then run</span> <span class="cmd-in">claude</span> <span class="dim">to start.</span>
+<span class="ps">PS C:\Users\hyunji&gt;</span> <span class="cursor"></span></div>
+          </div>
+          <p class="shot-cap">설치가 끝나면 <strong>✓ installed successfully</strong> 메시지가 떠요.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <h4>PowerShell을 완전히 닫았다가 다시 열어요</h4>
+          <p>
+            방금 설치가 <strong>PATH</strong>(윈도우가 프로그램을 찾는 경로)에 등록됐는데,
+            이건 <strong>창을 새로 열어야</strong> 반영돼요. 열려 있던 PowerShell 창을 닫고
+            <strong>새 PowerShell 창</strong>을 다시 여세요.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <h4>제대로 설치됐는지 확인해요</h4>
+          <p>새 창에 아래를 입력하고 Enter를 누르세요.</p>
+          <div class="cmd">
+            <button class="copy-btn" type="button" data-copy="claude --version">복사하기</button>
+            <code><span class="prompt">PS&gt; </span>claude --version</code>
+          </div>
+          <p><span class="kbd">2.1.211 (Claude Code)</span> 처럼 버전 번호가 나오면 성공이에요.</p>
+          <div class="warn-box">
+            <b>혹시 "claude is not recognized..." 라고 나온다면?</b> 3단계처럼 창을 아직 새로 안 연 경우예요.
+            창을 완전히 닫고 다시 열어보세요. 그래도 안 되면 <span class="kbd">claude doctor</span>를 입력해
+            무엇이 문제인지 진단할 수 있어요.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-body">
+          <h4>클로드 코드를 실행하고 로그인해요</h4>
+          <p>작업할 폴더에서 아래를 입력하면 클로드 코드가 시작돼요.</p>
+          <div class="cmd">
+            <button class="copy-btn" type="button" data-copy="claude">복사하기</button>
+            <code><span class="prompt">PS&gt; </span>claude</code>
+          </div>
+          <p>
+            처음 실행하면 <strong>브라우저가 자동으로 열리며 로그인</strong>을 안내해요.
+            가입한 클로드 계정으로 로그인하면, 아래와 같은 환영 화면이 나타납니다.
+          </p>
+          <div class="mock term" aria-hidden="true">
+            <div class="mock-bar">
+              <span class="mock-dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
+              <span class="mock-title" style="margin-left:8px;">claude</span>
+            </div>
+            <div class="cc-welcome">
+<div class="cc-box">
+  <div class="cc-title"><span class="star">✻</span> Welcome to Claude Code</div>
+  <div class="cc-line">/help 로 도움말 · /status 로 현재 설정 확인</div>
+  <div class="cc-line cc-cwd">cwd: C:\Users\hyunji\my-project</div>
+</div>
+<div class="cc-input"><span class="chev">&gt;</span> <span style="color:#6b7086">무엇을 도와드릴까요? 여기에 입력하세요…</span></div>
+<div class="cc-hint">? 를 누르면 단축키 · Enter 로 전송</div>
+            </div>
+          </div>
+          <p class="shot-cap">클로드 코드 첫 실행 화면 — 아래 입력창에 할 일을 적고 <strong>Enter</strong>를 누르면 시작돼요.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">6</span>
+        <div class="step-body">
+          <h4>(권장) Git for Windows도 설치해요</h4>
+          <p>
+            <a class="inline" href="https://git-scm.com/downloads/win" target="_blank" rel="noopener">Git for Windows</a>가 있으면
+            클로드 코드가 <strong>Bash 도구</strong>까지 쓸 수 있어 더 많은 일을 할 수 있어요.
+            없어도 동작하지만, 있으면 훨씬 편합니다.
+          </p>
+          <div class="note-box">
+            <strong>winget으로 설치하는 방법도 있어요</strong>
+            명령어 설치가 막히면 <span class="kbd">winget install Anthropic.ClaudeCode</span> 로도 설치할 수 있어요.
+            (이 방식은 자동 업데이트가 안 되니, 가끔 <span class="kbd">winget upgrade Anthropic.ClaudeCode</span>로 최신화해 주세요.)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 세 탭 설명 -->
+  <section class="sec">
+    <h2>채팅 · 코워크 · 코드, 뭐가 다른가요?</h2>
+    <p class="sec-sub">같은 클로드지만 하는 일이 달라요. 헷갈리기 쉬워서 정리해 드려요.</p>
+    <div class="trio">
+      <div class="trio-item">
+        <h4>채팅 <span class="en">Chat</span></h4>
+        <p>GPT처럼 <strong>대화만</strong> 하는 곳이에요. 내 컴퓨터 파일에는 손대지 않아요.</p>
+      </div>
+      <div class="trio-item">
+        <h4>코워크 <span class="en">Cowork</span></h4>
+        <p>클로드가 <strong>알아서 백그라운드로 일해주는</strong> 자동 에이전트예요. 최근 채팅과 한 화면으로 합쳐졌고, 클라우드에서 돌아 노트북을 닫아도 계속돼요.</p>
+      </div>
+      <div class="trio-item">
+        <h4>코드 <span class="en">Code</span></h4>
+        <p>바로 이게 <strong>클로드 코드</strong>예요. 내 컴퓨터의 파일을 직접 열고 고치며, 변경은 내가 하나씩 <strong>확인·승인</strong>해요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 문제 해결 -->
+  <section class="sec">
+    <h2>자주 막히는 부분</h2>
+    <p class="sec-sub">이 세 가지만 알면 대부분 해결돼요.</p>
+    <div class="trouble">
+      <div class="trb">
+        <div class="t-q"><span class="err">'irm' is not recognized...</span></div>
+        <p class="t-a">지금 창이 <strong>CMD</strong>예요(PowerShell 아님). 시작 메뉴에서 <code>PowerShell</code>을 검색해 다시 열고 명령어를 붙여넣으세요. 프롬프트 앞이 <code>PS</code>로 시작하는지 확인!</p>
+      </div>
+      <div class="trb">
+        <div class="t-q"><span class="err">claude is not recognized...</span></div>
+        <p class="t-a">설치는 됐지만 창을 아직 새로 안 연 경우예요. PowerShell 창을 <strong>완전히 닫고 다시 열어</strong> 주세요. 그래도 안 되면 <code>claude doctor</code>로 진단해 보세요.</p>
+      </div>
+      <div class="trb">
+        <div class="t-q">로그인하니 "요금제를 올려달라(upgrade)"고 나와요</div>
+        <p class="t-a">무료 플랜에서는 클로드 코드를 쓸 수 없어요. <strong>Pro·Max·Team</strong> 중 하나로 구독한 계정으로 로그인해야 합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sec">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq">
+      <div class="qa">
+        <div class="q">방법 A와 방법 B, 둘 다 해야 하나요?</div>
+        <p class="a">아니요. 둘 중 하나만 하면 돼요. 터미널이 낯설면 <strong>방법 A(앱)</strong>, 명령어로 직접 다루고 싶으면 <strong>방법 B(터미널)</strong>를 고르세요. 나중에 둘 다 써도 설정은 서로 공유돼요.</p>
+      </div>
+      <div class="qa">
+        <div class="q">예전에는 WSL이나 Node.js가 필요하다던데요?</div>
+        <p class="a">이제는 <strong>윈도우에서 그냥 설치</strong>돼요. 네이티브 설치 프로그램이 단일 실행파일을 내려받아 주기 때문에 WSL도, Node.js도 따로 안 깔아도 됩니다.</p>
+      </div>
+      <div class="qa">
+        <div class="q">무료로 쓸 수는 없나요?</div>
+        <p class="a">클로드 코드는 유료 플랜(Pro 이상) 전용이에요. 무료 클로드 계정으로는 대화(Chat)만 가능합니다.</p>
+      </div>
+      <div class="qa">
+        <div class="q">설치한 뒤 업데이트는 어떻게 하나요?</div>
+        <p class="a">네이티브(방법 B의 기본) 설치는 <strong>자동으로 최신화</strong>돼요. 바로 올리고 싶으면 <span class="kbd">claude update</span>를 입력하세요. winget으로 설치했다면 <span class="kbd">winget upgrade Anthropic.ClaudeCode</span>를 가끔 실행해 주세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact">
+    <p>설치하시다 막히시면 편하게 연락 주세요. 화면 공유로도 도와드릴게요.</p>
+    <p class="contact-phone"><a href="tel:010-8791-2483">010-8791-2483</a> <span>김현지 대표</span></p>
+    <a class="btn" href="mailto:hyunji@crabit.co.kr?subject=%5B클로드%20코드%20설치%5D%20문의">메일로 문의하기</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+    <p class="f-note">설치 화면 일부는 이해를 돕기 위한 재현 이미지이며, 실제 화면은 버전에 따라 조금 다를 수 있어요. 최신 안내는 공식 문서(code.claude.com/docs)를 참고하세요.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(function () {
+        var old = btn.textContent;
+        btn.textContent = '복사됨!';
+        btn.classList.add('done');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1500);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -18,7 +18,7 @@
     font-weight: 700;
     font-display: swap;
   }
-  .eyebrow, h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  .eyebrow, h2, .wn-h { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
   :root {
     --page: #F2F3F6;
     --bg: #FFFFFF;
@@ -165,6 +165,46 @@
   .vs-web ul.plain { margin-bottom: 10px; }
   .vs-web a.inline { color: var(--pink); font-weight: 700; text-decoration: none; }
   .vs-web a.inline:hover { text-decoration: underline; }
+
+  /* 하나의 흰 카드: 버전 안내 + 웹 대안 */
+  .win-note {
+    background: var(--bg); border-radius: 18px; padding: 30px 32px; margin-top: 16px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+  }
+  .win-note .wn-h { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.35; margin: 0 0 10px; }
+  .win-note .wn-p { margin: 0 0 14px; font-size: 16px; color: var(--ink); text-wrap: pretty; }
+  .win-note .wn-p strong { font-weight: 700; }
+  .win-note a.inline { color: var(--pink); font-weight: 700; text-decoration: none; }
+  .win-note a.inline:hover { text-decoration: underline; }
+  .win-note ul.plain { margin: 0 0 14px; padding-left: 20px; }
+  .win-note ul.plain li { font-size: 15.5px; margin-bottom: 6px; }
+  .wn-check { font-size: 14.5px !important; color: var(--muted); }
+  .wn-check strong { color: var(--ink); }
+  .wn-div { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+  .nowrap { white-space: nowrap; }
+
+  .wn-table-wrap { overflow-x: auto; margin: 0 0 12px; -webkit-overflow-scrolling: touch; }
+  .wn-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .wn-table th, .wn-table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .wn-table thead th { font-size: 13px; font-weight: 700; color: var(--muted); background: var(--fill-soft); }
+  .wn-table thead th:first-child { border-top-left-radius: 10px; }
+  .wn-table thead th:last-child { border-top-right-radius: 10px; }
+  .wn-table tbody tr:last-child td { border-bottom: 0; }
+  .wn-table td { font-weight: 600; }
+  .wn-table .ok { color: #1a7f37; font-weight: 700; }
+  .wn-table .ok::before { content: "\2713 "; }
+  .wn-table .warn { color: #B4690E; font-weight: 700; }
+  .wn-table .warn::before { content: "\26A0 "; }
+  .wn-table .wn-sub { color: var(--muted); font-weight: 500; font-size: 13.5px; }
+
+  @media (max-width: 560px) {
+    .win-note { padding: 22px 18px; }
+    .win-note .wn-h { font-size: 19px; }
+    .win-note .wn-p { font-size: 15px; }
+    .win-note ul.plain li { font-size: 14.5px; }
+    .wn-table { font-size: 13.5px; }
+    .wn-table th, .wn-table td { padding: 10px 10px; }
+  }
   @media (max-width: 560px) {
     .vs-grid { grid-template-columns: 1fr; }
     .vs-card { padding: 16px 18px; }
@@ -406,7 +446,7 @@
             <strong>예</strong>를 누르세요. 그럼 설치가 저절로 진행돼요.
           </p>
           <div class="shot wide" aria-hidden="true">
-            <img src="assets/guide/win-install.gif" alt="" loading="lazy" />
+            <img src="assets/guide/win-install.webp" alt="" loading="lazy" />
           </div>
         </div>
       </div>
@@ -420,7 +460,7 @@
             <strong>Google로 계속하기</strong> → <strong>내 구글 계정 선택</strong>, 이 세 번만 누르면 로그인 끝!
           </p>
           <div class="shot wide" aria-hidden="true">
-            <img src="assets/guide/win-login.gif" alt="" loading="lazy" />
+            <img src="assets/guide/win-login.webp" alt="" loading="lazy" />
           </div>
           <p class="shot-cap">1번에서 가입한 구글 계정을 고르면 돼요. 중간에 "허용할까요?" 물음이 나오면 모두 <strong>예/허용</strong>을 누르세요.</p>
           <div class="tip-box">
@@ -444,7 +484,7 @@
             <li>"학부모님께 보낼 이번 주 안내문 초안 써줘"</li>
           </ul>
           <div class="shot wide" aria-hidden="true">
-            <img src="assets/guide/win-cowork.gif" alt="" loading="lazy" />
+            <img src="assets/guide/win-cowork.webp" alt="" loading="lazy" />
           </div>
           <p class="shot-cap">일을 적고 보내면, 오른쪽에 <strong>진행 상황</strong> 창이 뜨면서 클로드가 알아서 작업해요. 결과가 마음에 안 들면 또 말로 고쳐달라고 하면 돼요.</p>
           <div class="tip-box">
@@ -485,32 +525,50 @@
     </div>
     <p class="sec-sub" style="margin-top:18px;">강의 실습을 온전히 따라오시려면 <strong>데스크탑 앱 설치를 권장</strong>드려요.</p>
 
-    <div class="tip-box" style="margin-top:4px;">
-      <strong>그런데 윈도우는 설치가 안 될 수도 있어요</strong>
-      데스크탑 앱의 '컴퓨터 사용' 기능은 윈도우의 특정 기능(Hyper-V)이 필요한데,
-      이 기능이 <strong>윈도우 Home 에디션에는 들어있지 않아요.</strong>
-      <ul class="plain" style="margin:8px 0 0; padding-left:18px;">
-        <li>윈도우 <strong>Pro / Enterprise / Education</strong> → 설치·사용 문제없음</li>
-        <li>윈도우 <strong>Home</strong> → 컴퓨터 사용 기능이 제한될 수 있음</li>
-        <li><strong>맥(Mac)</strong> → macOS 11(Big Sur) 이상이면 문제없음</li>
-      </ul>
-      <p style="margin:8px 0 0; font-size:14.5px;">내 윈도우 버전은 <strong>설정 &gt; 시스템 &gt; 정보</strong>의 'Windows 사양 &gt; 에디션' 항목에서 확인할 수 있어요.</p>
-    </div>
+    <div class="win-note">
+      <h3 class="wn-h">그런데 윈도우는 버전에 따라 앱 사용이 어려울 수 있어요</h3>
+      <p class="wn-p">
+        데스크탑 앱의 '컴퓨터 사용' 기능은 윈도우의 특정 기능(Hyper-V)이 필요한데,
+        이 기능이 <strong>윈도우 Home 에디션에는 들어있지 않아요.</strong>
+      </p>
+      <div class="wn-table-wrap">
+        <table class="wn-table">
+          <thead>
+            <tr><th>내 컴퓨터 버전</th><th>앱 설치 · 사용</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="nowrap">윈도우 Pro / Enterprise / Education</span></td>
+              <td><span class="ok">문제없음</span></td>
+            </tr>
+            <tr>
+              <td><span class="nowrap">윈도우 Home</span></td>
+              <td><span class="warn">컴퓨터 사용 기능이 제한될 수 있음</span></td>
+            </tr>
+            <tr>
+              <td><span class="nowrap">맥(Mac)</span></td>
+              <td><span class="ok">문제없음</span> <span class="wn-sub">(macOS 11 이상)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="wn-p wn-check">내 윈도우 버전은 <strong>설정 &gt; 시스템 &gt; 정보</strong>의 'Windows 사양 &gt; 에디션' 항목에서 확인할 수 있어요.</p>
 
-    <div class="vs-web">
-      <div class="vs-name" style="margin-bottom:6px;">윈도우 Home이라면? → 웹으로 접속하세요</div>
-      <p>
+      <hr class="wn-div" />
+
+      <h3 class="wn-h">윈도우 Home이라서 앱 사용이 안된다면?</h3>
+      <p class="wn-p">
         데스크탑 앱이 어려운 경우, <a class="inline" href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> 웹사이트로
         접속하면 코워크를 그대로 사용할 수 있어요. <strong>설치가 필요 없어요.</strong>
       </p>
-      <p style="margin-bottom:6px;">단, 웹 접속 시 아래 기능은 사용할 수 없어요.</p>
+      <p class="wn-p" style="margin-bottom:6px;">단, 웹 접속 시 아래 기능은 사용할 수 없어요.</p>
       <ul class="plain">
         <li>내 컴퓨터의 로컬 파일 직접 열기·저장</li>
         <li>화면 속 다른 프로그램 대신 조작(컴퓨터 사용)</li>
         <li>브라우저 직접 제어</li>
         <li>라이브 아티팩트</li>
       </ul>
-      <p style="margin-bottom:0;">
+      <p class="wn-p" style="margin-bottom:0;">
         즉, 컴퓨터를 직접 조작하는 실습을 제외한 <strong>리서치·문서 작업·서비스 연동 실습은
         웹으로도 충분히</strong> 따라오실 수 있어요.
       </p>

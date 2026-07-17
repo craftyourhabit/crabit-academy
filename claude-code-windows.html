@@ -175,8 +175,8 @@
   /* 실제 화면 사진 (모션 핀) */
   .shot { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(22, 25, 42, 0.14); margin: 4px 0 8px; }
   .shot img { width: 100%; display: block; }
-  /* 실제 영상 GIF: 카드 폭을 꽉 채워 크게 */
-  .shot.wide { width: calc(100% + 36px); margin-left: -18px; margin-right: -18px; }
+  /* 실제 영상 GIF: 본문 텍스트 폭에 맞춰 정렬 */
+  .shot.wide { width: 100%; margin-left: 0; margin-right: 0; }
   .shot .pulse {
     position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px;
     border-radius: 99px; border: 3px solid var(--pink); animation: pulseRing 1.8s ease-out infinite;
@@ -278,7 +278,7 @@
     .step-body ul.plain li { font-size: 15px; }
     .tip-box { font-size: 14px; padding: 12px 14px; }
     .shot { border-radius: 10px; }
-    .shot.wide { width: calc(100% + 24px); margin-left: -12px; margin-right: -12px; }
+    .shot.wide { width: 100%; margin-left: 0; margin-right: 0; }
     .shot-cap { font-size: 13.5px !important; }
     .click-tip { font-size: 12px; padding: 6px 11px; }
     .closing { padding: 24px 18px; border-radius: 18px; }

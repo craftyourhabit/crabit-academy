@@ -201,9 +201,11 @@
 <script src="assets/events.js"></script>
 <script>
 /* ---------- 교육 / 설명회 전체 목록 ----------
-   EVENTS_DB 전체를 kind(교육·설명회)로 걸러 보여줍니다.
+   SHOW_IDS에 나열한 실제 교육·설명회만 보여줍니다.
+   (웨비나 다시보기·커뮤니티 모임 등은 각 전용 페이지에서 다룹니다.)
    진행 예정이 위, 지난 일정이 아래. 상태 판단은 events.js의 공통 기준을 씁니다. */
 (function () {
+  const SHOW_IDS = ["homepage-blog-master", "daegu-lecture"];
   const CATEGORIES = ["전체", "교육", "설명회"];
   const EMPTY_MSG = {
     "전체": "일정을 준비하고 있어요.",
@@ -253,7 +255,8 @@
 
   function renderRows() {
     const entries = sortEntries(
-      Object.entries(EVENTS_DB).filter(([, ev]) => active === "전체" || ev.kind === active)
+      Object.entries(EVENTS_DB).filter(([id, ev]) =>
+        SHOW_IDS.includes(id) && (active === "전체" || ev.kind === active))
     );
     rowsEl.innerHTML = "";
     if (entries.length === 0) {

@@ -45,6 +45,12 @@ const SCHEDULE = [
 
 전체보기 자체는 비밀번호 없이 볼 수 있고, **일부공개(`access: "protected"`)로 설정된 항목을 클릭할 때만** 비밀번호 모달이 뜹니다.
 
+### 인사이트: 원장님을 위한 클로드 코워크 (윈도우 설치 가이드)
+
+- 페이지: `claude-code-windows.html` — 윈도우에서 클로드를 설치하는 방법을 한 단계씩 안내. 방법 A(데스크탑 앱, 터미널 없이) / 방법 B(PowerShell `irm https://claude.ai/install.ps1 | iex`) 두 경로를 다루고, 실제 claude.ai 스크린샷(`assets/guide/`)과 CSS로 재현한 PowerShell·클로드 코드·데스크탑 앱 화면을 함께 담았습니다. 2026년 7월 기준(채팅·코워크 통합 반영). 설치 명령/요건은 공식 문서 code.claude.com/docs 기준이라 버전이 바뀌면 갱신 필요.
+- 노출: 홈(`index.html`) 자료/인사이트 섹션 + 전체보기(`resources.html`)의 `RESOURCES` 배열에 `인사이트`(공개) 항목으로 등록됨. 링크는 `claude-code-windows`(확장자 없이).
+- 썸네일: `assets/thumbs/claude-cowork-windows.svg` (INSIGHT 라벨 + 터미널 모티프).
+
 ## 별도 공유용 페이지 (사이트에서 링크되지 않음)
 
 - `daegu-guide.html` — 대구 원장님 대상 강의 사전 준비가이드. 아카데미 어느 페이지에서도 링크하지 않은 독립 페이지라, 이 링크만 받은 분은 다른 페이지를 볼 수 없습니다. 추후 대구 강의 상세페이지에 연결 예정.

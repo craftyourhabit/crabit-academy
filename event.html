@@ -144,16 +144,6 @@
   .pe-row { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
   .pe-label { flex: none; width: 68px; font-size: 14px; font-weight: 600; color: var(--muted); }
   .pe-body { flex: 1; min-width: 200px; }
-  .pe-body .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-  .pe-body .chip {
-    font-size: 15px;
-    font-weight: 500;
-    background: var(--bg);
-    padding: 7px 15px;
-    border-radius: 99px;
-    box-shadow: 0 1px 3px rgba(22, 25, 42, 0.06);
-  }
-  .pe-note { margin: 10px 0 0; font-size: 14.5px; color: var(--muted); line-height: 1.6; text-wrap: pretty; }
   .pe-text { font-size: 16px; font-weight: 600; }
 
   /* ---------- 커리큘럼 (세션별 안내) ----------
@@ -437,10 +427,8 @@
   const extraHtml = (ev.prep || ev.audience)
     ? '<div class="p-extra">'
       + (ev.prep
-          ? '<div class="pe-row"><span class="pe-label">준비물</span><div class="pe-body">'
-            + '<div class="chips">' + ev.prep.map(p => '<span class="chip">' + esc(p) + '</span>').join("") + '</div>'
-            + (ev.prepNote ? '<p class="pe-note">' + esc(ev.prepNote) + '</p>' : '')
-            + '</div></div>'
+          ? '<div class="pe-row"><span class="pe-label">준비물</span>'
+            + '<div class="pe-body"><span class="pe-text">' + esc(ev.prep.join(" · ")) + '</span></div></div>'
           : '')
       + (ev.audience
           ? '<div class="pe-row"><span class="pe-label">추천 대상</span>'

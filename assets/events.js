@@ -11,7 +11,7 @@
    - startDate: "YYYY-MM-DD" — 당일이면 '예정' 대신 '오늘'로 표시.
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
-   - prep / prepNote / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
+   - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
    =============================================== */
 const EVENTS_DB = {
   "parents-webinar": {
@@ -133,7 +133,6 @@ const EVENTS_DB = {
     speaker: "MU 조연심 대표 · 크래빗 김현지 대표 · 캐다 최유정 대표",
     assistant: "올커니 조경이 대표 · 캐다 최지호 매니저",
     prep: ["노트북", "학원 로고 이미지 파일 (PNG·JPG 등)"],
-    prepNote: "로고 파일이 있으시면 미리 노트북에 저장해 오시면 실습이 더 편합니다. 파일이 없으셔도 괜찮아요 — 로고 사진이나 텍스트만 있어도 AI로 함께 만들 수 있게 준비해두었습니다.",
     audience: "학원 원장·운영자 (오프라인 25명 / 온라인 30명, 선착순)",
     status: "upcoming",
     applyUrl: "https://forms.gle/k6C2iuo5jSQXYL358",

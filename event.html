@@ -156,6 +156,18 @@
   .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
   .btn-ghost:hover { background: #F0F0F0; }
   .soon-note { font-size: 15px; color: var(--muted); font-weight: 500; }
+  .closed-note {
+    margin-top: 20px;
+    background: var(--tint);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .closed-note[hidden] { display: none; }
+  .closed-note p { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.6; }
 
   .notfound { text-align: center; padding: 80px 0; }
   .notfound h1 { margin-bottom: 12px; }
@@ -244,7 +256,7 @@
       ? '<a class="btn btn-primary" href="' + ev.applyUrl + '" target="_blank" rel="noopener">신청하기</a>'
       : '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
   } else if (ev.status === "closed") {
-    cta = '<span class="soon-note">마감된 교육이에요.</span>';
+    cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
   } else {
     cta = '<span class="soon-note">다시보기 영상을 준비하고 있어요.</span>';
   }
@@ -279,7 +291,23 @@
         : '')
     + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
     + '<div class="cta-row">' + cta
-    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a></div>';
+    + '<a class="btn btn-ghost" href="./">다른 일정 보기</a></div>'
+    + (ev.status === "closed"
+        ? '<div class="closed-note" id="closedNote" hidden>'
+          + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'
+          + '<a class="btn btn-primary" href="schedule">다른 교육 일정 보기</a>'
+          + '</div>'
+        : '');
+
+  const closedBtn = document.getElementById("closedApply");
+  if (closedBtn) {
+    closedBtn.addEventListener("click", () => {
+      const note = document.getElementById("closedNote");
+      note.hidden = false;
+      closedBtn.style.display = "none";
+      note.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }
 })();
 </script>
 

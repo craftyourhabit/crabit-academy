@@ -111,7 +111,6 @@
   }
   .pill.gray { background: var(--fill); color: var(--muted); }
   .pill.ink { background: var(--ink); color: #fff; }
-  .cat { font-size: 14px; color: var(--muted); font-weight: 500; }
   .row h2 {
     margin: 0 0 12px;
     font-size: 22px;
@@ -269,12 +268,11 @@
       a.href = "event?id=" + id;
       a.innerHTML =
         '<div class="info">'
-        + '<div class="badges">' + badges(ev) + '<span class="cat"></span></div>'
+        + '<div class="badges">' + badges(ev) + "</div>"
         + "<h2></h2>"
         + '<div class="sub"></div>'
         + "</div>"
         + '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />';
-      a.querySelector(".cat").textContent = ev.host;
       a.querySelector("h2").textContent = ev.title;
       a.querySelector(".sub").textContent = subLine(ev);
       rowsEl.appendChild(a);

@@ -543,7 +543,7 @@
    SHOW_IDS에 나열한 교육만 노출합니다. (지금은 대구 강의 하나)
    진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */
 (function () {
-  const SHOW_IDS = ["daegu-lecture"];
+  const SHOW_IDS = ["homepage-blog-master", "daegu-lecture"];
   const grid = document.getElementById("upcomingGrid");
   const entries = Object.entries(EVENTS_DB)
     .filter(([id]) => SHOW_IDS.includes(id))

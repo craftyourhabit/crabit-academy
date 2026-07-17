@@ -100,6 +100,29 @@ const EVENTS_DB = {
     status: "closed",
     replayUrl: ""
   },
+  "homepage-blog-master": {
+    type: "Course",
+    category: "마케팅·브랜딩",
+    host: "올커니",
+    title: "학원 홈페이지형 블로그 마스터 과정",
+    date: "2026.07.18 (토) 10:00 – 17:00",
+    place: "광명 GIDC · 경기도 광명시 일직로 43 C동 1715호 (한경아교육장)",
+    thumb: "assets/thumbs/homepage-blog-master.svg",
+    desc: "홈페이지 · 블로그 · SNS를 하나로 연결하는 '홈페이지형 블로그'를 하루 만에 직접 완성하는 올커니 원데이 특강입니다. 검색에서 상담까지 이어지는, 우리 학원만의 평생 온라인 자산을 원장님이 직접 구축하고 이후에도 스스로 운영합니다.",
+    points: [
+      "Session 1. 검색에서 선택까지 — 학원 온라인 자산 전략 (조연심 대표)",
+      "Session 2. 바이브 코딩으로 완성하는 콘텐츠 자동화 — 우리 학원 AI 마케터 만들기 (김현지 대표 · 크래빗)",
+      "Session 3. 온라인 자산이 되는 홈페이지형 블로그 만들기 실습 (최유정 대표 · 캐다)",
+      "수료 후에도 계속 쓰는 실무 운영자료 8종 · 피드백 Zoom 강의 1회 제공"
+    ],
+    speaker: "조연심 · 김현지 · 최유정",
+    speakerRole: "올커니 · 크래빗 · 캐다 3인 3세션",
+    prep: ["노트북", "Claude 유료 플랜 (최소 Pro)", "Notion 가입"],
+    audience: "학원 원장·운영자 (오프라인 25명 / 온라인 30명, 선착순)",
+    status: "upcoming",
+    applyUrl: "https://forms.gle/k6C2iuo5jSQXYL358",
+    replayUrl: ""
+  },
   "allkeoni-meetup": {
     type: "Community",
     category: "올커니",
@@ -126,4 +149,5 @@ const EVENTS_DB = {
    =============================================== */
 const SCHEDULE = [
   { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
+  { date: "2026-07-18", time: "10:00", id: "homepage-blog-master" },
 ];

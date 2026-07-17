@@ -240,7 +240,9 @@
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
   } else if (ev.status === "upcoming") {
-    cta = '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
+    cta = ev.applyUrl
+      ? '<a class="btn btn-primary" href="' + ev.applyUrl + '" target="_blank" rel="noopener">신청하기</a>'
+      : '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
   } else if (ev.status === "closed") {
     cta = '<span class="soon-note">마감된 교육이에요.</span>';
   } else {

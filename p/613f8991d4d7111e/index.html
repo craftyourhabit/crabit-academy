@@ -72,24 +72,18 @@
     border-radius: 14px;
     padding: 14px 18px;
     font-size: 14.5px;
-    margin-bottom: 20px;
+    margin-bottom: 34px;
   }
   .notice strong { font-weight: 700; }
 
-  /* 준비 중 배너 */
-  .prep-banner {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 22px 24px;
-    margin-bottom: 34px;
-  }
-  .prep-banner strong { display: block; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-  .prep-banner span { font-size: 15px; color: var(--muted); }
-
   section { margin-bottom: 40px; }
-  .sec-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .sec-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
   h2 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+  .sec-tag {
+    font-size: 12.5px; font-weight: 600; color: var(--pink);
+    background: var(--tint); padding: 3px 10px; border-radius: 99px;
+    transform: translateY(-2px);
+  }
   .sec-sub { margin: 0 0 18px; font-size: 16px; color: var(--muted); }
 
   .handout {
@@ -116,6 +110,23 @@
   .handout .info span { font-size: 14px; color: var(--muted); }
   .handout .acts { display: flex; gap: 10px; flex-wrap: wrap; }
 
+  .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #F0F0F0; }
+
   .soon {
     display: inline-flex;
     align-items: center;
@@ -129,6 +140,77 @@
     cursor: default;
   }
   .soon .dot { width: 7px; height: 7px; border-radius: 99px; background: var(--pink); }
+
+  /* 녹화본 자리 */
+  .replay-slot {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 40px 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.06);
+  }
+  .replay-slot .ic {
+    width: 56px; height: 56px; border-radius: 99px;
+    background: var(--tint);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+  }
+  .replay-slot .ic svg { width: 28px; height: 28px; }
+  .replay-slot strong { display: block; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .replay-slot span { font-size: 15px; color: var(--muted); }
+
+  /* 프롬프트 미리보기/복사 모달 */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 25, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 24px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .prompt-modal {
+    background: var(--bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(22, 25, 42, 0.28);
+  }
+  .pm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 24px 14px; }
+  .pm-head h3 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .pm-close {
+    flex: none; border: 0; background: none; cursor: pointer;
+    font-size: 16px; color: var(--muted);
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .pm-close:hover { background: var(--fill); color: var(--ink); }
+  #promptText {
+    margin: 0 24px;
+    background: var(--fill-soft);
+    border-radius: 12px;
+    padding: 18px 20px;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 14.5px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--ink);
+  }
+  .pm-actions { padding: 16px 24px 22px; }
+  .pm-actions .btn { width: 100%; }
+  #modalCopyBtn.done { background: var(--pink) !important; }
 
   footer {
     border-top: 1px solid var(--line);
@@ -170,10 +252,57 @@
     <strong>안내</strong> — 이 페이지는 참석자 전용이에요. 링크와 비밀번호를 외부에 공유하지 말아 주세요.
   </div>
 
-  <div class="prep-banner">
-    <strong>자료를 준비하고 있어요</strong>
-    <span>강의에서 안내드린 자료를 이 페이지에 순차적으로 올려드립니다. 준비되는 대로 아래 항목에서 바로 받아보실 수 있어요.</span>
-  </div>
+  <!-- 녹화본 다시보기 (추가 예정) -->
+  <section>
+    <div class="sec-title"><h2>강의 녹화본 다시보기</h2><span class="sec-tag">추가 예정</span></div>
+    <p class="sec-sub">강의 녹화본을 이 페이지에서 다시 보실 수 있도록 준비하고 있어요.</p>
+    <div class="replay-slot">
+      <span class="ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#FB75BB" stroke-width="1.8"/><path d="M11 9.5l3.5 2.5L11 14.5v-5z" fill="#FB75BB"/></svg>
+      </span>
+      <strong>녹화본은 강의 종료 후 업로드됩니다</strong>
+      <span>준비되면 이 자리에서 바로 재생됩니다.</span>
+    </div>
+  </section>
+
+  <!-- 실습자료 (프롬프트) -->
+  <section>
+    <div class="sec-title"><h2>실습자료</h2></div>
+    <p class="sec-sub">강의 실습에 사용하는 프롬프트예요. 버튼을 누르면 창이 열리고, 그 안에서 전체 복사해 클로드 코워크 채팅창에 붙여넣으시면 됩니다.</p>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>실습 프롬프트 #1</strong>
+        <span>강의 실습 1단계에서 사용하는 프롬프트</span>
+      </span>
+      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="1">프롬프트 열기 · 복사</button></span>
+    </div>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>실습 프롬프트 #2</strong>
+        <span>강의 실습 2단계에서 사용하는 프롬프트</span>
+      </span>
+      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="2">프롬프트 열기 · 복사</button></span>
+    </div>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>실습 프롬프트 #3</strong>
+        <span>강의 실습 3단계에서 사용하는 프롬프트</span>
+      </span>
+      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="3">프롬프트 열기 · 복사</button></span>
+    </div>
+  </section>
 
   <!-- 제공 자료 (준비 중) -->
   <section>
@@ -268,6 +397,36 @@
       <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
     </div>
   </section>
+
+  <!-- 프롬프트 복사 모달 -->
+  <div class="modal-backdrop" id="promptBackdrop" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+    <div class="prompt-modal">
+      <div class="pm-head">
+        <h3 id="pmTitle">실습 프롬프트</h3>
+        <button class="pm-close" type="button" id="promptClose" aria-label="닫기">&#10005;</button>
+      </div>
+      <pre id="promptText"></pre>
+      <div class="pm-actions">
+        <button class="btn btn-primary" type="button" id="modalCopyBtn">프롬프트 전체 복사하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 실습 프롬프트 원문 (준비 중 · 확정되면 각 블록 내용만 교체하세요) -->
+  <script type="text/plain" id="ptext-1">[실습 프롬프트 #1 — 준비 중]
+
+강의에서 사용할 실습 프롬프트 #1이 확정되면 이곳에 업데이트됩니다.
+확정 후에는 이 창에서 [프롬프트 전체 복사하기]를 눌러 클로드 코워크 채팅창에 붙여넣으시면 됩니다.</script>
+
+  <script type="text/plain" id="ptext-2">[실습 프롬프트 #2 — 준비 중]
+
+강의에서 사용할 실습 프롬프트 #2가 확정되면 이곳에 업데이트됩니다.
+확정 후에는 이 창에서 [프롬프트 전체 복사하기]를 눌러 클로드 코워크 채팅창에 붙여넣으시면 됩니다.</script>
+
+  <script type="text/plain" id="ptext-3">[실습 프롬프트 #3 — 준비 중]
+
+강의에서 사용할 실습 프롬프트 #3이 확정되면 이곳에 업데이트됩니다.
+확정 후에는 이 창에서 [프롬프트 전체 복사하기]를 눌러 클로드 코워크 채팅창에 붙여넣으시면 됩니다.</script>
 </main>
 
 <footer>
@@ -291,6 +450,63 @@
     </div>
   </div>
 </footer>
+
+<script>
+/* ===== 실습 프롬프트 열기 + 복사 모달 ===== */
+var promptBackdrop = document.getElementById("promptBackdrop");
+var promptText = document.getElementById("promptText");
+var pmTitle = document.getElementById("pmTitle");
+var modalCopyBtn = document.getElementById("modalCopyBtn");
+modalCopyBtn.dataset.label = "프롬프트 전체 복사하기";
+
+function openPrompt(key) {
+  var src = document.getElementById("ptext-" + key);
+  promptText.textContent = src ? src.textContent.trim() : "";
+  pmTitle.textContent = "실습 프롬프트 #" + key;
+  modalCopyBtn.textContent = modalCopyBtn.dataset.label;
+  modalCopyBtn.classList.remove("done");
+  promptText.scrollTop = 0;
+  promptBackdrop.classList.add("show");
+}
+Array.prototype.forEach.call(document.querySelectorAll(".js-prompt"), function (btn) {
+  btn.addEventListener("click", function () { openPrompt(btn.dataset.key); });
+});
+document.getElementById("promptClose").addEventListener("click", function () {
+  promptBackdrop.classList.remove("show");
+});
+promptBackdrop.addEventListener("click", function (e) {
+  if (e.target === promptBackdrop) promptBackdrop.classList.remove("show");
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") promptBackdrop.classList.remove("show");
+});
+
+function copyPrompt(btn) {
+  var text = promptText.textContent;
+  function done() {
+    btn.textContent = "복사 완료! 코워크 채팅창에 붙여넣으세요";
+    btn.classList.add("done");
+    setTimeout(function () {
+      btn.textContent = btn.dataset.label;
+      btn.classList.remove("done");
+    }, 3000);
+  }
+  function fallback() {
+    var range = document.createRange();
+    range.selectNodeContents(promptText);
+    var sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+    try { document.execCommand("copy"); done(); } catch (e) {
+      btn.textContent = "위 글을 손으로 드래그해 복사해 주세요";
+    }
+    sel.removeAllRanges();
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else { fallback(); }
+}
+modalCopyBtn.addEventListener("click", function () { copyPrompt(modalCopyBtn); });
+</script>
 
 </body>
 </html>

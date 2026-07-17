@@ -50,7 +50,7 @@
     border-bottom: 1px solid var(--line);
   }
   .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
-  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; margin-left: 14px; }
   .brand img { height: 26px; display: block; }
   .brand a { color: inherit; text-decoration: none; }
   .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
@@ -140,6 +140,8 @@
   /* 실제 화면 사진 (모션 핀) */
   .shot { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(22, 25, 42, 0.14); margin: 4px 0 8px; }
   .shot img { width: 100%; display: block; }
+  /* 실제 영상 GIF: 카드 폭을 꽉 채워 크게 */
+  .shot.wide { width: calc(100% + 36px); margin-left: -18px; margin-right: -18px; }
   .shot .pulse {
     position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px;
     border-radius: 99px; border: 3px solid var(--pink); animation: pulseRing 1.8s ease-out infinite;
@@ -222,6 +224,48 @@
   .f-note { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
 
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+  /* ---------- 모바일 최적화 ---------- */
+  @media (max-width: 560px) {
+    .wrap { padding: 0 16px; }
+    .nav { padding: 12px 0; }
+    .brand { margin-left: 8px; }
+    .brand img { height: 22px; }
+    .nav > a { font-size: 13.5px; }
+    .hero { padding: 22px 0 6px; }
+    .eyebrow { font-size: 19px; margin-bottom: 10px; }
+    .hero-lead { font-size: 16px; }
+    .intro-box { padding: 20px 18px; border-radius: 16px; }
+    .intro-box h3 { font-size: 18px; }
+    .intro-box p { font-size: 14.5px; }
+    h2 { font-size: 22px; }
+    .sec { margin-bottom: 40px; }
+    .sec-sub { font-size: 15.5px; }
+    .prep-card { padding: 14px 16px; }
+    .prep-card .pc-t { font-size: 15.5px; }
+    .prep-card .pc-d { font-size: 13.5px; }
+    .step { padding: 20px 16px; gap: 12px; border-radius: 16px; }
+    .step-num { width: 30px; height: 30px; font-size: 15px; }
+    .step-body h4 { font-size: 17.5px; }
+    .step-body p { font-size: 15.5px; }
+    .step-body ul.plain li { font-size: 15px; }
+    .tip-box { font-size: 14px; padding: 12px 14px; }
+    .shot { border-radius: 10px; }
+    .shot.wide { width: calc(100% + 24px); margin-left: -12px; margin-right: -12px; }
+    .shot-cap { font-size: 13.5px !important; }
+    .click-tip { font-size: 12px; padding: 6px 11px; }
+    .closing { padding: 24px 18px; border-radius: 18px; }
+    .closing > p { font-size: 15.5px; }
+    .use-item { padding: 13px 14px; }
+    .use-item .u-t { font-size: 15px; }
+    .use-item .u-d { font-size: 13.5px; }
+    .closing .cl-foot { font-size: 15px; }
+    .qa { padding: 16px 18px; }
+    .qa .q { font-size: 15.5px; }
+    .qa .a { font-size: 14.5px; }
+    .adv { padding: 4px 16px; }
+    .adv .adv-body code { font-size: 12px; word-break: break-all; white-space: normal; }
+    footer { font-size: 13px; }
+  }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -267,7 +311,7 @@
         <span class="pc-ico">1</span>
         <div>
           <div class="pc-t">윈도우 노트북(또는 데스크탑)</div>
-          <div class="pc-d">우리가 늘 쓰는 그 컴퓨터면 돼요. (윈도우 10 또는 11)</div>
+          <div class="pc-d">우리가 늘 쓰는 그 컴퓨터면 돼요. 윈도우 버전에 따라 설치 오류가 나는 경우가 있으니, 에러가 발생하면 윈도우 버전을 업데이트한 뒤 다시 시도해 보시는 걸 추천해요.</div>
         </div>
       </div>
       <div class="prep-card">
@@ -335,10 +379,10 @@
             받은 파일을 <strong>두 번 클릭</strong>하고, "이 앱이 디바이스를 변경할 수 있도록 허용하시겠어요?"가 뜨면
             <strong>예</strong>를 누르세요. 그럼 설치가 저절로 진행돼요.
           </p>
-          <div class="shot" aria-hidden="true">
+          <div class="shot wide" aria-hidden="true">
             <img src="assets/guide/win-install.gif" alt="" loading="lazy" />
           </div>
-          <p class="shot-cap"><strong>실제 설치 화면 그대로</strong>예요 — 화면이 커지면서 <strong style="color:var(--pink)">분홍 테두리</strong>가 생기는 곳이 눌러야 하는 곳!</p>
+          <p class="shot-cap"><strong>실제 설치 화면 그대로</strong>예요 — <strong style="color:var(--pink)">분홍 테두리</strong>가 생기는 곳이 눌러야 하는 곳!</p>
         </div>
       </div>
 
@@ -350,7 +394,7 @@
             설치가 끝나면 클로드 앱이 저절로 열려요. <strong>시작하기</strong> →
             <strong>Google로 계속하기</strong> → <strong>내 구글 계정 선택</strong>, 이 세 번만 누르면 로그인 끝!
           </p>
-          <div class="shot" aria-hidden="true">
+          <div class="shot wide" aria-hidden="true">
             <img src="assets/guide/win-login.gif" alt="" loading="lazy" />
           </div>
           <p class="shot-cap">1번에서 가입한 구글 계정을 고르면 돼요. 중간에 "허용할까요?" 물음이 나오면 모두 <strong>예/허용</strong>을 누르세요.</p>
@@ -374,7 +418,7 @@
             <li>"이 엑셀 출석부에서 이번 달 3번 이상 결석한 학생만 뽑아줘"</li>
             <li>"학부모님께 보낼 이번 주 안내문 초안 써줘"</li>
           </ul>
-          <div class="shot" aria-hidden="true">
+          <div class="shot wide" aria-hidden="true">
             <img src="assets/guide/win-cowork.gif" alt="" loading="lazy" />
           </div>
           <p class="shot-cap">일을 적고 보내면, 오른쪽에 <strong>진행 상황</strong> 창이 뜨면서 클로드가 알아서 작업해요. 결과가 마음에 안 들면 또 말로 고쳐달라고 하면 돼요.</p>

@@ -66,10 +66,13 @@
     border-radius: 99px;
     letter-spacing: 0.04em;
   }
-  .badge.type { background: var(--fill); color: var(--muted); text-transform: uppercase; }
   .badge.host-crabit { background: var(--tint); color: var(--pink); }
   .badge.host-allkeoni { background: var(--ink); color: #fff; }
+  /* 교육/설명회 — 상태 배지 왼쪽의 분류. 채운 배지들과 구분되게 외곽선만 */
+  .badge.kind { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
   .badge.status-upcoming { background: var(--fill); color: var(--ink); }
+  /* 당일 — 하루만 붙는 배지라 브랜드 핑크를 꽉 채워 가장 강하게 */
+  .badge.status-today { background: var(--pink); color: #fff; }
   .badge.status-soon { background: var(--fill); color: var(--muted); }
 
   h1 {
@@ -353,23 +356,33 @@
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   const hostClass = ev.host === "올커니" ? "host-allkeoni" : "host-crabit";
-  const statusBadge = ev.status === "upcoming"
-    ? '<span class="badge status-upcoming">예정</span>'
-    : (ev.status === "closed" ? '<span class="badge status-soon">마감</span>'
-    : (ev.status === "replay" ? "" : '<span class="badge status-soon">다시보기 준비 중</span>'));
+  const BADGE_CLS = { today: "status-today", upcoming: "status-upcoming", closed: "status-soon" };
+  let statusBadge;
+  if (ev.status === "replay") {
+    statusBadge = "";
+  } else if (ev.status === "replay-soon") {
+    statusBadge = '<span class="badge status-soon">다시보기 준비 중</span>';
+  } else {
+    const t = eventStatusTag(ev);
+    statusBadge = '<span class="badge ' + BADGE_CLS[t.cls] + '">' + t.text + '</span>';
+  }
+
+  const kindBadge = ev.kind ? '<span class="badge kind">' + esc(ev.kind) + '</span>' : '';
 
   // ctaAction: 누를 수 있는 CTA가 있으면 하단 고정 바로, 없으면 본문에 문구로만 남긴다
-  let cta = "", ctaAction = true;
+  let cta = "", ctaAction = true, isClosedFlow = false;
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
-  } else if (ev.status === "upcoming") {
+  } else if (ev.status === "replay-soon" || ev.status === "replay") {
+    ctaAction = false;
+  } else if (!isEventOver(ev)) {
     cta = ev.applyUrl
       ? '<a class="btn btn-primary" href="' + ev.applyUrl + '" target="_blank" rel="noopener">신청하기</a>'
       : '<a class="btn btn-primary" href="mailto:hyunji@crabit.co.kr?subject=' + encodeURIComponent("[참가 문의] " + ev.title) + '">참가 문의하기</a>';
-  } else if (ev.status === "closed") {
-    cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
   } else {
-    ctaAction = false;
+    // 마감됐거나, 날짜가 지났는데 status를 아직 안 바꾼 경우
+    cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
+    isClosedFlow = true;
   }
 
   const sessionsHtml = ev.sessions
@@ -422,8 +435,8 @@
   main.innerHTML =
     '<img class="thumb" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
     + '<div class="meta-row">'
-    + '<span class="badge type">' + esc(ev.type) + '</span>'
     + '<span class="badge ' + hostClass + '">' + esc(ev.host) + '</span>'
+    + kindBadge
     + statusBadge
     + '</div>'
     + '<h1>' + esc(ev.title) + '</h1>'
@@ -450,7 +463,7 @@
     + '<p class="audience">추천 대상 — <strong>' + esc(ev.audience) + '</strong></p>'
     + detailHtml
     + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
-    + (ev.status === "closed"
+    + (isClosedFlow
         ? '<div class="closed-note" id="closedNote" hidden>'
           + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'
           + '<a class="btn btn-primary" href="schedule">다른 교육 일정 보기</a>'

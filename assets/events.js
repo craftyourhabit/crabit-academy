@@ -7,12 +7,16 @@
      경로만 바꾸면 됩니다. (jpg/png 가능)
    - status: "upcoming"(예정) | "closed"(마감) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
    - replayUrl: status가 "replay"일 때 영상 링크
+   - kind: "교육" | "설명회" — 카드·상세에서 상태 태그 왼쪽에 붙는 분류
+   - startDate: "YYYY-MM-DD" — 당일이면 '예정' 대신 '오늘'로 표시.
+     날짜가 확정되지 않은 일정은 생략하면 됩니다.
    =============================================== */
 const EVENTS_DB = {
   "parents-webinar": {
     type: "Webinar",
     category: "학원 운영",
     host: "크래빗",
+    kind: "교육",
     title: "2026 학부모 소통전략 웨비나",
     date: "2026",
     thumb: "assets/thumbs/parents-webinar.svg",
@@ -30,6 +34,7 @@ const EVENTS_DB = {
     type: "Lecture",
     category: "마케팅·브랜딩",
     host: "크래빗",
+    kind: "교육",
     title: "우리 학원만의 랜딩페이지, 코딩 없이 한 번에 제작하기",
     date: "2026.05",
     thumb: "assets/thumbs/landing-lecture.svg",
@@ -47,6 +52,7 @@ const EVENTS_DB = {
     type: "Course",
     category: "AI·자동화",
     host: "크래빗",
+    kind: "교육",
     title: "모두를 위한 클로드 코드 (Teachers Webinar)",
     date: "2026",
     thumb: "assets/thumbs/claude-code-teachers.svg",
@@ -64,8 +70,10 @@ const EVENTS_DB = {
     type: "Lecture",
     category: "AI·자동화",
     host: "크래빗",
+    kind: "교육",
     title: "클로드 코드로 카드뉴스 자동화 에이전트 만들기",
     date: "2026.07.14 (화) 20:00",
+    startDate: "2026-07-14",
     thumb: "assets/thumbs/cardnews-automation.svg",
     desc: "홍보 카드뉴스 제작을 AI 에이전트에게 맡기는 방법을 처음부터 끝까지 실습합니다. 기초 설계부터 자동화 운영까지 가이드북과 함께 진행합니다.",
     points: [
@@ -81,8 +89,10 @@ const EVENTS_DB = {
     type: "Lecture",
     category: "AI·자동화",
     host: "크래빗",
+    kind: "교육",
     title: "우리 학원만의 AI 마케터 고용하기",
     date: "2026.07.09 (목) 10:00 – 12:00",
+    startDate: "2026-07-09",
     place: "대구학원연합회 · 대구 달서구 상화북로 191, 6층",
     placeUrl: "https://naver.me/5vczvOjM",
     thumb: "assets/thumbs/daegu-lecture.jpg",
@@ -104,8 +114,10 @@ const EVENTS_DB = {
     type: "Course",
     category: "마케팅·브랜딩",
     host: "올커니",
+    kind: "교육",
     title: "학원 홈페이지형 블로그 마스터 과정",
     date: "2026.07.18 (토) 10:00 – 17:00",
+    startDate: "2026-07-18",
     place: "광명 GIDC · 경기도 광명시 일직로 43 C동 1715호 (한경아교육장)",
     thumb: "assets/events/homepage-blog-master/hero.jpg",
     desc: "홈페이지 · 블로그 · SNS를 하나로 연결하는 '홈페이지형 블로그'를 하루 만에 직접 완성하는 올커니 원데이 특강입니다. 검색에서 상담까지 이어지는, 우리 학원만의 평생 온라인 자산을 원장님이 직접 구축하고 이후에도 스스로 운영합니다.",
@@ -181,8 +193,10 @@ const EVENTS_DB = {
     type: "Community",
     category: "올커니",
     host: "올커니",
+    kind: "교육",
     title: "올커니 커뮤니티 모임",
     date: "2026.07.16 (목) 19:30",
+    startDate: "2026-07-16",
     thumb: "assets/thumbs/allkeoni-meetup.svg",
     desc: "올바른 교육 커뮤니티, 올커니의 정기 모임입니다. 원장님들이 서로의 운영 노하우를 나누고 함께 성장하는 자리입니다.",
     points: [
@@ -195,6 +209,36 @@ const EVENTS_DB = {
     replayUrl: ""
   }
 };
+
+/* ===============================================
+   상태 태그 (예정 / 오늘 / 마감)
+   - 접속한 사람의 현지 날짜를 기준으로 판단합니다.
+   - startDate가 없는 일정은 '오늘'이 될 수 없습니다.
+   =============================================== */
+function todayStr() {
+  const n = new Date();
+  return n.getFullYear() + "-"
+    + String(n.getMonth() + 1).padStart(2, "0") + "-"
+    + String(n.getDate()).padStart(2, "0");
+}
+
+function isEventToday(ev) {
+  return !!(ev && ev.startDate) && ev.startDate === todayStr();
+}
+
+/* 일정이 끝났는지 판단.
+   status를 손으로 "closed"로 바꾸지 않아도, startDate가 지나면 자동으로 마감 처리한다.
+   (안 그러면 교육 다음 날에도 '예정'으로 남아 신청을 받는 것처럼 보인다) */
+function isEventOver(ev) {
+  if (ev.status !== "upcoming") return true;
+  return !!ev.startDate && ev.startDate < todayStr();
+}
+
+/* 카드·상세가 공통으로 쓰는 상태 라벨. { text, cls } 반환. */
+function eventStatusTag(ev) {
+  if (isEventOver(ev)) return { text: "마감", cls: "closed" };
+  return isEventToday(ev) ? { text: "오늘", cls: "today" } : { text: "예정", cls: "upcoming" };
+}
 
 /* ===============================================
    예정 일정 (schedule.html 먼슬리 캘린더에서 사용)

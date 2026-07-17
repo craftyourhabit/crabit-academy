@@ -560,13 +560,12 @@
     a.innerHTML =
       '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
       + '<div class="body">'
-      + '<div class="k-row"><span class="k"></span>'
+      + '<div class="k-row">'
       + '<span class="status-tag ' + (upcoming ? "upcoming" : "closed") + '">' + (upcoming ? "예정" : "마감") + '</span></div>'
       + '<strong></strong>'
       + '<p></p>'
       + '<div class="foot"><span class="date"></span><span class="more arrow">&#8250;</span></div>'
       + '</div>';
-    a.querySelector(".k").textContent = ev.type;
     a.querySelector("strong").textContent = ev.title;
     a.querySelector(".body p").textContent = ev.desc;
     a.querySelector(".date").textContent = ev.date;

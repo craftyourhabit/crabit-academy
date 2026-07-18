@@ -141,7 +141,50 @@
   }
   .tip-box strong:first-child { display: block; margin-bottom: 3px; }
 
-  /* ---------- 에러 해결 ---------- */
+  /* ---------- 에러 해결: 카드뉴스 표지 ---------- */
+  .cn-cover {
+    background: linear-gradient(158deg, #232838 0%, #16192A 62%);
+    color: #fff; border-radius: 22px; padding: 34px 26px 30px;
+    text-align: center; margin-bottom: 16px;
+  }
+  .cn-label { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); text-transform: uppercase; }
+  .cn-h {
+    color: #fff; font-size: clamp(24px, 5.6vw, 33px); line-height: 1.35;
+    font-weight: 700; letter-spacing: -0.01em; margin: 10px 0 24px; text-wrap: balance;
+  }
+  .cn-app {
+    background: #fff; border-radius: 16px; padding: 20px 18px 22px; max-width: 380px; margin: 0 auto;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+  }
+  .cn-cap { font-size: 13.5px; color: #8a8c98; font-weight: 600; margin-bottom: 12px; }
+  .cn-cap strong { color: var(--ink); }
+  .cn-appbar { display: inline-flex; align-items: center; gap: 12px; }
+  .cn-plus { color: #b7b7c2; font-size: 22px; line-height: 1; }
+  .cn-toggle { display: inline-flex; background: #ececf1; border-radius: 12px; padding: 4px; gap: 2px; }
+  .cn-tab { font-size: 14.5px; font-weight: 600; color: #8a8c98; padding: 8px 18px; border-radius: 9px; }
+  .cn-tab.active { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,0.14); position: relative; }
+  .cn-tab.active::after {
+    content: ""; position: absolute; inset: -3px; border-radius: 11px;
+    border: 2px solid var(--pink); animation: cnRing 1.6s ease-out infinite;
+  }
+  @keyframes cnRing { 0% { opacity: 1; transform: scale(1); } 70%,100% { opacity: 0; transform: scale(1.18); } }
+  .cn-arrow { color: #c4c4cf; font-size: 20px; margin: 12px 0 10px; line-height: 1; }
+  .cn-errbox {
+    display: block; background: #0d1020; color: #ff8faf; text-align: left;
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.55;
+    border-radius: 10px; padding: 14px 16px; word-break: break-word;
+  }
+  .cn-reassure { margin: 22px 0 0; font-size: 16px; color: #fff; opacity: 0.94; text-wrap: pretty; }
+  .cn-reassure strong { color: var(--pink); }
+  @media (max-width: 560px) {
+    .cn-cover { padding: 28px 18px 26px; }
+    .cn-app { padding: 18px 14px; }
+    .cn-tab { padding: 7px 14px; font-size: 13.5px; }
+    .cn-errbox { font-size: 12.5px; }
+    .cn-reassure { font-size: 15px; }
+  }
+
+  /* ---------- 에러 해결: 해결 단계 ---------- */
   .fix-card {
     background: var(--bg); border-radius: 18px; padding: 30px 32px;
     box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
@@ -641,15 +684,27 @@
     </div>
   </section>
 
-  <!-- 에러 해결: Missing HCS services -->
+  <!-- 에러 해결: Missing HCS services (카드뉴스) -->
   <section class="sec">
-    <h2>코워크 실행 중 이런 에러가 뜬다면?</h2>
-    <p class="sec-sub">
-      윈도우에서 코워크의 <strong>협업(컴퓨터 사용)</strong> 기능을 켤 때 자주 나오는 에러예요.
-      아래 <strong>이미지 그대로</strong>, 딱 4단계면 해결됩니다.
-    </p>
+    <div class="cn-cover">
+      <span class="cn-label">코워크 협업 에러 해결</span>
+      <h2 class="cn-h">원장님! '협업'을 누르면<br />이렇게 에러가 뜨시나요?</h2>
+      <div class="cn-app">
+        <div class="cn-cap">이 화면에서 <strong>'협업'</strong>을 눌렀더니…</div>
+        <div class="cn-appbar">
+          <span class="cn-plus">+</span>
+          <span class="cn-toggle">
+            <span class="cn-tab">채팅</span>
+            <span class="cn-tab active">협업</span>
+          </span>
+        </div>
+        <div class="cn-arrow">&#8595;</div>
+        <code class="cn-errbox">Missing HCS services:<br />HNS, vmcompute, vfpext</code>
+      </div>
+      <p class="cn-reassure">괜찮아요! <strong>아주 흔한 에러</strong>라, 아래 4단계만 그대로 따라 하면 금방 해결돼요.</p>
+    </div>
+
     <div class="fix-card">
-      <code class="err-code">Missing HCS services: HNS, vmcompute, vfpext</code>
       <p class="fx-d" style="margin-bottom:20px;">
         윈도우의 <strong>가상화 기능</strong>이 꺼져 있어서 생기는 문제예요. 아래 명령어 한 줄로 그 기능을 켜주면 돼요.
       </p>

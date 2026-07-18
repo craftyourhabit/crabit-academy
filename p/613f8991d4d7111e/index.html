@@ -183,6 +183,25 @@
     box-shadow: 0 2px 10px rgba(22, 25, 42, 0.08);
   }
 
+  /* 세션 2 자료: 그룹 라벨 + 추가 인증 */
+  .grp-label { font-size: 13px; font-weight: 700; color: var(--muted); margin: 2px 0 12px; }
+  .grp-label.lock { display: flex; align-items: center; gap: 7px; margin-top: 30px; color: var(--ink); }
+  .grp-label .lk { width: 15px; height: 15px; flex: none; }
+  .s2-authbox { background: var(--fill-soft); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .s2-authbox.done { background: var(--tint); border-color: transparent; }
+  .s2-auth-desc { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
+  .s2-auth-desc strong { color: var(--ink); font-weight: 700; }
+  .s2-auth-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .s2-auth-row input { flex: 1; min-width: 160px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 15px; font-family: inherit; background: #fff; color: var(--ink); }
+  .s2-auth-row input:focus { outline: 2px solid var(--pink); border-color: transparent; }
+  .s2-auth-row .btn { flex: none; }
+  .s2-err { min-height: 18px; margin: 8px 0 0; font-size: 13.5px; color: var(--pink); font-weight: 500; }
+  .s2-ok { margin: 0; font-size: 14.5px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .s2-ok .lk { width: 17px; height: 17px; flex: none; color: var(--pink); }
+  .handout.locked { opacity: 0.62; }
+  .s2lock { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--muted); padding: 10px 14px; }
+  .s2lock .lk { width: 14px; height: 14px; flex: none; }
+
   /* 프롬프트 미리보기/복사 모달 */
   .modal-backdrop {
     position: fixed;
@@ -369,31 +388,22 @@
     </div>
   </section>
 
-  <!-- 제공 자료 (준비 중) -->
+  <!-- 세션 2 강의자료 -->
   <section>
-    <div class="sec-title"><h2>제공 자료</h2></div>
-    <p class="sec-sub">강의에서 안내드린 자료 8종이에요. 준비되는 대로 하나씩 열립니다.</p>
+    <div class="sec-title"><h2>세션 2 강의자료</h2></div>
+    <p class="sec-sub">강의에서 안내드린 자료예요. 앞의 3종은 바로 받으실 수 있고, 뒤의 4종은 추가 비밀번호가 필요해요.</p>
+
+    <div class="grp-label">바로 받는 자료</div>
 
     <div class="handout">
       <span class="doc" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#FB75BB" stroke-width="1.8"/><path d="M3 8h18" stroke="#FB75BB" stroke-width="1.8"/></svg>
       </span>
       <span class="info">
-        <strong>홈페이지형 블로그 템플릿 3종</strong>
-        <span>캔바 편집 링크 제공 · 사진·텍스트만 교체</span>
+        <strong>홈페이지형 블로그 템플릿 3종 (캔바)</strong>
+        <span>PDF · 캔바 편집 링크 포함</span>
       </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
-    </div>
-
-    <div class="handout">
-      <span class="doc" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="info">
-        <strong>템플릿별 위젯 코드북</strong>
-        <span>복사해서 붙여넣는 위젯 코드 모음</span>
-      </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
+      <span class="acts"><a class="btn btn-primary" href="kit01-blog-templates.pdf" download="홈페이지형 블로그 템플릿 3종 (캔바).pdf">다운로드</a></span>
     </div>
 
     <div class="handout">
@@ -401,10 +411,10 @@
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
       </span>
       <span class="info">
-        <strong>홈페이지형 블로그 설계 워크북</strong>
-        <span>현재 블로그 진단 + 개선 요소 정리</span>
+        <strong>블로그 설계 워크북 (사전진단 체크리스트)</strong>
+        <span>PDF · 현재 블로그 진단 + 개선 요소 정리</span>
       </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
+      <span class="acts"><a class="btn btn-primary" href="kit03-design-workbook.pdf" download="블로그 설계 워크북 (사전진단 체크리스트).pdf">다운로드</a></span>
     </div>
 
     <div class="handout">
@@ -413,53 +423,79 @@
       </span>
       <span class="info">
         <strong>홈페이지형 블로그 구축 가이드북</strong>
-        <span>처음부터 끝까지 따라 하는 단계별 안내서</span>
+        <span>PDF · 처음부터 끝까지 따라 하는 단계별 안내</span>
       </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
+      <span class="acts"><a class="btn btn-primary" href="kit04-build-guidebook.pdf" download="홈페이지형 블로그 구축 가이드북.pdf">다운로드</a></span>
     </div>
 
-    <div class="handout">
-      <span class="doc" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="#FB75BB" stroke-width="1.8"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </span>
-      <span class="info">
-        <strong>학원 프로필 소개글 50선 레퍼런스북</strong>
-        <span>소개글 샘플 + AI 프롬프트 포함</span>
-      </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
+    <div class="grp-label lock"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>추가 비밀번호가 필요한 자료</div>
+
+    <div class="s2-authbox" id="s2AuthBox">
+      <p class="s2-auth-desc">아래 4종은 별도로 안내드린 <strong>추가 비밀번호</strong>를 입력하면 열려요.</p>
+      <div class="s2-auth-row">
+        <input type="text" inputmode="numeric" autocomplete="off" id="s2pw" placeholder="추가 비밀번호" />
+        <button class="btn btn-primary" type="button" id="s2btn">인증</button>
+      </div>
+      <p class="s2-err" id="s2err"></p>
     </div>
 
-    <div class="handout">
-      <span class="doc" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </span>
-      <span class="info">
-        <strong>학원 블로그 콘텐츠 AI 프롬프트북</strong>
-        <span>복사·붙여넣기로 하루 10분 콘텐츠 작성</span>
-      </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
-    </div>
+    <div id="s2items">
+      <div class="handout locked">
+        <span class="doc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="#FB75BB" stroke-width="1.8"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="info">
+          <strong>학원 프로필 소개글 50선 레퍼런스북</strong>
+          <span>PDF · 소개글 샘플 + AI 프롬프트 포함</span>
+        </span>
+        <span class="acts">
+          <span class="s2lock"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>인증 필요</span>
+          <a class="btn btn-primary s2dl" id="s2-05" href="#" download="학원 프로필 소개글 50선 레퍼런스북.pdf" style="display:none">다운로드</a>
+        </span>
+      </div>
 
-    <div class="handout">
-      <span class="doc" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l8 3v5c0 4.4-3 8.3-8 9.7C7 18.3 4 14.4 4 11V6l8-3z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="info">
-        <strong>학원 온라인 광고 교육청 가이드라인</strong>
-        <span>SNS 운영 시 필수 준수사항</span>
-      </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
-    </div>
+      <div class="handout locked">
+        <span class="doc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 8h8M8 11h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="info">
+          <strong>학원 블로그 콘텐츠 AI 프롬프트북</strong>
+          <span>PDF · 복사·붙여넣기로 하루 10분 콘텐츠 작성</span>
+        </span>
+        <span class="acts">
+          <span class="s2lock"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>인증 필요</span>
+          <a class="btn btn-primary s2dl" id="s2-06" href="#" download="학원 블로그 콘텐츠 AI 프롬프트북.pdf" style="display:none">다운로드</a>
+        </span>
+      </div>
 
-    <div class="handout">
-      <span class="doc" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#FB75BB" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </span>
-      <span class="info">
-        <strong>학원 온라인 콘텐츠 브리프</strong>
-        <span>실무자 전달용 콘텐츠 기획서</span>
-      </span>
-      <span class="acts"><span class="soon"><span class="dot"></span>준비 중</span></span>
+      <div class="handout locked">
+        <span class="doc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l8 3v5c0 4.4-3 8.3-8 9.7C7 18.3 4 14.4 4 11V6l8-3z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="info">
+          <strong>학원 온라인 광고 교육청 가이드라인</strong>
+          <span>PDF · SNS 운영 시 필수 준수사항</span>
+        </span>
+        <span class="acts">
+          <span class="s2lock"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>인증 필요</span>
+          <a class="btn btn-primary s2dl" id="s2-07" href="#" download="학원 온라인 광고 교육청 가이드라인.pdf" style="display:none">다운로드</a>
+        </span>
+      </div>
+
+      <div class="handout locked">
+        <span class="doc" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#FB75BB" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="info">
+          <strong>학원 온라인 콘텐츠 브리프</strong>
+          <span>PDF · 실무자 전달용 콘텐츠 기획서 (작성용 PPTX 포함)</span>
+        </span>
+        <span class="acts">
+          <span class="s2lock"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>인증 필요</span>
+          <a class="btn btn-primary s2dl" id="s2-08" href="#" download="학원 온라인 콘텐츠 브리프.pdf" style="display:none">다운로드</a>
+          <a class="btn btn-ghost s2dl" id="s2-08b" href="#" download="학원 온라인 콘텐츠 브리프 (작성용).pptx" style="display:none">작성용 PPTX</a>
+        </span>
+      </div>
     </div>
   </section>
 
@@ -650,6 +686,53 @@ if (s3Btn) {
       s3Btn.textContent = "미리보기";
     }
   });
+}
+
+/* ===== 세션 2 추가 인증 자료 (Kit05~08) =====
+   추가 비밀번호의 SHA-256 앞 16자리가 곧 파일 폴더 경로.
+   맞는 비밀번호를 넣어야 폴더가 존재해서 다운로드 링크가 열립니다. */
+var S2_FILES = [
+  { id: "s2-05", file: "kit05-profile-reference.pdf" },
+  { id: "s2-06", file: "kit06-ai-prompts.pdf" },
+  { id: "s2-07", file: "kit07-ad-guideline.pdf" },
+  { id: "s2-08", file: "kit08-content-brief.pdf" },
+  { id: "s2-08b", file: "kit08-content-brief-editable.pptx" }
+];
+var s2pw = document.getElementById("s2pw");
+var s2err = document.getElementById("s2err");
+var s2btn = document.getElementById("s2btn");
+var s2box = document.getElementById("s2AuthBox");
+
+async function s2sha(text) {
+  var b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+}
+async function s2Unlock() {
+  var pw = (s2pw.value || "").trim();
+  if (!pw) { s2err.textContent = "추가 비밀번호를 입력해 주세요."; return; }
+  s2btn.disabled = true; s2err.textContent = "확인 중…";
+  try {
+    var base = (await s2sha(pw)).slice(0, 16) + "/";
+    var res = await fetch(base + S2_FILES[0].file, { method: "HEAD" });
+    if (res.ok) {
+      S2_FILES.forEach(function (f) {
+        var a = document.getElementById(f.id);
+        if (a) { a.href = base + f.file; a.style.display = ""; }
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("#s2items .s2lock"), function (el) { el.style.display = "none"; });
+      Array.prototype.forEach.call(document.querySelectorAll("#s2items .handout.locked"), function (el) { el.classList.remove("locked"); });
+      s2box.classList.add("done");
+      s2box.innerHTML = '<p class="s2-ok"><svg class="lk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>인증 완료 — 아래에서 자료를 받으실 수 있어요.</p>';
+    } else {
+      s2err.textContent = "비밀번호가 올바르지 않습니다."; s2btn.disabled = false;
+    }
+  } catch (e) {
+    s2err.textContent = "확인 중 문제가 발생했어요. 잠시 후 다시 시도해 주세요."; s2btn.disabled = false;
+  }
+}
+if (s2btn) {
+  s2btn.addEventListener("click", s2Unlock);
+  s2pw.addEventListener("keydown", function (e) { if (e.key === "Enter") s2Unlock(); });
 }
 </script>
 

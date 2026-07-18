@@ -308,6 +308,51 @@
     </div>
   </section>
 
+  <!-- 세션 1 강의안 -->
+  <section>
+    <div class="sec-title"><h2>세션 1 강의안</h2></div>
+    <p class="sec-sub">조연심(MU) 대표의 세션 1 — 학원장 대상 AI 퍼스널 브랜딩. 강의안과 '이름값 진단' 워크북·실습 자료예요.</p>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="13" rx="2" stroke="#FB75BB" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>AI 퍼스널 브랜딩 강의안</strong>
+        <span>103쪽 · 영상 포함 · 용량이 커 구글드라이브로 제공</span>
+      </span>
+      <span class="acts"><span class="soon"><span class="dot"></span>구글드라이브 링크 준비 중</span></span>
+    </div>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5z" stroke="#FB75BB" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>이름값 진단 워크북</strong>
+        <span>PDF · 17쪽 · 조연심</span>
+      </span>
+      <span class="acts">
+        <a class="btn btn-primary" href="session1-naming-workbook.pdf" download="이름값 진단 워크북 (조연심).pdf">다운로드</a>
+        <button class="btn btn-ghost" type="button" id="s1wbPreviewBtn">미리보기</button>
+      </span>
+    </div>
+    <div class="pdf-preview" id="s1wbPreview">
+      <iframe id="s1wbFrame" title="이름값 진단 워크북 미리보기" src="about:blank"></iframe>
+    </div>
+
+    <div class="handout">
+      <span class="doc" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#FB75BB" stroke-width="1.8"/><path d="M8 8h5M8 12h8M8 16h6" stroke="#FB75BB" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info">
+        <strong>이름값 진단 실습</strong>
+        <span>PPTX · 실습용 (직접 작성 가능)</span>
+      </span>
+      <span class="acts"><a class="btn btn-primary" href="session1-naming-worksheet.pptx" download="이름값 진단 실습 (조연심).pptx">다운로드</a></span>
+    </div>
+  </section>
+
   <!-- 세션 3 강의안 -->
   <section>
     <div class="sec-title"><h2>세션 3 강의안</h2></div>
@@ -362,7 +407,7 @@
         <strong>실습 프롬프트 #1</strong>
         <span>마케터 이름 짓기 + 학원 인터뷰 (처음 한 번)</span>
       </span>
-      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="1">프롬프트 열기 · 복사</button></span>
+      <span class="acts"><button class="btn btn-ghost js-prompt" type="button" data-key="1">프롬프트 열기 · 복사</button></span>
     </div>
 
     <div class="handout">
@@ -373,7 +418,7 @@
         <strong>실습 프롬프트 #2</strong>
         <span>시트 분석 → 주제 추천 → 카드뉴스·글 제작 (매주 일요일)</span>
       </span>
-      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="2">프롬프트 열기 · 복사</button></span>
+      <span class="acts"><button class="btn btn-ghost js-prompt" type="button" data-key="2">프롬프트 열기 · 복사</button></span>
     </div>
 
     <div class="handout">
@@ -384,7 +429,7 @@
         <strong>실습 프롬프트 #3</strong>
         <span>매주 일요일 자동 스케줄 (마지막에 한 번)</span>
       </span>
-      <span class="acts"><button class="btn btn-primary js-prompt" type="button" data-key="3">프롬프트 열기 · 복사</button></span>
+      <span class="acts"><button class="btn btn-ghost js-prompt" type="button" data-key="3">프롬프트 열기 · 복사</button></span>
     </div>
   </section>
 
@@ -684,6 +729,23 @@ if (s3Btn) {
       s3pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } else {
       s3Btn.textContent = "미리보기";
+    }
+  });
+}
+
+/* ===== 세션 1 워크북 PDF 미리보기 토글 ===== */
+var s1pv = document.getElementById("s1wbPreview");
+var s1pf = document.getElementById("s1wbFrame");
+var s1Btn = document.getElementById("s1wbPreviewBtn");
+if (s1Btn) {
+  s1Btn.addEventListener("click", function () {
+    var open = s1pv.classList.toggle("open");
+    if (open) {
+      if (s1pf.getAttribute("src") === "about:blank") s1pf.src = "session1-naming-workbook.pdf#view=FitH";
+      s1Btn.textContent = "미리보기 닫기";
+      s1pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      s1Btn.textContent = "미리보기";
     }
   });
 }

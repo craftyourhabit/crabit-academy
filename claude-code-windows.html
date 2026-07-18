@@ -68,6 +68,13 @@
   .toc a.active { color: var(--pink); font-weight: 700; }
   .toc a.active::before { content: ""; position: absolute; left: -16px; top: 4px; width: 1.5px; height: 12px; background: var(--pink); }
 
+  /* 앵커 도착 시 하이라이트 반짝 */
+  .hi-flash { animation: hiFlash 2s ease-out 1; border-radius: 22px; }
+  @keyframes hiFlash {
+    0%, 12% { box-shadow: 0 0 0 3px var(--pink), 0 10px 34px rgba(251,117,187,0.42); }
+    100% { box-shadow: 0 0 0 0 rgba(251,117,187,0); }
+  }
+
   /* ---------- hero ---------- */
   .hero { padding: 30px 0 8px; }
   .eyebrow {
@@ -872,6 +879,23 @@
 </footer>
 
 <script>
+  // 앵커(#error 등)로 도착하면 해당 카드에 하이라이트 반짝
+  (function () {
+    function flash() {
+      var id = (location.hash || '').slice(1);
+      if (!id) return;
+      var sec = document.getElementById(id);
+      if (!sec) return;
+      var card = sec.querySelector('.cn-cover, .steps, .prep, .vs-grid, .win-note, .closing, .fix-card, .faq') || sec;
+      card.classList.remove('hi-flash');
+      void card.offsetWidth;
+      card.classList.add('hi-flash');
+      setTimeout(function () { card.classList.remove('hi-flash'); }, 2100);
+    }
+    window.addEventListener('hashchange', flash);
+    if (location.hash) setTimeout(flash, 300);
+  })();
+
   // 우측 개요: 현재 섹션 하이라이트
   (function () {
     var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));

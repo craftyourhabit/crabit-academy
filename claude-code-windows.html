@@ -58,8 +58,9 @@
 
   /* ---------- 우측 개요(목차) ---------- */
   section[id] { scroll-margin-top: 84px; }
-  .toc { position: fixed; top: 50%; right: 26px; transform: translateY(-50%); z-index: 15; display: none; }
-  @media (min-width: 1140px) { .toc { display: block; } }
+  .toc { position: fixed; top: 92px; right: 52px; z-index: 15; display: none; }
+  @media (min-width: 1160px) { .toc { display: block; } }
+  @media (min-width: 1320px) { .toc { right: 88px; } }
   .toc .toc-h { font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; color: rgba(22,25,42,0.28); text-transform: uppercase; margin: 0 0 12px 15px; }
   .toc ul { list-style: none; margin: 0; padding: 0 0 0 15px; display: flex; flex-direction: column; gap: 11px; border-left: 1.5px solid var(--line); }
   .toc a { font-size: 12.5px; line-height: 1.3; font-weight: 500; color: rgba(22,25,42,0.32); text-decoration: none; display: block; transition: color 0.15s; position: relative; }

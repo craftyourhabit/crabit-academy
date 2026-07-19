@@ -96,6 +96,22 @@
   }
   .sec-ico { display: inline-flex; align-self: center; color: var(--pink); }
   .sec-ico svg { width: 22px; height: 22px; }
+  /* 선물 아이콘: 이미지 일러스트 + 흔들림 애니메이션 (대구 동일) */
+  .gift-title { align-items: center; gap: 12px; }
+  .gift-icon {
+    width: 44px; height: 44px; object-fit: contain; flex: none;
+    transform-origin: 50% 85%;
+    animation: giftWiggle 2.6s ease-in-out infinite;
+  }
+  @keyframes giftWiggle {
+    0%, 62%, 100% { transform: rotate(0deg); }
+    68% { transform: rotate(-9deg); }
+    74% { transform: rotate(7deg); }
+    80% { transform: rotate(-5deg); }
+    86% { transform: rotate(3deg); }
+    92% { transform: rotate(-1.5deg); }
+  }
+  @media (prefers-reduced-motion: reduce) { .gift-icon { animation: none; } }
   .sec-sub { margin: 0 0 18px; font-size: 16px; color: var(--muted); }
 
   .handout {
@@ -474,7 +490,7 @@
 
   <!-- 추가 선물 자료 -->
   <section>
-    <div class="sec-title"><span class="sec-ico"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M11.25 2c-4.219.004-6.401.08-7.786 1.464C2.08 4.85 2.004 7.031 2 11.25h4.914a4 4 0 0 1-.757-1.528C5.62 7.57 7.57 5.62 9.722 6.157c.572.143 1.09.406 1.528.757zM2 12.75c.004 4.218.08 6.4 1.464 7.785C4.85 21.92 7.031 21.995 11.25 22v-7.877A4.75 4.75 0 0 1 7 16.75a.75.75 0 0 1 0-1.5a3.25 3.25 0 0 0 3.163-2.5zM12.75 22c4.218-.005 6.4-.08 7.785-1.465c1.385-1.384 1.46-3.567 1.465-7.785h-8.163A3.25 3.25 0 0 0 17 15.25a.75.75 0 0 1 0 1.5a4.75 4.75 0 0 1-4.25-2.627zM22 11.25c-.005-4.219-.08-6.401-1.465-7.786C19.151 2.08 16.968 2.004 12.75 2v4.914a4 4 0 0 1 1.527-.757c2.153-.538 4.104 1.412 3.565 3.565a4 4 0 0 1-.756 1.528z"/><path fill="currentColor" d="M9.358 7.613a2.5 2.5 0 0 1 1.892 2.422v1.215h-1.215a2.5 2.5 0 0 1-2.422-1.892a1.44 1.44 0 0 1 1.745-1.745m3.392 2.422v1.215h1.215c1.145 0 2.144-.78 2.422-1.892a1.44 1.44 0 0 0-1.746-1.745a2.5 2.5 0 0 0-1.891 2.422"/></svg></span><h2>추가 선물 자료</h2></div>
+    <div class="sec-title gift-title"><img class="gift-icon" src="gift.png" alt="" aria-hidden="true" /><h2>추가 선물 자료</h2></div>
     <p class="sec-sub">강의에서 준비한 추가 선물 자료 8종이에요. 앞의 3종은 바로 받으실 수 있고, 뒤의 4종은 추가 비밀번호가 필요해요.</p>
     <div class="session-card">
 

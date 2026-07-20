@@ -16,14 +16,14 @@ window.COURSES = {
         title: "검색에서 선택까지, 학원 온라인 자산 전략",
         instructor: "조연심 · 퍼스널브랜딩그룹 엠유(MU) 대표",
         lessons: [
-          { id: "s1", title: "검색에서 선택까지, 학원 온라인 자산 전략 (풀강의)", duration: "1:07:17", videoId: null }
+          { id: "s1", title: "검색에서 선택까지, 학원 온라인 자산 전략 (풀강의)", duration: "1:07:17", videoId: "zoM-HDKK4CI" }
         ]
       },
       {
         title: "우리 학원만의 AI 마케터 고용하기",
         instructor: "김현지 · 크래빗 대표",
         lessons: [
-          { id: "s2", title: "우리 학원만의 AI 마케터 고용하기 (풀강의)", duration: "약 1:05:00", videoId: null }
+          { id: "s2", title: "우리 학원만의 AI 마케터 고용하기 (풀강의)", duration: "54:55", videoId: "CoTD5erEp8g" }
         ]
       },
       {

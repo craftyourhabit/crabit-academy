@@ -134,6 +134,34 @@
   }
   .empty { padding: 48px 0; text-align: center; color: var(--muted); font-size: 16px; }
 
+  /* 코스 다시보기 카드 — 강사 목록과 다시보기 버튼 */
+  .row .people { margin: 0 0 16px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .row .people li { font-size: 15px; color: var(--muted); display: flex; gap: 10px; align-items: baseline; }
+  .row .people li::before {
+    content: "";
+    flex: none;
+    width: 5px; height: 5px;
+    border-radius: 99px;
+    background: rgba(22, 25, 42, 0.3);
+    transform: translateY(-2px);
+  }
+  .row .people li strong { color: var(--ink); font-weight: 600; }
+  .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn:hover { background: #333333; }
+
   footer {
     border-top: 1px solid var(--line);
     padding: 40px 0 44px;
@@ -268,11 +296,54 @@
     });
   }
 
-  /* 다시보기 오픈 시 아래 두 줄로 복원: renderTabs(); renderRows(); */
+  /* ---------- 코스 다시보기 목록 ----------
+     지금은 코스형 다시보기 1건만 열려 있어 카테고리 탭 없이 카드만 보여준다.
+     EVENTS_DB 기반 전체 목록으로 되돌리려면: 아래 블록을 지우고 renderTabs(); renderRows(); 를 호출.
+     항목이 늘어나면 REPLAY_COURSES 배열에 카드를 추가하면 된다. */
+  const REPLAY_COURSES = [
+    {
+      id: "homepage-blog-master",
+      title: "학원 홈페이지형 블로그 마스터 과정",
+      date: "2026.07.18",
+      thumb: "assets/events/homepage-blog-master/hero.jpg",
+      people: [
+        { name: "조연심", role: "퍼스널브랜딩그룹 엠유(MU) 대표" },
+        { name: "김현지", role: "크래빗 대표" },
+        { name: "최유정", role: "캐다(KEDA) 대표" }
+      ]
+    }
+  ];
+
   tabsEl.style.display = "none";
-  rowsEl.innerHTML = '<div class="empty" style="padding: 80px 0;">'
-    + '<strong style="display:block; font-family: \'Elice Digital Baeum\', Pretendard, sans-serif; font-size: 27px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Coming soon</strong>'
-    + '웨비나 다시보기를 준비하고 있어요. 조금만 기다려주세요!</div>';
+  rowsEl.innerHTML = "";
+  REPLAY_COURSES.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "row static";
+    div.innerHTML =
+      '<div class="info">'
+      + '<div class="badges"><span class="pill">코스 VOD</span>'
+      + '<span class="cat"></span></div>'
+      + '<h2></h2>'
+      + '<ul class="people"></ul>'
+      + '<a class="btn"></a>'
+      + '</div>'
+      + '<img class="thumb" src="' + c.thumb + '" alt="" loading="lazy" />';
+    div.querySelector(".cat").textContent = c.date + " 진행";
+    div.querySelector("h2").textContent = c.title;
+    const ul = div.querySelector(".people");
+    c.people.forEach(p => {
+      const li = document.createElement("li");
+      const strong = document.createElement("strong");
+      strong.textContent = p.name;
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(" " + p.role));
+      ul.appendChild(li);
+    });
+    const btn = div.querySelector(".btn");
+    btn.textContent = "다시보기";
+    btn.href = "course?id=" + c.id;
+    rowsEl.appendChild(div);
+  });
 })();
 </script>
 

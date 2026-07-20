@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>강의 다시보기 — 크래빗 아카데미</title>
+<meta name="description" content="크래빗 아카데미 강의 다시보기. 커리큘럼을 따라 세션별 영상을 학습하세요." />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/favicon.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  :root {
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  header { box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06); position: sticky; top: 0; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); z-index: 20; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .brand img { height: 26px; display: block; }
+  .brand a { color: inherit; text-decoration: none; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  main.wrap { padding-top: 36px; padding-bottom: 96px; }
+
+  /* ---------- 코스 헤드 ---------- */
+  .course-head { margin-bottom: 24px; }
+  .course-head .k {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--pink);
+    text-transform: uppercase;
+  }
+  .course-head h1 {
+    margin: 6px 0 4px;
+    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: clamp(22px, 3.4vw, 30px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .course-head .sub { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* ---------- 레이아웃: 플레이어(좌) + 커리큘럼(우) ---------- */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; align-items: start; }
+
+  /* ---------- 플레이어 ---------- */
+  .player {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.12);
+  }
+  .player iframe { width: 100%; height: 100%; display: block; border: 0; }
+  /* 영상 미업로드 상태 플레이스홀더 — 다크 배경에 흰 텍스트 */
+  .player .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 24px;
+    color: #fff;
+  }
+  .player .placeholder .ph-badge {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 99px;
+    padding: 5px 14px;
+  }
+  .player .placeholder strong { font-size: clamp(18px, 2.6vw, 24px); font-weight: 700; letter-spacing: -0.01em; }
+  .player .placeholder p { margin: 0; font-size: 15px; color: rgba(255, 255, 255, 0.55); max-width: 30em; }
+
+  /* ---------- 현재 강의 정보 ---------- */
+  .now { padding: 22px 4px 0; }
+  .now .n-sec { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  .now h2 { margin: 0 0 8px; font-size: clamp(19px, 2.6vw, 24px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; }
+  .now .n-meta { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .now .n-meta strong { font-weight: 600; color: var(--ink); }
+  .now-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #333333; }
+  .btn-secondary { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+  .btn-secondary:hover { background: #F0F0F0; }
+  .btn:disabled { opacity: 0.35; cursor: default; }
+  .btn-secondary:disabled:hover { background: #fff; }
+  /* 완료된 강의의 완료 버튼 — 눌린 상태 */
+  .btn-done { background: var(--fill); color: var(--muted); }
+  .btn-done:hover { background: var(--fill); }
+  .spacer { flex: 1; }
+
+  /* ---------- 커리큘럼 사이드바 ---------- */
+  .curriculum {
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .cur-head { padding: 22px 22px 18px; border-bottom: 1px solid var(--line); }
+  .cur-head h2 {
+    margin: 0 0 12px;
+    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .progress-line { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .progress-line strong { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .progress-track { margin-top: 8px; height: 6px; border-radius: 99px; background: var(--fill); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; background: var(--pink); width: 0%; transition: width 0.25s ease; }
+
+  .cur-sec { padding: 18px 0 6px; }
+  .cur-sec + .cur-sec { border-top: 1px solid var(--line); }
+  .cs-head { padding: 0 22px 10px; }
+  .cs-no { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); }
+  .cs-title { margin: 3px 0 2px; font-size: 15.5px; font-weight: 700; line-height: 1.45; letter-spacing: -0.01em; }
+  .cs-inst { font-size: 13.5px; color: var(--muted); }
+
+  .lesson {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    padding: 12px 22px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.15s;
+  }
+  .lesson:hover { background: rgba(22, 25, 42, 0.04); }
+  .lesson.current { background: #fff; border-left-color: var(--pink); }
+  .lesson .check {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 99px;
+    border: 1.5px solid rgba(22, 25, 42, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+  .lesson .check svg { display: none; }
+  .lesson.done .check { background: var(--ink); border-color: var(--ink); }
+  .lesson.done .check svg { display: block; }
+  .lesson .l-body { flex: 1; min-width: 0; }
+  .lesson .l-title { font-size: 14.5px; font-weight: 500; line-height: 1.45; color: var(--ink); }
+  .lesson.current .l-title { font-weight: 700; }
+  .lesson.done:not(.current) .l-title { color: var(--muted); }
+  .lesson .l-dur { flex: none; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* ---------- 코스를 찾을 수 없을 때 ---------- */
+  .notfound { text-align: center; padding: 80px 0; }
+  .notfound h1 { margin: 0 0 12px; font-size: 28px; font-weight: 700; }
+  .notfound p { color: var(--muted); margin: 0 0 28px; }
+
+  footer {
+    background: var(--fill);
+    border-top: 1px solid var(--line);
+    padding: 40px 0 44px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  footer .wrap { max-width: 1160px; }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+  /* ---------- 모바일: 사이드바를 플레이어 아래로 ---------- */
+  @media (max-width: 920px) {
+    .layout { grid-template-columns: 1fr; }
+    main.wrap { padding-top: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="webinars">다시보기 전체 목록</a>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 · 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/course-data.js"></script>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const courseId = params.get("id");
+  const course = courseId && window.COURSES && window.COURSES[courseId];
+  const main = document.getElementById("main");
+
+  if (!course) {
+    main.innerHTML = '<div class="notfound">'
+      + '<h1>강의를 찾을 수 없어요</h1>'
+      + '<p>주소가 잘못되었거나, 종료되어 내려간 강의일 수 있습니다.</p>'
+      + '<a class="btn btn-primary" href="webinars">다시보기 전체 목록으로</a>'
+      + '</div>';
+    return;
+  }
+
+  document.title = course.title + " — 크래빗 아카데미";
+
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  /* 섹션을 평탄화한 강의 목록 — 이전/다음 이동과 진도율 계산에 사용 */
+  const flat = [];
+  course.sections.forEach((sec, si) => {
+    sec.lessons.forEach(ls => flat.push({ section: sec, sectionIndex: si, lesson: ls }));
+  });
+
+  /* ---------- 진도 저장 (localStorage) ---------- */
+  const STORE_KEY = "crabit-course-progress:" + courseId;
+  function loadDone() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+      return new Set(Array.isArray(raw) ? raw : []);
+    } catch (e) { return new Set(); }
+  }
+  function saveDone(set) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify([...set])); } catch (e) { /* 시크릿 모드 등 */ }
+  }
+  let done = loadDone();
+
+  /* ---------- 현재 강의 ---------- */
+  const lessonParam = params.get("lesson");
+  let cur = Math.max(0, flat.findIndex(f => f.lesson.id === lessonParam));
+
+  function setLesson(i) {
+    cur = Math.min(Math.max(i, 0), flat.length - 1);
+    const u = new URL(location.href);
+    u.searchParams.set("lesson", flat[cur].lesson.id);
+    history.replaceState(null, "", u);
+    render();
+  }
+
+  /* ---------- 렌더 ---------- */
+  const CHECK_SVG = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none" aria-hidden="true">'
+    + '<path d="M1 4.5L4 7.5L10 1.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function playerHtml(lesson) {
+    if (lesson.videoId) {
+      return '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(lesson.videoId) + '?rel=0" '
+        + 'title="' + esc(lesson.title) + '" '
+        + 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" '
+        + 'allowfullscreen></iframe>';
+    }
+    return '<div class="placeholder">'
+      + '<span class="ph-badge">UPLOAD 예정</span>'
+      + '<strong>영상 준비 중</strong>'
+      + '<p>강의 영상을 편집하고 있어요. 업로드가 끝나면 이 자리에서 바로 볼 수 있습니다.</p>'
+      + '</div>';
+  }
+
+  function render() {
+    const f = flat[cur];
+    const doneCount = flat.filter(x => done.has(x.lesson.id)).length;
+    const pct = Math.round((doneCount / flat.length) * 100);
+    const isDone = done.has(f.lesson.id);
+
+    const sidebarHtml =
+      '<aside class="curriculum" aria-label="커리큘럼">'
+      + '<div class="cur-head">'
+      + '<h2>커리큘럼</h2>'
+      + '<div class="progress-line"><span>' + doneCount + ' / ' + flat.length + ' 강의 완료</span><strong>' + pct + '%</strong></div>'
+      + '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>'
+      + '</div>'
+      + course.sections.map((sec, si) =>
+          '<div class="cur-sec">'
+          + '<div class="cs-head">'
+          + '<div class="cs-no">SESSION ' + String(si + 1).padStart(2, "0") + '</div>'
+          + '<div class="cs-title">' + esc(sec.title) + '</div>'
+          + '<div class="cs-inst">' + esc(sec.instructor) + '</div>'
+          + '</div>'
+          + sec.lessons.map(ls => {
+              const gi = flat.findIndex(x => x.lesson.id === ls.id);
+              const cls = "lesson" + (gi === cur ? " current" : "") + (done.has(ls.id) ? " done" : "");
+              return '<button type="button" class="' + cls + '" data-i="' + gi + '"'
+                + (gi === cur ? ' aria-current="true"' : '') + '>'
+                + '<span class="check">' + CHECK_SVG + '</span>'
+                + '<span class="l-body"><span class="l-title">' + esc(ls.title) + '</span></span>'
+                + '<span class="l-dur">' + esc(ls.duration) + '</span>'
+                + '</button>';
+            }).join("")
+          + '</div>'
+        ).join("")
+      + '</aside>';
+
+    main.innerHTML =
+      '<div class="course-head">'
+      + '<div class="k">Course Replay</div>'
+      + '<h1>' + esc(course.title) + '</h1>'
+      + '<div class="sub">' + esc(course.date) + ' 진행 · 강의 다시보기</div>'
+      + '</div>'
+      + '<div class="layout">'
+      + '<div class="stage">'
+      + '<div class="player">' + playerHtml(f.lesson) + '</div>'
+      + '<div class="now">'
+      + '<div class="n-sec">SESSION ' + String(f.sectionIndex + 1).padStart(2, "0") + ' · ' + esc(f.section.title) + '</div>'
+      + '<h2>' + esc(f.lesson.title) + '</h2>'
+      + '<div class="n-meta"><strong>' + esc(f.section.instructor) + '</strong> &nbsp;·&nbsp; 재생시간 ' + esc(f.lesson.duration) + '</div>'
+      + '<div class="now-actions">'
+      + '<button type="button" class="btn btn-secondary" id="prevBtn"' + (cur === 0 ? " disabled" : "") + '>이전 강의</button>'
+      + '<button type="button" class="btn btn-secondary" id="nextBtn"' + (cur === flat.length - 1 ? " disabled" : "") + '>다음 강의</button>'
+      + '<span class="spacer"></span>'
+      + '<button type="button" class="btn ' + (isDone ? "btn-done" : "btn-primary") + '" id="doneBtn">'
+      + (isDone ? "완료됨 · 체크 해제" : "이 강의 완료 체크") + '</button>'
+      + '</div>'
+      + '</div>'
+      + '</div>'
+      + sidebarHtml
+      + '</div>';
+
+    document.getElementById("prevBtn").addEventListener("click", () => setLesson(cur - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => setLesson(cur + 1));
+    document.getElementById("doneBtn").addEventListener("click", () => {
+      if (done.has(f.lesson.id)) done.delete(f.lesson.id);
+      else done.add(f.lesson.id);
+      saveDone(done);
+      render();
+    });
+    main.querySelectorAll(".lesson").forEach(btn => {
+      btn.addEventListener("click", () => setLesson(Number(btn.dataset.i)));
+    });
+  }
+
+  render();
+})();
+</script>
+
+</body>
+</html>

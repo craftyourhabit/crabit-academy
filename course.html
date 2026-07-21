@@ -82,29 +82,47 @@
   .player iframe { width: 100%; height: 100%; display: block; border: 0; }
   .player { position: relative; }
   .player .shield { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
-  .pctrl {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--ink); color: #fff;
-    border-radius: 0 0 18px 18px; margin-top: -18px; padding: 28px 18px 12px;
-    position: relative; z-index: 6;
+  .ctrl {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 7;
+    padding: 26px 12px 6px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+    opacity: 1; transition: opacity 0.25s;
   }
-  .pctrl .pbtn {
+  .player.hidectrl .ctrl { opacity: 0; pointer-events: none; }
+  .player.hidectrl, .player.hidectrl .shield { cursor: none; }
+  .seek { position: relative; height: 14px; display: flex; align-items: center; cursor: pointer; margin: 0 6px; }
+  .seek .seek-track { width: 100%; height: 3px; border-radius: 99px; background: rgba(255, 255, 255, 0.3); transition: height 0.1s; }
+  .seek:hover .seek-track { height: 5px; }
+  .seek .seek-fill { position: absolute; left: 0; height: 3px; border-radius: 99px; background: var(--pink); width: 0%; pointer-events: none; transition: height 0.1s; }
+  .seek:hover .seek-fill { height: 5px; }
+  .seek .seek-thumb {
+    position: absolute; width: 13px; height: 13px; border-radius: 99px; background: var(--pink);
+    transform: translateX(-50%) scale(0); transition: transform 0.1s; pointer-events: none; left: 0%;
+  }
+  .seek:hover .seek-thumb, .seek.dragging .seek-thumb { transform: translateX(-50%) scale(1); }
+  .ctrl-row { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+  .ctrl-row .pbtn {
     background: none; border: 0; color: #fff; cursor: pointer;
-    font: inherit; font-size: 14px; font-weight: 600; line-height: 1;
-    display: inline-flex; align-items: center; gap: 4px; padding: 8px 10px;
-    border-radius: 10px; transition: background 0.15s;
+    font: inherit; font-size: 13px; font-weight: 600; line-height: 1;
+    display: inline-flex; align-items: center; gap: 3px; padding: 8px;
+    border-radius: 8px; opacity: 0.92; transition: opacity 0.15s;
   }
-  .pctrl .pbtn:hover { background: rgba(255, 255, 255, 0.12); }
-  .pctrl .pbtn svg { width: 20px; height: 20px; display: block; }
-  .pctrl .ptime { font-size: 13px; color: rgba(255, 255, 255, 0.7); font-variant-numeric: tabular-nums; margin-left: auto; }
-  .pctrl .pvol { display: inline-flex; align-items: center; gap: 6px; }
-  .pctrl input[type="range"] { width: 90px; accent-color: var(--pink); }
-  .pctrl select {
-    background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 8px; font: inherit; font-size: 13px; padding: 5px 8px; cursor: pointer;
+  .ctrl-row .pbtn:hover { opacity: 1; }
+  .ctrl-row .pbtn svg { width: 22px; height: 22px; display: block; }
+  .ctrl-row .ptime { font-size: 13px; color: rgba(255, 255, 255, 0.9); font-variant-numeric: tabular-nums; margin-left: 6px; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+  .ctrl-row .pvol { display: inline-flex; align-items: center; }
+  .ctrl-row .pvol input[type="range"] {
+    width: 0; opacity: 0; transition: width 0.2s, opacity 0.2s; accent-color: #fff; margin: 0;
   }
-  .pctrl select option { color: #16192A; }
-  @media (max-width: 560px) { .pctrl { flex-wrap: wrap; gap: 8px; } .pctrl .ptime { margin-left: 0; width: 100%; } }
+  .ctrl-row .pvol:hover input[type="range"], .ctrl-row .pvol input[type="range"]:focus { width: 70px; opacity: 1; margin-left: 4px; }
+  .ctrl-row .spacer { flex: 1; }
+  .ctrl-row select {
+    background: rgba(0, 0, 0, 0.4); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px; font: inherit; font-size: 12.5px; padding: 5px 7px; cursor: pointer;
+  }
+  .ctrl-row select option { color: #16192A; }
+  .player:fullscreen { border-radius: 0; }
+  .player:fullscreen #ytp iframe, .player:fullscreen iframe { height: 100%; }
   /* 영상 미업로드 상태 플레이스홀더 — 다크 배경에 흰 텍스트 */
   .player .placeholder {
     width: 100%;
@@ -346,7 +364,20 @@
 
   function playerHtml(lesson) {
     if (lesson.videoId) {
-      return '<div id="ytp"></div><div class="shield" id="ytShield" title="재생/일시정지"></div>';
+      return '<div id="ytp"></div><div class="shield" id="ytShield" title="재생/일시정지"></div>'
+        + '<div class="ctrl" id="ctrlBar">'
+        + '<div class="seek" id="pcSeek"><div class="seek-track"></div><div class="seek-fill" id="pcFill"></div><div class="seek-thumb" id="pcThumb"></div></div>'
+        + '<div class="ctrl-row">'
+        + '<button class="pbtn" id="pcPlay" aria-label="재생/일시정지"><svg id="pcPlayIco" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button>'
+        + '<button class="pbtn" id="pcBack" aria-label="10초 뒤로"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2L7 6l5 4V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z" fill="currentColor"/></svg></button>'
+        + '<button class="pbtn" id="pcFwd" aria-label="10초 앞으로"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2l5 4-5 4V7c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6h2c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8z" fill="currentColor"/></svg></button>'
+        + '<span class="pvol"><button class="pbtn" id="pcMute" aria-label="음소거"><svg id="pcVolIco" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z" fill="currentColor"/></svg></button>'
+        + '<input type="range" id="pcVol" min="0" max="100" value="100" aria-label="볼륨"></span>'
+        + '<span class="ptime" id="pcTime">0:00 / 0:00</span>'
+        + '<span class="spacer"></span>'
+        + '<select id="pcQ" aria-label="화질"><option value="default">자동</option></select>'
+        + '<button class="pbtn" id="pcFs" aria-label="전체화면"><svg id="pcFsIco" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/></svg></button>'
+        + '</div></div>';
     }
     return '<div class="placeholder">'
       + '<span class="ph-badge">UPLOAD 예정</span>'
@@ -398,14 +429,6 @@
       + '<div class="layout">'
       + '<div class="stage">'
       + '<div class="player">' + playerHtml(f.lesson) + '</div>'
-      + (f.lesson.videoId ? '<div class="pctrl">'
-        + '<button class="pbtn" id="pcBack" aria-label="10초 뒤로"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2L7 6l5 4V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z" fill="currentColor"/></svg>10</button>'
-        + '<button class="pbtn" id="pcPlay" aria-label="재생/일시정지"><svg id="pcPlayIco" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button>'
-        + '<button class="pbtn" id="pcFwd" aria-label="10초 앞으로">10<svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2l5 4-5 4V7c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6h2c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8z" fill="currentColor"/></svg></button>'
-        + '<span class="pvol"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z" fill="#fff"/></svg><input type="range" id="pcVol" min="0" max="100" value="100" aria-label="볼륨"></span>'
-        + '<select id="pcQ" aria-label="화질"><option value="default">화질 자동</option></select>'
-        + '<span class="ptime" id="pcTime">0:00 / 0:00</span>'
-        + '</div>' : '')
       + '<div class="now">'
       + '<div class="n-sec">SESSION ' + String(f.sectionIndex + 1).padStart(2, "0") + ' · ' + esc(f.section.title) + '</div>'
       + '<h2>' + esc(f.lesson.title) + '</h2>'
@@ -470,6 +493,8 @@
     });
   }
   function el(id) { return document.getElementById(id); }
+  let hideTimer = null, dragging = false;
+  function playerBox() { return document.querySelector(".player"); }
   function wireControls() {
     const iframe = yt.getIframe();
     if (iframe) { iframe.style.pointerEvents = "none"; iframe.tabIndex = -1; }
@@ -477,26 +502,99 @@
     el("pcPlay").addEventListener("click", toggle);
     el("pcBack").addEventListener("click", () => yt.seekTo(Math.max(0, yt.getCurrentTime() - 10), true));
     el("pcFwd").addEventListener("click", () => yt.seekTo(yt.getCurrentTime() + 10, true));
-    el("pcVol").addEventListener("input", e => yt.setVolume(Number(e.target.value)));
+    el("pcVol").addEventListener("input", e => { yt.setVolume(Number(e.target.value)); if (yt.isMuted()) yt.unMute(); syncVol(); });
+    el("pcMute").addEventListener("click", () => { yt.isMuted() ? yt.unMute() : yt.mute(); setTimeout(syncVol, 100); });
     el("pcQ").addEventListener("change", e => { if (e.target.value !== "default") yt.setPlaybackQuality(e.target.value); });
+    el("pcFs").addEventListener("click", toggleFs);
+    document.addEventListener("fullscreenchange", syncFs);
+
+    /* 시크바 (클릭 + 드래그) */
+    const seek = el("pcSeek");
+    function ratioFromEvent(ev) {
+      const r = seek.getBoundingClientRect();
+      const x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+      return Math.min(1, Math.max(0, x / r.width));
+    }
+    function seekPreview(ratio) {
+      el("pcFill").style.width = (ratio * 100) + "%";
+      el("pcThumb").style.left = (ratio * 100) + "%";
+    }
+    function onDrag(ev) { if (dragging) seekPreview(ratioFromEvent(ev)); }
+    function endDrag(ev) {
+      if (!dragging) return;
+      dragging = false; seek.classList.remove("dragging");
+      yt.seekTo(ratioFromEvent(ev.changedTouches ? ev.changedTouches[0] : ev) * yt.getDuration(), true);
+      document.removeEventListener("pointermove", onDrag);
+      document.removeEventListener("pointerup", endDrag);
+    }
+    seek.addEventListener("pointerdown", ev => {
+      dragging = true; seek.classList.add("dragging");
+      seekPreview(ratioFromEvent(ev));
+      document.addEventListener("pointermove", onDrag);
+      document.addEventListener("pointerup", endDrag);
+    });
+
+    /* 자동 숨김 */
+    const box = playerBox();
+    ["mousemove", "pointerdown", "touchstart"].forEach(evName =>
+      box.addEventListener(evName, poke, { passive: true }));
+    box.addEventListener("mouseleave", () => { if (isPlaying()) hideNow(); });
+
     ytTimer = setInterval(() => {
       if (!yt || !yt.getCurrentTime) return;
+      const dur = yt.getDuration() || 0, cur = yt.getCurrentTime() || 0;
       const tEl = el("pcTime");
-      if (tEl) tEl.textContent = fmt(yt.getCurrentTime()) + " / " + fmt(yt.getDuration());
-    }, 500);
-    syncQuality();
+      if (tEl) tEl.textContent = fmt(cur) + " / " + fmt(dur);
+      if (!dragging && dur > 0) {
+        const pct = (cur / dur * 100) + "%";
+        if (el("pcFill")) { el("pcFill").style.width = pct; el("pcThumb").style.left = pct; }
+      }
+    }, 350);
+    syncQuality(); syncVol(); poke();
+  }
+  function isPlaying() { return yt && yt.getPlayerState && yt.getPlayerState() === YT.PlayerState.PLAYING; }
+  function poke() {
+    const box = playerBox();
+    if (!box) return;
+    box.classList.remove("hidectrl");
+    if (hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { if (isPlaying() && !dragging) box.classList.add("hidectrl"); }, 2600);
+  }
+  function hideNow() {
+    const box = playerBox();
+    if (box && !dragging) box.classList.add("hidectrl");
   }
   function toggle() {
     if (!yt) return;
-    const st = yt.getPlayerState();
-    if (st === YT.PlayerState.PLAYING) yt.pauseVideo(); else yt.playVideo();
+    isPlaying() ? yt.pauseVideo() : yt.playVideo();
+  }
+  function toggleFs() {
+    const box = playerBox();
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (box && box.requestFullscreen) box.requestFullscreen();
+  }
+  const FS_IN = "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z";
+  const FS_OUT = "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z";
+  function syncFs() {
+    const p = el("pcFsIco");
+    if (p) p.innerHTML = '<path d="' + (document.fullscreenElement ? FS_OUT : FS_IN) + '" fill="currentColor"/>';
+  }
+  const VOL_ON = "M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z";
+  const VOL_OFF = "M3 9v6h4l5 5V4L7 9H3zm13.6 3l2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7z";
+  function syncVol() {
+    if (!yt || !yt.isMuted) return;
+    const muted = yt.isMuted() || yt.getVolume() === 0;
+    const p = el("pcVolIco");
+    if (p) p.innerHTML = '<path d="' + (muted ? VOL_OFF : VOL_ON) + '" fill="currentColor"/>';
+    const v = el("pcVol");
+    if (v && !muted) v.value = yt.getVolume();
   }
   function onState() {
-    const ico = document.querySelector("#pcPlayIco path") || null;
     const p = el("pcPlayIco");
     if (!p) return;
-    const playing = yt.getPlayerState() === YT.PlayerState.PLAYING;
+    const playing = isPlaying();
     p.innerHTML = '<path d="' + (playing ? PAUSE_D : PLAY_D) + '" fill="currentColor"/>';
+    if (!playing) poke();
     syncQuality();
   }
   function syncQuality() {
@@ -506,7 +604,7 @@
     const levels = yt.getAvailableQualityLevels();
     if (!levels || !levels.length) return;
     const curQ = yt.getPlaybackQuality();
-    sel.innerHTML = '<option value="default">화질 자동</option>' + levels.filter(l => l !== "auto").map(l =>
+    sel.innerHTML = '<option value="default">자동</option>' + levels.filter(l => l !== "auto").map(l =>
       '<option value="' + l + '"' + (l === curQ ? " selected" : "") + '>' + (Q_LABEL[l] || l) + '</option>').join("");
   }
 

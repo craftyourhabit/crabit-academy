@@ -80,6 +80,31 @@
     box-shadow: 0 4px 16px rgba(22, 25, 42, 0.12);
   }
   .player iframe { width: 100%; height: 100%; display: block; border: 0; }
+  .player { position: relative; }
+  .player .shield { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
+  .pctrl {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--ink); color: #fff;
+    border-radius: 0 0 18px 18px; margin-top: -18px; padding: 28px 18px 12px;
+    position: relative; z-index: 6;
+  }
+  .pctrl .pbtn {
+    background: none; border: 0; color: #fff; cursor: pointer;
+    font: inherit; font-size: 14px; font-weight: 600; line-height: 1;
+    display: inline-flex; align-items: center; gap: 4px; padding: 8px 10px;
+    border-radius: 10px; transition: background 0.15s;
+  }
+  .pctrl .pbtn:hover { background: rgba(255, 255, 255, 0.12); }
+  .pctrl .pbtn svg { width: 20px; height: 20px; display: block; }
+  .pctrl .ptime { font-size: 13px; color: rgba(255, 255, 255, 0.7); font-variant-numeric: tabular-nums; margin-left: auto; }
+  .pctrl .pvol { display: inline-flex; align-items: center; gap: 6px; }
+  .pctrl input[type="range"] { width: 90px; accent-color: var(--pink); }
+  .pctrl select {
+    background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px; font: inherit; font-size: 13px; padding: 5px 8px; cursor: pointer;
+  }
+  .pctrl select option { color: #16192A; }
+  @media (max-width: 560px) { .pctrl { flex-wrap: wrap; gap: 8px; } .pctrl .ptime { margin-left: 0; width: 100%; } }
   /* 영상 미업로드 상태 플레이스홀더 — 다크 배경에 흰 텍스트 */
   .player .placeholder {
     width: 100%;
@@ -322,10 +347,7 @@
 
   function playerHtml(lesson) {
     if (lesson.videoId) {
-      return '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(lesson.videoId) + '?rel=0" '
-        + 'title="' + esc(lesson.title) + '" '
-        + 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" '
-        + 'allowfullscreen></iframe>';
+      return '<div id="ytp"></div><div class="shield" id="ytShield" title="재생/일시정지"></div>';
     }
     return '<div class="placeholder">'
       + '<span class="ph-badge">UPLOAD 예정</span>'
@@ -377,6 +399,14 @@
       + '<div class="layout">'
       + '<div class="stage">'
       + '<div class="player">' + playerHtml(f.lesson) + '</div>'
+      + (f.lesson.videoId ? '<div class="pctrl">'
+        + '<button class="pbtn" id="pcBack" aria-label="10초 뒤로"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2L7 6l5 4V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z" fill="currentColor"/></svg>10</button>'
+        + '<button class="pbtn" id="pcPlay" aria-label="재생/일시정지"><svg id="pcPlayIco" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button>'
+        + '<button class="pbtn" id="pcFwd" aria-label="10초 앞으로">10<svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2l5 4-5 4V7c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6h2c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8z" fill="currentColor"/></svg></button>'
+        + '<span class="pvol"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z" fill="#fff"/></svg><input type="range" id="pcVol" min="0" max="100" value="100" aria-label="볼륨"></span>'
+        + '<select id="pcQ" aria-label="화질"><option value="default">화질 자동</option></select>'
+        + '<span class="ptime" id="pcTime">0:00 / 0:00</span>'
+        + '</div>' : '')
       + '<div class="now">'
       + '<div class="n-sec">SESSION ' + String(f.sectionIndex + 1).padStart(2, "0") + ' · ' + esc(f.section.title) + '</div>'
       + '<h2>' + esc(f.lesson.title) + '</h2>'
@@ -404,6 +434,81 @@
     main.querySelectorAll(".lesson").forEach(btn => {
       btn.addEventListener("click", () => setLesson(Number(btn.dataset.i)));
     });
+
+    initPlayer(f.lesson);
+  }
+
+  /* ---------- 커스텀 플레이어 (YouTube IFrame API) ---------- */
+  let yt = null, ytTimer = null, apiReady = null;
+  function loadApi() {
+    if (apiReady) return apiReady;
+    apiReady = new Promise(res => {
+      if (window.YT && window.YT.Player) return res();
+      const s = document.createElement("script");
+      s.src = "https://www.youtube.com/iframe_api";
+      window.onYouTubeIframeAPIReady = () => res();
+      document.head.appendChild(s);
+    });
+    return apiReady;
+  }
+  const PLAY_D = "M8 5v14l11-7z", PAUSE_D = "M6 5h4v14H6zM14 5h4v14h-4z";
+  const Q_LABEL = { highres:"4K+", hd2160:"2160p", hd1440:"1440p", hd1080:"1080p", hd720:"720p", large:"480p", medium:"360p", small:"240p", tiny:"144p", auto:"자동", "default":"자동" };
+  function fmt(s) {
+    s = Math.max(0, Math.floor(s || 0));
+    const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = String(s % 60).padStart(2, "0");
+    return h ? h + ":" + String(m).padStart(2, "0") + ":" + ss : m + ":" + ss;
+  }
+  function initPlayer(lesson) {
+    if (ytTimer) { clearInterval(ytTimer); ytTimer = null; }
+    if (yt) { try { yt.destroy(); } catch (e) {} yt = null; }
+    if (!lesson.videoId || !document.getElementById("ytp")) return;
+    loadApi().then(() => {
+      yt = new YT.Player("ytp", {
+        videoId: lesson.videoId,
+        playerVars: { controls: 0, rel: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, fs: 0, playsinline: 1, origin: location.origin },
+        events: { onReady: wireControls, onStateChange: onState, onPlaybackQualityChange: syncQuality }
+      });
+    });
+  }
+  function el(id) { return document.getElementById(id); }
+  function wireControls() {
+    const iframe = yt.getIframe();
+    if (iframe) { iframe.style.pointerEvents = "none"; iframe.tabIndex = -1; }
+    el("ytShield").addEventListener("click", toggle);
+    el("pcPlay").addEventListener("click", toggle);
+    el("pcBack").addEventListener("click", () => yt.seekTo(Math.max(0, yt.getCurrentTime() - 10), true));
+    el("pcFwd").addEventListener("click", () => yt.seekTo(yt.getCurrentTime() + 10, true));
+    el("pcVol").addEventListener("input", e => yt.setVolume(Number(e.target.value)));
+    el("pcQ").addEventListener("change", e => { if (e.target.value !== "default") yt.setPlaybackQuality(e.target.value); });
+    ytTimer = setInterval(() => {
+      if (!yt || !yt.getCurrentTime) return;
+      const tEl = el("pcTime");
+      if (tEl) tEl.textContent = fmt(yt.getCurrentTime()) + " / " + fmt(yt.getDuration());
+    }, 500);
+    syncQuality();
+  }
+  function toggle() {
+    if (!yt) return;
+    const st = yt.getPlayerState();
+    if (st === YT.PlayerState.PLAYING) yt.pauseVideo(); else yt.playVideo();
+  }
+  function onState() {
+    const ico = document.querySelector("#pcPlayIco path") || null;
+    const p = el("pcPlayIco");
+    if (!p) return;
+    const playing = yt.getPlayerState() === YT.PlayerState.PLAYING;
+    p.innerHTML = '<path d="' + (playing ? PAUSE_D : PLAY_D) + '" fill="currentColor"/>';
+    syncQuality();
+  }
+  function syncQuality() {
+    if (!yt || !yt.getAvailableQualityLevels) return;
+    const sel = el("pcQ");
+    if (!sel) return;
+    const levels = yt.getAvailableQualityLevels();
+    if (!levels || !levels.length) return;
+    const curQ = yt.getPlaybackQuality();
+    sel.innerHTML = '<option value="default">화질 자동</option>' + levels.filter(l => l !== "auto").map(l =>
+      '<option value="' + l + '"' + (l === curQ ? " selected" : "") + '>' + (Q_LABEL[l] || l) + '</option>').join("");
   }
 
   render();

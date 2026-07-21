@@ -164,7 +164,7 @@
 
   /* ---------- 커리큘럼 사이드바 ---------- */
   .curriculum {
-    background: var(--fill-soft);
+    background: #fff;
     border: 1px solid var(--line);
     border-radius: 18px;
     overflow: hidden;
@@ -199,11 +199,10 @@
     font-family: inherit;
     padding: 12px 22px;
     cursor: pointer;
-    border-left: 3px solid transparent;
     transition: background 0.15s;
   }
   .lesson:hover { background: rgba(22, 25, 42, 0.04); }
-  .lesson.current { background: #fff; border-left-color: var(--pink); }
+  .lesson.current { background: #FFEFF7; }
   .lesson .check {
     flex: none;
     width: 20px;
@@ -219,8 +218,8 @@
   .lesson.done .check { background: var(--ink); border-color: var(--ink); }
   .lesson.done .check svg { display: block; }
   .lesson .l-body { flex: 1; min-width: 0; }
-  .lesson .l-title { font-size: 14.5px; font-weight: 500; line-height: 1.45; color: var(--ink); }
-  .lesson.current .l-title { font-weight: 700; }
+  .lesson .l-title { font-size: 14.5px; font-weight: 400; line-height: 1.45; color: var(--ink); }
+  .lesson.current .l-title { font-weight: 400; }
   .lesson.done:not(.current) .l-title { color: var(--muted); }
   .lesson .l-dur { flex: none; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 

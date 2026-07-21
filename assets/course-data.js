@@ -32,7 +32,7 @@ window.COURSES = {
         lessons: [
           { id: "s3p1", title: "PART 1. 온라인 설계도 그리기 (STEP 1~4)", duration: "58:06", videoId: "cRRsFC_YpnQ" },
           { id: "s3p2", title: "PART 2. 홈페이지형 블로그 구축 실습 (STEP 5~6)", duration: "1:14:20", videoId: "at4Ih6o_bBQ" },
-          { id: "s3p3", title: "PART 3. AI 블로그 콘텐츠 실습", duration: "준비 중", videoId: null }
+          { id: "s3p3", title: "PART 3. AI 블로그 콘텐츠 실습", duration: "1:15:39", videoId: "6OmCp7vj60c" }
         ]
       }
     ]

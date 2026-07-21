@@ -30,7 +30,7 @@ window.COURSES = {
         title: "온라인 자산이 되는 홈페이지형 블로그 만들기",
         instructor: "최유정 · 캐다(KEDA) 대표",
         lessons: [
-          { id: "s3p1", title: "PART 1. 온라인 설계도 그리기 (STEP 1~4)", duration: "준비 중", videoId: null },
+          { id: "s3p1", title: "PART 1. 온라인 설계도 그리기 (STEP 1~4)", duration: "58:06", videoId: "cRRsFC_YpnQ" },
           { id: "s3p2", title: "PART 2. 홈페이지형 블로그 구축 실습 (STEP 5~6)", duration: "준비 중", videoId: null },
           { id: "s3p3", title: "PART 3. AI 블로그 콘텐츠 실습", duration: "준비 중", videoId: null }
         ]

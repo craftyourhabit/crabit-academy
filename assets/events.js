@@ -13,6 +13,13 @@
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
    =============================================== */
+
+/* 카카오톡 채널 — 행사·설명회 알림을 보내는 채널.
+   /friend 경로는 채널 친구 추가 화면을 바로 엽니다.
+   알림 발송은 카카오톡 채널 관리자센터(center-pf.kakao.com)에서 합니다. (README 참고) */
+const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_nutkG";
+const KAKAO_CHANNEL_ADD_URL = KAKAO_CHANNEL_URL + "/friend";
+
 const EVENTS_DB = {
   "parents-webinar": {
     type: "Webinar",

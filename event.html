@@ -257,29 +257,7 @@
   }
   .btn-primary { background: var(--ink); color: #fff; }
   .btn-primary:hover { background: #333333; }
-  /* 카카오 버튼 — 카카오 브랜드 컬러(옐로) 고정. 채널 추가 버튼에만 사용 */
-  .btn-kakao { background: #FEE500; color: #191919; }
-  .btn-kakao:hover { background: #F4DC00; }
   .soon-note { font-size: 15px; color: var(--muted); font-weight: 500; }
-
-  /* ---------- 카카오톡 알림 받기 ----------
-     채널 친구 추가를 유도하는 콜아웃. 친구가 된 분들에게는
-     채널 관리자센터에서 행사·다시보기 소식을 메시지로 보낸다. */
-  .notify-box {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 26px 28px;
-    margin: 0 0 36px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    flex-wrap: wrap;
-  }
-  .notify-box .n-text { flex: 1; min-width: 220px; }
-  .notify-box h2 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
-  .notify-box p { margin: 0; font-size: 15px; color: var(--muted); }
   .closed-note {
     margin-top: 20px;
     background: var(--tint);
@@ -455,25 +433,6 @@
         ? '<div class="p-extra"><h3>추천 대상</h3><ul><li>' + esc(ev.audience) + '</li></ul></div>'
         : '');
 
-  // 카카오톡 채널 알림 — 상태에 따라 문구만 바뀐다.
-  // 채널 친구가 되면 관리자센터에서 보내는 행사·다시보기 소식을 받게 된다.
-  let notifyTitle, notifyDesc;
-  if (ev.status === "replay-soon") {
-    notifyTitle = "다시보기 오픈 알림 받기";
-    notifyDesc = "카카오톡 채널을 추가해두시면 다시보기가 열릴 때 소식을 보내드려요.";
-  } else if (ev.status === "upcoming" && !isEventOver(ev)) {
-    notifyTitle = "행사 알림 받기";
-    notifyDesc = "카카오톡 채널을 추가해두시면 행사 안내와 새 일정 소식을 보내드려요.";
-  } else {
-    notifyTitle = "다음 행사 알림 받기";
-    notifyDesc = "카카오톡 채널을 추가해두시면 다음 행사·설명회 소식을 가장 먼저 보내드려요.";
-  }
-  const notifyHtml =
-    '<section class="notify-box">'
-    + '<div class="n-text"><h2>' + notifyTitle + '</h2><p>' + notifyDesc + '</p></div>'
-    + '<a class="btn btn-kakao" href="' + KAKAO_CHANNEL_ADD_URL + '" target="_blank" rel="noopener">카카오톡 채널 추가하기</a>'
-    + '</section>';
-
   // 주최사 담당자가 따로 있으면 신청 버튼 옆에 문의처를 함께 안내한다
   const contactHtml = (ev.contact && ev.status === "upcoming")
     ? '<span class="contact-note">문의 ' + esc(ev.contact.name) + ' '
@@ -500,7 +459,6 @@
     + materialsHtml
     + detailHtml
     + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
-    + notifyHtml
     + (isClosedFlow
         ? '<div class="closed-note" id="closedNote" hidden>'
           + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'

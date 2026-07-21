@@ -386,6 +386,19 @@
       + '</div>';
   }
 
+  /* ---------- 접근 게이트: 후속자료 페이지 경유 필수 ---------- */
+  let authed = false;
+  try { authed = localStorage.getItem("crabitReplayAuth") === "followup-613f"; } catch (e) {}
+  if (!authed) {
+    main.innerHTML = '<div class="notfound">'
+      + '<h1>수강생 전용 페이지예요</h1>'
+      + '<p>강의 다시보기는 안내받은 후속 자료 페이지를 통해 접속할 수 있어요.<br>'
+      + '후속 자료 페이지에서 비밀번호를 입력한 뒤, [강의 다시보기 페이지로 이동] 버튼을 눌러주세요.</p>'
+      + '<a class="btn btn-primary" href="blog-followup">후속 자료 페이지로 가기</a>'
+      + '</div>';
+    return;
+  }
+
   function render() {
     const f = flat[cur];
     const doneCount = flat.filter(x => done.has(x.lesson.id)).length;

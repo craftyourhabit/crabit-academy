@@ -202,8 +202,8 @@
   }
 
   /* ---------- 신청 폼 ----------
-     구글폼 대신 페이지 안에서 바로 받는다. 제출은 Cloudflare Worker로 가고
-     Worker가 Supabase에 넣는다. 이 페이지에는 어떤 키도 들어 있지 않다. */
+     구글폼 대신 페이지 안에서 바로 받는다. 제출은 Supabase로 곧장 간다.
+     공개용 키만 쓰고, 남의 신청을 읽는 건 테이블 권한과 RLS가 막는다. */
   .applyform { scroll-margin-top: 20px; margin-bottom: 36px; }
   .applyform h2 { margin: 0 0 6px; }
   .applyform .form-sub { margin: 0 0 22px; font-size: 15.5px; color: var(--muted); line-height: 1.6; }
@@ -812,5 +812,7 @@
 })();
 </script>
 
+
+<script src="assets/track.js" defer></script>
 </body>
 </html>

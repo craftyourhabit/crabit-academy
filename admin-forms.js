@@ -1029,3 +1029,240 @@ function exportApplicationsCsv(items) {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+/* ---------------------------------------------------------------
+   대시보드
+
+   집계는 Supabase 뷰 두 개가 대신해 줍니다.
+   - academy_event_stats : 강의별 조회수·신청·매출·전환율
+   - academy_daily_stats : 최근 90일 일별 추이 (한국 시간 기준)
+
+   차트는 외부 라이브러리 없이 인라인 SVG로 그립니다.
+   이 어드민은 의존성이 하나도 없는 구조라 그걸 유지합니다.
+   --------------------------------------------------------------- */
+
+let dashRange = 30;      // 추이 차트 기간 (일)
+let dashMetric = "applications";
+
+/* 강의가 끝났는지 판단.
+   같은 규칙이 assets/events.js 에도 있지만 그 파일은 어드민에서 스크립트로
+   불러오지 않고 텍스트로만 읽어 값을 꺼내 씁니다. 그래서 함수는 못 씁니다.
+   events.js 의 isEventOver 를 고치면 여기도 같이 맞춰 주세요. */
+function dashEventOver(ev) {
+  if (!ev || ev.status !== "upcoming") return true;
+  const d = new Date();
+  const today = d.getFullYear() + "-"
+    + String(d.getMonth() + 1).padStart(2, "0") + "-"
+    + String(d.getDate()).padStart(2, "0");
+  return !!ev.startDate && ev.startDate < today;
+}
+
+const won = n => Number(n || 0).toLocaleString("ko-KR") + "원";
+const num = n => Number(n || 0).toLocaleString("ko-KR");
+
+/* 꺾은선 하나를 SVG 패스로 그립니다. 값이 모두 0이면 바닥에 붙습니다. */
+function linePath(vals, w, h, pad) {
+  if (!vals.length) return { line: "", area: "" };
+  const max = Math.max(1, ...vals);
+  const dx = vals.length > 1 ? (w - pad * 2) / (vals.length - 1) : 0;
+  const pt = i => [pad + dx * i, h - pad - (vals[i] / max) * (h - pad * 2)];
+  const d = vals.map((_, i) => (i ? "L" : "M") + pt(i).map(n => n.toFixed(1)).join(" ")).join(" ");
+  const first = pt(0), last = pt(vals.length - 1);
+  return {
+    line: d,
+    area: d + " L" + last[0].toFixed(1) + " " + (h - pad) + " L" + first[0].toFixed(1) + " " + (h - pad) + " Z",
+    max
+  };
+}
+
+function trendChart(rows) {
+  const slice = rows.slice(-dashRange);
+  const vals = slice.map(r => Number(r[dashMetric] || 0));
+  if (!slice.length || vals.every(v => v === 0)) {
+    return '<div class="chart-empty">아직 쌓인 데이터가 없어요.<br />방문과 신청이 들어오면 여기에 그려집니다.</div>';
+  }
+  const W = 640, H = 210, P = 26;
+  const { line, area, max } = linePath(vals, W, H, P);
+  const ticks = [0, Math.floor(slice.length / 2), slice.length - 1];
+
+  return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img">'
+    + [0, 0.5, 1].map(f => {
+        const y = P + (H - P * 2) * f;
+        return '<line class="grid-line" x1="' + P + '" y1="' + y + '" x2="' + (W - P) + '" y2="' + y + '" stroke-dasharray="3 4" />';
+      }).join("")
+    + '<path d="' + area + '" fill="#FB75BB" fill-opacity="0.12" />'
+    + '<path d="' + line + '" fill="none" stroke="#FB75BB" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />'
+    + ticks.map(i => {
+        const x = P + ((W - P * 2) / Math.max(1, slice.length - 1)) * i;
+        const anchor = i === 0 ? "start" : (i === slice.length - 1 ? "end" : "middle");
+        return '<text class="axis-t" x="' + x + '" y="' + (H - 6) + '" text-anchor="' + anchor + '">'
+          + String(slice[i].day).slice(5) + '</text>';
+      }).join("")
+    + '<text class="axis-t" x="' + P + '" y="' + (P - 8) + '">최대 '
+      + (dashMetric === "revenue" ? won(max) : num(max)) + '</text>'
+    + '</svg>';
+}
+
+async function renderDashboard() {
+  const box = document.getElementById("list");
+  document.querySelector("#listTitle").firstChild.textContent = "대시보드";
+  document.querySelector("#listCnt").textContent = "";
+  box.className = "";
+  box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
+
+  let stats = [], daily = [], recent = [];
+  try {
+    [stats, daily, recent] = await Promise.all([
+      table("/academy_event_stats?select=*"),
+      table("/academy_daily_stats?select=*&order=day.asc"),
+      table("/academy_applications?select=name,org,status,created_at,event_title&order=created_at.desc&limit=5")
+    ]);
+    stats = stats || []; daily = daily || []; recent = recent || [];
+  } catch (e) {
+    box.innerHTML = "";
+    box.appendChild(el("div", "empty", "대시보드를 불러오지 못했어요. " + (e.message || "")));
+    return;
+  }
+
+  /* --- 합계 --- */
+  const sum = k => stats.reduce((a, r) => a + Number(r[k] || 0), 0);
+  const totalApp = sum("applications"), totalPaid = sum("paid"), totalPending = sum("pending");
+  const totalViews = sum("views"), totalRevenue = sum("revenue");
+
+  /* 이번 달 매출은 일별 뷰에서 이번 달치만 더합니다. */
+  const ym = new Date().toISOString().slice(0, 7);
+  const monthRevenue = daily.filter(d => String(d.day).slice(0, 7) === ym)
+                            .reduce((a, d) => a + Number(d.revenue || 0), 0);
+
+  /* 진행 예정 강의: 아직 안 지났고 신청 받는 중인 것 */
+  const upcoming = Object.keys(store.EVENTS_DB)
+    .filter(id => !dashEventOver(store.EVENTS_DB[id])).length;
+
+  const conv = totalViews > 0 ? (totalApp * 100 / totalViews).toFixed(1) + "%" : "-";
+
+  box.innerHTML = "";
+
+  /* --- KPI 타일 --- */
+  const kpis = el("div", "kpis");
+  [
+    ["입금 대기", num(totalPending), totalPending > 0 ? "확인 필요" : "없음", totalPending > 0],
+    ["이번 달 매출", won(monthRevenue), "입금 확인 기준", false],
+    ["누적 신청", num(totalApp), "입금 완료 " + num(totalPaid) + "건", false],
+    ["진행 예정 강의", num(upcoming), "신청 받는 중", false],
+    ["조회 대비 신청", conv, "조회 " + num(totalViews) + "회", false]
+  ].forEach(([lab, val, sub, alert]) => {
+    const c = el("div", "kpi" + (alert ? " alert" : ""));
+    c.appendChild(el("div", "k-lab", lab));
+    c.appendChild(el("div", "k-num", val));
+    c.appendChild(el("div", "k-sub", sub));
+    kpis.appendChild(c);
+  });
+  box.appendChild(kpis);
+
+  const grid = el("div", "dash-grid");
+  const left = el("div"), right = el("div");
+
+  /* --- 추이 차트 --- */
+  const trend = el("div", "panel-c");
+  const th = el("div", "p-head");
+  th.appendChild(el("div", "p-title", "추이"));
+  const ctrl = el("div");
+  ctrl.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
+  const mSeg = el("div", "seg-mini");
+  [["applications", "신청"], ["views", "조회"], ["revenue", "매출"]].forEach(([k, lab]) => {
+    const b = el("button", dashMetric === k ? "on" : null, lab);
+    b.addEventListener("click", () => { dashMetric = k; renderDashboard(); });
+    mSeg.appendChild(b);
+  });
+  const rSeg = el("div", "seg-mini");
+  [[7, "7일"], [30, "30일"], [90, "90일"]].forEach(([d, lab]) => {
+    const b = el("button", dashRange === d ? "on" : null, lab);
+    b.addEventListener("click", () => { dashRange = d; renderDashboard(); });
+    rSeg.appendChild(b);
+  });
+  ctrl.appendChild(mSeg); ctrl.appendChild(rSeg);
+  th.appendChild(ctrl);
+  trend.appendChild(th);
+  const chartBox = el("div");
+  chartBox.innerHTML = trendChart(daily);
+  trend.appendChild(chartBox);
+  left.appendChild(trend);
+
+  /* --- 강의별 현황 --- */
+  const ev = el("div", "panel-c");
+  const eh = el("div", "p-head");
+  eh.appendChild(el("div", "p-title", "강의별 현황"));
+  ev.appendChild(eh);
+
+  const withTitle = stats
+    .map(r => ({ ...r, title: (store.EVENTS_DB[r.event_id] || {}).title || r.event_id }))
+    .filter(r => r.views > 0 || r.applications > 0)
+    .sort((a, b) => b.applications - a.applications || b.views - a.views)
+    .slice(0, 8);
+
+  if (!withTitle.length) {
+    ev.appendChild(el("div", "chart-empty", "아직 조회나 신청이 없어요."));
+  } else {
+    const maxV = Math.max(1, ...withTitle.map(r => r.views));
+    withTitle.forEach(r => {
+      const row = el("div", "ev-row");
+      row.appendChild(el("div", "ev-name", r.title));
+      const bar = el("div", "ev-bar");
+      const i = el("i"); i.style.width = Math.round(r.views / maxV * 100) + "%";
+      bar.appendChild(i); row.appendChild(bar);
+      row.appendChild(el("div", "ev-num",
+        "조회 " + num(r.views) + " · 신청 " + num(r.applications)
+        + (r.conversion_rate != null ? " (" + r.conversion_rate + "%)" : "")));
+      ev.appendChild(row);
+    });
+  }
+  left.appendChild(ev);
+
+  /* --- 빠른 작업 --- */
+  const q = el("div", "panel-c");
+  q.appendChild(el("div", "p-title", "빠른 작업"));
+  const ql = el("div", "quick");
+  ql.style.marginTop = "8px";
+  [
+    ["ic-edu", "새 교육 등록", () => { goTab("events"); setTimeout(() => openEvent(null), 60); }],
+    ["ic-apply", "신청자 보기", () => goTab("applications")],
+    ["ic-doc", "자료 올리기", () => { goTab("resources"); setTimeout(() => openResource(null, false), 60); }]
+  ].forEach(([ic, lab, fn]) => {
+    const b = el("button");
+    b.appendChild(el("span", "ic " + ic));
+    b.appendChild(document.createTextNode(lab));
+    b.addEventListener("click", fn);
+    ql.appendChild(b);
+  });
+  q.appendChild(ql);
+  right.appendChild(q);
+
+  /* --- 최근 신청자 --- */
+  const rc = el("div", "panel-c");
+  const rh = el("div", "p-head");
+  rh.appendChild(el("div", "p-title", "최근 신청자"));
+  const more = el("button", "btn btn-ghost btn-sm", "전체 보기");
+  more.addEventListener("click", () => goTab("applications"));
+  rh.appendChild(more);
+  rc.appendChild(rh);
+
+  if (!recent.length) {
+    rc.appendChild(el("div", "chart-empty", "아직 신청자가 없어요."));
+  } else {
+    recent.forEach(r => {
+      const row = el("div", "mini-row");
+      const m = el("div", "mini-main");
+      m.appendChild(el("div", "mini-t", r.name || "(이름 없음)"));
+      m.appendChild(el("div", "mini-s",
+        [r.org, r.event_title, apDate(r.created_at)].filter(Boolean).join(" · ")));
+      row.appendChild(m);
+      const st = AP_STATUS[r.status] || AP_STATUS.pending;
+      row.appendChild(el("span", "badge " + st.cls, st.label));
+      rc.appendChild(row);
+    });
+  }
+  right.appendChild(rc);
+
+  grid.appendChild(left); grid.appendChild(right);
+  box.appendChild(grid);
+}

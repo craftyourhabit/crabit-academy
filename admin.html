@@ -90,26 +90,139 @@
 
   .err { color: #C2255C; font-size: 14px; font-weight: 500; min-height: 22px; margin: 6px 0 10px; }
 
-  /* ---------- 앱 셸 ---------- */
+  /* ---------- 앱 셸 ----------
+     크래빗 어드민(admin.crabit.co.kr)과 같은 규격이다.
+     상단 바 + 좌측 사이드바, 본문은 흰 배경에 얇은 보더 카드. */
   #app { display: none; }
   header.top {
     background: var(--bg); border-bottom: 1px solid var(--line);
-    position: sticky; top: 0; z-index: 30;
+    position: sticky; top: 0; z-index: 40;
   }
-  .top-in { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 16px; }
-  .top-in img { height: 22px; display: block; }
-  .top-in .who { font-size: 14px; color: var(--muted); }
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); background: var(--bg); }
-  .tabs-in { display: flex; gap: 4px; max-width: 900px; margin: 0 auto; padding: 0 20px; width: 100%; }
-  .tab {
-    border: 0; background: none; font-family: inherit; font-size: 15.5px; font-weight: 600;
-    color: var(--muted); padding: 14px 16px; cursor: pointer; border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+  .top-in {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 20px; height: 56px;
   }
-  .tab:hover { color: var(--ink); }
-  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .top-in .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: inherit; }
+  .top-in .brand img { height: 21px; display: block; }
+  .top-in .brand-sub { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .top-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .top-link { font-size: 14px; color: var(--muted); text-decoration: none; font-weight: 500; }
+  .top-link:hover { color: var(--ink); }
+  .top-in .who { font-size: 13.5px; color: var(--muted); }
+  .hamburger {
+    display: none; width: 34px; height: 34px; padding: 0; border: 0; background: transparent;
+    border-radius: 9px; cursor: pointer; color: var(--ink);
+    align-items: center; justify-content: center;
+  }
+  .hamburger:hover { background: #F8F8FA; }
+  .hamburger svg { width: 20px; height: 20px; }
 
-  main { padding: 28px 0 80px; }
+  .shell { display: flex; align-items: flex-start; min-height: calc(100vh - 56px); }
+
+  /* ---------- 사이드바 ---------- */
+  .side {
+    width: 194px; flex: none; align-self: stretch;
+    background: var(--bg); border-right: 1px solid var(--line);
+    padding: 18px 12px 20px; position: sticky; top: 56px;
+    height: calc(100vh - 56px); overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .side-group {
+    font-size: 11.5px; font-weight: 600; color: var(--deco);
+    letter-spacing: 0.04em; padding: 0 10px; margin: 16px 0 7px;
+  }
+  .side-group:first-child { margin-top: 0; }
+  .nav {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    border: 0; background: none; font-family: inherit; font-size: 14.5px; font-weight: 600;
+    color: var(--ink); padding: 9px 10px; border-radius: 9px; cursor: pointer;
+    text-align: left; margin-bottom: 2px;
+  }
+  .nav:hover { background: #F8F8FA; }
+  .nav.active { background: var(--tint); color: var(--ink); }
+  /* 아이콘은 색 칩으로만 구분한다. 외부 아이콘 파일을 안 쓰려는 것. */
+  .nav .ic { width: 19px; height: 19px; border-radius: 6px; flex: none; }
+  .ic-home  { background: var(--pink); }
+  .ic-edu   { background: #7C9CF5; }
+  .ic-apply { background: #4FBF8B; }
+  .ic-doc   { background: #F1B44C; }
+  .side-foot { margin-top: auto; padding: 14px 10px 0; font-size: 12px; color: var(--deco); }
+  .side-dim { display: none; }
+
+  .content { flex: 1; min-width: 0; padding: 26px 28px 80px; }
+
+  @media (max-width: 820px) {
+    .hamburger { display: flex; }
+    .side {
+      position: fixed; top: 56px; left: 0; z-index: 35;
+      transform: translateX(-100%); transition: transform 0.2s;
+      box-shadow: 0 8px 30px rgba(22, 25, 42, 0.12);
+    }
+    .side.open { transform: none; }
+    .side-dim.open {
+      display: block; position: fixed; inset: 56px 0 0 0; z-index: 34;
+      background: rgba(22, 25, 42, 0.28);
+    }
+    .content { padding: 22px 18px 70px; }
+  }
+
+  /* ---------- 대시보드 ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-bottom: 20px;
+          background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .kpi { padding: 17px 20px; border-right: 1px solid var(--line); }
+  .kpi:last-child { border-right: 0; }
+  .kpi .k-lab { font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  .kpi .k-num { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+  .kpi .k-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .kpi.alert .k-num, .kpi.alert .k-sub { color: #C2255C; }
+
+  .dash-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+  .panel-c { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 18px; }
+  .panel-c .p-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .panel-c .p-title { font-size: 15.5px; font-weight: 700; }
+  .seg-mini { display: inline-flex; background: var(--page); border-radius: 9px; padding: 3px; gap: 2px; }
+  .seg-mini button {
+    border: 0; background: none; font-family: inherit; font-size: 13px; font-weight: 600;
+    color: var(--muted); padding: 5px 11px; border-radius: 7px; cursor: pointer;
+  }
+  .seg-mini button.on { background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgba(22,25,42,0.08); }
+
+  .chart { width: 100%; height: 210px; display: block; }
+  .chart .grid-line { stroke: var(--line); stroke-width: 1; }
+  .chart .axis-t { font-size: 10.5px; fill: var(--deco); }
+  .chart-empty { padding: 54px 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+  .ev-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .ev-row:last-child { border-bottom: 0; }
+  .ev-name { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ev-bar { flex: none; width: 130px; height: 7px; border-radius: 99px; background: var(--page); overflow: hidden; }
+  .ev-bar i { display: block; height: 100%; background: var(--pink); }
+  .ev-num { flex: none; width: 118px; text-align: right; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .quick button {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 600;
+    color: var(--ink); padding: 11px 8px; border-radius: 9px; cursor: pointer; text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  .quick button:last-child { border-bottom: 0; }
+  .quick button:hover { background: #F8F8FA; }
+  .quick .ic { width: 17px; height: 17px; border-radius: 5px; flex: none; }
+
+  .mini-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .mini-row:last-child { border-bottom: 0; }
+  .mini-main { flex: 1; min-width: 0; }
+  .mini-t { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mini-s { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  @media (max-width: 1080px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .kpi { border-bottom: 1px solid var(--line); }
+    .dash-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) { .kpis { grid-template-columns: 1fr; } }
+
+  main { padding: 0; }
   .head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
   .head-row h2 { font-size: 20px; font-weight: 700; }
   .head-row .cnt { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 8px; }
@@ -246,21 +359,41 @@
 <!-- ================= 앱 ================= -->
 <div id="app">
   <header class="top">
-    <div class="wrap top-in">
-      <img src="assets/logo.png" alt="Crabit 아카데미" />
-      <div style="display:flex;align-items:center;gap:14px">
+    <div class="top-in">
+      <button class="hamburger" id="navToggle" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <a class="brand" href="./admin.html">
+        <img src="assets/logo.png" alt="Crabit" />
+        <span class="brand-sub">아카데미 콘솔</span>
+      </a>
+      <div class="top-right">
+        <a class="top-link" href="./" target="_blank" rel="noopener">사이트 보기</a>
         <span class="who" id="who"></span>
         <button class="btn btn-ghost btn-sm" id="logoutBtn">로그아웃</button>
       </div>
     </div>
   </header>
-  <div class="tabs"><div class="tabs-in">
-    <button class="tab active" data-tab="events">교육 / 설명회</button>
-    <button class="tab" data-tab="resources">자료 / 인사이트</button>
-    <button class="tab" data-tab="applications">신청자</button>
-  </div></div>
 
-  <main class="wrap">
+  <div class="shell">
+    <aside class="side" id="side">
+      <div class="side-group">개요</div>
+      <button class="nav active" data-tab="dashboard">
+        <span class="ic ic-home"></span>대시보드
+      </button>
+
+      <div class="side-group">운영</div>
+      <button class="nav" data-tab="events"><span class="ic ic-edu"></span>교육 / 설명회</button>
+      <button class="nav" data-tab="applications"><span class="ic ic-apply"></span>신청자</button>
+
+      <div class="side-group">관리</div>
+      <button class="nav" data-tab="resources"><span class="ic ic-doc"></span>자료 / 인사이트</button>
+
+      <div class="side-foot">&copy; Crabit 2026</div>
+    </aside>
+    <div class="side-dim" id="sideDim"></div>
+
+    <main class="content">
     <!-- 목록 -->
     <div id="listView">
       <div class="head-row">
@@ -270,9 +403,10 @@
       <div class="list" id="list"></div>
     </div>
 
-    <!-- 편집 -->
-    <div id="editView"></div>
-  </main>
+      <!-- 편집 -->
+      <div id="editView"></div>
+    </main>
+  </div>
 </div>
 
 <!-- 확인 모달 -->
@@ -499,7 +633,7 @@ const store = {
   resText: "", resSha: null, RESOURCES: [],
   privText: "", privSha: null, RESOURCES_PRIVATE: []
 };
-let currentTab = "events";
+let currentTab = "dashboard";
 let editing = null;   // { kind: 'event'|'resource', id, isNew, data }
 
 async function loadAll() {
@@ -604,18 +738,46 @@ $("#logoutBtn").addEventListener("click", () => { auth.clear(); showLogin(); });
 /* ---------------------------------------------------------------
    4. 탭 · 목록
    --------------------------------------------------------------- */
-document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+document.querySelectorAll(".nav").forEach(t => t.addEventListener("click", () => {
   currentTab = t.dataset.tab;
-  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+  document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === t));
   editing = null;
+  closeSide();
   renderList();
 }));
+
+/* 좁은 화면에서는 사이드바를 서랍처럼 연다. */
+function closeSide() {
+  $("#side").classList.remove("open");
+  $("#sideDim").classList.remove("open");
+}
+$("#navToggle").addEventListener("click", () => {
+  $("#side").classList.toggle("open");
+  $("#sideDim").classList.toggle("open");
+});
+$("#sideDim").addEventListener("click", closeSide);
+
+/* 사이드바에서 특정 메뉴로 옮겨 갈 때 쓴다. (대시보드의 빠른 작업 등) */
+function goTab(tab) {
+  const btn = document.querySelector('.nav[data-tab="' + tab + '"]');
+  if (btn) btn.click();
+}
 
 function showList() { $("#listView").style.display = "block"; $("#editView").style.display = "none"; $("#editView").innerHTML = ""; }
 function showEdit() { $("#listView").style.display = "none"; $("#editView").style.display = "block"; window.scrollTo(0, 0); }
 
 function renderList() {
   showList();
+  /* 대시보드는 카드 여러 장을 직접 배치하느라 .list 래퍼를 벗깁니다.
+     다른 탭으로 돌아오면 다시 씌워 줍니다. */
+  $("#list").className = currentTab === "dashboard" ? "" : "list";
+
+  /* 대시보드는 목록이 아니라 요약 화면이라 따로 그립니다. (admin-forms.js) */
+  if (currentTab === "dashboard") {
+    $("#newBtn").style.display = "none";
+    renderDashboard();
+    return;
+  }
 
   /* 신청자 탭은 깃허브가 아니라 Supabase에서 읽어 옵니다.
      목록 모양도 달라서 전용 렌더 함수로 넘깁니다. (admin-forms.js) */

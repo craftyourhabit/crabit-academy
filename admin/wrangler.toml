@@ -1,0 +1,14 @@
+name = "crabit-academy-admin"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+[vars]
+REPO = "craftyourhabit/crabit-academy"
+BRANCH = "main"
+# 어드민 페이지가 올라가 있는 주소. 여기서 온 요청만 받습니다.
+ALLOWED_ORIGIN = "https://craftyourhabit.github.io"
+
+# 시크릿은 이 파일에 적지 않습니다. 아래 명령으로 따로 등록하세요.
+#   wrangler secret put ADMIN_PASSWORD
+#   wrangler secret put GITHUB_TOKEN
+#   wrangler secret put SESSION_SECRET

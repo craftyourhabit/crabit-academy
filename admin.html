@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>크래빗 아카데미 관리자</title>
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --page: #F2F3F6;
+    --card: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --deco: rgba(22, 25, 42, 0.30);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  h1, h2, h3 { letter-spacing: -0.02em; margin: 0; }
+  a { color: inherit; }
+
+  /* ---------- 버튼 (브랜드가이드) ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 22px; border-radius: 12px; font-size: 15px; font-weight: 600;
+    font-family: inherit; border: 0; cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:not(:disabled):hover { background: #333333; }
+  .btn-secondary { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-secondary:not(:disabled):hover { background: #F0F0F0; }
+  .btn-ghost { background: transparent; color: var(--ink); }
+  .btn-ghost:not(:disabled):hover { background: #F8F8FA; }
+  .btn-danger { background: var(--bg); color: #C2255C; border: 1px solid var(--line); }
+  .btn-danger:not(:disabled):hover { background: #FFF0F5; }
+  .btn-sm { padding: 8px 14px; font-size: 14px; border-radius: 10px; }
+  :focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; border-radius: 4px; }
+
+  /* ---------- 로그인 ---------- */
+  #login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .login-card {
+    background: var(--bg); border-radius: 24px; padding: 40px; width: 100%; max-width: 400px;
+    box-shadow: 0 2px 16px rgba(22, 25, 42, 0.07);
+  }
+  .login-card img { height: 26px; display: block; margin-bottom: 24px; }
+  .login-card h1 { font-size: 21px; font-weight: 700; margin-bottom: 6px; }
+  .login-card p.sub { font-size: 15px; color: var(--muted); margin: 0 0 24px; }
+
+  /* ---------- 입력 ---------- */
+  label.field { display: block; margin-bottom: 18px; }
+  label.field > .lab { display: block; font-size: 14px; font-weight: 600; margin-bottom: 7px; }
+  label.field .req { color: var(--pink); margin-left: 3px; }
+  label.field .hint { display: block; font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 4px; }
+  input[type="text"], input[type="password"], input[type="date"], input[type="time"], input[type="url"], textarea, select {
+    width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
+    font-size: 15px; font-family: inherit; background: var(--bg); color: var(--ink); line-height: 1.5;
+  }
+  textarea { min-height: 92px; resize: vertical; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2316192A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 34px; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--pink); outline-offset: -1px; border-color: transparent; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+
+  .err { color: #C2255C; font-size: 14px; font-weight: 500; min-height: 22px; margin: 6px 0 10px; }
+
+  /* ---------- 앱 셸 ---------- */
+  #app { display: none; }
+  header.top {
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .top-in { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 16px; }
+  .top-in img { height: 22px; display: block; }
+  .top-in .who { font-size: 14px; color: var(--muted); }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); background: var(--bg); }
+  .tabs-in { display: flex; gap: 4px; max-width: 900px; margin: 0 auto; padding: 0 20px; width: 100%; }
+  .tab {
+    border: 0; background: none; font-family: inherit; font-size: 15.5px; font-weight: 600;
+    color: var(--muted); padding: 14px 16px; cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  main { padding: 28px 0 80px; }
+  .head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .head-row h2 { font-size: 20px; font-weight: 700; }
+  .head-row .cnt { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 8px; }
+
+  /* ---------- 목록 ---------- */
+  .list { background: var(--bg); border-radius: 18px; overflow: hidden; box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05); }
+  .item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .item:last-child { border-bottom: 0; }
+  .item.is-private { background: repeating-linear-gradient(45deg, #FBFBFD, #FBFBFD 10px, #F6F6F9 10px, #F6F6F9 20px); }
+  .item.is-private .it-main { opacity: 0.5; }
+  .item .it-thumb { width: 76px; height: 43px; object-fit: cover; border-radius: 8px; background: var(--card); flex: none; border: 1px solid var(--line); }
+  .item .it-main { flex: 1; min-width: 0; }
+  .item .it-title { font-size: 15.5px; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .it-sub { font-size: 13.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .it-acts { display: flex; gap: 6px; flex: none; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 7px; margin-right: 6px; vertical-align: 1.5px; }
+  .badge.open { background: var(--tint); color: var(--pink); }
+  .badge.locked { background: var(--ink); color: #fff; }
+  .badge.soon { background: var(--card); color: var(--muted); border: 1px solid var(--line); }
+  .badge.priv { background: #EFEFF4; color: var(--muted); border: 1px dashed var(--deco); }
+  .badge.up { background: var(--tint); color: var(--pink); }
+  .badge.closed { background: var(--card); color: var(--muted); border: 1px solid var(--line); }
+  .empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 15px; }
+
+  /* ---------- 편집 ---------- */
+  #editView { display: none; }
+  .panel { background: var(--bg); border-radius: 18px; padding: 26px 28px; box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05); margin-bottom: 18px; }
+  .panel > h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .panel > p.pdesc { font-size: 14px; color: var(--muted); margin: 0 0 20px; }
+  .seg { display: flex; gap: 6px; flex-wrap: wrap; }
+  .seg button {
+    border: 1px solid var(--line); background: var(--bg); font-family: inherit; font-size: 14.5px;
+    font-weight: 500; padding: 9px 16px; border-radius: 10px; cursor: pointer; color: var(--muted);
+  }
+  .seg button:hover { background: #F8F8FA; }
+  .seg button.on { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 600; }
+  .thumb-pick { display: flex; align-items: center; gap: 14px; }
+  .thumb-pick img { width: 150px; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); background: var(--card); }
+  .file-list { list-style: none; padding: 0; margin: 10px 0 0; }
+  .file-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; padding: 7px 12px; background: var(--card); border-radius: 8px; margin-bottom: 6px; }
+  .file-list li span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .note strong { color: var(--ink); font-weight: 600; }
+  .note code { background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; font-size: 13px; }
+
+  /* ---------- 미리보기 ---------- */
+  .pv { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--card); }
+  .pv-card { background: var(--bg); border-radius: 14px; overflow: hidden; max-width: 330px; box-shadow: 0 2px 8px rgba(22, 25, 42, 0.08); }
+  .pv-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--card); }
+  .pv-card .b { padding: 15px 16px 17px; }
+  .pv-card .b .tags { display: flex; gap: 6px; margin-bottom: 9px; }
+  .pv-card .b strong { display: block; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .pv-card .b p { margin: 0; font-size: 13.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pv-card .b .dt { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .pv-row { background: var(--bg); border-radius: 12px; padding: 15px 18px; display: flex; align-items: center; gap: 14px; }
+  .pv-row .k { font-size: 13px; color: var(--muted); flex: none; width: 62px; }
+  .pv-row .m { flex: 1; min-width: 0; }
+  .pv-row .m strong { display: block; font-size: 15px; font-weight: 600; }
+  .pv-row .m span { font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- 저장 바 ---------- */
+  .savebar {
+    position: sticky; bottom: 0; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(8px);
+    border-top: 1px solid var(--line); padding: 14px 0; margin-top: 24px; z-index: 20;
+  }
+  .savebar-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .savebar .msg { font-size: 14px; color: var(--muted); }
+  .savebar .msg.ok { color: #0B7A3B; font-weight: 500; }
+  .savebar .msg.bad { color: #C2255C; font-weight: 500; }
+
+  /* ---------- 모달 ---------- */
+  .back { position: fixed; inset: 0; background: rgba(22, 25, 42, 0.55); display: none; align-items: center; justify-content: center; z-index: 60; padding: 24px; }
+  .back.show { display: flex; }
+  .modal { background: var(--bg); border-radius: 20px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 24px 60px rgba(22, 25, 42, 0.25); }
+  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .modal p { font-size: 14.5px; color: var(--muted); margin: 0 0 20px; }
+  .modal .m-acts { display: flex; gap: 8px; justify-content: flex-end; }
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: sp 0.7s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+
+  @media (max-width: 720px) {
+    .row2 { grid-template-columns: 1fr; }
+    .panel { padding: 20px 18px; }
+    .item { flex-wrap: wrap; }
+    .item .it-acts { width: 100%; justify-content: flex-end; }
+    .thumb-pick { flex-direction: column; align-items: stretch; }
+    .thumb-pick img { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ================= 로그인 ================= -->
+<div id="login">
+  <div class="login-card">
+    <img src="assets/logo.png" alt="Crabit 아카데미" />
+    <h1>관리자 로그인</h1>
+    <p class="sub">교육과 자료를 등록하고 수정하는 곳이에요.</p>
+    <label class="field">
+      <span class="lab">비밀번호</span>
+      <input type="password" id="pw" autocomplete="current-password" placeholder="비밀번호를 입력해 주세요" />
+    </label>
+    <p class="err" id="loginErr"></p>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%">로그인</button>
+  </div>
+</div>
+
+<!-- ================= 앱 ================= -->
+<div id="app">
+  <header class="top">
+    <div class="wrap top-in">
+      <img src="assets/logo.png" alt="Crabit 아카데미" />
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="who" id="who"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">로그아웃</button>
+      </div>
+    </div>
+  </header>
+  <div class="tabs"><div class="tabs-in">
+    <button class="tab active" data-tab="events">교육 / 설명회</button>
+    <button class="tab" data-tab="resources">자료 / 인사이트</button>
+  </div></div>
+
+  <main class="wrap">
+    <!-- 목록 -->
+    <div id="listView">
+      <div class="head-row">
+        <h2 id="listTitle">교육 / 설명회<span class="cnt" id="listCnt"></span></h2>
+        <button class="btn btn-primary" id="newBtn">새로 추가</button>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+
+    <!-- 편집 -->
+    <div id="editView"></div>
+  </main>
+</div>
+
+<!-- 확인 모달 -->
+<div class="back" id="confirmBack" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 id="cfTitle">삭제할까요?</h3>
+    <p id="cfBody"></p>
+    <div class="m-acts">
+      <button class="btn btn-secondary" id="cfNo">취소</button>
+      <button class="btn btn-danger" id="cfYes">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   크래빗 아카데미 어드민
+
+   이 페이지는 데이터를 직접 들고 있지 않습니다. Cloudflare Worker를 통해
+   깃허브 레포의 파일을 읽고 쓸 뿐이에요. 깃허브 토큰은 Worker 안에만
+   있으므로 이 페이지 소스에는 어떤 비밀도 들어 있지 않습니다.
+
+   저장하면 레포에 커밋이 올라가고, GitHub Pages가 1~2분 안에 사이트를
+   다시 배포합니다.
+   ===================================================================== */
+
+/* Worker 주소. 배포 후 실제 주소로 바꿔 주세요. (admin/DEPLOY.md 참고)
+   개발 중에는 브라우저 콘솔에서 localStorage.crabit_admin_api 로 갈아 끼울 수 있습니다. */
+const API = localStorage.getItem("crabit_admin_api") || "https://crabit-academy-admin.crabit.workers.dev";
+/* 배포 완료: 2026-08-17. Worker 주소를 바꾸면 admin/wrangler.toml 의 ALLOWED_ORIGIN 도 함께 확인하세요. */
+
+const EVENT_FILE = "assets/events.js";
+const RES_FILE = "assets/resources.js";
+const RES_PRIV_FILE = "assets/resources-private.js";
+
+/* 어드민이 다루는 공통 항목. 여기 없는 항목(sessions, materials, detailImages,
+   contact 등)은 수정 화면에 나오지 않지만 저장할 때 그대로 보존됩니다. */
+const EVENT_FORM_KEYS = [
+  "type", "category", "host", "kind", "title", "date", "startDate", "place", "placeUrl",
+  "thumb", "desc", "points", "speaker", "speakerRole", "assistant", "prep", "audience",
+  "status", "applyUrl", "replayUrl"
+];
+const ADVANCED_KEYS = ["sessions", "materials", "detailImages", "contact"];
+
+const CATEGORIES_EVENT = ["AI·자동화", "학원 운영", "마케팅·브랜딩", "올커니"];
+const TYPES = ["Lecture", "Webinar", "Course", "Community", "Seminar"];
+const CATEGORIES_RES = ["강의자료", "가이드북", "인사이트"];
+
+/* ---------------------------------------------------------------
+   0. 작은 도구들
+   --------------------------------------------------------------- */
+const $ = s => document.querySelector(s);
+const el = (t, cls, txt) => { const e = document.createElement(t); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const esc = s => String(s == null ? "" : s);
+
+function utf8ToB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  const CH = 0x8000;
+  for (let i = 0; i < bytes.length; i += CH) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  return btoa(bin);
+}
+function b64ToUtf8(b64) {
+  const bin = atob(b64);
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+async function sha256hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+/* 제목을 파일명·키로 쓸 수 있게 다듬습니다. 한글은 남기지 않고 임의값으로 대체해요. */
+function slugify(s) {
+  const base = String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return base || "item-" + Math.random().toString(36).slice(2, 8);
+}
+
+/* JS 리터럴 직렬화. 손으로 열어 봐도 읽히도록 들여쓰기를 넣습니다. */
+function keyLit(k) { return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k) ? k : JSON.stringify(k); }
+function jsLit(v, ind) {
+  ind = ind || 0;
+  const pad = "  ".repeat(ind), pad2 = "  ".repeat(ind + 1);
+  if (v === null || v === undefined) return "null";
+  if (Array.isArray(v)) {
+    if (!v.length) return "[]";
+    return "[\n" + v.map(x => pad2 + jsLit(x, ind + 1)).join(",\n") + "\n" + pad + "]";
+  }
+  if (typeof v === "object") {
+    const ks = Object.keys(v);
+    if (!ks.length) return "{}";
+    return "{\n" + ks.map(k => pad2 + keyLit(k) + ": " + jsLit(v[k], ind + 1)).join(",\n") + "\n" + pad + "}";
+  }
+  if (typeof v === "string") return JSON.stringify(v);
+  return String(v);
+}
+
+/* @admin:NAME:start ~ end 사이만 갈아 끼웁니다. 바깥 주석과 함수는 그대로 남아요. */
+function spliceMarker(text, name, body) {
+  const startRe = new RegExp("/\\* @admin:" + name + ":start[^*]*\\*/");
+  const m = text.match(startRe);
+  const endTag = "/* @admin:" + name + ":end */";
+  const ei = text.indexOf(endTag);
+  if (!m || ei === -1) throw new Error(name + " 마커를 찾지 못했어요. 파일이 손상됐을 수 있습니다.");
+  const si = text.indexOf(m[0]) + m[0].length;
+  return text.slice(0, si) + "\n" + body + "\n" + text.slice(ei);
+}
+/* 파일 전체를 평가해 안에 선언된 값을 꺼냅니다. 정규식으로 긁는 것보다 안전해요. */
+function evalNames(text, names) {
+  return new Function(text + "\nreturn {" + names.join(",") + "};")();
+}
+
+/* ---------------------------------------------------------------
+   1. Worker 통신
+   --------------------------------------------------------------- */
+const auth = {
+  get token() { return localStorage.getItem("crabit_admin_token") || ""; },
+  set token(v) { v ? localStorage.setItem("crabit_admin_token", v) : localStorage.removeItem("crabit_admin_token"); }
+};
+
+async function api(path, opts) {
+  opts = opts || {};
+  const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+  if (auth.token) headers.Authorization = "Bearer " + auth.token;
+  let res;
+  try {
+    res = await fetch(API + path, { method: opts.method || "GET", headers, body: opts.body ? JSON.stringify(opts.body) : undefined });
+  } catch (e) {
+    throw new Error("서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.");
+  }
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && data.code === "unauthorized") {
+    auth.token = "";
+    showLogin("로그인이 만료됐어요. 다시 로그인해 주세요.");
+    throw new Error("세션 만료");
+  }
+  if (!res.ok) throw new Error(data.error || ("요청 실패 (" + res.status + ")"));
+  return data;
+}
+
+const gh = {
+  async read(path) {
+    const d = await api("/api/file?path=" + encodeURIComponent(path));
+    return { exists: d.exists, text: d.exists ? b64ToUtf8(d.contentBase64) : null, sha: d.sha };
+  },
+  async writeText(path, text, sha, message) {
+    return api("/api/file", { method: "PUT", body: { path, contentBase64: utf8ToB64(text), sha, message } });
+  },
+  async writeBinary(path, base64, sha, message) {
+    return api("/api/file", { method: "PUT", body: { path, contentBase64: base64, sha, message } });
+  }
+};
+
+/* ---------------------------------------------------------------
+   2. 상태
+   --------------------------------------------------------------- */
+const store = {
+  eventsText: "", eventsSha: null, EVENTS_DB: {}, SCHEDULE: [],
+  resText: "", resSha: null, RESOURCES: [],
+  privText: "", privSha: null, RESOURCES_PRIVATE: []
+};
+let currentTab = "events";
+let editing = null;   // { kind: 'event'|'resource', id, isNew, data }
+
+async function loadAll() {
+  const [ev, rs, pv] = await Promise.all([gh.read(EVENT_FILE), gh.read(RES_FILE), gh.read(RES_PRIV_FILE)]);
+
+  store.eventsText = ev.text; store.eventsSha = ev.sha;
+  const e = evalNames(ev.text, ["EVENTS_DB", "SCHEDULE"]);
+  store.EVENTS_DB = e.EVENTS_DB; store.SCHEDULE = e.SCHEDULE;
+
+  store.resText = rs.text; store.resSha = rs.sha;
+  store.RESOURCES = evalNames(rs.text, ["RESOURCES"]).RESOURCES;
+
+  if (pv.exists) {
+    store.privText = pv.text; store.privSha = pv.sha;
+    store.RESOURCES_PRIVATE = evalNames(pv.text, ["RESOURCES_PRIVATE"]).RESOURCES_PRIVATE;
+  } else {
+    store.privText = null; store.privSha = null; store.RESOURCES_PRIVATE = [];
+  }
+}
+
+/* ---------------------------------------------------------------
+   3. 로그인 화면
+   --------------------------------------------------------------- */
+function showLogin(msg) {
+  $("#app").style.display = "none";
+  $("#login").style.display = "flex";
+  $("#loginErr").textContent = msg || "";
+  $("#pw").value = "";
+  setTimeout(() => $("#pw").focus(), 50);
+}
+async function doLogin() {
+  const pw = $("#pw").value;
+  if (!pw) { $("#loginErr").textContent = "비밀번호를 입력해 주세요."; return; }
+  const btn = $("#loginBtn");
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 확인 중';
+  try {
+    const d = await api("/api/login", { method: "POST", body: { password: pw } });
+    auth.token = d.token;
+    await enterApp();
+  } catch (e) {
+    $("#loginErr").textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = "로그인";
+  }
+}
+async function enterApp() {
+  $("#login").style.display = "none";
+  $("#app").style.display = "block";
+  $("#who").textContent = "불러오는 중…";
+  try {
+    await loadAll();
+    $("#who").textContent = "";
+    renderList();
+  } catch (e) {
+    $("#who").textContent = "";
+    alert("데이터를 불러오지 못했어요.\n\n" + e.message);
+  }
+}
+$("#loginBtn").addEventListener("click", doLogin);
+$("#pw").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+$("#logoutBtn").addEventListener("click", () => { auth.token = ""; showLogin(); });
+
+/* ---------------------------------------------------------------
+   4. 탭 · 목록
+   --------------------------------------------------------------- */
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  currentTab = t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+  editing = null;
+  renderList();
+}));
+
+function showList() { $("#listView").style.display = "block"; $("#editView").style.display = "none"; $("#editView").innerHTML = ""; }
+function showEdit() { $("#listView").style.display = "none"; $("#editView").style.display = "block"; window.scrollTo(0, 0); }
+
+function renderList() {
+  showList();
+  const isEv = currentTab === "events";
+  $("#listTitle").firstChild.textContent = isEv ? "교육 / 설명회" : "자료 / 인사이트";
+  const box = $("#list");
+  box.innerHTML = "";
+
+  const rows = isEv
+    ? Object.keys(store.EVENTS_DB).map(id => ({ id, d: store.EVENTS_DB[id] }))
+    : store.RESOURCES.map(r => ({ id: r.id, d: r, priv: false }))
+        .concat(store.RESOURCES_PRIVATE.map(r => ({ id: r.id, d: r, priv: true })));
+
+  $("#listCnt").textContent = rows.length ? "  " + rows.length + "건" : "";
+
+  if (!rows.length) {
+    box.innerHTML = '<div class="empty">아직 등록된 항목이 없어요. 오른쪽 위 “새로 추가”를 눌러 시작하세요.</div>';
+    return;
+  }
+
+  rows.forEach(({ id, d, priv }) => {
+    const it = el("div", "item" + (priv ? " is-private" : ""));
+
+    const img = el("img", "it-thumb");
+    img.src = d.thumb || "assets/favicon.png";
+    img.alt = "";
+    img.loading = "lazy";
+    img.onerror = () => { img.style.visibility = "hidden"; };
+    it.appendChild(img);
+
+    const main = el("div", "it-main");
+    const t = el("div", "it-title");
+    if (isEv) {
+      const over = d.status !== "upcoming";
+      const b = el("span", "badge " + (over ? "closed" : "up"), over ? "마감" : "예정");
+      t.appendChild(b);
+    } else {
+      const map = { public: ["open", "공개"], protected: ["locked", "일부공개"], soon: ["soon", "공개 예정"], private: ["priv", "비공개"] };
+      const [cls, lab] = map[priv ? "private" : d.access] || map.public;
+      t.appendChild(el("span", "badge " + cls, lab));
+    }
+    t.appendChild(document.createTextNode(d.title || "(제목 없음)"));
+    main.appendChild(t);
+    main.appendChild(el("div", "it-sub", isEv ? [d.kind, d.host, d.date].filter(Boolean).join(" | ") : (d.sub || "")));
+    it.appendChild(main);
+
+    const acts = el("div", "it-acts");
+    const edit = el("button", "btn btn-secondary btn-sm", "수정");
+    edit.addEventListener("click", () => isEv ? openEvent(id) : openResource(id, priv));
+    const del = el("button", "btn btn-danger btn-sm", "삭제");
+    del.addEventListener("click", () => confirmDelete(isEv, id, d.title, priv));
+    acts.appendChild(edit); acts.appendChild(del);
+    it.appendChild(acts);
+
+    box.appendChild(it);
+  });
+}
+
+$("#newBtn").addEventListener("click", () => currentTab === "events" ? openEvent(null) : openResource(null, false));
+
+/* ---------------------------------------------------------------
+   5. 폼 만들기 도우미
+   --------------------------------------------------------------- */
+function field(labelText, node, opts) {
+  opts = opts || {};
+  const l = el("label", "field");
+  const lab = el("span", "lab", labelText);
+  if (opts.required) lab.appendChild(el("span", "req", "*"));
+  l.appendChild(lab);
+  l.appendChild(node);
+  if (opts.hint) lab.appendChild(el("span", "hint", opts.hint));
+  return l;
+}
+function input(value, ph, type) {
+  const i = document.createElement("input");
+  i.type = type || "text"; i.value = value == null ? "" : value; if (ph) i.placeholder = ph;
+  return i;
+}
+function textarea(value, ph, rows) {
+  const t = document.createElement("textarea");
+  t.value = value == null ? "" : value; if (ph) t.placeholder = ph; if (rows) t.rows = rows;
+  return t;
+}
+function select(options, value) {
+  const s = document.createElement("select");
+  options.forEach(o => {
+    const op = document.createElement("option");
+    if (Array.isArray(o)) { op.value = o[0]; op.textContent = o[1]; }
+    else { op.value = o; op.textContent = o; }
+    s.appendChild(op);
+  });
+  s.value = value == null ? "" : value;
+  return s;
+}
+/* 눌러서 고르는 버튼 묶음. state 객체의 key를 바꿉니다. */
+function segment(options, state, key, onChange) {
+  const box = el("div", "seg");
+  options.forEach(o => {
+    const [val, lab] = Array.isArray(o) ? o : [o, o];
+    const b = el("button", "seg-btn" + (state[key] === val ? " on" : ""), lab);
+    b.type = "button";
+    b.addEventListener("click", () => {
+      state[key] = val;
+      box.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      if (onChange) onChange(val);
+    });
+    box.appendChild(b);
+  });
+  return box;
+}
+const linesToArr = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean);
+const arrToLines = a => (Array.isArray(a) ? a : []).join("\n");
+
+function panel(title, desc) {
+  const p = el("div", "panel");
+  if (title) p.appendChild(el("h3", null, title));
+  if (desc) p.appendChild(el("p", "pdesc", desc));
+  return p;
+}
+
+/* 이미지 업로드. 브라우저에서 가로 1280px로 줄이고 JPEG로 바꿔 올립니다.
+   SVG는 그대로 둡니다(줄이면 깨지니까요). */
+function imagePicker(state, key, pathPrefix, onPicked) {
+  const box = el("div", "thumb-pick");
+  const img = el("img");
+  img.alt = "";
+  const setPreview = v => {
+    if (!v) { img.style.visibility = "hidden"; return; }
+    img.style.visibility = "visible";
+    img.src = v;
+    img.onerror = () => { img.style.visibility = "hidden"; };
+  };
+  setPreview(state[key]);
+
+  const right = el("div");
+  const btn = el("button", "btn btn-secondary btn-sm", "이미지 고르기");
+  btn.type = "button";
+  const file = document.createElement("input");
+  file.type = "file"; file.accept = "image/*"; file.style.display = "none";
+  const status = el("div", null, "");
+  status.style.cssText = "font-size:13px;color:var(--muted);margin-top:8px";
+
+  btn.addEventListener("click", () => file.click());
+  file.addEventListener("change", async () => {
+    const f = file.files && file.files[0];
+    if (!f) return;
+    status.textContent = "이미지를 준비하고 있어요…";
+    try {
+      const out = await prepareImage(f);
+      state["__upload_" + key] = { base64: out.base64, ext: out.ext, prefix: pathPrefix };
+      setPreview(out.dataUrl);
+      status.textContent = "저장을 누르면 올라갑니다. (" + out.kb + "KB)";
+      if (onPicked) onPicked();
+    } catch (e) {
+      status.textContent = "이미지를 읽지 못했어요: " + e.message;
+    }
+    file.value = "";
+  });
+
+  right.appendChild(btn); right.appendChild(file); right.appendChild(status);
+  box.appendChild(img); box.appendChild(right);
+  return box;
+}
+
+function prepareImage(f) {
+  return new Promise((resolve, reject) => {
+    const isSvg = f.type === "image/svg+xml" || /\.svg$/i.test(f.name);
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("파일 읽기 실패"));
+    if (isSvg) {
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        resolve({ base64: dataUrl.split(",")[1], ext: "svg", dataUrl, kb: Math.round(f.size / 1024) });
+      };
+      reader.readAsDataURL(f);
+      return;
+    }
+    reader.onload = () => {
+      const im = new Image();
+      im.onerror = () => reject(new Error("이미지 형식이 아니에요"));
+      im.onload = () => {
+        const MAX = 1280;
+        const scale = Math.min(1, MAX / im.width);
+        const c = document.createElement("canvas");
+        c.width = Math.round(im.width * scale);
+        c.height = Math.round(im.height * scale);
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(im, 0, 0, c.width, c.height);
+        const dataUrl = c.toDataURL("image/jpeg", 0.85);
+        const base64 = dataUrl.split(",")[1];
+        resolve({ base64, ext: "jpg", dataUrl, kb: Math.round(base64.length * 0.75 / 1024) });
+      };
+      im.src = reader.result;
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+/* 저장 바 */
+function saveBar(onSave, onCancel) {
+  const bar = el("div", "savebar");
+  const inner = el("div", "savebar-in");
+  const msg = el("div", "msg", "");
+  const acts = el("div");
+  acts.style.cssText = "display:flex;gap:8px";
+  const cancel = el("button", "btn btn-secondary", "목록으로");
+  cancel.addEventListener("click", onCancel);
+  const save = el("button", "btn btn-primary", "저장하기");
+  acts.appendChild(cancel); acts.appendChild(save);
+  inner.appendChild(msg); inner.appendChild(acts);
+  bar.appendChild(inner);
+
+  save.addEventListener("click", async () => {
+    save.disabled = true; cancel.disabled = true;
+    save.innerHTML = '<span class="spin"></span> 저장 중';
+    msg.className = "msg"; msg.textContent = "";
+    try {
+      await onSave(m => { msg.className = "msg"; msg.textContent = m; });
+      msg.className = "msg ok";
+      msg.textContent = "저장했어요. 1~2분 뒤 사이트에 반영됩니다.";
+      save.textContent = "저장하기";
+      setTimeout(() => { renderList(); }, 1200);
+    } catch (e) {
+      msg.className = "msg bad";
+      msg.textContent = e.message;
+      save.textContent = "저장하기";
+      save.disabled = false; cancel.disabled = false;
+    }
+  });
+  return bar;
+}
+</script>
+<script src="admin-forms.js"></script>
+</body>
+</html>

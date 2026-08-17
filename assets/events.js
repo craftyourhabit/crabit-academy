@@ -7,12 +7,13 @@
      경로만 바꾸면 됩니다. (jpg/png 가능)
    - status: "upcoming"(예정) | "closed"(마감) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
    - replayUrl: status가 "replay"일 때 영상 링크
-   - kind: "교육" | "설명회" — 카드·상세에서 상태 태그 왼쪽에 붙는 분류
-   - startDate: "YYYY-MM-DD" — 당일이면 '예정' 대신 '오늘'로 표시.
+   - kind: "교육" | "설명회" - 카드·상세에서 상태 태그 왼쪽에 붙는 분류
+   - startDate: "YYYY-MM-DD" - 당일이면 '예정' 대신 '오늘'로 표시.
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
    =============================================== */
+/* @admin:EVENTS_DB:start - 이 줄과 아래 end 줄 사이는 어드민이 통째로 갈아 끼웁니다. 밖에 주석을 다세요. */
 const EVENTS_DB = {
   "parents-webinar": {
     type: "Webinar",
@@ -93,7 +94,7 @@ const EVENTS_DB = {
     host: "크래빗",
     kind: "교육",
     title: "우리 학원만의 AI 마케터 고용하기",
-    date: "2026.07.09 (목) 10:00 – 12:00",
+    date: "2026.07.09 (목) 10:00 - 12:00",
     startDate: "2026-07-09",
     place: "대구학원연합회 · 대구 달서구 상화북로 191, 6층",
     placeUrl: "https://naver.me/5vczvOjM",
@@ -118,7 +119,7 @@ const EVENTS_DB = {
     host: "올커니",
     kind: "교육",
     title: "학원 홈페이지형 블로그 마스터 과정",
-    date: "2026.07.18 (토) 10:00 – 17:00",
+    date: "2026.07.18 (토) 10:00 - 17:00",
     startDate: "2026-07-18",
     place: "광명 GIDC · 경기도 광명시 일직로 43 C동 1715호 (한경아교육장)",
     thumb: "assets/events/homepage-blog-master/hero.jpg",
@@ -137,7 +138,7 @@ const EVENTS_DB = {
     status: "upcoming",
     applyUrl: "https://forms.gle/k6C2iuo5jSQXYL358",
     contact: { name: "조경이 대표", tel: "010-8394-0484" },
-    /* 세션별 커리큘럼 — event.html의 커리큘럼 섹션에서 사용 */
+    /* 세션별 커리큘럼 - event.html의 커리큘럼 섹션에서 사용 */
     sessions: [
       {
         no: "01",
@@ -175,7 +176,7 @@ const EVENTS_DB = {
       { name: "학원 온라인 광고 교육청 가이드라인", note: "SNS 운영 시 필수 준수사항" },
       { name: "학원 온라인 콘텐츠 브리프", note: "실무자 전달용 기획서" }
     ],
-    /* '자세히 보기'로 펼쳐지는 카드뉴스 상세 — alt는 이미지 속 문구를 그대로 담아
+    /* '자세히 보기'로 펼쳐지는 카드뉴스 상세 - alt는 이미지 속 문구를 그대로 담아
        검색엔진·스크린리더에서도 내용이 읽히게 합니다. */
     detailImages: [
       { src: "assets/events/homepage-blog-master/detail-01.jpg", alt: "혹시 지금 블로그 이런 모습인가요? 글만 계속 쌓이고 있다. 학원 소개가 한눈에 보이지 않는다. 홈페이지 대신 쓰기에는 부족하다. 상담까지 연결되지 않는다. 블로그 하나만 바꿔도 학원의 첫인상이 달라집니다." },
@@ -211,6 +212,7 @@ const EVENTS_DB = {
     replayUrl: ""
   }
 };
+/* @admin:EVENTS_DB:end */
 
 /* ===============================================
    상태 태그 (예정 / 오늘 / 마감)
@@ -247,7 +249,9 @@ function eventStatusTag(ev) {
    - id가 EVENTS_DB에 있으면 제목·주최·썸네일을 자동으로 가져옵니다.
    - date: YYYY-MM-DD / time: HH:MM
    =============================================== */
+/* @admin:SCHEDULE:start */
 const SCHEDULE = [
   { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
-  { date: "2026-07-18", time: "10:00", id: "homepage-blog-master" },
+  { date: "2026-07-18", time: "10:00", id: "homepage-blog-master" }
 ];
+/* @admin:SCHEDULE:end */

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>크래빗 아카데미 — 꿈 많은 교육자를 위한 실전 강의</title>
+<title>크래빗 아카데미 - 꿈 많은 교육자를 위한 실전 강의</title>
 <meta name="description" content="크래빗 아카데미는 학원과 교육 기관을 위한 실습 중심 교육 브랜드입니다. 크래빗과 올커니의 교육 일정, 웨비나 다시보기, 강의 자료를 한곳에서 만나보세요." />
 <meta property="og:title" content="크래빗 아카데미" />
 <meta property="og:description" content="꿈 많은 교육자를 위한 실전 강의. 교육 일정, 웨비나 다시보기, 강의 자료를 한곳에서." />
@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
-  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL - 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
   @font-face {
     font-family: "Elice Digital Baeum";
     src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
@@ -296,10 +296,10 @@
     line-height: 1.5;
   }
   .status-tag.upcoming { background: var(--tint); color: var(--pink); }
-  /* 당일 — 하루만 붙는 태그라 브랜드 핑크를 꽉 채워 가장 강하게 */
+  /* 당일 - 하루만 붙는 태그라 브랜드 핑크를 꽉 채워 가장 강하게 */
   .status-tag.today { background: var(--pink); color: #fff; }
   .status-tag.closed { background: var(--fill); color: var(--muted); }
-  /* 교육/설명회 — 상태 태그 왼쪽의 분류. 채운 상태 태그와 구분되게 외곽선만 */
+  /* 교육/설명회 - 상태 태그 왼쪽의 분류. 채운 상태 태그와 구분되게 외곽선만 */
   .kind-tag {
     font-size: 12.5px;
     font-weight: 600;
@@ -496,32 +496,7 @@
         </div>
         <a class="link-all" href="resources">전체보기 &#8250;</a>
       </div>
-      <div class="res-list">
-        <a class="res-row" href="blog-followup">
-          <span class="res-kind">강의자료</span>
-          <span class="res-main">
-            <strong>학원 홈페이지형 블로그 마스터 과정 후속 자료</strong>
-            <span>강의 실습 프롬프트와 템플릿·워크북·가이드북 등 전체 자료를 이곳에서 받아보실 수 있어요.</span>
-          </span>
-          <span class="res-badge locked">일부공개</span>
-        </a>
-        <a class="res-row" href="daegu-followup">
-          <span class="res-kind">강의자료</span>
-          <span class="res-main">
-            <strong>[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료</strong>
-            <span>강의 자료부터 프롬프트 모음집, 핵심 자료 파일까지 전부 이곳에서 받아보실 수 있어요.</span>
-          </span>
-          <span class="res-badge locked">일부공개</span>
-        </a>
-        <a class="res-row" href="claude-code-windows">
-          <span class="res-kind">인사이트</span>
-          <span class="res-main">
-            <strong>원장님을 위한 클로드 코워크 시작하기 — 설치 가이드</strong>
-            <span>가장 강력한 AI 도구 클로드 코워크, 맥·윈도우 설치가 막막하셨다면 화면 그대로 한 단계씩 따라오세요.</span>
-          </span>
-          <span class="res-badge open">공개</span>
-        </a>
-      </div>
+      <div class="res-list" id="resList"></div>
     </div>
   </section>
 
@@ -564,7 +539,42 @@
 </div>
 
 <script src="assets/events.js"></script>
+<script src="assets/resources.js"></script>
 <script>
+/* ---------- 자료 / 인사이트 렌더링 (assets/resources.js 데이터 사용) ----------
+   홈에는 최신 3건만 보여 주고, 나머지는 전체보기로 넘깁니다.
+   비공개 자료는 assets/resources.js 에 아예 들어오지 않으므로 여기 나타나지 않습니다. */
+(function () {
+  const list = document.getElementById("resList");
+  const items = visibleResources().slice(0, 3);
+  if (items.length === 0) {
+    list.innerHTML = '<p style="color: var(--muted); font-size: 16px;">자료를 준비하고 있어요. 곧 채워 둘게요.</p>';
+    return;
+  }
+  items.forEach(r => {
+    const b = resourceBadge(r);
+    const clickable = r.access !== "soon" && !!r.href;
+    const el = document.createElement(clickable ? "a" : "div");
+    if (clickable) el.href = r.href;
+    el.className = "res-row";
+    el.innerHTML =
+      '<span class="res-kind"></span>'
+      + '<span class="res-main"><strong></strong><span></span></span>'
+      + '<span class="res-badge ' + b.cls + '"></span>';
+    el.querySelector(".res-kind").textContent = r.category;
+    el.querySelector(".res-main strong").textContent = r.title;
+    el.querySelector(".res-main span").textContent = r.sub;
+    el.querySelector(".res-badge").textContent = b.text;
+    /* 링크가 없는 일부공개 자료는 눌렀을 때 비밀번호 모달을 띄웁니다. */
+    if (!clickable && r.access === "protected") {
+      el.classList.add("js-locked");
+      el.dataset.title = r.title;
+      el.style.cursor = "pointer";
+    }
+    list.appendChild(el);
+  });
+})();
+
 /* ---------- 교육 일정 카드 렌더링 (assets/events.js 데이터 사용) ----------
    SHOW_IDS에 나열한 교육만 노출합니다. (지금은 대구 강의 하나)
    진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */

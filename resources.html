@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>자료 / 인사이트 — 크래빗 아카데미</title>
+<title>자료 / 인사이트 - 크래빗 아카데미</title>
 <meta name="description" content="크래빗 아카데미의 강의 자료, 가이드북, 교육 인사이트 전체 목록." />
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
-  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL — 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL - 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
   @font-face {
     font-family: "Elice Digital Baeum";
     src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
@@ -269,56 +269,29 @@
   </div>
 </div>
 
+<script src="assets/resources.js"></script>
 <script>
-/* ===============================================
-   자료 / 인사이트 데이터
-   - access: "public"(공개, href로 이동)
-             "protected"(일부공개, 비밀번호 입력 후 이동)
-             "soon"(공개 예정, 클릭 불가)
-   =============================================== */
-const RESOURCES = [
-  {
-    category: "강의자료",
-    title: "학원 홈페이지형 블로그 마스터 과정 후속 자료",
-    sub: "강의 실습 프롬프트 · 템플릿 · 워크북 · 가이드북 등 전체 자료를 전달",
-    thumb: "assets/events/homepage-blog-master/hero.jpg",
-    access: "protected",
-    href: "blog-followup"
-  },
-  {
-    category: "강의자료",
-    title: "[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료",
-    sub: "강의 자료 · 프롬프트 모음집 · 핵심 자료 파일 전부 전달",
-    thumb: "assets/thumbs/daegu-lecture.jpg",
-    access: "protected",
-    href: "daegu-followup"
-  },
-  {
-    category: "인사이트",
-    title: "원장님을 위한 클로드 코워크 시작하기 — 설치 가이드",
-    sub: "가장 강력한 AI 도구 클로드 코워크, 맥·윈도우 설치가 막막하셨다면 화면 그대로 한 단계씩",
-    thumb: "assets/thumbs/claude-cowork-windows.svg",
-    access: "public",
-    href: "claude-code-windows"
-  }
-];
-
+/* 자료 데이터는 assets/resources.js 에 있습니다. 어드민(admin.html)이 그 파일을 고쳐 씁니다. */
 (function () {
-  const CATEGORIES = ["전체", "강의자료", "인사이트"];
+  const CATEGORIES = ["전체", "강의자료", "가이드북", "인사이트"];
   let active = "전체";
 
   const tabsEl = document.getElementById("tabs");
   const rowsEl = document.getElementById("rows");
 
+  /* 사이트에 보일 자료만. 비공개 항목은 assets/resources.js 에 아예 없습니다. */
+  const ITEMS = visibleResources();
+
   function badge(r) {
-    if (r.access === "protected") return '<span class="pill ink">일부공개</span>';
-    if (r.access === "soon") return '<span class="pill gray">공개 예정</span>';
-    return '<span class="pill">공개</span>';
+    const b = resourceBadge(r);
+    const cls = b.cls === "locked" ? "pill ink" : (b.cls === "soon" ? "pill gray" : "pill");
+    return '<span class="' + cls + '">' + b.text + '</span>';
   }
 
   function renderTabs() {
     tabsEl.innerHTML = "";
-    CATEGORIES.forEach(c => {
+    /* 항목이 하나도 없는 카테고리 탭은 숨깁니다. */
+    CATEGORIES.filter(c => c === "전체" || ITEMS.some(r => r.category === c)).forEach(c => {
       const b = document.createElement("button");
       b.type = "button";
       b.className = "tab" + (c === active ? " active" : "");
@@ -331,7 +304,7 @@ const RESOURCES = [
   }
 
   function renderRows() {
-    const items = RESOURCES.filter(r => active === "전체" || r.category === active);
+    const items = ITEMS.filter(r => active === "전체" || r.category === active);
     rowsEl.innerHTML = "";
     if (items.length === 0) {
       rowsEl.innerHTML = '<div class="empty">이 카테고리의 자료를 준비하고 있어요.</div>';
@@ -339,7 +312,11 @@ const RESOURCES = [
     }
     items.forEach(r => {
       let el;
-      if (r.href) {
+      if (r.access === "soon") {
+        /* 공개 예정은 링크가 있어도 클릭되지 않아야 합니다. */
+        el = document.createElement("div");
+        el.className = "row static";
+      } else if (r.href) {
         el = document.createElement("a");
         el.href = r.href;
         el.className = "row";

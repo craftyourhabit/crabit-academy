@@ -134,6 +134,24 @@
   .badge.closed { background: var(--card); color: var(--muted); border: 1px solid var(--line); }
   .empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 15px; }
 
+  /* ---------- 신청자 현황 ---------- */
+  .ap-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .ap-bar select { padding: 9px 12px; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+  .ap-bar .spacer { flex: 1; }
+  .ap-sum { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ap-sum .chip { padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--fill-soft); font-size: 14px; }
+  .ap-sum .chip strong { font-weight: 700; margin-left: 6px; }
+  .ap-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .ap-row:last-child { border-bottom: 0; }
+  .ap-main { flex: 1; min-width: 0; }
+  .ap-name { font-size: 15.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ap-meta { margin-top: 5px; font-size: 13.5px; color: var(--muted); line-height: 1.6; word-break: break-all; }
+  .ap-msg { margin-top: 8px; padding: 10px 12px; background: var(--fill-soft); border-radius: 8px; font-size: 13.5px; line-height: 1.6; }
+  .ap-acts { display: flex; flex-direction: column; gap: 6px; flex: none; }
+  .badge.paid { background: #E6F4EA; color: #1E7B41; }
+  .badge.wait { background: #FFF3E0; color: #9A5B00; }
+  .badge.cancel { background: #F0F0F0; color: #666; }
+
   /* ---------- 편집 ---------- */
   #editView { display: none; }
   .panel { background: var(--bg); border-radius: 18px; padding: 26px 28px; box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05); margin-bottom: 18px; }
@@ -210,6 +228,10 @@
     <h1>관리자 로그인</h1>
     <p class="sub">교육과 자료를 등록하고 수정하는 곳이에요.</p>
     <div class="field">
+      <span class="lab">이메일</span>
+      <input type="email" id="email" autocomplete="username" placeholder="등록하신 이메일" />
+    </div>
+    <div class="field">
       <span class="lab">비밀번호</span>
       <div class="pw-wrap">
         <input type="password" id="pw" autocomplete="current-password" placeholder="비밀번호를 입력해 주세요" />
@@ -235,6 +257,7 @@
   <div class="tabs"><div class="tabs-in">
     <button class="tab active" data-tab="events">교육 / 설명회</button>
     <button class="tab" data-tab="resources">자료 / 인사이트</button>
+    <button class="tab" data-tab="applications">신청자</button>
   </div></div>
 
   <main class="wrap">
@@ -276,10 +299,11 @@
    다시 배포합니다.
    ===================================================================== */
 
-/* Worker 주소. 배포 후 실제 주소로 바꿔 주세요. (admin/DEPLOY.md 참고)
-   개발 중에는 브라우저 콘솔에서 localStorage.crabit_admin_api 로 갈아 끼울 수 있습니다. */
-const API = localStorage.getItem("crabit_admin_api") || "https://crabit-academy-admin.crabit.workers.dev";
-/* 배포 완료: 2026-08-17. Worker 주소를 바꾸면 admin/wrangler.toml 의 ALLOWED_ORIGIN 도 함께 확인하세요. */
+/* Supabase 프로젝트: 크래빗 아카데미 (ttolvlzubashyhdctbqr, 서울)
+   아래 키는 publishable(공개용)이라 이 파일에 있어도 됩니다.
+   실제 권한은 로그인 후 받는 access token이 정합니다. */
+const SB_URL = "https://ttolvlzubashyhdctbqr.supabase.co";
+const SB_KEY = "sb_publishable_BLr1R3be079ViSLSoAtIqQ_ZTs7T6HG";
 
 const EVENT_FILE = "assets/events.js";
 const RES_FILE = "assets/resources.js";
@@ -290,7 +314,7 @@ const RES_PRIV_FILE = "assets/resources-private.js";
 const EVENT_FORM_KEYS = [
   "type", "category", "host", "kind", "title", "date", "startDate", "place", "placeUrl",
   "thumb", "desc", "points", "speaker", "speakerRole", "assistant", "prep", "audience",
-  "status", "applyUrl", "replayUrl"
+  "status", "priceType", "price", "feeNote", "applyUrl", "replayUrl"
 ];
 const ADVANCED_KEYS = ["sessions", "materials", "detailImages", "contact"];
 
@@ -362,43 +386,108 @@ function evalNames(text, names) {
 }
 
 /* ---------------------------------------------------------------
-   1. Worker 통신
+   1. Supabase 통신
+
+   예전에는 Cloudflare Worker를 거쳤지만 지금은 Supabase 하나만 씁니다.
+   - 로그인       : Supabase Auth (이메일과 비밀번호)
+   - 강의·자료 저장 : Edge Function 'github' 가 깃허브에 커밋
+   - 신청자        : 테이블을 직접 조회 (RLS가 로그인한 사람만 통과시킴)
+
+   아래 publishable 키는 공개용이라 이 파일에 있어도 됩니다.
+   실제 권한은 로그인해서 받은 access token이 결정합니다.
    --------------------------------------------------------------- */
+const FN_URL = SB_URL + "/functions/v1/github";
+const REST_URL = SB_URL + "/rest/v1";
+const AUTH_URL = SB_URL + "/auth/v1";
+
 const auth = {
   get token() { return localStorage.getItem("crabit_admin_token") || ""; },
-  set token(v) { v ? localStorage.setItem("crabit_admin_token", v) : localStorage.removeItem("crabit_admin_token"); }
+  set token(v) { v ? localStorage.setItem("crabit_admin_token", v) : localStorage.removeItem("crabit_admin_token"); },
+  get refresh() { return localStorage.getItem("crabit_admin_refresh") || ""; },
+  set refresh(v) { v ? localStorage.setItem("crabit_admin_refresh", v) : localStorage.removeItem("crabit_admin_refresh"); },
+  clear() { this.token = ""; this.refresh = ""; }
 };
 
-async function api(path, opts) {
+function expired(msg) {
+  auth.clear();
+  showLogin(msg || "로그인이 만료됐어요. 다시 로그인해 주세요.");
+  return new Error("세션 만료");
+}
+
+/* access token은 한 시간이면 만료됩니다. 저장 도중에 끊기면 곤란하니
+   401을 만나면 조용히 갱신하고 한 번만 다시 시도합니다. */
+async function refreshSession() {
+  if (!auth.refresh) return false;
+  const res = await fetch(AUTH_URL + "/token?grant_type=refresh_token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "apikey": SB_KEY },
+    body: JSON.stringify({ refresh_token: auth.refresh })
+  });
+  if (!res.ok) return false;
+  const d = await res.json().catch(() => null);
+  if (!d || !d.access_token) return false;
+  auth.token = d.access_token;
+  auth.refresh = d.refresh_token || auth.refresh;
+  return true;
+}
+
+/* Supabase에 보내는 모든 요청이 지나가는 길목입니다. */
+async function sbFetch(url, opts, retried) {
   opts = opts || {};
-  const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+  const headers = Object.assign({
+    "Content-Type": "application/json",
+    "apikey": SB_KEY
+  }, opts.headers || {});
   if (auth.token) headers.Authorization = "Bearer " + auth.token;
+
   let res;
   try {
-    res = await fetch(API + path, { method: opts.method || "GET", headers, body: opts.body ? JSON.stringify(opts.body) : undefined });
+    res = await fetch(url, {
+      method: opts.method || "GET",
+      headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
   } catch (e) {
     throw new Error("서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.");
   }
-  const data = await res.json().catch(() => ({}));
-  if (res.status === 401 && data.code === "unauthorized") {
-    auth.token = "";
-    showLogin("로그인이 만료됐어요. 다시 로그인해 주세요.");
-    throw new Error("세션 만료");
+
+  if ((res.status === 401 || res.status === 403) && !retried) {
+    if (await refreshSession()) return sbFetch(url, opts, true);
+    throw expired();
   }
+  return res;
+}
+
+/* Edge Function 과 테이블 조회가 응답 모양이 달라서 얇게 감싸 둡니다. */
+async function api(path, opts) {
+  const res = await sbFetch(FN_URL + path, opts);
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) throw expired(data.error);
   if (!res.ok) throw new Error(data.error || ("요청 실패 (" + res.status + ")"));
   return data;
 }
 
+async function table(path, opts) {
+  const res = await sbFetch(REST_URL + path, opts);
+  if (res.status === 401 || res.status === 403) throw expired();
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.message || ("요청 실패 (" + res.status + ")"));
+  }
+  if (res.status === 204) return null;
+  return res.json().catch(() => null);
+}
+
 const gh = {
   async read(path) {
-    const d = await api("/api/file?path=" + encodeURIComponent(path));
+    const d = await api("?path=" + encodeURIComponent(path));
     return { exists: d.exists, text: d.exists ? b64ToUtf8(d.contentBase64) : null, sha: d.sha };
   },
   async writeText(path, text, sha, message) {
-    return api("/api/file", { method: "PUT", body: { path, contentBase64: utf8ToB64(text), sha, message } });
+    return api("", { method: "PUT", body: { path, contentBase64: utf8ToB64(text), sha, message } });
   },
   async writeBinary(path, base64, sha, message) {
-    return api("/api/file", { method: "PUT", body: { path, contentBase64: base64, sha, message } });
+    return api("", { method: "PUT", body: { path, contentBase64: base64, sha, message } });
   }
 };
 
@@ -439,16 +528,35 @@ function showLogin(msg) {
   $("#login").style.display = "flex";
   $("#loginErr").textContent = msg || "";
   $("#pw").value = "";
-  setTimeout(() => $("#pw").focus(), 50);
+  if (!$("#email").value) $("#email").value = localStorage.getItem("crabit_admin_email") || "";
+  /* 이메일은 지우지 않습니다. 비밀번호만 틀린 경우가 대부분이라
+     매번 다시 치게 하면 번거로워요. */
+  setTimeout(() => ($("#email").value ? $("#pw") : $("#email")).focus(), 50);
 }
+
 async function doLogin() {
+  const email = $("#email").value.trim();
   const pw = $("#pw").value;
+  if (!email) { $("#loginErr").textContent = "이메일을 입력해 주세요."; return; }
   if (!pw) { $("#loginErr").textContent = "비밀번호를 입력해 주세요."; return; }
+
   const btn = $("#loginBtn");
   btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 확인 중';
   try {
-    const d = await api("/api/login", { method: "POST", body: { password: pw } });
-    auth.token = d.token;
+    const res = await fetch(AUTH_URL + "/token?grant_type=password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SB_KEY },
+      body: JSON.stringify({ email, password: pw })
+    });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok || !d.access_token) {
+      throw new Error(res.status === 400
+        ? "이메일이나 비밀번호가 올바르지 않습니다."
+        : (d.error_description || d.msg || "로그인에 실패했어요."));
+    }
+    auth.token = d.access_token;
+    auth.refresh = d.refresh_token || "";
+    localStorage.setItem("crabit_admin_email", email);
     await enterApp();
   } catch (e) {
     $("#loginErr").textContent = e.message;
@@ -491,7 +599,7 @@ async function enterApp() {
 
 $("#loginBtn").addEventListener("click", doLogin);
 $("#pw").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-$("#logoutBtn").addEventListener("click", () => { auth.token = ""; showLogin(); });
+$("#logoutBtn").addEventListener("click", () => { auth.clear(); showLogin(); });
 
 /* ---------------------------------------------------------------
    4. 탭 · 목록
@@ -508,6 +616,16 @@ function showEdit() { $("#listView").style.display = "none"; $("#editView").styl
 
 function renderList() {
   showList();
+
+  /* 신청자 탭은 깃허브가 아니라 Supabase에서 읽어 옵니다.
+     목록 모양도 달라서 전용 렌더 함수로 넘깁니다. (admin-forms.js) */
+  if (currentTab === "applications") {
+    $("#newBtn").style.display = "none";
+    renderApplications();
+    return;
+  }
+  $("#newBtn").style.display = "";
+
   const isEv = currentTab === "events";
   $("#listTitle").firstChild.textContent = isEv ? "교육 / 설명회" : "자료 / 인사이트";
   const box = $("#list");
@@ -548,7 +666,14 @@ function renderList() {
     }
     t.appendChild(document.createTextNode(d.title || "(제목 없음)"));
     main.appendChild(t);
-    main.appendChild(el("div", "it-sub", isEv ? [d.kind, d.host, d.date].filter(Boolean).join(" | ") : (d.sub || "")));
+    /* 목록에서도 유료인지 무료인지 바로 보이게 합니다. */
+    const priceLabel = !isEv ? ""
+      : (d.priceType === "paid" && Number(d.price) > 0)
+        ? Number(d.price).toLocaleString("ko-KR") + "원"
+        : (d.priceType === "paid" ? "유료 (금액 미입력)" : "무료");
+    main.appendChild(el("div", "it-sub", isEv
+      ? [d.kind, d.host, d.date, priceLabel].filter(Boolean).join(" | ")
+      : (d.sub || "")));
     it.appendChild(main);
 
     const acts = el("div", "it-acts");

@@ -12,6 +12,21 @@
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
+   - priceType: "free"(무료) | "paid"(유료). 생략하면 무료로 봅니다.
+   - price: 수강료 숫자만 (예: 330000). priceType이 "paid"일 때만 씁니다.
+     결제 연동(카카오페이 등)에 그대로 넘길 값이라 반드시 숫자로 둡니다.
+     쉼표나 "원" 같은 글자를 넣으면 안 됩니다.
+   - feeNote: 금액 아래에 붙는 짧은 부연 (예: "교재비와 다과 포함"). 선택 사항.
+     "VAT 포함" 같은 조건도 여기에 적습니다.
+   - fee: 예전에 쓰던 자유 입력 수강료 문구. 새로 쓰지 마세요.
+     priceType과 price가 없을 때만 표시용으로 쓰입니다.
+   - applyUrl: 비워 두는 것이 기본입니다.
+     비워 두면 상세페이지 안의 신청 폼으로 직접 받습니다.
+     공동 주최라 상대 쪽 폼으로 받아야 할 때만 그 주소를 넣으세요.
+     주소를 넣으면 내장 폼 대신 그 링크로 보냅니다.
+
+   입금 계좌는 이 파일에도 사이트에도 두지 않습니다.
+   공개 레포라 검색에 노출되기 때문에, 계좌는 신청한 분에게만 따로 안내합니다.
    =============================================== */
 /* @admin:EVENTS_DB:start - 이 줄과 아래 end 줄 사이는 어드민이 통째로 갈아 끼웁니다. 밖에 주석을 다세요. */
 const EVENTS_DB = {
@@ -242,6 +257,31 @@ function isEventOver(ev) {
 function eventStatusTag(ev) {
   if (isEventOver(ev)) return { text: "마감", cls: "closed" };
   return isEventToday(ev) ? { text: "오늘", cls: "today" } : { text: "예정", cls: "upcoming" };
+}
+
+/* 수강료 정보를 한 곳에서 판단한다. { paid, amount, text, note } 반환.
+   - paid: 유료 여부
+   - amount: 숫자 금액. 결제 연동에 그대로 넘길 값이라 숫자로만 둔다.
+   - text: 화면에 보여 줄 문구
+   예전에 쓰던 자유 입력 fee 값도 계속 읽어 준다. 그 경우 amount는 없다. */
+function eventPriceInfo(ev) {
+  const amount = Number(ev.price);
+  const note = ev.feeNote || "";
+
+  if (ev.priceType === "paid" && Number.isFinite(amount) && amount > 0) {
+    return { paid: true, incomplete: false, amount, text: amount.toLocaleString("ko-KR") + "원", note };
+  }
+  /* 유료로 정해 놓고 금액을 아직 안 넣은 상태.
+     여기서 '무료'로 보여 주면 실제로 돈을 받는 강의가 무료로 나가 버린다.
+     그래서 금액을 안내하지 않고 수강료 영역 자체를 감춘다. */
+  if (ev.priceType === "paid") {
+    return { paid: true, incomplete: true, amount: null, text: "", note };
+  }
+  /* priceType을 아직 안 정한 예전 데이터. fee 문구가 있으면 유료로 본다. */
+  if (!ev.priceType && ev.fee) {
+    return { paid: true, incomplete: false, amount: null, text: String(ev.fee), note };
+  }
+  return { paid: false, incomplete: false, amount: 0, text: "무료", note };
 }
 
 /* ===============================================

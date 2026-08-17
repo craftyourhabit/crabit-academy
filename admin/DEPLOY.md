@@ -1,27 +1,61 @@
 # 어드민 배포 안내
 
-크래빗 아카데미 관리자 페이지를 실제로 쓰려면 Cloudflare Worker 하나를 올려야 합니다.
-한 번만 하면 되고, 비용은 들지 않아요. 전체 30분 정도 걸립니다.
+크래빗 아카데미 관리자 페이지는 **Supabase 하나**로 돌아갑니다.
+예전에는 Cloudflare Worker도 함께 썼지만 관리 대상을 줄이려고 전부 옮겼습니다.
 
-## 왜 Worker가 필요한가
+## 구조
+
+```
+어머님 → admin.html
+           │ Supabase Auth 로그인 (이메일과 비밀번호)
+           ├─→ Edge Function 'github'  → 깃허브 커밋 → Pages 자동 배포
+           └─→ academy_applications 테이블 (신청자 조회와 입금 확인)
+
+신청자 → event.html 신청 폼 → academy_applications 테이블 (INSERT만)
+```
 
 레포가 public 이라 어드민 페이지에 깃허브 토큰을 넣으면 전 세계에 공개됩니다.
-Worker는 토큰을 자기 안에만 두고, 비밀번호로 로그인한 사람의 요청만 깃허브로 넘겨 줍니다.
-데이터베이스도 서버도 아니고, 토큰을 감춰 주는 중계기입니다.
+그래서 토큰은 Edge Function 시크릿에만 두고, 로그인한 사람의 요청만 넘겨 줍니다.
 
-```
-어머님 → admin.html (비밀번호 로그인) → Worker (토큰 보관) → 깃허브 커밋 → Pages 자동 배포
-```
+프로젝트: **크래빗 아카데미** (`ttolvlzubashyhdctbqr`, 서울 ap-northeast-2)
+
+---
 
 ## 00. 준비물
 
-- Cloudflare 계정 (무료)
+- Supabase 계정 (프로젝트 접근 권한)
 - 깃허브 계정 (crabit-academy 레포에 쓰기 권한)
 - 터미널
 
 ---
 
-## 01. 깃허브 토큰 발급
+## 01. 테이블 만들기
+
+이미 하셨다면 넘어가세요.
+
+1. Supabase 대시보드 → **SQL Editor**
+2. `admin/supabase-schema.sql` 내용을 붙여넣고 **Run**
+
+두 번 실행해도 안전합니다.
+
+이 스키마는 anon(비로그인)에게 **INSERT 권한만, 그것도 지정한 칼럼에만** 줍니다.
+`status`, `paid_at`, `memo` 는 아예 못 건드립니다. 조회는 RLS와 권한 양쪽에서 막힙니다.
+
+---
+
+## 02. 관리자 계정 만들기
+
+1. Supabase 대시보드 → **Authentication → Users → Add user**
+2. 이메일과 비밀번호를 넣습니다. **12자 이상**으로 정해 주세요
+3. 쓰실 분마다 하나씩 만듭니다 (현지님, 어머님)
+
+`Auto Confirm User` 를 켜 두면 메일 인증 없이 바로 로그인됩니다.
+
+> 계정 삭제로 접근을 끊을 수 있습니다. 비밀번호를 잊으면 같은 화면에서 재설정하세요.
+
+---
+
+## 03. 깃허브 토큰 발급
 
 1. https://github.com/settings/personal-access-tokens/new 접속
 2. 아래대로 설정합니다.
@@ -38,132 +72,83 @@ Worker는 토큰을 자기 안에만 두고, 비밀번호로 로그인한 사람
 
 ---
 
-## 02. Worker 배포
+## 04. Edge Function 배포
 
-터미널에서 이 폴더로 들어갑니다.
-
-```bash
-cd ~/Desktop/CRABIT/MKT/crabit-academy/admin
-```
-
-Cloudflare에 로그인합니다.
-
-```bash
-npx wrangler login
-```
-
-시크릿 3개를 등록합니다. 명령을 하나씩 실행하면 값을 물어봅니다.
-
-```bash
-npx wrangler secret put ADMIN_PASSWORD
-```
-
-어머님이 쓰실 로그인 비밀번호입니다. **12자 이상**으로 정해 주세요.
-Worker에는 무차별 대입을 늦추는 지연만 있고 횟수 제한은 없으므로, 길이가 곧 보안입니다.
-
-```bash
-npx wrangler secret put GITHUB_TOKEN
-```
-
-01에서 만든 깃허브 토큰을 붙여 넣습니다.
-
-```bash
-npx wrangler secret put SESSION_SECRET
-```
-
-로그인 세션에 서명할 임의 문자열입니다. 아래 명령으로 만들어 붙여 넣으세요.
-
-```bash
-openssl rand -hex 32
-```
-
-이제 배포합니다.
-
-```bash
-npx wrangler deploy
-```
-
-성공하면 `https://crabit-academy-admin.<계정이름>.workers.dev` 같은 주소가 나옵니다.
-이 주소를 복사해 두세요.
-
----
-
-## 03. 어드민에 Worker 주소 넣기
-
-`admin.html` 을 열어 `API` 값을 02에서 받은 실제 주소로 바꿉니다.
-
-```js
-const API = localStorage.getItem("crabit_admin_api") || "https://여기에-실제-주소.workers.dev";
-```
-
-그리고 커밋해서 올립니다.
+터미널에서 레포 폴더로 들어갑니다.
 
 ```bash
 cd ~/Desktop/CRABIT/MKT/crabit-academy
-git add -A
-git commit -m "어드민 페이지 추가"
-git push
 ```
 
-1~2분 뒤 아래 주소로 들어갈 수 있습니다.
-
-```
-https://craftyourhabit.github.io/crabit-academy/admin.html
-```
-
----
-
-## 04. 확인
-
-1. 위 주소를 열어 비밀번호로 로그인합니다.
-2. 교육 목록과 자료 목록이 뜨면 성공입니다.
-3. 아무 항목이나 열어 제목 끝에 글자를 하나 넣고 저장한 뒤, 1~2분 뒤 사이트에서 바뀌었는지 봅니다.
-4. 확인했으면 원래대로 되돌려 두세요.
-
----
-
-## 05. 알아 두실 것
-
-**저장하면 1~2분 뒤에 반영됩니다.** 깃허브에 커밋이 올라가고 GitHub Pages가 다시 배포하는 시간이에요.
-바로 안 바뀐다고 여러 번 저장하지 않아도 됩니다.
-
-**로그인은 12시간 유지됩니다.** 그 뒤에는 다시 비밀번호를 넣어야 해요.
-
-**두 사람이 동시에 고치면** 나중에 저장한 쪽이 "다른 곳에서 먼저 수정됐어요" 안내를 받습니다.
-덮어쓰지 않고 막아 주니, 새로고침한 뒤 다시 고치면 됩니다.
-
-**어드민이 건드릴 수 있는 경로는 정해져 있습니다.** worker.js 의 `ALLOWED_PATHS` 에 있는
-자료 파일과 이미지, 첨부 폴더뿐이에요. `.github/workflows` 같은 곳에는 쓸 수 없으므로,
-설령 세션이 새더라도 토큰을 빼내는 코드를 심을 수는 없습니다.
-
-**모든 변경은 깃 히스토리에 남습니다.** 실수로 지워도 복구할 수 있으니 알려 주세요.
-
----
-
-## 06. 비용
-
-| 항목 | 무료 한도 | 실제 사용량 |
-|---|---|---|
-| Cloudflare Workers | 하루 10만 요청 | 하루 수십 건 |
-| GitHub Pages | 월 100GB 전송 | 훨씬 적음 |
-
-무료 한도 안에서 충분히 돌아갑니다.
-
----
-
-## 07. 토큰을 새로 발급해야 할 때
-
-깃허브 토큰은 1년 뒤 만료됩니다. 만료되면 어드민에서 저장이 안 되고 "저장 실패" 가 뜹니다.
-01번을 다시 해서 새 토큰을 만든 뒤 아래 명령만 실행하면 됩니다.
+Supabase에 로그인하고 프로젝트를 연결합니다.
 
 ```bash
-cd ~/Desktop/CRABIT/MKT/crabit-academy/admin && npx wrangler secret put GITHUB_TOKEN
+npx supabase login
 ```
-
-## 08. 비밀번호를 바꾸고 싶을 때
 
 ```bash
-cd ~/Desktop/CRABIT/MKT/crabit-academy/admin && npx wrangler secret put ADMIN_PASSWORD
+npx supabase link --project-ref ttolvlzubashyhdctbqr
 ```
 
-바꾸면 기존 로그인 세션은 12시간 안에 자연히 끊깁니다. 즉시 끊으려면 `SESSION_SECRET` 도 함께 바꾸세요.
+시크릿 4개를 등록합니다. `GITHUB_TOKEN` 자리에 03에서 만든 토큰을 넣으세요.
+
+```bash
+npx supabase secrets set GITHUB_TOKEN=붙여넣기 GH_REPO=craftyourhabit/crabit-academy GH_BRANCH=main ALLOWED_ORIGIN=https://craftyourhabit.github.io
+```
+
+배포합니다.
+
+```bash
+npx supabase functions deploy github
+```
+
+> `SUPABASE_` 로 시작하는 이름은 예약어라 쓸 수 없어서 `GH_` 접두어를 씁니다.
+> `SUPABASE_URL` 과 `SUPABASE_ANON_KEY` 는 Supabase가 자동으로 넣어 줍니다.
+
+---
+
+## 05. 확인
+
+1. https://craftyourhabit.github.io/crabit-academy/admin.html 접속
+2. 02에서 만든 이메일과 비밀번호로 로그인
+3. 교육 목록이 뜨면 Edge Function이 깃허브를 잘 읽고 있는 것입니다
+4. **신청자** 탭을 눌러 목록이 뜨는지 확인합니다
+
+로그인은 되는데 목록이 안 뜨면 시크릿 이름과 깃허브 토큰 권한을 확인하세요.
+함수 로그는 Supabase 대시보드 → Edge Functions → github → Logs 에서 봅니다.
+
+---
+
+## 06. Cloudflare Worker 정리
+
+위 확인이 끝나면 예전 Worker는 필요 없습니다. 지우셔도 됩니다.
+
+```bash
+cd ~/Desktop/CRABIT/MKT/crabit-academy/admin && npx wrangler delete
+```
+
+지우고 나면 이 폴더의 `worker.js` 와 `wrangler.toml` 도 삭제하세요.
+**확인이 끝나기 전에는 지우지 마세요.** 되돌릴 자리가 없어집니다.
+
+---
+
+## 07. 알아 두실 것
+
+**로그인 유지 시간**
+access token은 한 시간이면 만료되지만 자동으로 갱신됩니다.
+저장 도중 끊기는 일은 없어요. 로그아웃을 누르면 완전히 끊깁니다.
+
+**신청자 개인정보**
+`academy_applications` 테이블에만 있고 깃허브에는 절대 올라가지 않습니다.
+public 레포라 한 번 커밋되면 지우기 어렵기 때문입니다.
+내려받으실 때는 어드민 신청자 탭의 **엑셀로 내려받기** 를 쓰세요.
+
+**publishable 키**
+`admin.html` 과 `event.html` 에 그대로 적혀 있습니다. 공개용이라 괜찮습니다.
+다만 이 키가 안전한 이유는 테이블 권한과 RLS가 제대로 걸려 있기 때문입니다.
+`supabase-schema.sql` 의 정책을 함부로 고치지 마세요.
+
+**어드민이 건드릴 수 있는 경로**
+Edge Function의 `ALLOWED_PATHS` 에 적힌 파일만 고칠 수 있습니다.
+`.github/workflows` 같은 곳은 막혀 있어서, 세션이 새더라도 토큰을 빼내는
+워크플로를 심는 일은 불가능합니다.

@@ -32,6 +32,12 @@ function openEvent(id) {
     prep: arrToLines(src.prep),
     audience: src.audience || "",
     status: src.status || "upcoming",
+    /* 예전에 쓰던 자유 입력 fee 값이 남아 있으면 유료로 옮겨 담습니다.
+       저장하면 fee는 빠지고 priceType과 price로 정리됩니다. */
+    priceType: src.priceType || (src.fee ? "paid" : "free"),
+    price: src.price != null ? String(src.price)
+         : (src.fee ? String(src.fee).replace(/[^0-9]/g, "") : ""),
+    feeNote: src.feeNote || "",
     applyUrl: src.applyUrl || "",
     replayUrl: src.replayUrl || ""
   };
@@ -168,6 +174,50 @@ function openEvent(id) {
   prep.addEventListener("input", () => state.prep = prep.value);
   p3.appendChild(field("준비물", prep, { hint: "엔터로 줄을 나누면 항목이 하나씩 늘어납니다." }));
 
+  /* --- 수강료 --- */
+  const ptRow = el("div");
+  ptRow.style.marginBottom = "18px";
+  const ptLab = el("span", "lab", "수강료");
+  ptLab.style.cssText = "display:block;font-size:14px;font-weight:600;margin-bottom:7px";
+  ptRow.appendChild(ptLab);
+  ptRow.appendChild(segment([["free", "무료"], ["paid", "유료"]], state, "priceType", v => {
+    amtWrap.style.display = v === "paid" ? "block" : "none";
+    refreshPreview();
+  }));
+  p3.appendChild(ptRow);
+
+  /* 금액은 반드시 숫자만 받습니다. 나중에 카카오페이 같은 결제에 그대로 넘길 값이라
+     "330,000원" 처럼 글자가 섞이면 결제가 붙지 않습니다. */
+  const amt = input(state.price, "예: 330000", "text");
+  amt.setAttribute("inputmode", "numeric");
+  const amtPreview = el("span", "hint", "");
+  const showAmt = () => {
+    const n = Number(String(state.price).replace(/[^0-9]/g, ""));
+    amtPreview.textContent = n > 0
+      ? "화면에는 " + n.toLocaleString("ko-KR") + "원 으로 보입니다."
+      : "숫자만 넣어 주세요. 쉼표나 '원'은 빼고 330000 처럼요.";
+  };
+  amt.addEventListener("input", () => {
+    /* 실수로 쉼표나 글자를 넣어도 조용히 숫자만 남깁니다. */
+    const only = amt.value.replace(/[^0-9]/g, "");
+    if (amt.value !== only) amt.value = only;
+    state.price = only;
+    showAmt();
+    refreshPreview();
+  });
+  const amtWrap = field("금액 (원)", amt);
+  amtWrap.appendChild(amtPreview);
+  amtWrap.style.display = state.priceType === "paid" ? "block" : "none";
+  showAmt();
+  p3.appendChild(amtWrap);
+
+  const feeNote = input(state.feeNote, "예: 교재비와 다과 포함, VAT 포함");
+  feeNote.addEventListener("input", () => state.feeNote = feeNote.value);
+  p3.appendChild(field("수강료 부가 설명", feeNote, {
+    hint: "선택 사항이에요. 금액 아래 작은 글씨로 들어갑니다. "
+        + "입금 계좌는 여기에 넣지 마세요. 사이트가 공개라 검색에 노출됩니다."
+  }));
+
   const ap = input(state.applyUrl, "예: https://forms.gle/...", "url");
   ap.addEventListener("input", () => state.applyUrl = ap.value);
   p3.appendChild(field("신청 링크", ap, { hint: "넣으면 상세페이지에 신청 버튼이 생깁니다." }));
@@ -269,6 +319,14 @@ async function saveEvent(state, id, isNew, setMsg) {
   put("prep", linesToArr(state.prep));
   put("audience", state.audience.trim());
   put("status", state.status);
+  /* 유료일 때만 금액을 남깁니다. 무료로 되돌리면 price는 아예 빠집니다.
+     예전 자유 입력 fee는 여기서 더 이상 쓰지 않으므로 저장하면 자연히 사라집니다. */
+  put("priceType", state.priceType);
+  if (state.priceType === "paid") {
+    const n = Number(String(state.price).replace(/[^0-9]/g, ""));
+    if (n > 0) next.price = n;
+  }
+  put("feeNote", state.feeNote.trim());
   put("applyUrl", state.applyUrl.trim());
   ADVANCED_KEYS.forEach(k => { if (prev[k]) next[k] = prev[k]; });
   next.replayUrl = state.status === "replay" ? state.replayUrl.trim() : (state.replayUrl.trim() || "");
@@ -747,7 +805,227 @@ async function deleteResource(id, isPrivate) {
    --------------------------------------------------------------- */
 (async function boot() {
   if (auth.token) {
-    try { await api("/api/ping"); await enterApp(); return; } catch (e) { /* 아래에서 로그인 화면 */ }
+    try {
+      /* 저장된 토큰이 아직 살아 있는지 Supabase에 물어봅니다.
+         만료됐으면 sbFetch 안에서 자동으로 갱신을 한 번 시도합니다. */
+      const res = await sbFetch(AUTH_URL + "/user");
+      if (!res.ok) throw new Error("세션 없음");
+      await enterApp();
+      return;
+    } catch (e) { /* 아래에서 로그인 화면 */ }
   }
   showLogin();
 })();
+
+/* ---------------------------------------------------------------
+   신청자 현황
+
+   다른 탭과 달리 깃허브가 아니라 Supabase 테이블에서 바로 읽어 옵니다.
+   신청자 이름과 전화번호는 개인정보라 public 레포에 둘 수 없어서예요.
+   조회 권한은 로그인해서 받은 access token이 결정합니다.
+   비로그인(anon)으로는 RLS와 테이블 권한 양쪽에서 막힙니다.
+   --------------------------------------------------------------- */
+
+/* 현재 보고 있는 강의 필터. 빈 문자열이면 전체입니다. */
+let apFilter = "";
+
+const AP_STATUS = {
+  pending:   { cls: "wait",   label: "입금 대기" },
+  paid:      { cls: "paid",   label: "입금 확인" },
+  cancelled: { cls: "cancel", label: "취소" }
+};
+
+function apDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "." + p(d.getMonth() + 1) + "." + p(d.getDate())
+    + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+
+/* 저장할 때 숫자만 남겨 두었으니 보여 줄 때 다시 하이픈을 넣습니다. */
+function apPhone(v) {
+  const s = String(v || "");
+  if (s.length === 11) return s.slice(0, 3) + "-" + s.slice(3, 7) + "-" + s.slice(7);
+  if (s.length === 10) return s.slice(0, 3) + "-" + s.slice(3, 6) + "-" + s.slice(6);
+  return s;
+}
+
+async function renderApplications() {
+  const box = document.getElementById("list");
+  document.querySelector("#listTitle").firstChild.textContent = "신청자";
+  document.querySelector("#listCnt").textContent = "";
+  box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
+
+  let items = [];
+  try {
+    const cols = "id,created_at,event_id,event_title,event_fee,event_price,name,phone,email,org,source,message,status,paid_at,memo";
+    const q = "/academy_applications?select=" + cols + "&order=created_at.desc&limit=500"
+      + (apFilter ? "&event_id=eq." + encodeURIComponent(apFilter) : "");
+    items = (await table(q)) || [];
+  } catch (e) {
+    box.innerHTML = "";
+    box.appendChild(el("div", "empty", "신청자를 불러오지 못했어요. " + (e.message || "")));
+    return;
+  }
+
+  document.querySelector("#listCnt").textContent = items.length ? "  " + items.length + "건" : "";
+
+  /* --- 강의 필터와 CSV 내보내기 --- */
+  const bar = el("div", "ap-bar");
+  const sel = document.createElement("select");
+  sel.appendChild(new Option("전체 강의", ""));
+  Object.keys(store.EVENTS_DB).forEach(id => {
+    sel.appendChild(new Option(store.EVENTS_DB[id].title || id, id));
+  });
+  sel.value = apFilter;
+  sel.addEventListener("change", () => { apFilter = sel.value; renderApplications(); });
+  bar.appendChild(sel);
+  bar.appendChild(el("div", "spacer"));
+
+  const csv = el("button", "btn btn-secondary btn-sm", "엑셀로 내려받기");
+  csv.addEventListener("click", () => exportApplicationsCsv(items));
+  bar.appendChild(csv);
+
+  const refresh = el("button", "btn btn-secondary btn-sm", "새로고침");
+  refresh.addEventListener("click", () => renderApplications());
+  bar.appendChild(refresh);
+
+  /* --- 상태별 집계 --- */
+  const cnt = { pending: 0, paid: 0, cancelled: 0 };
+  items.forEach(i => { cnt[i.status] = (cnt[i.status] || 0) + 1; });
+  const sum = el("div", "ap-sum");
+  [["전체", items.length], ["입금 대기", cnt.pending], ["입금 확인", cnt.paid], ["취소", cnt.cancelled]]
+    .forEach(([label, n]) => {
+      const c = el("div", "chip", label);
+      c.appendChild(el("strong", null, String(n)));
+      sum.appendChild(c);
+    });
+
+  box.innerHTML = "";
+  const head = el("div");
+  head.appendChild(bar);
+  head.appendChild(sum);
+  box.appendChild(head);
+
+  if (!items.length) {
+    box.appendChild(el("div", "empty", "아직 신청자가 없어요."));
+    return;
+  }
+
+  items.forEach(it => {
+    const row = el("div", "ap-row");
+    const main = el("div", "ap-main");
+
+    const st = AP_STATUS[it.status] || AP_STATUS.pending;
+    const name = el("div", "ap-name");
+    name.appendChild(el("span", "badge " + st.cls, st.label));
+    name.appendChild(document.createTextNode(it.name || "(이름 없음)"));
+    main.appendChild(name);
+
+    const meta = [
+      apPhone(it.phone),
+      it.email,
+      it.org,
+      it.event_title || it.event_id,
+      it.event_fee,
+      apDate(it.created_at) + " 신청"
+    ].filter(Boolean).join("  |  ");
+    main.appendChild(el("div", "ap-meta", meta));
+
+    if (it.source) main.appendChild(el("div", "ap-meta", "경로: " + it.source));
+    if (it.message) main.appendChild(el("div", "ap-msg", it.message));
+    if (it.memo) main.appendChild(el("div", "ap-msg", "메모: " + it.memo));
+
+    row.appendChild(main);
+
+    /* --- 입금 확인 토글과 메모 --- */
+    const acts = el("div", "ap-acts");
+    const toggle = el("button", "btn btn-sm " + (it.status === "paid" ? "btn-secondary" : "btn-primary"),
+      it.status === "paid" ? "대기로 되돌리기" : "입금 확인");
+    toggle.addEventListener("click", async () => {
+      toggle.disabled = true;
+      try {
+        const toPaid = it.status !== "paid";
+        await table("/academy_applications?id=eq." + it.id, {
+          method: "PATCH",
+          headers: { "Prefer": "return=minimal" },
+          body: { status: toPaid ? "paid" : "pending", paid_at: toPaid ? new Date().toISOString() : null }
+        });
+        renderApplications();
+      } catch (e) {
+        alert("변경하지 못했어요. " + (e.message || ""));
+        toggle.disabled = false;
+      }
+    });
+    acts.appendChild(toggle);
+
+    const memo = el("button", "btn btn-secondary btn-sm", "메모");
+    memo.addEventListener("click", async () => {
+      const v = prompt("메모를 남겨 주세요. 비우면 지워집니다.", it.memo || "");
+      if (v === null) return;
+      try {
+        await table("/academy_applications?id=eq." + it.id, {
+          method: "PATCH",
+          headers: { "Prefer": "return=minimal" },
+          body: { memo: v.trim().slice(0, 500) || null }
+        });
+        renderApplications();
+      } catch (e) {
+        alert("저장하지 못했어요. " + (e.message || ""));
+      }
+    });
+    acts.appendChild(memo);
+
+    if (it.status !== "cancelled") {
+      const cancel = el("button", "btn btn-danger btn-sm", "취소 처리");
+      cancel.addEventListener("click", async () => {
+        if (!confirm(it.name + " 님의 신청을 취소 처리할까요?")) return;
+        try {
+          await table("/academy_applications?id=eq." + it.id, {
+            method: "PATCH",
+            headers: { "Prefer": "return=minimal" },
+            body: { status: "cancelled", paid_at: null }
+          });
+          renderApplications();
+        } catch (e) {
+          alert("변경하지 못했어요. " + (e.message || ""));
+        }
+      });
+      acts.appendChild(cancel);
+    }
+
+    row.appendChild(acts);
+    box.appendChild(row);
+  });
+}
+
+/* 엑셀에서 바로 열리도록 UTF-8 BOM을 붙입니다.
+   BOM이 없으면 한글이 깨져서 나옵니다. */
+function exportApplicationsCsv(items) {
+  const cols = [
+    ["신청일시", i => apDate(i.created_at)],
+    ["상태", i => (AP_STATUS[i.status] || AP_STATUS.pending).label],
+    ["이름", i => i.name],
+    ["연락처", i => apPhone(i.phone)],
+    ["이메일", i => i.email],
+    ["학원명과 직책", i => i.org],
+    ["강의", i => i.event_title || i.event_id],
+    ["수강료", i => i.event_fee],
+    ["참가 경로", i => i.source],
+    ["문의사항", i => i.message],
+    ["메모", i => i.memo],
+    ["입금 확인 시각", i => apDate(i.paid_at)]
+  ];
+  const cell = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+  const lines = [cols.map(c => cell(c[0])).join(",")]
+    .concat(items.map(i => cols.map(c => cell(c[1](i))).join(",")));
+
+  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "크래빗아카데미_신청자_" + new Date().toISOString().slice(0, 10) + ".csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}

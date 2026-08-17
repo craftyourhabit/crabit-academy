@@ -6,10 +6,17 @@
    그래서 토큰은 이 Worker의 시크릿으로만 두고, 어드민은 비밀번호로 로그인해
    이 Worker를 통해서만 레포를 읽고 씁니다.
 
+   강의 신청도 이 Worker가 받습니다. 신청자 이름과 전화번호는 개인정보라
+   public 레포에 커밋할 수 없어서, 깃허브가 아니라 Supabase에 넣습니다.
+   Supabase 테이블은 RLS를 켜고 정책을 하나도 두지 않아서, service_role
+   키를 가진 이 Worker 말고는 아무도 읽거나 쓸 수 없습니다.
+
    필요한 시크릿 (wrangler secret put <이름>):
-     ADMIN_PASSWORD   어머님이 입력하실 로그인 비밀번호. 12자 이상 권장.
-     GITHUB_TOKEN     crabit-academy 레포 Contents 읽기/쓰기 권한 토큰
-     SESSION_SECRET   세션 서명용 임의 문자열 (openssl rand -hex 32)
+     ADMIN_PASSWORD        어머님이 입력하실 로그인 비밀번호. 12자 이상 권장.
+     GITHUB_TOKEN          crabit-academy 레포 Contents 읽기/쓰기 권한 토큰
+     SESSION_SECRET        세션 서명용 임의 문자열 (openssl rand -hex 32)
+     SUPABASE_URL          예: https://xxxx.supabase.co
+     SUPABASE_SERVICE_KEY  Supabase service_role 키. 절대 레포에 넣지 마세요.
 
    설정값은 wrangler.toml 의 [vars] 에 있습니다.
    ===================================================================== */
@@ -120,6 +127,37 @@ async function github(env, method, path, body) {
   return res;
 }
 
+/* ---------- Supabase ---------- */
+
+const APPLY_TABLE = "academy_applications";
+
+async function supabase(env, method, query, body, extraHeaders) {
+  const url = env.SUPABASE_URL.replace(/\/+$/, "")
+    + "/rest/v1/" + APPLY_TABLE + (query ? "?" + query : "");
+  return fetch(url, {
+    method,
+    headers: {
+      "apikey": env.SUPABASE_SERVICE_KEY,
+      "Authorization": "Bearer " + env.SUPABASE_SERVICE_KEY,
+      "Content-Type": "application/json",
+      ...(extraHeaders || {})
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+}
+
+/* 신청 폼에서 받은 값 다듬기. 길이를 자르는 이유는 누가 장문을 밀어 넣어
+   테이블을 부풀리는 걸 막기 위해서입니다. */
+function clean(v, max) {
+  if (typeof v !== "string") return "";
+  return v.trim().slice(0, max);
+}
+
+/* 숫자만 남겨 비교합니다. 010-1234-5678 과 01012345678 을 같은 번호로 봅니다. */
+function normalizePhone(v) {
+  return String(v || "").replace(/[^0-9]/g, "");
+}
+
 /* ---------- 라우팅 ---------- */
 
 export default {
@@ -141,6 +179,57 @@ export default {
         return json(env, { error: "비밀번호가 올바르지 않습니다." }, 401);
       }
       return json(env, { token: await issueToken(env), expiresInHours: SESSION_HOURS });
+    }
+
+    /* 강의 신청 접수. 여기만 로그인 없이 열려 있습니다.
+       공개 폼이라 누구나 부를 수 있으니, 받은 값을 그대로 믿지 않고
+       길이를 자르고 형식을 확인한 뒤에만 저장합니다. */
+    if (route === "/api/apply" && request.method === "POST") {
+      let body;
+      try { body = await request.json(); } catch { return json(env, { error: "요청 형식 오류" }, 400); }
+
+      /* 사람 눈에 안 보이는 칸입니다. 자동 프로그램만 여기를 채웁니다.
+         채워져 있으면 조용히 성공한 척하고 버립니다. */
+      if (clean(body.website, 100)) return json(env, { ok: true });
+
+      const name = clean(body.name, 40);
+      const phone = clean(body.phone, 20);
+      const phoneDigits = normalizePhone(phone);
+
+      if (!name) return json(env, { error: "이름을 입력해 주세요." }, 400);
+      if (phoneDigits.length < 9 || phoneDigits.length > 11) {
+        return json(env, { error: "연락처를 다시 확인해 주세요." }, 400);
+      }
+      if (body.consent !== true) {
+        return json(env, { error: "개인정보 수집·이용에 동의해 주셔야 신청할 수 있어요." }, 400);
+      }
+      const eventId = clean(body.eventId, 60);
+      if (!eventId) return json(env, { error: "어느 강의인지 확인되지 않았어요." }, 400);
+
+      const row = {
+        event_id: eventId,
+        event_title: clean(body.eventTitle, 200) || null,
+        event_fee: clean(body.eventFee, 60) || null,
+        name,
+        phone: phoneDigits,
+        email: clean(body.email, 120) || null,
+        org: clean(body.org, 120) || null,
+        source: clean(body.source, 120) || null,
+        message: clean(body.message, 1000) || null,
+        consent: true
+      };
+
+      const res = await supabase(env, "POST", null, [row], { "Prefer": "return=minimal" });
+      if (res.status === 409) {
+        return json(env, {
+          error: "이미 같은 연락처로 신청이 접수돼 있어요. 확인이 필요하시면 문의해 주세요.",
+          code: "duplicate"
+        }, 409);
+      }
+      if (!res.ok) {
+        return json(env, { error: "접수에 실패했어요. 잠시 후 다시 시도해 주세요." }, 502);
+      }
+      return json(env, { ok: true });
     }
 
     /* 여기부터는 전부 로그인 필요 */
@@ -204,6 +293,48 @@ export default {
         branch: env.BRANCH
       });
       if (!res.ok) return json(env, { error: "삭제 실패 (" + res.status + ")" }, 502);
+      return json(env, { ok: true });
+    }
+
+    /* 신청자 목록. 어드민 화면에서만 부릅니다.
+       eventId를 주면 그 강의만, 없으면 전체를 최신순으로 돌려줍니다. */
+    if (route === "/api/applications" && request.method === "GET") {
+      const eventId = url.searchParams.get("eventId") || "";
+      const params = new URLSearchParams();
+      params.set("select", "id,created_at,event_id,event_title,event_fee,name,phone,email,org,source,message,status,paid_at,memo");
+      params.set("order", "created_at.desc");
+      params.set("limit", "500");
+      if (eventId) params.set("event_id", "eq." + eventId);
+
+      const res = await supabase(env, "GET", params.toString());
+      if (!res.ok) return json(env, { error: "신청자 조회 실패 (" + res.status + ")" }, 502);
+      return json(env, { items: await res.json() });
+    }
+
+    /* 신청 건 상태 변경. 입금 확인 체크와 메모에 씁니다. */
+    if (route === "/api/application" && request.method === "PATCH") {
+      let body;
+      try { body = await request.json(); } catch { return json(env, { error: "요청 형식 오류" }, 400); }
+      const { id, status, memo } = body || {};
+      if (!id || !/^[0-9a-f-]{36}$/i.test(String(id))) {
+        return json(env, { error: "잘못된 신청 번호입니다." }, 400);
+      }
+
+      const patch = {};
+      if (status !== undefined) {
+        if (!["pending", "paid", "cancelled"].includes(status)) {
+          return json(env, { error: "알 수 없는 상태입니다." }, 400);
+        }
+        patch.status = status;
+        /* 입금 확인으로 바꿀 때만 시각을 찍고, 되돌리면 지웁니다. */
+        patch.paid_at = status === "paid" ? new Date().toISOString() : null;
+      }
+      if (memo !== undefined) patch.memo = clean(memo, 500) || null;
+      if (!Object.keys(patch).length) return json(env, { error: "바꿀 내용이 없습니다." }, 400);
+
+      const res = await supabase(env, "PATCH", "id=eq." + encodeURIComponent(id), patch,
+        { "Prefer": "return=minimal" });
+      if (!res.ok) return json(env, { error: "변경 실패 (" + res.status + ")" }, 502);
       return json(env, { ok: true });
     }
 

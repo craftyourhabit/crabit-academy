@@ -1,0 +1,8 @@
+project_id = "ttolvlzubashyhdctbqr"
+
+[functions.github]
+# 플랫폼이 JWT를 대신 검사하게 두면 브라우저의 사전 요청(OPTIONS)까지 막혀서
+# CORS가 깨집니다. 그래서 여기서는 끄고, 함수 안에서 직접 검사합니다.
+# index.ts 의 verifyUser() 가 Supabase Auth에 물어봐서 진짜 로그인한
+# 관리자인지 확인합니다. publishable 키만 들고 오면 거기서 걸립니다.
+verify_jwt = false

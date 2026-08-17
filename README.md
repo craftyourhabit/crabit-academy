@@ -5,6 +5,46 @@
 - 배포 주소: https://craftyourhabit.github.io/crabit-academy/
 - 배포 방식: GitHub Pages (main 브랜치에 푸시하면 1~2분 내 자동 반영)
 
+## 관리자 페이지 (코드 없이 콘텐츠 관리)
+
+교육과 자료를 코드 수정 없이 등록·수정·삭제할 수 있는 어드민이 있습니다.
+
+- 주소: `admin.html` (비밀번호 로그인)
+- 배포 절차: [admin/DEPLOY.md](admin/DEPLOY.md) - Cloudflare Worker 1개만 올리면 됩니다
+- 사용법: [admin/사용안내.md](admin/사용안내.md) - 비개발자용
+
+동작 방식은 이렇습니다. 어드민은 데이터를 들고 있지 않고, Cloudflare Worker를 통해
+이 레포의 파일을 직접 고쳐 커밋합니다. 깃허브 토큰은 Worker 시크릿에만 있어서
+public 레포에 노출되지 않습니다. DB도 서버도 없습니다.
+
+```
+admin.html → Worker(토큰 보관) → 깃허브 커밋 → Pages 재배포
+```
+
+**어드민이 고치는 파일**
+
+| 파일 | 내용 |
+|---|---|
+| `assets/events.js` | `EVENTS_DB`, `SCHEDULE` |
+| `assets/resources.js` | `RESOURCES` (공개 + 일부공개) |
+| `assets/resources-private.js` | `RESOURCES_PRIVATE` (비공개 전용, 사이트는 미로드) |
+| `assets/thumbs/` | 썸네일 이미지 |
+| `p/<해시>/` | 일부공개 자료 페이지와 첨부파일 |
+
+**마커 규칙 (중요)** 위 js 파일에는 `/* @admin:이름:start */ ~ /* @admin:이름:end */`
+마커가 있고, 어드민은 **그 사이만** 통째로 갈아 끼웁니다.
+따라서 **마커 안에 주석을 달면 저장할 때 사라집니다.** 설명은 마커 바깥에 적으세요.
+마커 밖의 헬퍼 함수(`eventStatusTag`, `visibleResources` 등)와 주석은 그대로 보존됩니다.
+
+**어드민이 다루지 않는 항목** 이벤트의 `sessions`(커리큘럼), `materials`(제공 자료),
+`detailImages`(상세 이미지), `contact`(문의처)는 폼에 나오지 않습니다.
+다만 저장해도 **지워지지 않고 그대로 보존**되며, 해당 이벤트를 열면 안내 문구가 뜹니다.
+이 항목들을 고치려면 `assets/events.js`를 직접 수정하세요.
+
+**비공개 자료의 한계** `resources-private.js`는 사이트가 불러오지 않으므로 방문자에게는
+보이지 않지만, 레포가 public 이라 github.com 을 직접 뒤지면 제목은 보입니다.
+대외비 자료는 여기에 두지 마세요.
+
 ## 페이지 구성
 
 - 홈(`index.html`): 히어로 배너 → 예정 교육(EVENTS_DB의 upcoming 자동 표시) → 웨비나 다시보기 → 자료/인사이트
@@ -12,10 +52,10 @@
 - 예정 일정(`schedule.html`): 월간 캘린더. 일정 클릭 → 모달 → 상세페이지 이동
 - 자료 · 인사이트(`resources.html`): 나브에서 직접 링크
 - 행사 상세: `event.html?id=<키>`
-- 제휴 업체 페이지는 보류 중 — 필요해지면 git 히스토리의 `partners.html`(커밋 a27538c)을 복원하면 됩니다
-- 웨비나 다시보기는 Coming soon 상태 — 오픈하려면 `index.html`의 coming-soon 블록을 카드로 되돌리고, `webinars.html` 스크립트 하단의 주석대로 `renderTabs(); renderRows();`를 복원
+- 제휴 업체 페이지는 보류 중 - 필요해지면 git 히스토리의 `partners.html`(커밋 a27538c)을 복원하면 됩니다
+- 웨비나 다시보기는 Coming soon 상태 - 오픈하려면 `index.html`의 coming-soon 블록을 카드로 되돌리고, `webinars.html` 스크립트 하단의 주석대로 `renderTabs(); renderRows();`를 복원
 - 대구 후속 자료: 미리보기(`daegu-followup.html`, 블러+비밀번호 모달, 비번 `daegu0709`) → 본문(`p/fa217da48e278217/`) = 유튜브 임베드(클릭 차단, youtube-nocookie, iframe pointer-events:none) + 핸드아웃 PDF(`handout.pdf`) 다운로드/미리보기. 영상 교체는 본문 index.html의 `VIDEO_ID` 수정
-- 웨비나 다시보기(홈 섹션·콘텐츠 드롭다운)는 삭제됨 — 되살리려면 git 히스토리에서 `id="replay"` 섹션과 콘텐츠 드롭다운 nav를 복원
+- 웨비나 다시보기(홈 섹션·콘텐츠 드롭다운)는 삭제됨 - 되살리려면 git 히스토리에서 `id="replay"` 섹션과 콘텐츠 드롭다운 nav를 복원
 
 ## 행사 상세페이지와 썸네일
 
@@ -36,18 +76,18 @@ const SCHEDULE = [
 ```
 
 - `date`: `YYYY-MM-DD` / `time`: `HH:MM`
-- `id`: `EVENTS_DB`의 키 — 제목·주최·썸네일·설명을 자동으로 가져오고, 클릭 시 모달과 상세페이지로 연결됩니다
+- `id`: `EVENTS_DB`의 키 - 제목·주최·썸네일·설명을 자동으로 가져오고, 클릭 시 모달과 상세페이지로 연결됩니다
 
 ## 전체보기 페이지 (공개)
 
-- 웨비나 다시보기 전체: `webinars.html` — `assets/events.js`의 이벤트를 카테고리 탭(AI·자동화 / 학원 운영 / 마케팅·브랜딩 / 올커니)으로 필터링해 보여줍니다.
-- 자료 / 인사이트 전체: `resources.html` — 파일 안의 `RESOURCES` 배열로 관리합니다. 카테고리 탭: 강의자료 / 가이드북 / 인사이트.
+- 웨비나 다시보기 전체: `webinars.html` - `assets/events.js`의 이벤트를 카테고리 탭(AI·자동화 / 학원 운영 / 마케팅·브랜딩 / 올커니)으로 필터링해 보여줍니다.
+- 자료 / 인사이트 전체: `resources.html` - 데이터는 `assets/resources.js`의 `RESOURCES` 배열에 있습니다(예전에는 resources.html 안에 인라인으로 있었음). 카테고리 탭: 강의자료 / 가이드북 / 인사이트. 항목이 없는 카테고리 탭은 자동으로 숨겨집니다. 홈(`index.html`)의 자료 섹션도 같은 데이터에서 최신 3건을 렌더링합니다.
 
 전체보기 자체는 비밀번호 없이 볼 수 있고, **일부공개(`access: "protected"`)로 설정된 항목을 클릭할 때만** 비밀번호 모달이 뜹니다.
 
 ### 인사이트: 원장님을 위한 클로드 코워크 (윈도우 설치 가이드)
 
-- 페이지: `claude-code-windows.html` — 윈도우에서 클로드를 설치하는 방법을 한 단계씩 안내. 방법 A(데스크탑 앱, 터미널 없이) / 방법 B(PowerShell `irm https://claude.ai/install.ps1 | iex`) 두 경로를 다루고, 실제 claude.ai 스크린샷(`assets/guide/`)과 CSS로 재현한 PowerShell·클로드 코드·데스크탑 앱 화면을 함께 담았습니다. 2026년 7월 기준(채팅·코워크 통합 반영). 설치 명령/요건은 공식 문서 code.claude.com/docs 기준이라 버전이 바뀌면 갱신 필요.
+- 페이지: `claude-code-windows.html` - 윈도우에서 클로드를 설치하는 방법을 한 단계씩 안내. 방법 A(데스크탑 앱, 터미널 없이) / 방법 B(PowerShell `irm https://claude.ai/install.ps1 | iex`) 두 경로를 다루고, 실제 claude.ai 스크린샷(`assets/guide/`)과 CSS로 재현한 PowerShell·클로드 코드·데스크탑 앱 화면을 함께 담았습니다. 2026년 7월 기준(채팅·코워크 통합 반영). 설치 명령/요건은 공식 문서 code.claude.com/docs 기준이라 버전이 바뀌면 갱신 필요.
 - 노출: 홈(`index.html`) 자료/인사이트 섹션 + 전체보기(`resources.html`)의 `RESOURCES` 배열에 `인사이트`(공개) 항목으로 등록됨. 링크는 `claude-code-windows`(확장자 없이).
 - 썸네일: `assets/thumbs/claude-cowork-windows.svg` (INSIGHT 라벨 + 터미널 모티프).
 
@@ -71,16 +111,20 @@ const SCHEDULE = [
 
 ## 별도 공유용 페이지 (사이트에서 링크되지 않음)
 
-- `daegu-guide.html` — 대구 원장님 대상 강의 사전 준비가이드. 아카데미 어느 페이지에서도 링크하지 않은 독립 페이지라, 이 링크만 받은 분은 다른 페이지를 볼 수 없습니다. 추후 대구 강의 상세페이지에 연결 예정.
+- `daegu-guide.html` - 대구 원장님 대상 강의 사전 준비가이드. 아카데미 어느 페이지에서도 링크하지 않은 독립 페이지라, 이 링크만 받은 분은 다른 페이지를 볼 수 없습니다. 추후 대구 강의 상세페이지에 연결 예정.
 
 ## 현재 비밀번호 목록
 
 | 콘텐츠 | 비밀번호 | 경로 |
 |---|---|---|
 | [대구학원연합회] AI 마케터 고용하기 후속 자료 | `daegu0709` | 미리보기 `daegu-followup.html` → 본문 `p/fa217da48e278217/` |
-| [올커니] 학원 홈페이지형 블로그 마스터 과정 강의자료 | `blog0718` | 미리보기 `blog-followup.html` → 본문 `p/613f8991d4d7111e/` (본문 내용 준비 중 — 강의 후 자료 업로드) |
+| [올커니] 학원 홈페이지형 블로그 마스터 과정 강의자료 | `blog0718` | 미리보기 `blog-followup.html` → 본문 `p/613f8991d4d7111e/` (본문 내용 준비 중 - 강의 후 자료 업로드) |
 
 ## 비밀번호 자료 페이지 만드는 법
+
+> 보통은 **어드민(`admin.html`)에서 자료를 "일부공개"로 등록하면 아래 과정이 자동으로 처리됩니다.**
+> 비밀번호를 입력하면 해시 경로를 계산해 자료 페이지와 첨부파일까지 만들어 줍니다.
+> 아래는 손으로 만들거나 구조를 이해해야 할 때 참고하는 설명입니다.
 
 비밀번호의 SHA-256 해시 앞 16자리를 폴더 이름으로 사용합니다. 경로가 코드에 남지 않아, 비밀번호를 모르면 접근할 수 없습니다.
 

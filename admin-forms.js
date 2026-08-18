@@ -939,13 +939,17 @@ async function renderApplications() {
   });
 
   box.innerHTML = "";
-  const head = el("div");
-  head.appendChild(bar);
-  head.appendChild(sum);
-  box.appendChild(head);
+  /* 필터와 상태 칩은 카드 밖에 둡니다. 흰 카드가 툴바까지 감싸면
+     넓은 화면에서 버튼이 카드 끝으로 밀려 따로 노는 것처럼 보입니다. */
+  box.appendChild(bar);
+  box.appendChild(sum);
+
+  /* 목록만 카드 한 장으로 감쌉니다. */
+  const card = el("div", "list");
+  box.appendChild(card);
 
   if (!items.length) {
-    box.appendChild(el("div", "empty",
+    card.appendChild(el("div", "empty",
       (apStatus || apFilter) ? "이 조건에 맞는 신청자가 없어요." : "아직 신청자가 없어요."));
     return;
   }
@@ -1038,7 +1042,7 @@ async function renderApplications() {
     }
 
     row.appendChild(acts);
-    box.appendChild(row);
+    card.appendChild(row);
   });
 }
 

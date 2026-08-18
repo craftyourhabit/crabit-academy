@@ -809,7 +809,10 @@ function renderList() {
   showList();
   /* 대시보드는 카드 여러 장을 직접 배치하느라 .list 래퍼를 벗깁니다.
      다른 탭으로 돌아오면 다시 씌워 줍니다. */
-  $("#list").className = currentTab === "dashboard" ? "" : "list";
+  /* 대시보드와 신청자는 카드 여러 장을 직접 배치하느라 .list 래퍼를 벗깁니다.
+     교육·자료 탭만 목록 카드 하나로 감쌉니다. */
+  $("#list").className =
+    (currentTab === "dashboard" || currentTab === "applications") ? "" : "list";
 
   /* 대시보드는 목록이 아니라 요약 화면이라 따로 그립니다. (admin-forms.js) */
   if (currentTab === "dashboard") {
@@ -1066,6 +1069,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608181307"></script>
+<script src="admin-forms.js?v=202608181541"></script>
 </body>
 </html>

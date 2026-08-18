@@ -21,6 +21,8 @@ function openEvent(id) {
     title: src.title || "",
     date: src.date || "",
     startDate: src.startDate || "",
+    format: src.format || (src.place ? "offline" : "online"),
+    onlineUrl: src.onlineUrl || "",
     place: src.place || "",
     placeUrl: src.placeUrl || "",
     thumb: src.thumb || "",
@@ -143,12 +145,37 @@ function openEvent(id) {
   calWrap.appendChild(el("span", "hint", "체크하면 '예정 일정' 페이지의 월간 달력에 올라갑니다. 진행 날짜가 있어야 해요."));
   p2.appendChild(calWrap);
 
+  /* --- 진행 방식 --- */
+  const fmRow = el("div");
+  fmRow.style.marginBottom = "18px";
+  const fmLab = el("span", "lab", "진행 방식");
+  fmLab.style.cssText = "display:block;font-size:14px;font-weight:600;margin-bottom:7px";
+  fmRow.appendChild(fmLab);
+  fmRow.appendChild(segment([
+    ["offline", "오프라인"], ["online", "온라인"], ["hybrid", "동시 진행"]
+  ], state, "format", v => {
+    plcWrap.style.display = (v === "online") ? "none" : "block";
+    urlWrap.style.display = (v === "offline") ? "none" : "block";
+  }));
+  p2.appendChild(fmRow);
+
   const plc = input(state.place, "예: 광명 GIDC, 경기도 광명시 일직로 43 C동 1715호");
   plc.addEventListener("input", () => state.place = plc.value);
-  p2.appendChild(field("장소", plc));
+  const plcWrap = field("장소", plc);
+  plcWrap.style.display = (state.format === "online") ? "none" : "block";
+  p2.appendChild(plcWrap);
   const plcU = input(state.placeUrl, "예: https://naver.me/...", "url");
   plcU.addEventListener("input", () => state.placeUrl = plcU.value);
   p2.appendChild(field("장소 지도 링크", plcU, { hint: "네이버 지도 공유 링크를 넣으면 장소를 눌러 열 수 있어요." }));
+
+  const ourl = input(state.onlineUrl, "예: https://zoom.us/j/...", "url");
+  ourl.addEventListener("input", () => state.onlineUrl = ourl.value);
+  const urlWrap = field("온라인 참여 링크 (줌 등)", ourl, {
+    hint: "이 링크는 사이트에 절대 안 보입니다. 링크를 아는 사람은 누구나 들어올 수 있기 때문이에요. "
+        + "신청하고 결제까지 마친 분에게만 알림톡으로 따로 보냅니다."
+  });
+  urlWrap.style.display = (state.format === "offline") ? "none" : "block";
+  p2.appendChild(urlWrap);
   view.appendChild(p2);
 
   /* --- 진행자와 신청 --- */
@@ -320,6 +347,9 @@ async function saveEvent(state, id, isNew, setMsg) {
   put("title", state.title.trim());
   put("date", state.date.trim());
   put("startDate", state.startDate);
+  put("format", state.format);
+  /* 오프라인만 하는 강의에는 온라인 링크를 남기지 않습니다. */
+  if (state.format !== "offline") put("onlineUrl", state.onlineUrl.trim());
   put("place", state.place.trim());
   put("placeUrl", state.placeUrl.trim());
   put("thumb", state.thumb);

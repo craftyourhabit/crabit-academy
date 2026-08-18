@@ -12,6 +12,12 @@
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
+   - format: "offline"(오프라인) | "online"(온라인) | "hybrid"(동시 진행).
+     생략하면 place 유무로 추정합니다.
+   - onlineUrl: 줌 등 참여 링크. format이 online 또는 hybrid일 때만 씁니다.
+     ★ 이 값은 공개 페이지에 절대 노출하지 않습니다. 링크를 아는 사람은
+       누구나 들어올 수 있기 때문입니다. 신청하고 결제까지 마친 분에게만
+       알림톡으로 따로 보냅니다.
    - priceType: "free"(무료) | "paid"(유료). 생략하면 무료로 봅니다.
    - price: 수강료 숫자만 (예: 330000). priceType이 "paid"일 때만 씁니다.
      결제 연동(카카오페이 등)에 그대로 넘길 값이라 반드시 숫자로 둡니다.
@@ -257,6 +263,18 @@ function isEventOver(ev) {
 function eventStatusTag(ev) {
   if (isEventOver(ev)) return { text: "마감", cls: "closed" };
   return isEventToday(ev) ? { text: "오늘", cls: "today" } : { text: "예정", cls: "upcoming" };
+}
+
+/* 진행 방식을 한 곳에서 판단한다. { kind, label, isOnline, isOffline } 반환.
+   format을 아직 안 정한 예전 데이터는 place 유무로 추정한다. */
+function eventFormat(ev) {
+  const f = ev.format || (ev.place ? "offline" : "online");
+  const map = {
+    offline: { kind: "offline", label: "오프라인", isOffline: true,  isOnline: false },
+    online:  { kind: "online",  label: "온라인",   isOffline: false, isOnline: true  },
+    hybrid:  { kind: "hybrid",  label: "오프라인 + 온라인 동시", isOffline: true, isOnline: true }
+  };
+  return map[f] || map.offline;
 }
 
 /* 수강료 정보를 한 곳에서 판단한다. { paid, amount, text, note } 반환.

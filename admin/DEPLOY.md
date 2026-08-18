@@ -1,7 +1,7 @@
 # 어드민 배포 안내
 
 크래빗 아카데미 관리자 페이지는 **Supabase 하나**로 돌아갑니다.
-예전에는 Cloudflare Worker도 함께 썼지만 관리 대상을 줄이려고 전부 옮겼습니다.
+다른 서비스는 쓰지 않습니다.
 
 ## 구조
 
@@ -105,6 +105,11 @@ npx supabase functions deploy github
 > `SUPABASE_` 로 시작하는 이름은 예약어라 쓸 수 없어서 `GH_` 접두어를 씁니다.
 > `SUPABASE_URL` 과 `SUPABASE_ANON_KEY` 는 Supabase가 자동으로 넣어 줍니다.
 
+**`Access token not provided` 가 뜨면** CLI 로그인이 만료된 것입니다.
+`npx supabase login` 을 한 번 더 실행하고 브라우저에서 승인하면 됩니다.
+`SUPABASE_ACCESS_TOKEN` 을 따로 만드실 필요는 없습니다.
+이 토큰은 계정 전체를 다루는 키라, 발급하시더라도 채팅이나 메일에 붙여넣지 마세요.
+
 ---
 
 ## 05. 확인
@@ -119,20 +124,7 @@ npx supabase functions deploy github
 
 ---
 
-## 06. Cloudflare Worker 정리
-
-위 확인이 끝나면 예전 Worker는 필요 없습니다. 지우셔도 됩니다.
-
-```bash
-cd ~/Desktop/CRABIT/MKT/crabit-academy/admin && npx wrangler delete
-```
-
-지우고 나면 이 폴더의 `worker.js` 와 `wrangler.toml` 도 삭제하세요.
-**확인이 끝나기 전에는 지우지 마세요.** 되돌릴 자리가 없어집니다.
-
----
-
-## 07. 알아 두실 것
+## 06. 알아 두실 것
 
 **로그인 유지 시간**
 access token은 한 시간이면 만료되지만 자동으로 갱신됩니다.
@@ -155,7 +147,7 @@ Edge Function의 `ALLOWED_PATHS` 에 적힌 파일만 고칠 수 있습니다.
 
 ---
 
-## 08. 어드민 스크립트를 고쳤을 때
+## 07. 어드민 스크립트를 고쳤을 때
 
 `admin-forms.js` 를 수정하면 `admin.html` 의 아래 줄에서 `?v=` 뒤 숫자를 바꿔 주세요.
 

@@ -4,3 +4,6 @@
 /logo.png
 디자인 템플릿/
 디자인 템플릿.zip
+
+# 솔라피 API 키. 절대 커밋하지 않습니다.
+admin/.solapi.env

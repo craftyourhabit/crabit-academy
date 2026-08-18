@@ -1,0 +1,291 @@
+#!/usr/bin/env node
+/* =====================================================================
+   크래빗 아카데미 - 솔라피 알림톡 템플릿 도구
+
+   카카오 알림톡 템플릿을 등록하고 검수(승인)를 요청합니다.
+   솔라피 Node SDK 에는 검수 요청이 빠져 있어서 REST 를 직접 부릅니다.
+
+   【키는 환경변수로만 받습니다】
+   API Secret 을 명령문에 적으면 셸 기록에 남습니다.
+   아래처럼 앞에 붙여서 실행하거나, admin/.solapi.env 에 넣어 두세요.
+   (.solapi.env 는 .gitignore 에 있어 레포에 올라가지 않습니다)
+
+     SOLAPI_API_KEY=... SOLAPI_API_SECRET=... node admin/solapi-template.mjs channels
+
+   【쓰는 순서】
+     1) node admin/solapi-template.mjs channels        연동된 채널과 pfId 확인
+     2) node admin/solapi-template.mjs categories      카테고리 코드 확인
+     3) node admin/solapi-template.mjs drafts          등록할 문안 미리보기
+     4) node admin/solapi-template.mjs create <키> <pfId> <카테고리코드>
+     5) node admin/solapi-template.mjs inspect <템플릿ID>   검수 요청
+     6) node admin/solapi-template.mjs status <템플릿ID>    상태 확인
+        node admin/solapi-template.mjs list              전체 목록
+
+   카카오 심사는 영업일 1~3일 걸립니다.
+   광고성 문구가 있으면 반려되므로 아래 문안은 정보성으로만 썼습니다.
+   ===================================================================== */
+
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const BASE = "https://api.solapi.com";
+const here = path.dirname(fileURLToPath(import.meta.url));
+
+/* admin/.solapi.env 가 있으면 읽어 옵니다. KEY=VALUE 한 줄씩. */
+function loadEnvFile() {
+  const f = path.join(here, ".solapi.env");
+  if (!fs.existsSync(f)) return;
+  for (const line of fs.readFileSync(f, "utf8").split("\n")) {
+    const t = line.trim();
+    if (!t || t.startsWith("#")) continue;
+    const i = t.indexOf("=");
+    if (i < 1) continue;
+    const k = t.slice(0, i).trim();
+    if (!process.env[k]) process.env[k] = t.slice(i + 1).trim();
+  }
+}
+loadEnvFile();
+
+const API_KEY = process.env.SOLAPI_API_KEY;
+const API_SECRET = process.env.SOLAPI_API_SECRET;
+
+if (!API_KEY || !API_SECRET) {
+  console.error("SOLAPI_API_KEY 와 SOLAPI_API_SECRET 이 필요합니다.");
+  console.error("솔라피 콘솔 > 개발/연동 > API Key 관리 에서 발급받으세요.");
+  console.error("");
+  console.error("  SOLAPI_API_KEY=... SOLAPI_API_SECRET=... node admin/solapi-template.mjs channels");
+  console.error("");
+  console.error("또는 admin/.solapi.env 파일에 두 줄로 적어 두셔도 됩니다.");
+  process.exit(1);
+}
+
+/* 솔라피 인증 헤더.
+   date + salt 를 API Secret 으로 HMAC-SHA256 해시합니다.
+   Secret 자체는 절대 전송되지 않습니다. */
+function authHeader() {
+  const date = new Date().toISOString();
+  const salt = crypto.randomBytes(32).toString("hex");
+  const signature = crypto.createHmac("sha256", API_SECRET).update(date + salt).digest("hex");
+  return `HMAC-SHA256 apiKey=${API_KEY}, date=${date}, salt=${salt}, signature=${signature}`;
+}
+
+async function call(method, url, body) {
+  const res = await fetch(BASE + url, {
+    method,
+    headers: {
+      "Authorization": authHeader(),
+      "Content-Type": "application/json"
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch { data = text; }
+  if (!res.ok) {
+    const msg = (data && (data.errorMessage || data.message)) || text.slice(0, 300);
+    throw new Error(`${method} ${url} → ${res.status}\n${msg}`);
+  }
+  return data;
+}
+
+/* ---------------------------------------------------------------
+   알림톡 문안
+
+   #{변수명} 은 발송할 때 값을 채워 넣는 자리입니다.
+   카카오에서 승인받은 치환문구와 이름이 정확히 같아야 하므로,
+   여기서 정한 이름을 나중에 발송 코드에서도 그대로 씁니다.
+
+   광고 표현("할인", "지금 신청", "특가")은 넣지 않습니다.
+   알림톡은 정보성 메시지만 허용되고, 광고로 보이면 반려됩니다.
+   --------------------------------------------------------------- */
+const DRAFTS = {
+  apply_confirm: {
+    name: "크래빗아카데미_접수확인",
+    content: [
+      "[크래빗 아카데미] 신청이 접수되었습니다.",
+      "",
+      "#{이름}님, 신청해 주셔서 감사합니다.",
+      "",
+      "강의: #{강의명}",
+      "일시: #{일시}",
+      "장소: #{장소}",
+      "수강료: #{수강료}",
+      "",
+      "아래 계좌로 수강료를 입금해 주시면 접수가 확정됩니다.",
+      "입금계좌: #{입금계좌}",
+      "입금자명은 신청자 성함과 동일하게 기재해 주세요.",
+      "",
+      "문의: #{문의처}"
+    ].join("\n")
+  },
+  payment_guide: {
+    name: "크래빗아카데미_입금안내",
+    content: [
+      "[크래빗 아카데미] 입금 안내드립니다.",
+      "",
+      "#{이름}님, 신청하신 강의의 입금이 아직 확인되지 않았습니다.",
+      "",
+      "강의: #{강의명}",
+      "수강료: #{수강료}",
+      "입금계좌: #{입금계좌}",
+      "",
+      "#{마감일}까지 입금이 확인되지 않으면 신청이 자동 취소됩니다.",
+      "",
+      "문의: #{문의처}"
+    ].join("\n")
+  },
+  reminder: {
+    name: "크래빗아카데미_수강리마인드",
+    content: [
+      "[크래빗 아카데미] 신청하신 강의를 안내드립니다.",
+      "",
+      "#{이름}님, 강의 일정을 다시 안내드립니다.",
+      "",
+      "강의: #{강의명}",
+      "일시: #{일시}",
+      "장소: #{장소}",
+      "준비물: #{준비물}",
+      "",
+      "문의: #{문의처}"
+    ].join("\n")
+  },
+  followup: {
+    name: "크래빗아카데미_자료안내",
+    content: [
+      "[크래빗 아카데미] 강의 자료를 안내드립니다.",
+      "",
+      "#{이름}님, 수강해 주셔서 감사합니다.",
+      "",
+      "강의: #{강의명}",
+      "자료는 아래 버튼에서 확인하실 수 있습니다.",
+      "확인 기한: #{보관기한}",
+      "",
+      "문의: #{문의처}"
+    ].join("\n"),
+    buttons: [
+      { buttonName: "자료 보기", buttonType: "WL", linkMo: "#{자료링크}", linkPc: "#{자료링크}" }
+    ]
+  }
+};
+
+/* ---------------------------------------------------------------
+   명령
+   --------------------------------------------------------------- */
+const [, , cmd, ...args] = process.argv;
+
+const show = v => console.log(JSON.stringify(v, null, 2));
+
+try {
+  switch (cmd) {
+    case "channels": {
+      const d = await call("GET", "/kakao/v2/channels");
+      const list = d.channelList || d.list || d;
+      if (!Array.isArray(list) || !list.length) {
+        console.log("연동된 카카오 채널이 없습니다.");
+        console.log("솔라피 콘솔 > 카카오 > 채널 관리 에서 먼저 연동해 주세요.");
+        break;
+      }
+      console.log("연동된 채널\n");
+      for (const c of list) {
+        console.log(`  pfId       : ${c.channelId || c.pfId}`);
+        console.log(`  검색용 아이디: ${c.searchId || "-"}`);
+        console.log(`  상태       : ${c.status || "-"}`);
+        console.log("");
+      }
+      console.log("위 pfId 를 create 명령에 넣으세요.");
+      break;
+    }
+
+    case "categories": {
+      const d = await call("GET", "/kakao/v2/templates/categories");
+      const list = d.categoryList || d.list || d;
+      console.log("카테고리 코드 (교육 관련만 추려 보세요)\n");
+      show(list);
+      break;
+    }
+
+    case "drafts": {
+      console.log("등록할 문안 미리보기\n");
+      for (const [key, t] of Object.entries(DRAFTS)) {
+        console.log("─".repeat(56));
+        console.log(`[${key}] ${t.name}`);
+        console.log("─".repeat(56));
+        console.log(t.content);
+        if (t.buttons) console.log("\n버튼: " + t.buttons.map(b => b.buttonName).join(", "));
+        console.log("");
+      }
+      break;
+    }
+
+    case "create": {
+      const [key, pfId, categoryCode] = args;
+      const draft = DRAFTS[key];
+      if (!draft || !pfId || !categoryCode) {
+        console.error("사용법: create <키> <pfId> <카테고리코드>");
+        console.error("키: " + Object.keys(DRAFTS).join(", "));
+        process.exit(1);
+      }
+      const body = {
+        pfId,
+        name: draft.name,
+        content: draft.content,
+        categoryCode,
+        messageType: "BA",          /* 기본형 */
+        emphasizeType: "NONE"
+      };
+      if (draft.buttons) body.buttons = draft.buttons;
+
+      const d = await call("POST", "/kakao/v2/templates", body);
+      console.log("템플릿을 등록했습니다. 아직 검수 전입니다.\n");
+      console.log("  templateId : " + (d.templateId || d.id));
+      console.log("  상태       : " + (d.status || "-"));
+      console.log("\n다음: node admin/solapi-template.mjs inspect " + (d.templateId || d.id));
+      break;
+    }
+
+    case "inspect": {
+      const [templateId] = args;
+      if (!templateId) { console.error("사용법: inspect <템플릿ID>"); process.exit(1); }
+      /* POST 가 아니라 PUT 입니다. SDK 에는 이 호출이 빠져 있습니다. */
+      const d = await call("PUT", `/kakao/v2/templates/${encodeURIComponent(templateId)}/inspection`);
+      console.log("검수를 요청했습니다. 카카오 심사는 영업일 1~3일 걸립니다.\n");
+      console.log("  상태: " + (d.status || "-"));
+      console.log("\n상태 확인: node admin/solapi-template.mjs status " + templateId);
+      break;
+    }
+
+    case "status": {
+      const [templateId] = args;
+      if (!templateId) { console.error("사용법: status <템플릿ID>"); process.exit(1); }
+      const d = await call("GET", `/kakao/v2/templates/${encodeURIComponent(templateId)}`);
+      console.log("  이름   : " + (d.name || "-"));
+      console.log("  상태   : " + (d.status || "-"));
+      if (d.comments && d.comments.length) {
+        console.log("\n심사 의견");
+        for (const c of d.comments) console.log("  - " + (c.content || JSON.stringify(c)));
+      }
+      break;
+    }
+
+    case "list": {
+      const d = await call("GET", "/kakao/v2/templates");
+      const list = d.templateList || d.list || d;
+      const rows = Array.isArray(list) ? list : Object.values(list || {});
+      if (!rows.length) { console.log("등록된 템플릿이 없습니다."); break; }
+      for (const t of rows) {
+        console.log(`  ${t.status || "-"}  ${t.templateId || t.id}  ${t.name || ""}`);
+      }
+      break;
+    }
+
+    default:
+      console.log("명령: channels | categories | drafts | create | inspect | status | list");
+      console.log("자세한 사용법은 이 파일 맨 위 주석을 보세요.");
+  }
+} catch (e) {
+  console.error("\n실패했습니다.\n");
+  console.error(e.message);
+  process.exit(1);
+}

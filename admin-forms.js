@@ -1270,12 +1270,15 @@ async function renderDashboard() {
   const ql = el("div", "quick");
   ql.style.marginTop = "8px";
   [
-    ["📚", "새 교육 등록", () => { goTab("events"); setTimeout(() => openEvent(null), 60); }],
-    ["🙋", "신청자 보기", () => goTab("applications")],
-    ["📁", "자료 올리기", () => { goTab("resources"); setTimeout(() => openResource(null, false), 60); }]
+    ["events", "새 교육 등록", () => { goTab("events"); setTimeout(() => openEvent(null), 60); }],
+    ["applications", "신청자 보기", () => goTab("applications")],
+    ["resources", "자료 올리기", () => { goTab("resources"); setTimeout(() => openResource(null, false), 60); }]
   ].forEach(([ic, lab, fn]) => {
     const b = el("button");
-    b.appendChild(el("span", "ic", ic));
+    /* 사이드바에 이미 그려 둔 같은 아이콘을 그대로 복제해 씁니다.
+       두 곳에서 모양이 어긋나는 일을 막으려는 것입니다. */
+    const src = document.querySelector('.nav[data-tab="' + ic + '"] .ic');
+    b.appendChild(src ? src.cloneNode(true) : el("span", "ic"));
     b.appendChild(document.createTextNode(lab));
     b.addEventListener("click", fn);
     ql.appendChild(b);

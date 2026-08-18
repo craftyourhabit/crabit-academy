@@ -150,13 +150,14 @@
   }
   .nav:hover { background: #F8F8FA; }
   .nav.active { background: var(--tint); color: var(--ink); }
-  /* 아이콘은 이모지를 쓴다. 실제 크래빗 어드민(admin.crabit.co.kr)도 같은 방식이라
-     따로 이미지 파일을 두지 않아도 톤이 맞는다. */
-  .nav .ic {
-    width: 20px; flex: none; text-align: center;
-    font-size: 15px; line-height: 1;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  /* 아이콘은 인라인 SVG 다. 파일을 따로 두지 않아 요청이 늘지 않고,
+     currentColor 로 메뉴마다 색을 달리 줄 수 있다.
+     채워진 2D 모양에 밝은 면을 겹쳐 실제 크래빗 어드민과 톤을 맞췄다. */
+  .nav .ic, .quick .ic {
+    width: 20px; height: 20px; flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
   }
+  .nav .ic svg, .quick .ic svg { width: 20px; height: 20px; display: block; }
   .side-foot { margin-top: auto; padding: 14px 10px 0; font-size: 12px; color: var(--deco); }
   .side-dim { display: none; }
 
@@ -218,11 +219,7 @@
   }
   .quick button:last-child { border-bottom: 0; }
   .quick button:hover { background: #F8F8FA; }
-  .quick .ic {
-    width: 19px; flex: none; text-align: center;
-    font-size: 14.5px; line-height: 1;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  }
+
 
   .mini-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .mini-row:last-child { border-bottom: 0; }
@@ -413,15 +410,15 @@
     <aside class="side" id="side">
       <div class="side-group">개요</div>
       <button class="nav active" data-tab="dashboard">
-        <span class="ic">🏠</span>대시보드
+        <span class="ic" style="color:#4C6FFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.6 10.4 12 3.8l8.4 6.6v8.3a1.7 1.7 0 0 1-1.7 1.7H5.3a1.7 1.7 0 0 1-1.7-1.7z" fill="currentColor"/><path d="M9.6 20.4v-5.6h4.8v5.6z" fill="#fff" fill-opacity=".85"/></svg></span>대시보드
       </button>
 
       <div class="side-group">운영</div>
-      <button class="nav" data-tab="events"><span class="ic">📚</span>교육 / 설명회</button>
-      <button class="nav" data-tab="applications"><span class="ic">🙋</span>신청자</button>
+      <button class="nav" data-tab="events"><span class="ic" style="color:#7C5CFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4.6h6a2.4 2.4 0 0 1 2 1.1V20a2.4 2.4 0 0 0-2-1.1H4z" fill="currentColor"/><path d="M20 4.6h-6a2.4 2.4 0 0 0-2 1.1V20a2.4 2.4 0 0 1 2-1.1h6z" fill="currentColor" fill-opacity=".55"/></svg></span>교육 / 설명회</button>
+      <button class="nav" data-tab="applications"><span class="ic" style="color:#F59E0B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.6" fill="currentColor"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0 1.2 1.2 0 0 1-1.2 1.2H5.8a1.2 1.2 0 0 1-1.2-1.2z" fill="currentColor" fill-opacity=".55"/></svg></span>신청자</button>
 
       <div class="side-group">관리</div>
-      <button class="nav" data-tab="resources"><span class="ic">📁</span>자료 / 인사이트</button>
+      <button class="nav" data-tab="resources"><span class="ic" style="color:#2FA968" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.4 6.6a2 2 0 0 1 2-2h3.3l2 2.2h7.9a2 2 0 0 1 2 2v1.4H3.4z" fill="currentColor" fill-opacity=".55"/><path d="M3.4 10.2h17.2v8a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2z" fill="currentColor"/></svg></span>자료 / 인사이트</button>
 
       <div class="side-foot">&copy; Crabit 2026</div>
     </aside>
@@ -1069,6 +1066,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608181541"></script>
+<script src="admin-forms.js?v=202608181648"></script>
 </body>
 </html>

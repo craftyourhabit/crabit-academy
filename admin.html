@@ -739,8 +739,48 @@ async function enterApp() {
     renderList();
   } catch (e) {
     $("#who").textContent = "";
-    alert("데이터를 불러오지 못했어요.\n\n" + e.message);
+    /* alert 을 쓰면 안 됩니다. 브라우저 기본 대화상자는 화면 전체를 붙잡아
+       버려서, 실패했을 때 사용자가 아무것도 못 하고 개발자도 화면을 볼 수
+       없게 됩니다. 실제로 그 상태로 페이지가 멈춘 적이 있습니다.
+       화면 안에 사정을 적고 다시 시도할 길을 열어 둡니다. */
+    showLoadError(e);
   }
+}
+
+/* 데이터를 못 불러왔을 때 본문에 띄우는 안내. */
+function showLoadError(e) {
+  const box = $("#list");
+  box.className = "";
+  box.innerHTML = "";
+
+  const card = el("div", "panel-c");
+  card.appendChild(el("div", "p-title", "데이터를 불러오지 못했어요"));
+
+  const msg = el("div", "hint");
+  msg.style.cssText = "margin:10px 0 16px;line-height:1.7";
+  msg.textContent = (e && e.message) ? e.message : "알 수 없는 오류입니다.";
+  card.appendChild(msg);
+
+  const help = el("div", "note");
+  help.innerHTML = "잠시 뒤에도 같으면 아래를 확인해 주세요."
+    + "<br />1. 인터넷 연결"
+    + "<br />2. 로그아웃 후 다시 로그인"
+    + "<br />3. 그래도 안 되면 현지님께 알려 주세요. (Edge Function 또는 깃허브 토큰 문제일 수 있어요)";
+  card.appendChild(help);
+
+  const row = el("div");
+  row.style.cssText = "display:flex;gap:8px;margin-top:16px";
+  const retry = el("button", "btn btn-primary btn-sm", "다시 시도");
+  retry.addEventListener("click", () => enterApp());
+  const out = el("button", "btn btn-secondary btn-sm", "로그아웃");
+  out.addEventListener("click", () => { auth.clear(); showLogin(); });
+  row.appendChild(retry); row.appendChild(out);
+  card.appendChild(row);
+
+  box.appendChild(card);
+  $("#listTitle").firstChild.textContent = "문제가 생겼어요";
+  $("#listCnt").textContent = "";
+  $("#newBtn").style.display = "none";
 }
 /* ---------- 비밀번호 보기 토글 ----------
    눈 아이콘을 누르면 입력한 글자가 보입니다. 붙여넣기가 제대로 됐는지

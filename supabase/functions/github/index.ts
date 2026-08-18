@@ -38,14 +38,45 @@ function pathAllowed(path: unknown): path is string {
   return ALLOWED_PATHS.some((re) => re.test(path));
 }
 
+/* 시크릿에 잘못된 값이 들어가도 그대로 응답 헤더에 싣지 않습니다.
+   실제로 ALLOWED_ORIGIN 끝에 깃허브 토큰이 붙어 들어간 적이 있고,
+   그 값이 Access-Control-Allow-Origin 헤더로 전 세계에 나갔습니다.
+   주소 형태가 아니면 아예 안 싣습니다. 그러면 CORS가 막혀서 바로 알아챌 수 있고,
+   무엇보다 비밀이 밖으로 새지 않습니다. */
+function safeOrigin() {
+  const raw = (Deno.env.get("ALLOWED_ORIGIN") || "").trim();
+  if (!raw) return "*";
+  try {
+    const u = new URL(raw);
+    /* 주소에 경로나 물음표가 붙어 있으면 오염된 값으로 봅니다.
+       정상값은 https://호스트 형태뿐입니다. */
+    if (u.pathname !== "/" || u.search || u.hash) return null;
+    if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+    return u.origin;
+  } catch {
+    return null;
+  }
+}
+
 function corsHeaders() {
+  const origin = safeOrigin();
+  if (origin === null) {
+    /* 값이 이상하면 CORS 헤더를 아예 주지 않습니다. */
+    return { "Vary": "Origin" };
+  }
   return {
-    "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") || "*",
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
+}
+
+/* 설정이 깨져 있으면 시작할 때 로그에 남깁니다.
+   Supabase 대시보드 > Edge Functions > github > Logs 에서 보입니다. */
+if (safeOrigin() === null) {
+  console.error("ALLOWED_ORIGIN 값이 올바른 주소가 아닙니다. CORS 헤더를 내보내지 않습니다.");
 }
 
 function json(body: unknown, status = 200) {

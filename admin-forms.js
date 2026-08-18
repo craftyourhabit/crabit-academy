@@ -242,6 +242,18 @@ function openEvent(id) {
   view.appendChild(p4);
 
   /* --- 미리보기 --- */
+  /* --- 알림톡 --- */
+  /* 이미 등록된 강의에만 붙입니다. 새로 만드는 중에는 보낼 대상이 없어요. */
+  if (!isNew) {
+    const pn = panel("알림톡", "이 강의 신청자에게 보낸 기록입니다.");
+    const nbox = el("div");
+    nbox.id = "notiBox";
+    nbox.appendChild(el("div", "hint", "불러오는 중이에요…"));
+    pn.appendChild(nbox);
+    view.appendChild(pn);
+    loadNotifications(id, state.title);
+  }
+
   const p5 = panel("미리보기", "홈 화면에 이렇게 보입니다.");
   const pv = el("div", "pv");
   p5.appendChild(pv);
@@ -828,6 +840,8 @@ async function deleteResource(id, isPrivate) {
 
 /* 현재 보고 있는 강의 필터. 빈 문자열이면 전체입니다. */
 let apFilter = "";
+/* 상태 칩으로 거르는 값. 빈 문자열이면 전체입니다. */
+let apStatus = "";
 
 const AP_STATUS = {
   pending:   { cls: "wait",   label: "입금 대기" },
@@ -861,7 +875,8 @@ async function renderApplications() {
   try {
     const cols = "id,created_at,event_id,event_title,event_fee,event_price,name,phone,email,org,source,message,status,paid_at,memo";
     const q = "/academy_applications?select=" + cols + "&order=created_at.desc&limit=500"
-      + (apFilter ? "&event_id=eq." + encodeURIComponent(apFilter) : "");
+      + (apFilter ? "&event_id=eq." + encodeURIComponent(apFilter) : "")
+      + (apStatus ? "&status=eq." + encodeURIComponent(apStatus) : "");
     items = (await table(q)) || [];
   } catch (e) {
     box.innerHTML = "";
@@ -891,16 +906,37 @@ async function renderApplications() {
   refresh.addEventListener("click", () => renderApplications());
   bar.appendChild(refresh);
 
-  /* --- 상태별 집계 --- */
-  const cnt = { pending: 0, paid: 0, cancelled: 0 };
-  items.forEach(i => { cnt[i.status] = (cnt[i.status] || 0) + 1; });
+  /* --- 상태 칩 ---
+     숫자만 보여 주는 게 아니라 누르면 그 상태만 걸러 줍니다.
+     칩의 숫자는 지금 걸린 상태 필터와 무관하게 항상 전체 기준이라야
+     "지금 대기가 몇 건인지"를 볼 수 있어서, 상태 필터가 걸려 있을 때는
+     따로 세어 옵니다. */
+  let cnt = { pending: 0, paid: 0, cancelled: 0 }, totalCnt = items.length;
+  if (apStatus) {
+    try {
+      const all = await table("/academy_applications?select=status"
+        + (apFilter ? "&event_id=eq." + encodeURIComponent(apFilter) : "")) || [];
+      totalCnt = all.length;
+      all.forEach(i => { cnt[i.status] = (cnt[i.status] || 0) + 1; });
+    } catch (e) { /* 실패하면 아래 화면 기준으로 둡니다 */ }
+  } else {
+    items.forEach(i => { cnt[i.status] = (cnt[i.status] || 0) + 1; });
+  }
+
   const sum = el("div", "ap-sum");
-  [["전체", items.length], ["입금 대기", cnt.pending], ["입금 확인", cnt.paid], ["취소", cnt.cancelled]]
-    .forEach(([label, n]) => {
-      const c = el("div", "chip", label);
-      c.appendChild(el("strong", null, String(n)));
-      sum.appendChild(c);
-    });
+  [
+    ["", "전체", totalCnt, "dot-all"],
+    ["pending", "입금 대기", cnt.pending, "dot-wait"],
+    ["paid", "입금 확인", cnt.paid, "dot-paid"],
+    ["cancelled", "취소", cnt.cancelled, "dot-cancel"]
+  ].forEach(([val, label, n, dot]) => {
+    const c = el("button", "chip" + (apStatus === val ? " on" : ""));
+    c.appendChild(el("span", "dot " + dot));
+    c.appendChild(document.createTextNode(label));
+    c.appendChild(el("strong", null, String(n)));
+    c.addEventListener("click", () => { apStatus = val; renderApplications(); });
+    sum.appendChild(c);
+  });
 
   box.innerHTML = "";
   const head = el("div");
@@ -909,7 +945,8 @@ async function renderApplications() {
   box.appendChild(head);
 
   if (!items.length) {
-    box.appendChild(el("div", "empty", "아직 신청자가 없어요."));
+    box.appendChild(el("div", "empty",
+      (apStatus || apFilter) ? "이 조건에 맞는 신청자가 없어요." : "아직 신청자가 없어요."));
     return;
   }
 
@@ -941,16 +978,21 @@ async function renderApplications() {
 
     /* --- 입금 확인 토글과 메모 --- */
     const acts = el("div", "ap-acts");
-    const toggle = el("button", "btn btn-sm " + (it.status === "paid" ? "btn-secondary" : "btn-primary"),
-      it.status === "paid" ? "대기로 되돌리기" : "입금 확인");
+    /* 취소된 건은 곧바로 '입금 확인'으로 넘기지 않습니다.
+       취소를 되돌리는 건 '대기'로 돌아오는 것이지 돈이 들어온 게 아니니까요.
+       대기 -> 입금 확인 -> 대기 는 서로 오갑니다. */
+    const isPaid = it.status === "paid";
+    const isCancelled = it.status === "cancelled";
+    const toggle = el("button", "btn btn-sm " + (isPaid || isCancelled ? "btn-secondary" : "btn-primary"),
+      isCancelled ? "취소 되돌리기" : (isPaid ? "대기로 되돌리기" : "입금 확인"));
     toggle.addEventListener("click", async () => {
       toggle.disabled = true;
       try {
-        const toPaid = it.status !== "paid";
+        const next = isCancelled ? "pending" : (isPaid ? "pending" : "paid");
         await table("/academy_applications?id=eq." + it.id, {
           method: "PATCH",
           headers: { "Prefer": "return=minimal" },
-          body: { status: toPaid ? "paid" : "pending", paid_at: toPaid ? new Date().toISOString() : null }
+          body: { status: next, paid_at: next === "paid" ? new Date().toISOString() : null }
         });
         renderApplications();
       } catch (e) {
@@ -1224,12 +1266,12 @@ async function renderDashboard() {
   const ql = el("div", "quick");
   ql.style.marginTop = "8px";
   [
-    ["ic-edu", "새 교육 등록", () => { goTab("events"); setTimeout(() => openEvent(null), 60); }],
-    ["ic-apply", "신청자 보기", () => goTab("applications")],
-    ["ic-doc", "자료 올리기", () => { goTab("resources"); setTimeout(() => openResource(null, false), 60); }]
+    ["📚", "새 교육 등록", () => { goTab("events"); setTimeout(() => openEvent(null), 60); }],
+    ["🙋", "신청자 보기", () => goTab("applications")],
+    ["📁", "자료 올리기", () => { goTab("resources"); setTimeout(() => openResource(null, false), 60); }]
   ].forEach(([ic, lab, fn]) => {
     const b = el("button");
-    b.appendChild(el("span", "ic " + ic));
+    b.appendChild(el("span", "ic", ic));
     b.appendChild(document.createTextNode(lab));
     b.addEventListener("click", fn);
     ql.appendChild(b);
@@ -1265,4 +1307,109 @@ async function renderDashboard() {
 
   grid.appendChild(left); grid.appendChild(right);
   box.appendChild(grid);
+}
+
+/* ---------------------------------------------------------------
+   알림톡 (솔라피 연결 예정)
+
+   지금은 "언제 무엇을 보냈는지" 기록을 보여 주고, 발송 버튼 자리를
+   잡아 두기만 합니다. 실제 발송은 솔라피 계정이 준비되면
+   Edge Function 하나(send-alimtalk)를 얹어 붙입니다.
+
+   버튼을 미리 만들어 두는 이유는, 붙일 때 화면을 다시 안 건드리려는 것입니다.
+   Edge Function 이 생기면 sendAlimtalk() 안의 안내창만 실제 호출로 바꾸면 됩니다.
+   --------------------------------------------------------------- */
+
+/* 보낼 수 있는 알림 종류. 솔라피 템플릿 승인이 끝나면 templateId를 채웁니다. */
+const NOTI_KINDS = [
+  { kind: "apply_confirm", label: "접수 확인",  desc: "신청이 들어왔을 때 계좌와 함께 안내" },
+  { kind: "payment_guide", label: "입금 안내",  desc: "입금 대기 중인 분에게만" },
+  { kind: "reminder",      label: "수강 리마인드", desc: "강의 전날 장소와 준비물 안내" },
+  { kind: "followup",      label: "자료 안내",  desc: "강의가 끝난 뒤 자료 링크" }
+];
+
+const NOTI_STATUS = {
+  sent:    { cls: "paid",   label: "발송 완료" },
+  pending: { cls: "wait",   label: "발송 중" },
+  failed:  { cls: "cancel", label: "실패" }
+};
+
+async function loadNotifications(eventId, eventTitle) {
+  const box = document.getElementById("notiBox");
+  if (!box) return;
+
+  let rows = [];
+  try {
+    rows = (await table("/academy_notifications?select=*&event_id=eq."
+      + encodeURIComponent(eventId) + "&order=created_at.desc&limit=50")) || [];
+  } catch (e) {
+    box.innerHTML = "";
+    /* 표를 아직 안 만들었으면 여기로 옵니다. 화면이 죽지 않게 안내만 합니다. */
+    box.appendChild(el("div", "note",
+      "알림톡 기록을 불러오지 못했어요. admin/supabase-notifications.sql 을 실행하셨는지 확인해 주세요."));
+    return;
+  }
+
+  box.innerHTML = "";
+
+  /* --- 발송 버튼 --- */
+  const btns = el("div");
+  btns.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px";
+  NOTI_KINDS.forEach(k => {
+    const b = el("button", "btn btn-secondary btn-sm", k.label + " 보내기");
+    b.disabled = true;
+    b.title = "솔라피 연결 후 사용할 수 있어요. " + k.desc;
+    b.addEventListener("click", () => sendAlimtalk(eventId, eventTitle, k));
+    btns.appendChild(b);
+  });
+  box.appendChild(btns);
+
+  const note = el("div", "note");
+  note.innerHTML = "<strong>아직 솔라피가 연결되지 않았어요.</strong> "
+    + "버튼은 연결이 끝나면 바로 눌러서 쓸 수 있게 미리 만들어 둔 것입니다. "
+    + "지금은 발송 기록만 보여 줍니다.";
+  box.appendChild(note);
+
+  /* --- 발송 이력 --- */
+  if (!rows.length) {
+    box.appendChild(el("div", "empty", "아직 보낸 알림톡이 없어요."));
+    return;
+  }
+
+  const list = el("div");
+  list.style.marginTop = "6px";
+  rows.forEach(r => {
+    const kind = (NOTI_KINDS.find(k => k.kind === r.kind) || {}).label || r.kind;
+    const st = NOTI_STATUS[r.status] || NOTI_STATUS.pending;
+
+    const row = el("div", "mini-row");
+    const m = el("div", "mini-main");
+    const t = el("div", "mini-t");
+    t.appendChild(el("span", "badge " + st.cls, st.label));
+    t.appendChild(document.createTextNode(kind));
+    m.appendChild(t);
+
+    const parts = [apDate(r.sent_at || r.created_at) + " 발송"];
+    parts.push("대상 " + (r.target_count || 0) + "명");
+    if (r.fail_count) parts.push("실패 " + r.fail_count + "건");
+    m.appendChild(el("div", "mini-s", parts.join(" · ")));
+
+    if (r.error_message) m.appendChild(el("div", "mini-s", "오류: " + r.error_message));
+    if (r.message) {
+      const msg = el("div", "ap-msg", r.message);
+      msg.style.marginTop = "8px";
+      m.appendChild(msg);
+    }
+    row.appendChild(m);
+    list.appendChild(row);
+  });
+  box.appendChild(list);
+}
+
+/* 솔라피가 붙으면 이 함수 안만 바꾸면 됩니다.
+   화면과 버튼은 이미 자리를 잡아 두었습니다. */
+async function sendAlimtalk(eventId, eventTitle, kind) {
+  alert("아직 솔라피가 연결되지 않았어요.\n\n"
+    + "연결이 끝나면 이 버튼으로 '" + kind.label + "' 알림톡을 보낼 수 있습니다.\n"
+    + "(" + kind.desc + ")");
 }

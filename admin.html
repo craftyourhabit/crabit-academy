@@ -57,9 +57,18 @@
     background: var(--bg); border-radius: 24px; padding: 40px; width: 100%; max-width: 400px;
     box-shadow: 0 2px 16px rgba(22, 25, 42, 0.07);
   }
-  .login-card img { height: 26px; display: block; margin-bottom: 24px; }
+  .login-card img { height: 24px; display: block; margin-bottom: 22px; }
   .login-card h1 { font-size: 21px; font-weight: 700; margin-bottom: 6px; }
-  .login-card p.sub { font-size: 15px; color: var(--muted); margin: 0 0 24px; }
+  .login-card p.sub { font-size: 14.5px; color: var(--muted); margin: 0 0 26px; }
+  /* 로그인 카드 안에서는 칸 사이 간격을 조금 좁혀 한 덩어리로 보이게 한다. */
+  .login-card .field { margin-bottom: 14px; }
+  .login-card .field > .lab { font-size: 13.5px; }
+  .login-card input { padding: 12px 14px; font-size: 15px; }
+  /* 오류 문구는 평소엔 자리를 차지하지 않다가 뜰 때만 밀어낸다.
+     빈 줄이 늘 자리를 잡고 있으면 버튼이 멀어 보인다. */
+  .login-card .err { min-height: 0; margin: 2px 0 0; }
+  .login-card .err:not(:empty) { margin: 10px 0 0; }
+  .login-card .btn-primary { width: 100%; margin-top: 18px; padding: 13px; font-size: 15.5px; }
 
   /* ---------- 입력 ---------- */
   .field { display: block; margin-bottom: 18px; }
@@ -79,7 +88,8 @@
   }
   .pw-toggle:hover { background: #F8F8FA; color: var(--ink); }
   .pw-toggle svg { width: 19px; height: 19px; display: block; }
-  input[type="text"], input[type="password"], input[type="date"], input[type="time"], input[type="url"], textarea, select {
+  input[type="text"], input[type="password"], input[type="email"], input[type="tel"],
+  input[type="number"], input[type="date"], input[type="time"], input[type="url"], textarea, select {
     width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
     font-size: 15px; font-family: inherit; background: var(--bg); color: var(--ink); line-height: 1.5;
   }
@@ -140,12 +150,13 @@
   }
   .nav:hover { background: #F8F8FA; }
   .nav.active { background: var(--tint); color: var(--ink); }
-  /* 아이콘은 색 칩으로만 구분한다. 외부 아이콘 파일을 안 쓰려는 것. */
-  .nav .ic { width: 19px; height: 19px; border-radius: 6px; flex: none; }
-  .ic-home  { background: var(--pink); }
-  .ic-edu   { background: #7C9CF5; }
-  .ic-apply { background: #4FBF8B; }
-  .ic-doc   { background: #F1B44C; }
+  /* 아이콘은 이모지를 쓴다. 실제 크래빗 어드민(admin.crabit.co.kr)도 같은 방식이라
+     따로 이미지 파일을 두지 않아도 톤이 맞는다. */
+  .nav .ic {
+    width: 20px; flex: none; text-align: center;
+    font-size: 15px; line-height: 1;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
   .side-foot { margin-top: auto; padding: 14px 10px 0; font-size: 12px; color: var(--deco); }
   .side-dim { display: none; }
 
@@ -207,7 +218,11 @@
   }
   .quick button:last-child { border-bottom: 0; }
   .quick button:hover { background: #F8F8FA; }
-  .quick .ic { width: 17px; height: 17px; border-radius: 5px; flex: none; }
+  .quick .ic {
+    width: 19px; flex: none; text-align: center;
+    font-size: 14.5px; line-height: 1;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
 
   .mini-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .mini-row:last-child { border-bottom: 0; }
@@ -248,12 +263,31 @@
   .empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 15px; }
 
   /* ---------- 신청자 현황 ---------- */
-  .ap-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
-  .ap-bar select { padding: 9px 12px; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
-  .ap-bar .spacer { flex: 1; }
+  .ap-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  /* 전역 select 는 width:100% 라 그대로 두면 필터가 줄을 통째로 밀어낸다. */
+  .ap-bar select {
+    width: auto; min-width: 190px; max-width: 320px;
+    padding: 9px 32px 9px 12px; font: inherit; font-size: 14px;
+    border: 1px solid var(--line); border-radius: 9px; background-color: var(--bg); color: var(--ink);
+  }
+  .ap-bar .spacer { flex: 1 1 auto; }
+
+  /* 상태 칩. 세기만 하는 게 아니라 누르면 그 상태만 걸러 준다. */
   .ap-sum { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .ap-sum .chip { padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--fill-soft); font-size: 14px; }
-  .ap-sum .chip strong { font-weight: 700; margin-left: 6px; }
+  .ap-sum .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 13px; border: 1px solid var(--line); border-radius: 99px;
+    background: var(--bg); font-family: inherit; font-size: 13.5px; color: var(--ink);
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  .ap-sum .chip:hover { background: #F8F8FA; }
+  .ap-sum .chip.on { border-color: var(--ink); background: #F8F8FA; }
+  .ap-sum .chip strong { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ap-sum .dot { width: 8px; height: 8px; border-radius: 99px; flex: none; }
+  .dot-all    { background: var(--deco); }
+  .dot-wait   { background: #F0A020; }
+  .dot-paid   { background: #2FA968; }
+  .dot-cancel { background: #B9BCC6; }
   .ap-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
   .ap-row:last-child { border-bottom: 0; }
   .ap-main { flex: 1; min-width: 0; }
@@ -352,7 +386,7 @@
       </div>
     </div>
     <p class="err" id="loginErr"></p>
-    <button class="btn btn-primary" id="loginBtn" style="width:100%">로그인</button>
+    <button class="btn btn-primary" id="loginBtn">로그인</button>
   </div>
 </div>
 
@@ -379,15 +413,15 @@
     <aside class="side" id="side">
       <div class="side-group">개요</div>
       <button class="nav active" data-tab="dashboard">
-        <span class="ic ic-home"></span>대시보드
+        <span class="ic">🏠</span>대시보드
       </button>
 
       <div class="side-group">운영</div>
-      <button class="nav" data-tab="events"><span class="ic ic-edu"></span>교육 / 설명회</button>
-      <button class="nav" data-tab="applications"><span class="ic ic-apply"></span>신청자</button>
+      <button class="nav" data-tab="events"><span class="ic">📚</span>교육 / 설명회</button>
+      <button class="nav" data-tab="applications"><span class="ic">🙋</span>신청자</button>
 
       <div class="side-group">관리</div>
-      <button class="nav" data-tab="resources"><span class="ic ic-doc"></span>자료 / 인사이트</button>
+      <button class="nav" data-tab="resources"><span class="ic">📁</span>자료 / 인사이트</button>
 
       <div class="side-foot">&copy; Crabit 2026</div>
     </aside>
@@ -733,6 +767,11 @@ async function enterApp() {
 
 $("#loginBtn").addEventListener("click", doLogin);
 $("#pw").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+/* 이메일 칸에서 엔터를 누르면 비밀번호 칸으로 옮겨 갑니다. 이미 채워져 있으면 바로 로그인. */
+$("#email").addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  if ($("#pw").value) doLogin(); else $("#pw").focus();
+});
 $("#logoutBtn").addEventListener("click", () => { auth.clear(); showLogin(); });
 
 /* ---------------------------------------------------------------
@@ -1027,6 +1066,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js"></script>
+<script src="admin-forms.js?v=202608181307"></script>
 </body>
 </html>

@@ -47,7 +47,7 @@ const EVENTS_DB = {
     category: "학원 운영",
     host: "올커니",
     kind: "교육",
-    title: "지역 1등 수학학원 만들기 프로젝트 (녹화본 3회)",
+    title: "지역 1등 수학학원 만들기 프로젝트 (녹화본)",
     date: "온라인 강의 3회차 녹화본 · 신청 후 바로 시청",
     thumb: "assets/events/math-academy-top1/hero.png",
     format: "online",
@@ -66,50 +66,6 @@ const EVENTS_DB = {
     speakerRole: "올마이티캠퍼스 대표 · 서울대 쌍둥이",
     audience: "수학학원 원장님과 운영자",
     status: "upcoming",
-    sessions: [
-      {
-        no: "01",
-        title: "5년 뒤에도 살아남는 수학학원의 조건",
-        speaker: "여호원",
-        speakerRole: "AI가 바꾸는 학원의 미래와 원장의 역할",
-        points: [
-          "AI는 학원을 어떻게 바꾸고 있는가",
-          "종이교재에서 AI 기반 디지털 학습으로",
-          "디지털교과서 시대, 수학학원의 대응 전략",
-          "AI를 활용한 학생 맞춤 학습관리 시스템",
-          "앞으로 없어질 학원과 살아남는 학원"
-        ],
-        poster: "assets/events/math-academy-top1/session-01.png"
-      },
-      {
-        no: "02",
-        title: "원장이 없어도 성장하는 학원 시스템 벤치마킹",
-        speaker: "여호원",
-        speakerRole: "원장의 역할은 무엇이어야 하는가",
-        points: [
-          "지표 기반 관리 시스템 구축",
-          "학생, 강사, 직원 관리 시스템",
-          "평가 및 보상 시스템",
-          "재무 및 회계 관리 시스템",
-          "다수 지점 운영 관리 노하우"
-        ],
-        poster: "assets/events/math-academy-top1/session-02.png"
-      },
-      {
-        no: "03",
-        title: "모집부터 상담까지, 등록률을 높이는 성장 시스템",
-        speaker: "여호원",
-        speakerRole: "학생이 찾아오고 학부모가 등록하는 학원의 비밀",
-        points: [
-          "같은 수업인데 더 비싼 학원이 선택되는 이유",
-          "우리 학원만의 차별화 포인트 만들기",
-          "설명회 하나로 등록을 만드는 구조",
-          "블로그, 유튜브, SNS 운영 전략",
-          "등록률을 높이는 상담 프로세스"
-        ],
-        poster: "assets/events/math-academy-top1/session-03.png"
-      }
-    ],
     materials: [
       { name: "온라인 강의 3회차 녹화영상" },
       { name: "전 회차 강의자료", note: "현장 참가자와 동일하게 제공" },
@@ -121,7 +77,10 @@ const EVENTS_DB = {
       { name: "AI 활용 수학문제 제작 프롬프트" }
     ],
     detailImages: [
-      { src: "assets/events/math-academy-top1/intro.png", alt: "지역1등 수학학원 만들기 프로젝트. 4년 만에 지점 7개까지 늘린 노하우 전격공개. 잘 가르치는 것만으로 지역 1등이 될 수 있을까요? 수업은 잘하는데 성장이 멈춘 학원, 원장이 모든 일을 하는 학원, 학생은 있는데 매출은 늘지 않는 학원." }
+      { src: "assets/events/math-academy-top1/intro.png", alt: "지역1등 수학학원 만들기 프로젝트. 4년 만에 지점 7개까지 늘린 노하우 전격공개. 잘 가르치는 것만으로 지역 1등이 될 수 있을까요? 수업은 잘하는데 성장이 멈춘 학원, 원장이 모든 일을 하는 학원, 학생은 있는데 매출은 늘지 않는 학원." },
+      { src: "assets/events/math-academy-top1/session-01.png", alt: "1강 5년 뒤에도 살아남는 수학학원의 조건. AI가 바꾸는 학원의 미래와 원장의 역할. 강의 내용 여덟 가지와 함께 드리는 자료 다섯 종." },
+      { src: "assets/events/math-academy-top1/session-02.png", alt: "2강 원장이 없어도 성장하는 학원 시스템 벤치마킹. 원장의 역할은 무엇이어야 하는가. 강의 내용 여덟 가지와 함께 드리는 자료 다섯 종." },
+      { src: "assets/events/math-academy-top1/session-03.png", alt: "3강 모집부터 상담까지 등록률을 높이는 성장 시스템. 학생이 찾아오고 학부모가 등록하는 학원의 비밀. 강의 내용 아홉 가지와 함께 드리는 자료 세 종." }
     ]
   },
   "parents-webinar": {

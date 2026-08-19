@@ -38,7 +38,9 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  /* 오른쪽에 뜬 결제 카드가 폭을 가져가므로 컨테이너를 넓게 잡는다.
+     1120 이면 본문에 652 밖에 안 남아 목록이 서너 줄씩 접힌다. */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
   header {
     box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06);
     position: sticky; top: 0; z-index: 40;
@@ -107,7 +109,10 @@
     padding-top: 26px; border-top: 1px solid var(--line);
   }
   .facts > div { min-width: 0; }
-  .facts dt { font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+  /* 라벨 앞에 붙는 2D 아이콘. 선 굵기 하나로 그린 납작한 모양이라
+     글자 옆에 있어도 시끄럽지 않다. 색은 글자색을 그대로 따라간다. */
+  .ic { flex: none; vertical-align: -3px; margin-right: 6px; }
+  .facts dt { display: flex; align-items: center; font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
   .facts dd { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-break: keep-all; }
   .facts dd a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .facts dd .sm { display: block; font-size: 13.5px; font-weight: 400; color: var(--muted); margin-top: 3px; }
@@ -149,7 +154,7 @@
      선은 .wrap 안쪽 폭에 맞춰 따로 그린다. */
   .sec::after {
     content: ""; display: block;
-    max-width: 1072px; margin: 56px auto 0;
+    max-width: 1232px; margin: 56px auto 0;
     border-top: 1px solid var(--line);
   }
   .sec:last-child { margin-bottom: 0; }
@@ -183,8 +188,9 @@
   .art { margin: 34px 0 0; }
   .art > * { margin: 0 0 20px; }
   .art > *:last-child { margin-bottom: 0; }
-  .art h4 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.45; margin-top: 40px; }
+  .art h4 { display: flex; align-items: flex-start; gap: 9px; font-size: 19px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.45; margin-top: 40px; }
   .art h4:first-child { margin-top: 0; }
+  .art h4 .ic { margin-right: 0; margin-top: 3px; color: var(--pink); }
   .art p { font-size: 17px; line-height: 1.8; }
   .art strong { font-weight: 700; }
   .art ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
@@ -264,15 +270,18 @@
   .b-who { margin: 10px 0 0; font-size: 16px; font-weight: 600; }
   .b-who span { font-weight: 400; color: var(--muted); }
 
-  .b-cols { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 44px; align-items: start; }
-  .b-lab { font-size: 13.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--pink); margin: 0 0 16px; }
-  .b-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; }
+  .b-cols { display: block; }
+  .b-lab { display: flex; align-items: center; font-size: 13.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--pink); margin: 0 0 16px; }
+  /* 칸 폭에 맞춰 단 수가 알아서 줄어든다. 한 항목이 접히지 않을 만큼은 확보한다. */
+  .b-list { list-style: none; margin: 0; padding: 0; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 12px 40px; }
   .b-list li { display: flex; gap: 11px; align-items: baseline; font-size: 16.5px; line-height: 1.5; word-break: keep-all; }
   .b-list li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 99px; background: var(--pink); transform: translateY(-2px); }
 
-  .b-gift { border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; background: #fff; }
+  .b-gift { margin-top: 30px; border: 1px solid var(--line); border-radius: 16px; padding: 24px 28px; background: #fff; }
   .b-gift .b-lab { color: var(--ink); }
-  .b-gift ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .b-gift ul { list-style: none; margin: 0; padding: 0; display: grid;
+               grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px 32px; }
   .b-gift li { display: flex; gap: 11px; align-items: baseline; font-size: 15.5px; line-height: 1.5; color: var(--muted); }
   .b-gift li::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 99px; background: var(--faint); transform: translateY(-2px); }
 
@@ -320,12 +329,15 @@
     .rail {
       display: block; position: fixed; z-index: 25;
       top: calc(var(--hd) + 92px); width: 332px;
-      left: 50%; transform: translateX(180px);
+      left: 50%; transform: translateX(284px);
     }
     /* 카드가 덮지 않도록 본문 오른쪽을 비운다. 배경 띠는 화면 끝까지 그대로 간다. */
-    .top > .wrap, main#body .wrap { padding-right: 420px; }
+    .top > .wrap, main#body .wrap { padding-right: 380px; }
   }
-  .buy { border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; box-shadow: 0 6px 24px rgba(22, 25, 42, 0.06); }
+  /* 배경을 반드시 채운다. 카드가 페이지 위에 떠서 다크 밴드 위를 지나가는데,
+     배경이 없으면 어두운 띠가 그대로 비쳐 글자가 통째로 묻힌다. */
+  .buy { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px;
+         box-shadow: 0 8px 28px rgba(22, 25, 42, 0.10); }
   .buy .b-label { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
   .buy .b-amount { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.25; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
   .buy .b-note { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
@@ -382,7 +394,6 @@
   @media (max-width: 1023px) {
     .narrow { max-width: none; }
     .strip { max-width: none; }
-    .b-cols { grid-template-columns: 1fr; gap: 32px; }
     .b-poster { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; }
     .top { padding: 22px 0 34px; }
     /* 결제 카드는 하단 고정 바가 이미 들고 있다. 같은 걸 두 번 보여 주지 않는다. */
@@ -398,6 +409,7 @@
     .band { padding: 40px 0; }
     .band-dark { padding: 44px 0; }
     .b-list { grid-template-columns: 1fr; }
+    .b-gift ul { grid-template-columns: 1fr; }
     .i-pain { grid-template-columns: 1fr; }
     .b-head { flex-direction: column; gap: 12px; }
     .sec { padding-bottom: 40px; margin-bottom: 40px; }
@@ -559,10 +571,26 @@
   /* 어드민에서 쓴 본문을 블록 단위로 그린다.
      글 안의 **굵게** 는 굵게 바꾼다. escape 를 먼저 하고 나서 바꾸므로
      본문에 <b> 같은 걸 적어도 태그로 살아나지 않는다. */
+  /* 2D 아이콘 모음. currentColor 를 쓰므로 놓는 자리의 글자색을 그대로 따른다. */
+  const IC = (d, w) => '<svg class="ic" width="' + (w || 16) + '" height="' + (w || 16) + '" viewBox="0 0 20 20" fill="none" aria-hidden="true">' + d + '</svg>';
+  const S = 'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
+  const ICONS = {
+    screen: IC('<rect x="2.5" y="3.5" width="15" height="10" rx="1.6" ' + S + '/><path d="M7 17h6M10 13.5V17" ' + S + '/>'),
+    calendar: IC('<rect x="2.8" y="4.2" width="14.4" height="13" rx="2" ' + S + '/><path d="M2.8 8.2h14.4M6.6 2.6v3M13.4 2.6v3" ' + S + '/>'),
+    people: IC('<circle cx="7.6" cy="7" r="2.9" ' + S + '/><path d="M2.6 16.4c0-2.7 2.2-4.5 5-4.5s5 1.8 5 4.5" ' + S + '/><path d="M13.4 5.4a2.6 2.6 0 0 1 0 5M14.6 16.4c0-2 .6-3.3-.6-4.2" ' + S + '/>'),
+    folder: IC('<path d="M2.6 6.2c0-1 .8-1.7 1.7-1.7h2.9l1.6 2h6.9c1 0 1.7.8 1.7 1.7v6.6c0 1-.8 1.7-1.7 1.7H4.3c-1 0-1.7-.8-1.7-1.7z" ' + S + '/>'),
+    tag: IC('<path d="M10.2 2.6H16a1.4 1.4 0 0 1 1.4 1.4v5.8L9.6 17.6a1.3 1.3 0 0 1-1.9 0L2.4 12.3a1.3 1.3 0 0 1 0-1.9z" ' + S + '/><circle cx="13.4" cy="6.6" r="1.2" ' + S + '/>'),
+    list: IC('<path d="M7 5.6h10M7 10h10M7 14.4h10M3.2 5.6h.01M3.2 10h.01M3.2 14.4h.01" ' + S + '/>'),
+    gift: IC('<rect x="2.8" y="8" width="14.4" height="9.2" rx="1.5" ' + S + '/><path d="M2.4 8h15.2M10 8v9.2" ' + S + '/><path d="M10 8S8.6 3.2 6.6 3.2a1.9 1.9 0 0 0 0 3.8H10zM10 8s1.4-4.8 3.4-4.8a1.9 1.9 0 0 1 0 3.8H10z" ' + S + '/>'),
+    bulb: IC('<path d="M7.4 14.6a5 5 0 1 1 5.2 0v1.6a1 1 0 0 1-1 1h-3.2a1 1 0 0 1-1-1z" ' + S + '/><path d="M8.4 17.8h3.2" ' + S + '/>'),
+    target: IC('<circle cx="10" cy="10" r="7.2" ' + S + '/><circle cx="10" cy="10" r="3.4" ' + S + '/><circle cx="10" cy="10" r="0.6" fill="currentColor"/>')
+  };
+  const FACT_ICON = { "진행 방식": "screen", "일정": "calendar", "대상": "people", "제공 자료": "folder", "수강료": "tag", "참가비": "tag" };
+
   const rich = t => esc(t).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   const artHtml = Array.isArray(ev.article) && ev.article.length
     ? '<div class="art">' + ev.article.map(b => {
-        if (b.type === "h") return '<h4>' + rich(b.text) + '</h4>';
+        if (b.type === "h") return '<h4>' + (ICONS[b.icon] || ICONS.bulb) + '<span>' + rich(b.text) + '</span></h4>';
         if (b.type === "quote") return '<blockquote>' + rich(b.text) + '</blockquote>';
         if (b.type === "ul") return '<ul>' + (b.items || []).map(x => '<li>' + rich(x) + '</li>').join("") + '</ul>';
         if (b.type === "img") return '<figure><img src="' + b.src + '" alt="' + esc(b.alt || "") + '" loading="lazy" />'
@@ -601,11 +629,11 @@
       + '</div></div>';
 
     const list = sn.points
-      ? '<div><p class="b-lab">강의 내용</p><ul class="b-list">'
+      ? '<div><p class="b-lab">' + ICONS.list + '강의 내용</p><ul class="b-list">'
         + sn.points.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul></div>'
       : '';
     const gift = sn.gifts
-      ? '<aside class="b-gift"><p class="b-lab">함께 드리는 자료</p><ul>'
+      ? '<aside class="b-gift"><p class="b-lab">' + ICONS.gift + '함께 드리는 자료</p><ul>'
         + sn.gifts.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul></aside>'
       : '';
 
@@ -756,7 +784,7 @@
     + '<h1>' + esc(ev.title) + '</h1>'
     + '<p class="tagline">' + esc(cardDesc(ev.desc, 60)) + '</p>'
     + '<dl class="facts">'
-    + facts.map(f => '<div><dt>' + f.k + '</dt><dd>' + f.v
+    + facts.map(f => '<div><dt>' + (ICONS[FACT_ICON[f.k]] || "") + f.k + '</dt><dd>' + f.v
         + (f.sm ? '<span class="sm">' + f.sm + '</span>' : '') + '</dd></div>').join("")
     + '</dl>'
     + '</div>'

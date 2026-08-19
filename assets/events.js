@@ -8,11 +8,13 @@
    - status: "upcoming"(예정) | "closed"(마감) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
    - replayUrl: status가 "replay"일 때 영상 링크
    - kind: "교육" | "설명회" - 카드와 상세에서 상태 태그 왼쪽에 붙는 분류
+   - category: 주제 분류. 학원 운영 | AI·자동화 | 마케팅·브랜딩 | 세무·노무
+     이 네 가지 중 하나만 씁니다. 새 주제가 필요하면 여기 목록부터 늘리세요.
    - startDate: "YYYY-MM-DD" - 당일이면 '예정' 대신 '오늘'로 표시.
      날짜가 확정되지 않은 일정은 생략하면 됩니다.
    - speaker / assistant: 연사, 스페셜 조교 (상세 상단에 표시)
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
-   - format: "offline"(오프라인) | "online"(온라인) | "hybrid"(동시 진행).
+   - format: "offline"(오프라인) | "online"(온라인) | "vod"(녹화본) | "hybrid"(동시 진행).
      생략하면 place 유무로 추정합니다.
    - onlineUrl: 줌 등 참여 링크. format이 online 또는 hybrid일 때만 씁니다.
      ★ 이 값은 공개 페이지에 절대 노출하지 않습니다. 링크를 아는 사람은
@@ -115,7 +117,7 @@ const EVENTS_DB = {
     title: "지역 1등 수학학원 만들기 프로젝트 (녹화본)",
     date: "온라인 강의 3회차 녹화본, 신청 후 바로 시청",
     thumb: "assets/events/math-academy-top1/hero.jpg",
-    format: "online",
+    format: "vod",
     priceType: "paid",
     price: 90000,
     feeNote: "회차당 30,000원, 3회차 묶음입니다. 강의자료는 현장 참가자와 똑같이 전부 드려요.",
@@ -126,7 +128,7 @@ const EVENTS_DB = {
        type: p(문단) | h(소제목) | ul(불릿) | quote(인용) | img(사진)
        글 안에서 **이렇게** 감싸면 굵게 나온다. */
     article: [
-      { type: "h", text: "학원이 커질수록, 원장님 시간은 왜 더 줄어들까요" },
+      { type: "h", icon: "target", text: "학원이 커질수록, 원장님 시간은 왜 더 줄어들까요" },
       { type: "p", text: "수업을 잘하면 학생이 늘고, 학생이 늘면 학원이 큰다고 배웠습니다. 그런데 막상 해보면 반대예요. 학생이 늘수록 원장님이 붙잡고 있어야 할 일이 같이 늘어납니다." },
       { type: "ul", items: [
         "상담도, 수업도, 관리도 결국 원장님이 마지막에 확인해야 끝난다",
@@ -135,7 +137,7 @@ const EVENTS_DB = {
       ] },
       { type: "p", text: "여호원 대표도 같은 자리에 있었습니다. 다른 점은 **사람을 더 쓰는 대신 시스템을 먼저 만들었다는 것**입니다. 4년 만에 지점 7개까지 늘리는 동안, 원장이 자리를 비워도 굴러가는 구조를 하나씩 세웠습니다." },
       { type: "quote", text: "잘 가르치는 것만으로\n지역 1등이 될 수 있을까요?" },
-      { type: "h", text: "이 강의에서 가져가시는 것" },
+      { type: "h", icon: "gift", text: "이 강의에서 가져가시는 것" },
       { type: "p", text: "이론 강의가 아닙니다. 실제로 쓰고 있는 관리 시트와 체크리스트, 상담 스크립트를 그대로 드립니다. 3회차를 다 보시면 **우리 학원에 무엇부터 손대야 하는지**가 정리됩니다." },
       { type: "img", src: "assets/events/math-academy-top1/hero.jpg",
         alt: "지역 1등 수학학원 만들기 프로젝트 포스터",
@@ -245,7 +247,7 @@ const EVENTS_DB = {
   },
   "landing-lecture": {
     type: "Lecture",
-    category: "마케팅과 브랜딩",
+    category: "마케팅·브랜딩",
     host: "크래빗",
     kind: "교육",
     title: "우리 학원만의 랜딩페이지, 코딩 없이 한 번에 제작하기",
@@ -263,7 +265,7 @@ const EVENTS_DB = {
   },
   "claude-code-teachers": {
     type: "Course",
-    category: "AI와 자동화",
+    category: "AI·자동화",
     host: "크래빗",
     kind: "교육",
     title: "모두를 위한 클로드 코드 (Teachers Webinar)",
@@ -281,7 +283,7 @@ const EVENTS_DB = {
   },
   "cardnews-automation": {
     type: "Lecture",
-    category: "AI와 자동화",
+    category: "AI·자동화",
     host: "크래빗",
     kind: "교육",
     title: "클로드 코드로 카드뉴스 자동화 에이전트 만들기",
@@ -300,7 +302,7 @@ const EVENTS_DB = {
   },
   "daegu-lecture": {
     type: "Lecture",
-    category: "AI와 자동화",
+    category: "AI·자동화",
     host: "크래빗",
     kind: "교육",
     title: "우리 학원만의 AI 마케터 고용하기",
@@ -326,7 +328,7 @@ const EVENTS_DB = {
   },
   "homepage-blog-master": {
     type: "Course",
-    category: "마케팅과 브랜딩",
+    category: "마케팅·브랜딩",
     host: "올커니",
     kind: "교육",
     title: "학원 홈페이지형 블로그 마스터 과정",
@@ -482,6 +484,8 @@ function eventStatusTag(ev) {
 function eventFormat(ev) {
   const f = ev.format || (ev.place ? "offline" : "online");
   const map = {
+    /* vod 는 정해진 시각이 없다. 참여 링크 안내가 나가면 안 되므로 isOnline 을 켜지 않는다. */
+    vod:     { kind: "vod",     label: "VOD",      isOffline: false, isOnline: false },
     offline: { kind: "offline", label: "오프라인", isOffline: true,  isOnline: false },
     online:  { kind: "online",  label: "온라인",   isOffline: false, isOnline: true  },
     hybrid:  { kind: "hybrid",  label: "오프라인 + 온라인 동시", isOffline: true, isOnline: true }

@@ -247,23 +247,6 @@
   .replay .thumb-wrap { border-radius: 14px; overflow: hidden; transition: transform 0.18s; }
   .replay:hover .thumb-wrap { transform: translateY(-3px); }
   .replay:hover strong { text-decoration: underline; text-underline-offset: 3px; }
-  .replay.coming-card {
-    cursor: default;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 24px;
-    min-height: 300px;
-    background: var(--fill-soft);
-    box-shadow: inset 0 0 0 2px var(--line);
-  }
-  .replay.coming-card:hover { transform: none; box-shadow: inset 0 0 0 2px var(--line); }
-  .replay.coming-card span {
-    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--muted);
-  }
   /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
      한 줄씩 눈으로 훑을 수 있게 한다. */
   .replay .thumb-wrap { position: relative; }
@@ -284,6 +267,8 @@
   }
   .replay .chip.today { background: var(--pink); color: #fff; }
   .replay .chip.closed { background: rgba(22, 25, 42, 0.72); color: #fff; }
+  /* 진행 형태는 오른쪽 위에. 상태 칩과 색을 달리해 역할이 다름을 보이게 한다. */
+  .replay .chip.fmt { left: auto; right: 12px; background: rgba(22, 25, 42, 0.72); color: #fff; }
 
   .replay .body {
     padding: 16px 4px 22px;
@@ -575,7 +560,7 @@
     .filter(([id]) => SHOW_IDS.includes(id))
     .sort((a, b) => (isEventOver(a[1]) ? 1 : 0) - (isEventOver(b[1]) ? 1 : 0));
   if (entries.length === 0) {
-    grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육·설명회 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
+    grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육과 설명회 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
     return;
   }
   entries.forEach(([id, ev]) => {
@@ -588,6 +573,7 @@
       '<div class="thumb-wrap">'
       + '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
       + '<span class="chip ' + tag.cls + '"></span>'
+      + '<span class="chip fmt"></span>'
       + '</div>'
       + '<div class="body">'
       + '<strong></strong>'
@@ -595,6 +581,7 @@
       + '<div class="foot"><span class="date"></span><span class="price"></span></div>'
       + '</div>';
     a.querySelector(".chip").textContent = tag.text;
+    a.querySelector(".chip.fmt").textContent = eventFormat(ev).label;
     a.querySelector("strong").textContent = ev.title;
     /* 분류와 주최를 한 줄로. 어느 쪽이 없어도 구분자가 남지 않게 조립한다. */
     const cat = [ev.category, ev.host].filter(Boolean);
@@ -607,12 +594,6 @@
     grid.appendChild(a);
   });
 
-  // 클릭 불가한 'Coming Soon!' 자리 카드
-  const soon = document.createElement("div");
-  soon.className = "replay coming-card";
-  soon.setAttribute("aria-hidden", "true");
-  soon.innerHTML = '<span>Coming Soon!</span>';
-  grid.appendChild(soon);
 })();
 
 /* ---------- 비밀번호 자료 접근 ----------

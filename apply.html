@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>신청하기 - 크래빗 아카데미</title>
+<meta name="description" content="크래빗 아카데미 교육 신청" />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/favicon.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL - 라이선스: assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  :root {
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  header { box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06); position: sticky; top: 0; background: rgba(255, 255, 255,0.92); backdrop-filter: blur(8px); z-index: 20; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand img { height: 26px; display: block; }
+  .brand a { color: inherit; text-decoration: none; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  main.wrap { padding-top: 40px; padding-bottom: 90px; }
+
+  .back {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 15px; font-weight: 500; color: var(--muted);
+    text-decoration: none; margin-bottom: 22px;
+  }
+  .back:hover { color: var(--ink); }
+
+  .sec-h {
+    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  /* ---------- 무엇을 신청하는지 다시 보여 주는 요약 ----------
+     상세 페이지를 떠나 왔으니, 강의와 금액을 여기서 한 번 더 확인시켜 준다. */
+  .summary {
+    display: flex; gap: 18px; align-items: center;
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 34px;
+  }
+  .summary img {
+    flex: none; width: 148px; aspect-ratio: 16 / 9;
+    object-fit: cover; border-radius: 10px; background: var(--fill); display: block;
+  }
+  .summary .s-txt { min-width: 0; }
+  .summary h2 { margin: 0 0 6px; font-size: 18px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.4; }
+  .summary .s-meta { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .summary .s-price { margin: 8px 0 0; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+
+  /* ---------- 신청 폼 ---------- */
+  .applyform h1 { margin: 0 0 6px; }
+  .applyform .form-sub { margin: 0 0 26px; font-size: 15.5px; color: var(--muted); line-height: 1.6; }
+  .applyform .fields { display: flex; flex-direction: column; gap: 18px; }
+  .applyform .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .applyform label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .applyform label .req { color: var(--pink); margin-left: 3px; }
+  .applyform input[type="text"],
+  .applyform input[type="tel"],
+  .applyform input[type="email"],
+  .applyform textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: border-color 0.15s;
+  }
+  .applyform input:focus, .applyform textarea:focus { outline: none; border-color: var(--ink); }
+  .applyform textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
+  /* 자동 프로그램만 채우는 칸. 사람 눈에는 안 보인다. */
+  .applyform .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .applyform .consent {
+    margin-top: 4px;
+    padding: 18px 20px;
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .applyform .consent-row { display: flex; gap: 10px; align-items: flex-start; }
+  .applyform .consent-row input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
+  .applyform .consent-row label { margin: 0; font-weight: 600; font-size: 15px; line-height: 1.5; }
+  .applyform .consent-detail { margin: 10px 0 0 28px; font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+
+  .applyform .submit-row { margin-top: 22px; }
+  .applyform button.submit {
+    width: 100%;
+    padding: 16px;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--ink);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .applyform button.submit:hover { background: #333333; }
+  .applyform button.submit:disabled { opacity: 0.5; cursor: default; }
+  .applyform .formmsg { margin: 14px 0 0; font-size: 15px; line-height: 1.6; }
+  .applyform .formmsg.err { color: #C0392B; font-weight: 600; }
+
+  .applyform .done {
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 34px;
+    text-align: center;
+  }
+  .applyform .done h3 { margin: 0 0 12px; font-size: 21px; font-weight: 700; }
+  .applyform .done p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--ink); }
+  .applyform .done .next { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; color: var(--muted); }
+  .applyform .done .btn-back {
+    display: inline-block; margin-top: 22px; padding: 12px 22px;
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; text-decoration: none;
+  }
+  .applyform .done .btn-back:hover { background: #F0F0F0; }
+
+  /* ---------- 주문 확인과 결제 ---------- */
+  .order h3 { margin: 0 0 6px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .order .o-sub { margin: 0 0 22px; font-size: 15.5px; color: var(--muted); }
+  .o-box { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 26px; }
+  .o-row { display: flex; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+  .o-row:last-child { border-bottom: 0; }
+  .o-row > span { flex: none; width: 96px; color: var(--muted); }
+  .o-row > b { font-weight: 600; flex: 1; }
+  .o-row.total { background: var(--fill-soft); }
+  .o-row.total > b { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+  .o-h { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+  .o-pay {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px;
+    font-size: 15.5px; font-weight: 600; cursor: pointer; margin-bottom: 22px;
+  }
+  .o-pay input { width: 18px; height: 18px; accent-color: var(--ink); }
+  .o-agree { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.6; margin-bottom: 18px; }
+  .o-agree input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
+  .o-agree a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .o-msg { margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: var(--muted); }
+  .o-msg.err { color: #C0392B; font-weight: 600; }
+  .order .submit {
+    width: 100%; padding: 16px; font: inherit; font-size: 17px; font-weight: 700;
+    color: #fff; background: var(--ink); border: 0; border-radius: 12px; cursor: pointer;
+  }
+  .order .submit:hover { background: #333333; }
+  .order .submit:disabled { opacity: 0.5; cursor: default; }
+
+  .notfound { text-align: center; padding: 70px 0 90px; }
+  .notfound h1 { font-size: 24px; margin: 0 0 12px; }
+  .notfound p { color: var(--muted); margin: 0 0 28px; }
+  .notfound a {
+    display: inline-block; padding: 13px 24px; font-size: 15px; font-weight: 600;
+    color: #fff; background: var(--ink); border-radius: 12px; text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .applyform .row2 { grid-template-columns: 1fr; }
+    .o-row { flex-direction: column; gap: 4px; }
+    .o-row > span { width: auto; font-size: 13.5px; }
+    .summary { flex-direction: column; align-items: stretch; }
+    .summary img { width: 100%; }
+  }
+
+  footer {
+    background: var(--fill);
+    border-top: 1px solid var(--line);
+    padding: 40px 0 44px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .f-brand img { height: 22px; display: block; }
+  .f-sns { display: flex; gap: 18px; }
+  .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .f-sns a:hover { color: var(--ink); }
+  .f-info { line-height: 1.8; }
+  .f-info p { margin: 0; }
+  .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
+    <a href="./">홈으로 돌아가기</a>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
+      <div class="f-sns">
+        <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
+        <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
+      </div>
+    </div>
+    <div class="f-info">
+      <p>(주)크래빗 | 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 | 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 | 문의 010-5957-2483</p>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 CRABIT. All rights reserved.</span>
+      <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
+      <span><a href="policy.html">이용약관과 환불 규정</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/events.js"></script>
+<script>
+/* ===============================================
+   신청 페이지
+
+   상세 페이지의 '신청하기'를 누르면 여기로 옵니다.
+   상세 안에 폼을 끼워 넣지 않고 페이지를 나눈 이유는,
+   신청하는 동안에는 신청에만 집중하게 하기 위해서예요.
+
+   제출은 Supabase로 곧장 갑니다. 중간 서버가 없습니다.
+   아래 publishable 키는 공개용이라 이 파일에 있어도 됩니다.
+   대신 테이블 권한이 유일한 방어선이라, anon 은 INSERT만 되고
+   남의 신청을 읽는 건 DB에서 막혀 있습니다. (admin/supabase-schema.sql)
+   =============================================== */
+(function () {
+  const id = new URLSearchParams(location.search).get("id");
+  const ev = id && EVENTS_DB[id];
+  const main = document.getElementById("main");
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  const notFound = (title, msg) => {
+    main.innerHTML = '<div class="notfound"><h1>' + title + '</h1><p>' + msg + '</p>'
+      + '<a href="courses.html">교육 일정 보러 가기</a></div>';
+  };
+
+  if (!ev) {
+    notFound("찾을 수 없는 교육이에요", "주소가 바뀌었거나 이미 내려간 교육일 수 있어요.");
+    return;
+  }
+
+  /* 지난 교육은 접수하지 않습니다. 상세 페이지에서도 막고 있지만,
+     주소를 직접 치고 들어오는 경우가 있어서 여기서 한 번 더 봅니다. */
+  const overable = ev.status === "replay" || ev.status === "replay-soon" || isEventOver(ev);
+  if (overable) {
+    notFound("접수가 끝난 교육이에요", "크래빗 아카데미에서 준비 중인 다른 교육을 둘러보세요.");
+    return;
+  }
+
+  const fmt = eventFormat(ev);
+  const price = eventPriceInfo(ev);
+  const detailUrl = "event.html?id=" + encodeURIComponent(id);
+
+  /* 무료 강의 완료 안내 */
+  const doneHtml = () => '<div class="done">'
+    + '<h3>신청이 접수되었습니다</h3>'
+    + '<p>남겨 주신 연락처로 확정 안내를 보내드릴게요.</p>'
+    + '<a class="btn-back" href="' + detailUrl + '">강의 상세로 돌아가기</a>'
+    + '</div>';
+
+  /* 유료 강의 주문 확인과 결제.
+     카카오페이 가맹 승인 전이라 마지막 버튼은 안내만 띄운다.
+     승인 후 이 자리에 결제창 호출만 넣으면 된다. */
+  const orderHtml = name => '<div class="order">'
+    + '<h3>주문 확인</h3>'
+    + '<p class="o-sub">' + esc(name) + '님, 아래 내용으로 결제를 진행합니다.</p>'
+    + '<div class="o-box">'
+    + '<div class="o-row"><span>강의</span><b>' + esc(ev.title) + '</b></div>'
+    + '<div class="o-row"><span>진행 방식</span><b>' + esc(fmt.label) + '</b></div>'
+    + (ev.provision ? '<div class="o-row"><span>서비스 제공</span><b>' + esc(ev.provision) + '</b></div>' : '')
+    + '<div class="o-row total"><span>결제 금액</span><b>' + esc(price.text) + '</b></div>'
+    + '</div>'
+    + '<h4 class="o-h">결제 수단</h4>'
+    + '<label class="o-pay"><input type="radio" name="paymethod" value="kakaopay" checked />'
+    + '<span>카카오페이</span></label>'
+    + '<label class="o-agree"><input type="checkbox" id="o-agree" />'
+    + '<span>주문 내용을 확인했으며 <a href="policy.html" target="_blank" rel="noopener">이용약관과 환불 규정</a>에 동의합니다.</span></label>'
+    + '<p class="o-msg" id="oMsg" hidden></p>'
+    + '<button class="submit" id="payBtn" type="button">결제하기</button>'
+    + '</div>';
+
+  main.innerHTML =
+    '<a class="back" href="' + detailUrl + '">&larr; 강의 상세로 돌아가기</a>'
+    + '<div class="summary">'
+    + '<img src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + '<div class="s-txt">'
+    + '<h2>' + esc(ev.title) + '</h2>'
+    + '<p class="s-meta">' + esc(ev.date) + ' | ' + esc(fmt.label) + '</p>'
+    + (price.incomplete ? '' : '<p class="s-price">' + esc(price.text) + '</p>')
+    + '</div></div>'
+    + '<section class="applyform" id="applyform">'
+    + '<h1 class="sec-h">신청하기</h1>'
+    + '<p class="form-sub">아래 내용을 남겨 주시면 접수됩니다.'
+    + (fmt.isOnline ? ' 온라인 참여 링크는 접수 후 따로 보내드려요.' : '')
+    + (price.paid ? ' 제출을 마치면 결제 화면으로 이어집니다.' : '')
+    + '</p>'
+    + '<form id="applyFormEl" novalidate><div class="fields">'
+    + '<div class="row2">'
+    + '<div><label for="f-name">이름<span class="req">*</span></label>'
+    + '<input type="text" id="f-name" name="name" autocomplete="name" maxlength="40" required /></div>'
+    + '<div><label for="f-phone">연락처<span class="req">*</span></label>'
+    + '<input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" maxlength="20" required /></div>'
+    + '</div>'
+    + '<div class="row2">'
+    + '<div><label for="f-email">이메일</label>'
+    + '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" /></div>'
+    + '<div><label for="f-org">학원명과 직책</label>'
+    + '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" /></div>'
+    + '</div>'
+    + '<div><label for="f-source">어떻게 알고 오셨나요</label>'
+    + '<input type="text" id="f-source" name="source" placeholder="예: 인스타그램, 지인 소개" maxlength="120" /></div>'
+    + '<div><label for="f-message">문의사항</label>'
+    + '<textarea id="f-message" name="message" maxlength="1000" placeholder="미리 궁금하신 점이 있으면 남겨 주세요."></textarea></div>'
+    /* 사람에게는 안 보이는 칸. 자동 프로그램이 채우면 접수하지 않는다. */
+    + '<div class="hp" aria-hidden="true"><label for="f-website">website</label>'
+    + '<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>'
+    + '<div class="consent">'
+    + '<div class="consent-row">'
+    + '<input type="checkbox" id="f-consent" name="consent" required />'
+    + '<label for="f-consent">개인정보 수집과 이용에 동의합니다<span class="req">*</span></label>'
+    + '</div>'
+    + '<p class="consent-detail">수집 항목은 이름, 연락처, 이메일, 소속입니다. '
+    + '강의 접수와 안내 목적으로만 쓰고 강의 종료 후 1년간 보관한 뒤 파기합니다. '
+    + '동의하지 않으셔도 되지만 그 경우 신청 접수가 어렵습니다.</p>'
+    + '</div>'
+    + '</div>'
+    + '<div class="submit-row"><button class="submit" type="submit">신청 접수하기</button></div>'
+    + '<p class="formmsg" id="formMsg" hidden></p>'
+    + '</form></section>';
+
+  document.title = ev.title + " 신청 - 크래빗 아카데미";
+
+  const SB_URL = "https://ttolvlzubashyhdctbqr.supabase.co";
+  const SB_KEY = "sb_publishable_BLr1R3be079ViSLSoAtIqQ_ZTs7T6HG";
+  const APPLY_API = SB_URL + "/rest/v1/academy_applications";
+
+  const formEl = document.getElementById("applyFormEl");
+  const msg = document.getElementById("formMsg");
+  const btn = formEl.querySelector("button.submit");
+
+  const show = (text, isError) => {
+    msg.textContent = text;
+    msg.className = "formmsg" + (isError ? " err" : "");
+    msg.hidden = false;
+  };
+
+  /* 결제하기 버튼 동작 */
+  function bindOrder() {
+    const payBtn = document.getElementById("payBtn");
+    const agree = document.getElementById("o-agree");
+    const oMsg = document.getElementById("oMsg");
+    if (!payBtn) return;
+    payBtn.addEventListener("click", () => {
+      if (!agree.checked) {
+        oMsg.textContent = "이용약관과 환불 규정에 동의해 주세요.";
+        oMsg.className = "o-msg err";
+        oMsg.hidden = false;
+        return;
+      }
+      /* 카카오페이 가맹 승인 후 여기서 결제창을 부릅니다. */
+      oMsg.innerHTML = "카카오페이 결제 연동을 준비하고 있어요.<br />"
+        + "지금은 담당자가 결제 방법을 따로 안내해 드립니다. 신청은 이미 접수되었어요.";
+      oMsg.className = "o-msg";
+      oMsg.hidden = false;
+      payBtn.disabled = true;
+      payBtn.textContent = "접수 완료";
+    });
+  }
+
+  formEl.addEventListener("submit", async e => {
+    e.preventDefault();
+    const val = n => (formEl.elements[n] ? formEl.elements[n].value.trim() : "");
+
+    if (!val("name")) { show("이름을 입력해 주세요.", true); formEl.elements.name.focus(); return; }
+    const digits = val("phone").replace(/[^0-9]/g, "");
+    if (digits.length < 9 || digits.length > 11) {
+      show("연락처를 다시 확인해 주세요.", true); formEl.elements.phone.focus(); return;
+    }
+    if (!formEl.elements.consent.checked) {
+      show("개인정보 수집과 이용에 동의해 주셔야 신청할 수 있어요.", true); return;
+    }
+
+    /* 사람 눈에 안 보이는 칸이 채워져 있으면 자동 프로그램이다.
+       조용히 성공한 척하고 보내지 않는다. */
+    if (val("website")) {
+      show("신청이 접수되었습니다.", false);
+      return;
+    }
+
+    btn.disabled = true;
+    show("접수하는 중이에요…", false);
+
+    /* 빈 칸은 아예 빼고 보낸다. 빈 문자열이 들어가면 길이 제약에 걸릴 수 있다. */
+    const row = {
+      event_id: id,
+      event_title: ev.title,
+      event_fee: price.text || null,
+      event_price: price.amount,
+      name: val("name"),
+      phone: digits,
+      email: val("email") || null,
+      org: val("org") || null,
+      source: val("source") || null,
+      message: val("message") || null,
+      consent: true
+    };
+
+    try {
+      const res = await fetch(APPLY_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SB_KEY,
+          "Authorization": "Bearer " + SB_KEY,
+          /* 넣기만 하고 돌려받지 않는다. anon 은 읽기 권한이 없으므로
+             return=representation 을 쓰면 오히려 실패한다. */
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(row)
+      });
+
+      if (!res.ok) {
+        /* 23505 는 유니크 위반. 같은 강의에 같은 번호로 이미 넣은 경우다. */
+        const err = await res.json().catch(() => ({}));
+        const dup = res.status === 409 || err.code === "23505";
+        show(dup
+          ? "이미 같은 연락처로 신청이 접수돼 있어요. 확인이 필요하시면 문의해 주세요."
+          : "접수에 실패했어요. 잠시 후 다시 시도해 주세요.", true);
+        btn.disabled = false;
+        return;
+      }
+
+      /* 성공하면 폼 자리를 다음 단계로 바꾼다.
+         유료 강의는 주문 확인과 결제로, 무료 강의는 완료 안내로 간다. */
+      const sec = document.getElementById("applyform");
+      sec.innerHTML = price.paid ? orderHtml(val("name")) : doneHtml();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (price.paid) bindOrder();
+    } catch {
+      show("네트워크 문제로 접수하지 못했어요. 잠시 후 다시 시도해 주세요.", true);
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+
+<script src="assets/track.js?v=202608191626" defer></script>
+</body>
+</html>

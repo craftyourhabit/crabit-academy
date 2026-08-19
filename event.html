@@ -214,118 +214,6 @@
     .fee .amount { font-size: 24px; }
   }
 
-  /* ---------- 신청 폼 ----------
-     구글폼 대신 페이지 안에서 바로 받는다. 제출은 Supabase로 곧장 간다.
-     공개용 키만 쓰고, 남의 신청을 읽는 건 테이블 권한과 RLS가 막는다. */
-  .applyform { scroll-margin-top: 20px; margin-bottom: 36px; }
-  .applyform h2 { margin: 0 0 6px; }
-  .applyform .form-sub { margin: 0 0 22px; font-size: 15.5px; color: var(--muted); line-height: 1.6; }
-  .applyform .fields { display: flex; flex-direction: column; gap: 18px; }
-  .applyform .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .applyform label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-  .applyform label .req { color: var(--pink); margin-left: 3px; }
-  .applyform input[type="text"],
-  .applyform input[type="tel"],
-  .applyform input[type="email"],
-  .applyform textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 13px 15px;
-    font: inherit;
-    font-size: 16px;
-    color: var(--ink);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    transition: border-color 0.15s;
-  }
-  .applyform input:focus, .applyform textarea:focus {
-    outline: none;
-    border-color: var(--ink);
-  }
-  .applyform textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
-  /* 자동 프로그램만 채우는 칸. 사람 눈에는 안 보인다. */
-  .applyform .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-
-  .applyform .consent {
-    margin-top: 4px;
-    padding: 18px 20px;
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-  }
-  .applyform .consent-row { display: flex; gap: 10px; align-items: flex-start; }
-  .applyform .consent-row input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
-  .applyform .consent-row label { margin: 0; font-weight: 600; font-size: 15px; line-height: 1.5; }
-  .applyform .consent-detail { margin: 10px 0 0 28px; font-size: 13.5px; color: var(--muted); line-height: 1.65; }
-
-  .applyform .submit-row { margin-top: 22px; }
-  .applyform button.submit {
-    width: 100%;
-    padding: 16px;
-    font: inherit;
-    font-size: 17px;
-    font-weight: 700;
-    color: #fff;
-    background: var(--ink);
-    border: 0;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .applyform button.submit:hover { background: #333333; }
-  .applyform button.submit:disabled { opacity: 0.5; cursor: default; }
-  .applyform .formmsg { margin: 14px 0 0; font-size: 15px; line-height: 1.6; }
-  .applyform .formmsg.err { color: #C0392B; font-weight: 600; }
-
-  .applyform .done {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 34px;
-    text-align: center;
-  }
-  .applyform .done h3 { margin: 0 0 12px; font-size: 21px; font-weight: 700; }
-  .applyform .done p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--ink); }
-  .applyform .done .next { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; color: var(--muted); }
-
-  /* ---------- 주문 확인과 결제 ----------
-     신청서를 낸 뒤 이어지는 화면. 금액과 제공 조건을 다시 보여 주고
-     동의를 받은 다음 결제로 넘어간다. */
-  .order h3 { margin: 0 0 6px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
-  .order .o-sub { margin: 0 0 22px; font-size: 15.5px; color: var(--muted); }
-  .o-box { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 26px; }
-  .o-row { display: flex; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--line); font-size: 15.5px; }
-  .o-row:last-child { border-bottom: 0; }
-  .o-row > span { flex: none; width: 96px; color: var(--muted); }
-  .o-row > b { font-weight: 600; flex: 1; }
-  .o-row.total { background: var(--fill-soft); }
-  .o-row.total > b { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-  .o-h { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
-  .o-pay {
-    display: flex; align-items: center; gap: 10px;
-    border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px;
-    font-size: 15.5px; font-weight: 600; cursor: pointer; margin-bottom: 22px;
-  }
-  .o-pay input { width: 18px; height: 18px; accent-color: var(--ink); }
-  .o-agree { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.6; margin-bottom: 18px; }
-  .o-agree input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
-  .o-agree a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  .o-msg { margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: var(--muted); }
-  .o-msg.err { color: #C0392B; font-weight: 600; }
-  .order .submit {
-    width: 100%; padding: 16px; font: inherit; font-size: 17px; font-weight: 700;
-    color: #fff; background: var(--ink); border: 0; border-radius: 12px; cursor: pointer;
-  }
-  .order .submit:hover { background: #333333; }
-  .order .submit:disabled { opacity: 0.5; cursor: default; }
-
-  @media (max-width: 640px) {
-    .applyform .row2 { grid-template-columns: 1fr; }
-    .o-row { flex-direction: column; gap: 4px; }
-    .o-row > span { width: auto; font-size: 13.5px; }
-  }
-
   /* ---------- 커리큘럼 (세션별 안내) ----------
      포스터를 왼쪽에 두고 오른쪽에 설명을 세우는 가로형. 좁은 화면에서는 위아래로 쌓는다. */
   .sec-h { margin: 0 0 16px; }
@@ -499,9 +387,9 @@
       </div>
     </div>
     <div class="f-info">
-      <p>(주)크래빗 · 대표 김현지</p>
-      <p>사업자등록번호 747-86-03279 · 통신판매업신고 제 2025-서울구로-2011</p>
-      <p>서울시 구로구 디지털로 288, 2003-1호 · 문의 010-5957-2483</p>
+      <p>(주)크래빗 | 대표 김현지</p>
+      <p>사업자등록번호 747-86-03279 | 통신판매업신고 제 2025-서울구로-2011</p>
+      <p>서울시 구로구 디지털로 288, 2003-1호 | 문의 010-5957-2483</p>
     </div>
     <div class="f-bottom">
       <span>&copy; 2026 CRABIT. All rights reserved.</span>
@@ -545,7 +433,7 @@
   const kindBadge = ev.kind ? '<span class="badge kind">' + esc(ev.kind) + '</span>' : '';
 
   // ctaAction: 누를 수 있는 CTA가 있으면 하단 고정 바로, 없으면 본문에 문구로만 남긴다
-  let cta = "", ctaAction = true, isClosedFlow = false, isApplyFlow = false, useInlineForm = false;
+  let cta = "", ctaAction = true, isClosedFlow = false, isApplyFlow = false;
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
   } else if (ev.status === "replay-soon" || ev.status === "replay") {
@@ -554,11 +442,12 @@
     isApplyFlow = true;
     /* applyUrl 이 있으면 외부 폼을 우선한다. 공동 주최라 상대 쪽 폼으로
        받아야 하는 경우가 있어서 남겨 둔 통로다.
-       비워 두면 이 페이지 안의 신청 폼으로 받는다. 그게 기본이다. */
-    useInlineForm = !ev.applyUrl;
+       비워 두면 우리 신청 페이지(apply.html)로 보낸다. 그게 기본이다.
+       상세 안에 폼을 끼워 넣지 않고 페이지를 나눈 이유는, 신청하는 동안에는
+       신청에만 집중하게 하기 위해서다. */
     cta = ev.applyUrl
       ? '<a class="btn btn-primary" href="' + ev.applyUrl + '" target="_blank" rel="noopener">신청하기</a>'
-      : '<button class="btn btn-primary" id="toForm" type="button">신청하기</button>';
+      : '<a class="btn btn-primary" href="apply.html?id=' + encodeURIComponent(id) + '">신청하기</a>';
   } else {
     // 마감됐거나, 날짜가 지났는데 status를 아직 안 바꾼 경우
     cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
@@ -635,7 +524,7 @@
       + '<p class="amount">' + esc(price.text) + '</p>'
       + (price.note ? '<p class="amount-note">' + esc(price.note) + '</p>' : '')
       + '<ol>'
-      + '<li>아래 신청하기 버튼을 눌러 신청서를 작성합니다.</li>'
+      + '<li>신청하기 버튼을 눌러 신청서를 작성합니다.</li>'
       + (price.paid
           ? '<li>이어지는 결제 화면에서 결제를 진행합니다.</li>'
             + '<li>결제가 확인되면 안내를 보내드립니다.</li>'
@@ -656,49 +545,6 @@
           : '<p class="cline">참가비 없이 무료로 진행합니다.</p>')
       + '</div>'
       + '</section>'
-    : '';
-
-  // 페이지 안에서 받는 신청 폼. 제출은 Worker로 가고 Worker가 Supabase에 넣는다.
-  const formHtml = useInlineForm
-    ? '<section class="applyform" id="applyform">'
-      + '<h2 class="sec-h">신청하기</h2>'
-      + '<p class="form-sub">아래 내용을 남겨 주시면 접수됩니다.'
-      + (fmt.isOnline ? ' 온라인 참여 링크는 접수 후 따로 보내드려요.' : '')
-      + (price.paid ? ' 제출을 마치면 결제 화면으로 이어집니다.' : '')
-      + '</p>'
-      + '<form id="applyFormEl" novalidate><div class="fields">'
-      + '<div class="row2">'
-      + '<div><label for="f-name">이름<span class="req">*</span></label>'
-      + '<input type="text" id="f-name" name="name" autocomplete="name" maxlength="40" required /></div>'
-      + '<div><label for="f-phone">연락처<span class="req">*</span></label>'
-      + '<input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" maxlength="20" required /></div>'
-      + '</div>'
-      + '<div class="row2">'
-      + '<div><label for="f-email">이메일</label>'
-      + '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" /></div>'
-      + '<div><label for="f-org">학원명과 직책</label>'
-      + '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" /></div>'
-      + '</div>'
-      + '<div><label for="f-source">어떻게 알고 오셨나요</label>'
-      + '<input type="text" id="f-source" name="source" placeholder="예: 인스타그램, 지인 소개" maxlength="120" /></div>'
-      + '<div><label for="f-message">문의사항</label>'
-      + '<textarea id="f-message" name="message" maxlength="1000" placeholder="미리 궁금하신 점이 있으면 남겨 주세요."></textarea></div>'
-      /* 사람에게는 안 보이는 칸. 자동 프로그램이 채우면 접수하지 않는다. */
-      + '<div class="hp" aria-hidden="true"><label for="f-website">website</label>'
-      + '<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>'
-      + '<div class="consent">'
-      + '<div class="consent-row">'
-      + '<input type="checkbox" id="f-consent" name="consent" required />'
-      + '<label for="f-consent">개인정보 수집과 이용에 동의합니다<span class="req">*</span></label>'
-      + '</div>'
-      + '<p class="consent-detail">수집 항목은 이름, 연락처, 이메일, 소속입니다. '
-      + '강의 접수와 안내 목적으로만 쓰고 강의 종료 후 1년간 보관한 뒤 파기합니다. '
-      + '동의하지 않으셔도 되지만 그 경우 신청 접수가 어렵습니다.</p>'
-      + '</div>'
-      + '</div>'
-      + '<div class="submit-row"><button class="submit" type="submit">신청 접수하기</button></div>'
-      + '<p class="formmsg" id="formMsg" hidden></p>'
-      + '</form></section>'
     : '';
 
   // 주최사 담당자가 따로 있으면 신청 버튼 옆에 문의처를 함께 안내한다
@@ -729,7 +575,6 @@
     + materialsHtml
     + detailHtml
     + feeHtml
-    + formHtml
     + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
     + (isClosedFlow
         ? '<div class="closed-note" id="closedNote" hidden>'
@@ -747,165 +592,6 @@
     const padForBar = () => { document.body.style.paddingBottom = bar.offsetHeight + "px"; };
     padForBar();
     window.addEventListener("resize", padForBar);
-  }
-
-  /* 하단 고정 바의 신청 버튼을 누르면 폼으로 데려가고 이름 칸에 커서를 둔다. */
-  const toForm = document.getElementById("toForm");
-  if (toForm) {
-    toForm.addEventListener("click", () => {
-      const sec = document.getElementById("applyform");
-      if (!sec) return;
-      sec.scrollIntoView({ behavior: "smooth", block: "start" });
-      const first = document.getElementById("f-name");
-      if (first) setTimeout(() => first.focus({ preventScroll: true }), 400);
-    });
-  }
-
-  /* 신청 폼 제출.
-     API 주소만 알고 있으면 되고 어떤 키도 이 페이지에 없다.
-     인증이 필요한 조회는 어드민에서만 하고, 여기는 접수만 한다. */
-  /* Supabase에 직접 넣습니다. 중간 서버가 없습니다.
-     아래 publishable 키는 공개용이라 이 파일에 있어도 됩니다.
-     대신 테이블 권한이 유일한 방어선이라, anon 은 INSERT만 되고
-     남의 신청을 읽는 건 DB에서 막혀 있습니다. (admin/supabase-schema.sql) */
-  const SB_URL = "https://ttolvlzubashyhdctbqr.supabase.co";
-  const SB_KEY = "sb_publishable_BLr1R3be079ViSLSoAtIqQ_ZTs7T6HG";
-  const APPLY_API = SB_URL + "/rest/v1/academy_applications";
-  const formEl = document.getElementById("applyFormEl");
-  if (formEl) {
-    const msg = document.getElementById("formMsg");
-    const btn = formEl.querySelector("button.submit");
-
-    const show = (text, isError) => {
-      msg.textContent = text;
-      msg.className = "formmsg" + (isError ? " err" : "");
-      msg.hidden = false;
-    };
-
-    /* 무료 강의 완료 안내 */
-    const doneHtml = () => '<div class="done">'
-      + '<h3>신청이 접수되었습니다</h3>'
-      + '<p>남겨 주신 연락처로 확정 안내를 보내드릴게요.</p>'
-      + '</div>';
-
-    /* 유료 강의 주문 확인과 결제.
-       카카오페이 연동 전이라 마지막 버튼은 안내만 띄운다.
-       가맹 승인 후 이 자리에 결제창 호출만 넣으면 된다. */
-    const orderHtml = name => '<div class="order">'
-      + '<h3>주문 확인</h3>'
-      + '<p class="o-sub">' + esc(name) + '님, 아래 내용으로 결제를 진행합니다.</p>'
-      + '<div class="o-box">'
-      + '<div class="o-row"><span>강의</span><b>' + esc(ev.title) + '</b></div>'
-      + '<div class="o-row"><span>진행 방식</span><b>' + esc(fmt.label) + '</b></div>'
-      + (ev.provision ? '<div class="o-row"><span>서비스 제공</span><b>' + esc(ev.provision) + '</b></div>' : '')
-      + '<div class="o-row total"><span>결제 금액</span><b>' + esc(price.text) + '</b></div>'
-      + '</div>'
-      + '<h4 class="o-h">결제 수단</h4>'
-      + '<label class="o-pay"><input type="radio" name="paymethod" value="kakaopay" checked />'
-      + '<span>카카오페이</span></label>'
-      + '<label class="o-agree"><input type="checkbox" id="o-agree" />'
-      + '<span>주문 내용을 확인했으며 <a href="policy.html" target="_blank" rel="noopener">이용약관과 환불 규정</a>에 동의합니다.</span></label>'
-      + '<p class="o-msg" id="oMsg" hidden></p>'
-      + '<button class="submit" id="payBtn" type="button">결제하기</button>'
-      + '</div>';
-
-    /* 결제하기 버튼 동작 */
-    function bindOrder() {
-      const btn = document.getElementById("payBtn");
-      const agree = document.getElementById("o-agree");
-      const msg = document.getElementById("oMsg");
-      if (!btn) return;
-      btn.addEventListener("click", () => {
-        if (!agree.checked) {
-          msg.textContent = "이용약관과 환불 규정에 동의해 주세요.";
-          msg.className = "o-msg err";
-          msg.hidden = false;
-          return;
-        }
-        /* 카카오페이 가맹 승인 후 여기서 결제창을 부릅니다. */
-        msg.innerHTML = "카카오페이 결제 연동을 준비하고 있어요.<br />"
-          + "지금은 담당자가 결제 방법을 따로 안내해 드립니다. 신청은 이미 접수되었어요.";
-        msg.className = "o-msg";
-        msg.hidden = false;
-        btn.disabled = true;
-        btn.textContent = "접수 완료";
-      });
-    }
-
-    formEl.addEventListener("submit", async e => {
-      e.preventDefault();
-      const val = n => (formEl.elements[n] ? formEl.elements[n].value.trim() : "");
-
-      if (!val("name")) { show("이름을 입력해 주세요.", true); formEl.elements.name.focus(); return; }
-      const digits = val("phone").replace(/[^0-9]/g, "");
-      if (digits.length < 9 || digits.length > 11) {
-        show("연락처를 다시 확인해 주세요.", true); formEl.elements.phone.focus(); return;
-      }
-      if (!formEl.elements.consent.checked) {
-        show("개인정보 수집과 이용에 동의해 주셔야 신청할 수 있어요.", true); return;
-      }
-
-      /* 사람 눈에 안 보이는 칸이 채워져 있으면 자동 프로그램이다.
-         조용히 성공한 척하고 보내지 않는다. */
-      if (val("website")) {
-        show("신청이 접수되었습니다.", false);
-        return;
-      }
-
-      btn.disabled = true;
-      show("접수하는 중이에요…", false);
-
-      /* 빈 칸은 아예 빼고 보낸다. 빈 문자열이 들어가면 길이 제약에 걸릴 수 있다. */
-      const row = {
-        event_id: id,
-        event_title: ev.title,
-        event_fee: price.text || null,
-        event_price: price.amount,
-        name: val("name"),
-        phone: digits,
-        email: val("email") || null,
-        org: val("org") || null,
-        source: val("source") || null,
-        message: val("message") || null,
-        consent: true
-      };
-
-      try {
-        const res = await fetch(APPLY_API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apikey": SB_KEY,
-            "Authorization": "Bearer " + SB_KEY,
-            /* 넣기만 하고 돌려받지 않는다. anon 은 읽기 권한이 없으므로
-               return=representation 을 쓰면 오히려 실패한다. */
-            "Prefer": "return=minimal"
-          },
-          body: JSON.stringify(row)
-        });
-
-        if (!res.ok) {
-          /* 23505 는 유니크 위반. 같은 강의에 같은 번호로 이미 넣은 경우다. */
-          const err = await res.json().catch(() => ({}));
-          const dup = res.status === 409 || err.code === "23505";
-          show(dup
-            ? "이미 같은 연락처로 신청이 접수돼 있어요. 확인이 필요하시면 문의해 주세요."
-            : "접수에 실패했어요. 잠시 후 다시 시도해 주세요.", true);
-          btn.disabled = false;
-          return;
-        }
-
-        /* 성공하면 폼 자리를 다음 단계로 바꾼다.
-           유료 강의는 주문 확인과 결제로, 무료 강의는 완료 안내로 간다. */
-        const sec = document.getElementById("applyform");
-        sec.innerHTML = price.paid ? orderHtml(val("name")) : doneHtml();
-        sec.scrollIntoView({ behavior: "smooth", block: "start" });
-        if (price.paid) bindOrder();
-      } catch {
-        show("네트워크 문제로 접수하지 못했어요. 잠시 후 다시 시도해 주세요.", true);
-        btn.disabled = false;
-      }
-    });
   }
 
   const closedBtn = document.getElementById("closedApply");

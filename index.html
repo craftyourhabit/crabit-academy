@@ -577,10 +577,10 @@
 })();
 
 /* ---------- 교육 일정 카드 렌더링 (assets/events.js 데이터 사용) ----------
-   SHOW_IDS에 나열한 교육만 노출합니다. (지금은 대구 강의 하나)
+   SHOW_IDS에 나열한 교육만 노출합니다.
    진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */
 (function () {
-  const SHOW_IDS = ["homepage-blog-master", "daegu-lecture"];
+  const SHOW_IDS = ["math-academy-top1", "homepage-blog-master", "daegu-lecture"];
   const grid = document.getElementById("upcomingGrid");
   const entries = Object.entries(EVENTS_DB)
     .filter(([id]) => SHOW_IDS.includes(id))
@@ -666,6 +666,6 @@ async function tryUnlock() {
 </script>
 
 
-<script src="assets/track.js" defer></script>
+<script src="assets/track.js?v=202608191626" defer></script>
 </body>
 </html>

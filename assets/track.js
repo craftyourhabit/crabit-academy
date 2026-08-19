@@ -48,26 +48,25 @@
 
     var body = JSON.stringify({ event_id: eventId, path: path, referrer_host: host });
 
-    /* sendBeacon 은 페이지를 떠나는 중에도 안전하게 보냅니다.
-       apikey 헤더를 못 실어서 쿼리스트링으로 넘깁니다. */
-    var url = SB_URL + "/rest/v1/academy_pageviews?apikey=" + encodeURIComponent(SB_KEY);
-    var sent = false;
-    if (navigator.sendBeacon) {
-      sent = navigator.sendBeacon(url, new Blob([body], { type: "application/json" }));
-    }
-    if (!sent) {
-      fetch(SB_URL + "/rest/v1/academy_pageviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SB_KEY,
-          "Authorization": "Bearer " + SB_KEY,
-          "Prefer": "return=minimal"
-        },
-        body: body,
-        keepalive: true
-      }).catch(function () { /* 조회수 기록이 실패해도 페이지는 멀쩡해야 합니다 */ });
-    }
+    /* sendBeacon 은 쓰지 않습니다.
+       비콘은 인증정보를 함께 보내는데, 그러면 브라우저가 응답의
+       Access-Control-Allow-Origin 이 '*' 인 것을 거부합니다.
+       Supabase 는 '*' 로 답하므로 비콘은 항상 CORS 에서 막힙니다.
+
+       keepalive 를 켠 fetch 는 페이지를 떠나는 중에도 요청을 끝까지 보냅니다.
+       credentials 를 omit 으로 두어 쿠키를 싣지 않으므로 와일드카드도 문제없습니다. */
+    fetch(SB_URL + "/rest/v1/academy_pageviews", {
+      method: "POST",
+      credentials: "omit",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SB_KEY,
+        "Authorization": "Bearer " + SB_KEY,
+        "Prefer": "return=minimal"
+      },
+      body: body,
+      keepalive: true
+    }).catch(function () { /* 조회수 기록이 실패해도 페이지는 멀쩡해야 합니다 */ });
   } catch (e) {
     /* 기록이 안 되는 건 사이트가 깨지는 것보다 훨씬 나은 일입니다. */
   }

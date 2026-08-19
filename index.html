@@ -27,6 +27,7 @@
     --ink: #16192A;
     --muted: rgba(22, 25, 42, 0.55);
     --line: #E8E8E8;
+    --faint: rgba(22, 25, 42, 0.30);
     --pink: #FB75BB;
     --tint: #FEE9F4;      /* 연핑크 */
   }
@@ -238,16 +239,14 @@
   }
   .replay {
     background: var(--bg);
-    border-radius: 20px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
-    transition: transform 0.18s, box-shadow 0.18s;
     text-decoration: none;
     color: inherit;
   }
-  .replay:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(22, 25, 42, 0.1); }
+  .replay .thumb-wrap { border-radius: 14px; overflow: hidden; transition: transform 0.18s; }
+  .replay:hover .thumb-wrap { transform: translateY(-3px); }
+  .replay:hover strong { text-decoration: underline; text-underline-offset: 3px; }
   .replay.coming-card {
     cursor: default;
     align-items: center;
@@ -265,6 +264,9 @@
     letter-spacing: -0.01em;
     color: var(--muted);
   }
+  /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
+     한 줄씩 눈으로 훑을 수 있게 한다. */
+  .replay .thumb-wrap { position: relative; }
   .replay .thumb {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -272,54 +274,40 @@
     display: block;
     background: var(--fill);
   }
+  .replay .chip {
+    position: absolute; top: 12px; left: 12px;
+    font-size: 12px; font-weight: 700; line-height: 1.5;
+    padding: 4px 11px; border-radius: 99px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+  }
+  .replay .chip.today { background: var(--pink); color: #fff; }
+  .replay .chip.closed { background: rgba(22, 25, 42, 0.72); color: #fff; }
+
   .replay .body {
-    padding: 20px 24px 24px;
+    padding: 16px 4px 22px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 7px;
     flex: 1;
   }
-  .replay .k-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .replay .body .k {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .status-tag {
-    font-size: 12.5px;
-    font-weight: 700;
-    padding: 3px 11px;
-    border-radius: 99px;
-    letter-spacing: 0;
-    line-height: 1.5;
-  }
-  .status-tag.upcoming { background: var(--tint); color: var(--pink); }
-  /* 당일 - 하루만 붙는 태그라 브랜드 핑크를 꽉 채워 가장 강하게 */
-  .status-tag.today { background: var(--pink); color: #fff; }
-  .status-tag.closed { background: var(--fill); color: var(--muted); }
-  /* 교육/설명회 - 상태 태그 왼쪽의 분류. 채운 상태 태그와 구분되게 외곽선만 */
-  .kind-tag {
-    font-size: 12.5px;
-    font-weight: 600;
-    padding: 3px 11px;
-    border-radius: 99px;
-    line-height: 1.5;
-    color: var(--ink);
-    box-shadow: inset 0 0 0 1px var(--line);
-  }
+  /* 제목은 두 줄까지만. 길이가 제각각이면 카드 높이가 들쭉날쭉해진다. */
   .replay .body strong {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .replay .body p { margin: 0; font-size: 15px; color: var(--muted); flex: 1; }
-  .replay .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .replay .date { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .replay .more { font-size: 15px; font-weight: 600; color: var(--pink); }
-  .replay .more.arrow { font-size: 24px; line-height: 1; font-weight: 600; }
+  .replay .cat { font-size: 13.5px; color: var(--muted); }
+  .replay .cat .bar { margin: 0 7px; color: var(--faint); }
+  .replay .foot { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 4px; }
+  .replay .date { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .replay .price { flex: none; font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
 
   /* ---------- resources ---------- */
   .res-list {
@@ -592,23 +580,30 @@
   }
   entries.forEach(([id, ev]) => {
     const tag = eventStatusTag(ev);
+    const price = eventPriceInfo(ev);
     const a = document.createElement("a");
     a.className = "replay";
     a.href = "event?id=" + id;
     a.innerHTML =
-      '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
+      '<div class="thumb-wrap">'
+      + '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
+      + '<span class="chip ' + tag.cls + '"></span>'
+      + '</div>'
       + '<div class="body">'
-      + '<div class="k-row">'
-      + (ev.kind ? '<span class="kind-tag"></span>' : '')
-      + '<span class="status-tag ' + tag.cls + '">' + tag.text + '</span></div>'
       + '<strong></strong>'
-      + '<p></p>'
-      + '<div class="foot"><span class="date"></span><span class="more arrow">&#8250;</span></div>'
+      + '<div class="cat"></div>'
+      + '<div class="foot"><span class="date"></span><span class="price"></span></div>'
       + '</div>';
-    if (ev.kind) a.querySelector(".kind-tag").textContent = ev.kind;
+    a.querySelector(".chip").textContent = tag.text;
     a.querySelector("strong").textContent = ev.title;
-    a.querySelector(".body p").textContent = cardDesc(ev.desc);
+    /* 분류와 주최를 한 줄로. 어느 쪽이 없어도 구분자가 남지 않게 조립한다. */
+    const cat = [ev.category, ev.host].filter(Boolean);
+    a.querySelector(".cat").innerHTML = cat.length
+      ? cat.map(x => '<span></span>').join('<span class="bar">|</span>')
+      : "";
+    a.querySelectorAll(".cat > span:not(.bar)").forEach((el, n) => { el.textContent = cat[n]; });
     a.querySelector(".date").textContent = ev.date;
+    a.querySelector(".price").textContent = price.incomplete ? "" : price.text;
     grid.appendChild(a);
   });
 

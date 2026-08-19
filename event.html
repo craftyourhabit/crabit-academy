@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>행사 상세 - 크래빗 아카데미</title>
-<meta name="description" content="크래빗 아카데미의 웨비나·강의·행사 상세 정보" />
+<meta name="description" content="크래빗 아카데미의 웨비나와 강의, 행사 상세 정보" />
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
@@ -22,9 +22,12 @@
     --fill-soft: #F9FAFC;
     --ink: #16192A;
     --muted: rgba(22, 25, 42, 0.55);
+    --faint: rgba(22, 25, 42, 0.30);
     --line: #E8E8E8;
     --pink: #FB75BB;
     --tint: #FEE9F4;
+    /* 헤더 높이. 고정 탭이 이 값만큼 아래에 붙는다. 스크립트가 실제 높이로 갱신한다. */
+    --hd: 63px;
   }
   * { box-sizing: border-box; }
   body {
@@ -35,317 +38,335 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-  header { box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06); position: sticky; top: 0; background: rgba(255, 255, 255,0.92); backdrop-filter: blur(8px); z-index: 20; }
-  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
-  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  header {
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06);
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+  }
+  /* .nav 는 .wrap 을 겸한다. padding 을 통째로 쓰면 .wrap 의 좌우 24px 이 0 으로 덮여
+     좁은 화면에서 로고와 링크가 화면 끝에 딱 붙는다. 세로 값만 지정한다. */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
   .brand img { height: 26px; display: block; }
   .brand a { color: inherit; text-decoration: none; }
-  .brand .dot { color: var(--pink); }
   .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
   .nav > a:hover { color: var(--ink); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
-  /* main은 .wrap도 함께 쓰므로 .wrap의 padding:0 24px에 눌리지 않도록 특이도를 높인다 */
-  main.wrap { padding-top: 56px; padding-bottom: 140px; }
-  .thumb {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    display: block;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px rgba(22, 25, 42, 0.09);
-    margin-bottom: 32px;
-    background: var(--fill);
+  /* ==================================================================
+     상단 블록
+     커버 이미지를 먼저 크게 보여 주고, 그 아래에 제목과 결제 카드를
+     나란히 둔다. 포스터 자체가 이미 강의 소개라서 가장 먼저 보이는 게 맞다.
+     ================================================================== */
+  .top { padding: 30px 0 46px; }
+  /* 커버는 제목과 같은 칸에 둔다.
+     컨테이너 폭(1120)에 꽉 채우면 16:9 라 603px 이 되어 첫 화면을 다 먹고,
+     제목과 금액이 스크롤 아래로 밀린다. 왼쪽 칸(736)에 넣으면 414px 로 떨어지고
+     커버와 제목, 아래 본문이 같은 선에 맞는다.
+     잘라내지 않는 이유는 포스터 위아래에 로고와 수식이 들어 있어서다. */
+  .cover {
+    display: block; width: 100%; margin: 0 0 30px;
+    aspect-ratio: 16 / 9; object-fit: cover;
+    border-radius: 16px; background: var(--fill);
   }
-  .meta-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .top-grid { display: grid; grid-template-columns: minmax(0, 1fr) 332px; gap: 52px; align-items: start; }
+
+  .crumb { display: flex; align-items: center; gap: 7px; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+  .crumb .sep { color: var(--faint); }
+
+  .meta-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
   .badge {
-    font-size: 13px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 99px;
-    letter-spacing: 0.04em;
+    font-size: 12.5px; font-weight: 600;
+    padding: 5px 12px; border-radius: 99px;
+    letter-spacing: 0.03em;
   }
-  /* 교육/설명회 - 상태 배지 왼쪽의 분류. 채운 배지들과 구분되게 외곽선만 */
   .badge.kind { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
   .badge.status-upcoming { background: var(--fill); color: var(--ink); }
   /* 당일 - 하루만 붙는 배지라 브랜드 핑크를 꽉 채워 가장 강하게 */
   .badge.status-today { background: var(--pink); color: #fff; }
   .badge.status-soon { background: var(--fill); color: var(--muted); }
 
-  h1 {
-    margin: 0 0 10px;
-    font-size: clamp(28px, 4.5vw, 40px);
+  .top h1 {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 2.9vw, 37px);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     line-height: 1.3;
-    /* balance 를 쓰면 줄을 고르게 나누느라 제목이 좁게 접힌다.
-       썸네일 폭을 꽉 채우도록 그대로 흘려보낸다. */
     text-wrap: pretty;
   }
-  .date {
-    font-size: 16px;
-    color: var(--muted);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    margin-bottom: 28px;
+  .tagline {
+    margin: 0 0 26px;
+    font-size: 17px; line-height: 1.65; color: var(--muted);
+    max-width: 34em; text-wrap: pretty;
   }
-  .date a {
-    color: var(--ink);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  /* 진행 방식. 온라인 참여 링크는 이 페이지에 절대 싣지 않는다.
-     링크를 아는 사람은 누구나 들어올 수 있기 때문이다. */
-  .date .fmt {
-    display: inline-block; font-size: 13.5px; font-weight: 600;
-    padding: 2px 10px; border-radius: 99px;
-    background: var(--fill); color: var(--ink); margin-right: 2px;
-  }
-  .desc { font-size: 17.5px; color: var(--ink); margin: 0 0 28px; max-width: 40em; text-wrap: pretty; }
 
-  .speaker { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
-  .speaker:last-of-type { margin-bottom: 28px; }
-  .speaker .s-label {
+  /* 핵심 사실. 표처럼 줄을 맞춰 훑어보기 쉽게 한다. */
+  .facts {
+    margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 36px;
+    padding-top: 26px; border-top: 1px solid var(--line);
+  }
+  .facts > div { min-width: 0; }
+  .facts dt { font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+  .facts dd { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.5; word-break: keep-all; }
+  .facts dd a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .facts dd .sm { display: block; font-size: 13.5px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+
+  /* ==================================================================
+     고정 탭
+     긴 상세페이지에서 원하는 곳으로 바로 가게 한다.
+     ================================================================== */
+  .tabs {
+    position: sticky; top: var(--hd); z-index: 30;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .tab-inner { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .tab-inner::-webkit-scrollbar { display: none; }
+  .tab-inner a {
     flex: none;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--pink);
-    text-transform: uppercase;
+    padding: 17px 18px 15px;
+    font-size: 15.5px; font-weight: 600;
+    color: var(--muted); text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
   }
-  /* 스페셜 조교는 연사보다 한 단계 낮은 정보라 라벨을 회색으로 */
-  .speaker.assist .s-label { color: var(--muted); letter-spacing: 0; }
-  .speaker strong { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
-  .speaker .s-role { font-size: 15px; color: var(--muted); }
+  .tab-inner a:hover { color: var(--ink); }
+  .tab-inner a.on { color: var(--ink); border-bottom-color: var(--ink); }
 
-  /* 섹션 제목 - 홈과 같이 엘리스 배움체로, 본문보다 확실히 크게.
-     콜아웃 안의 준비물·추천 대상(h3)도 '이런 내용을 다뤄요'와 같은 급으로 맞춘다. */
-  .sec-h, .points h2, .points h3, .materials h2 {
+  /* ==================================================================
+     본문
+     main 은 페이지 폭을 그대로 쓰고, 각 섹션이 안에서 .wrap 으로 폭을 잡는다.
+     이렇게 해야 커리큘럼처럼 배경을 화면 끝까지 깔아야 하는 구간을
+     중간에 끼워 넣을 수 있다.
+     ================================================================== */
+  main#body { padding-top: 52px; padding-bottom: 132px; }
+  section[id] { scroll-margin-top: calc(var(--hd) + 62px); }
+  .sec { margin-bottom: 56px; }
+  /* 섹션 사이 구분선. 본문이 화면 끝까지 가는 구간이 있어서
+     선은 .wrap 안쪽 폭에 맞춰 따로 그린다. */
+  .sec::after {
+    content: ""; display: block;
+    max-width: 1072px; margin: 56px auto 0;
+    border-top: 1px solid var(--line);
+  }
+  .sec:last-child { margin-bottom: 0; }
+  .sec:last-child::after { display: none; }
+  /* 읽는 글은 상단 커버와 같은 폭으로 묶는다. */
+  .narrow { max-width: 736px; }
+  .sec-h {
     font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
+    font-size: 26px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3;
+    margin: 0 0 24px;
+  }
+  .sub-h { font-size: 18px; font-weight: 700; letter-spacing: -0.015em; margin: 40px 0 16px; }
+
+  .lead { font-size: 17.5px; line-height: 1.75; margin: 0; text-wrap: pretty; }
+
+  /* 다루는 내용. 체크 표시로 "가져가는 것" 느낌을 준다. */
+  .checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 13px; }
+  .checks li { display: flex; gap: 13px; align-items: flex-start; font-size: 17px; line-height: 1.55; }
+  .checks svg { flex: none; margin-top: 5px; }
+
+  /* 준비물과 추천 대상처럼 짧게 덧붙는 정보 */
+  .info-rows { margin: 0; display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .info-rows > div { display: flex; gap: 20px; background: #fff; padding: 16px 20px; font-size: 16px; }
+  .info-rows dt { flex: none; width: 92px; color: var(--muted); font-weight: 500; }
+  .info-rows dd { margin: 0; flex: 1; font-weight: 500; }
+
+  /* 연사 */
+  .speakers { display: flex; flex-direction: column; gap: 12px; }
+  .sp {
+    display: flex; align-items: center; gap: 16px;
+    border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
+  }
+  .sp-ini {
+    flex: none; width: 46px; height: 46px; border-radius: 99px;
+    background: var(--tint); color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+  }
+  .sp-txt { min-width: 0; }
+  .sp-name { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .sp-role { font-size: 14.5px; color: var(--muted); line-height: 1.5; }
+  .sp.assist .sp-ini { background: var(--fill); }
+
+  /* 아직 글로 옮기지 못한 예전 강의의 상세 이미지 */
+  .strip { max-width: 736px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .strip img { width: 100%; display: block; margin: 0; }
+
+  /* ==================================================================
+     커리큘럼 (풀블리드 밴드)
+     배경을 화면 끝까지 깔고 안쪽 내용만 .wrap 으로 잡는다.
+     회차마다 흰 배경과 연회색을 번갈아 써서 구간이 눈으로 나뉘게 한다.
+     ================================================================== */
+  .band { padding: 56px 0; }
+  .band-soft { background: var(--fill-soft); }
+  .band-dark { background: var(--ink); color: #fff; padding: 64px 0; }
+
+  /* 도입 배너 */
+  .i-eyebrow {
+    display: inline-block; margin: 0 0 20px;
+    background: var(--pink); color: #fff;
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+    padding: 9px 18px; border-radius: 99px;
+  }
+  .i-q {
+    margin: 0 0 34px; font-size: clamp(26px, 3vw, 40px); font-weight: 700;
+    letter-spacing: -0.03em; line-height: 1.32; white-space: pre-line;
+  }
+  .i-pain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .i-pain li {
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 14px; padding: 20px 22px;
+    font-size: 17px; font-weight: 600; line-height: 1.5; word-break: keep-all;
   }
 
-  .points {
-    background: var(--fill-soft);
-    border-radius: 16px;
-    padding: 30px 34px;
-    margin-bottom: 36px;
-    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.05);
+  /* 회차 밴드 */
+  .b-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 30px; }
+  .b-no {
+    flex: none; background: var(--ink); color: #fff;
+    font-size: 15px; font-weight: 700; padding: 8px 18px; border-radius: 99px;
+    margin-top: 4px;
   }
-  .points h2 { margin: 0 0 18px; }
-  .points ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
-  .points li { display: flex; gap: 12px; font-size: 17px; align-items: baseline; }
-  .points li::before {
-    content: "";
-    flex: none;
-    width: 7px; height: 7px;
-    border-radius: 99px;
-    background: var(--pink);
-    transform: translateY(-2px);
-  }
-  /* 준비물·추천 대상 - 같은 콜아웃 안에서 구분선으로만 나눈다.
-     제목·본문 모두 '이런 내용을 다뤄요'와 동일한 규격을 쓴다. */
-  .p-extra { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
-  .points h3 { margin: 0 0 18px; }
+  .b-ttl { min-width: 0; }
+  .b-title { margin: 0; font-size: clamp(22px, 2.2vw, 30px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.32; text-wrap: pretty; }
+  .b-sub { margin: 10px 0 0; font-size: 16.5px; color: var(--muted); line-height: 1.5; }
+  .b-who { margin: 10px 0 0; font-size: 16px; font-weight: 600; }
+  .b-who span { font-weight: 400; color: var(--muted); }
 
-  /* ---------- 수강료와 신청 방법 ----------
-     계좌 정보는 이 페이지에 두지 않는다. 공개 레포라 검색에 노출되므로
-     신청서를 낸 분에게만 구글폼 확인 화면과 응답 메일로 안내한다. */
-  .fee {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 30px 34px;
-    margin-bottom: 36px;
-  }
-  .fee h2 { margin: 0 0 18px; }
-  .fee .amount { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
-  .fee .amount-note { margin: 6px 0 0; font-size: 15px; color: var(--muted); }
-  .fee ol {
-    margin: 24px 0 0;
-    padding: 0;
-    list-style: none;
-    counter-reset: step;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .fee li {
-    counter-increment: step;
-    display: flex;
-    gap: 12px;
-    font-size: 16.5px;
-    line-height: 1.55;
-    align-items: flex-start;
-  }
-  .fee li::before {
-    content: counter(step);
-    flex: none;
-    width: 23px; height: 23px;
-    border-radius: 99px;
-    background: var(--pink);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: translateY(2px);
-  }
-  .fee .caution {
-    margin: 22px 0 0;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--muted);
-  }
-  .fee .cline { margin: 0 0 8px; }
-  .fee .cline:last-child { margin-bottom: 0; }
-  .fee .cline b { color: var(--ink); font-weight: 600; margin-right: 6px; }
-  .fee .cline a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  @media (max-width: 640px) {
-    .fee { padding: 26px 22px; }
-    .fee .amount { font-size: 24px; }
-  }
+  .b-cols { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 44px; align-items: start; }
+  .b-lab { font-size: 13.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--pink); margin: 0 0 16px; }
+  .b-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; }
+  .b-list li { display: flex; gap: 11px; align-items: baseline; font-size: 16.5px; line-height: 1.5; word-break: keep-all; }
+  .b-list li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 99px; background: var(--pink); transform: translateY(-2px); }
 
-  /* ---------- 커리큘럼 (세션별 안내) ----------
-     포스터를 왼쪽에 두고 오른쪽에 설명을 세우는 가로형. 좁은 화면에서는 위아래로 쌓는다. */
-  .sec-h { margin: 0 0 16px; }
-  .sessions { margin: 0 0 36px; }
-  .s-grid { display: flex; flex-direction: column; gap: 16px; }
-  .s-card {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .s-card img {
-    flex: none;
-    width: 270px;
-    display: block;
-    aspect-ratio: 1190 / 1684;
-    object-fit: cover;
-    background: var(--fill);
-  }
-  .s-body { flex: 1; min-width: 0; padding: 28px 30px; display: flex; flex-direction: column; justify-content: center; }
-  .s-no { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: var(--pink); }
-  .s-title { font-size: 23px; font-weight: 700; margin: 8px 0 18px; letter-spacing: -0.01em; line-height: 1.35; text-wrap: pretty; }
-  .s-who { font-size: 18px; font-weight: 700; margin: 0; }
-  .s-who span { display: block; margin-top: 5px; font-size: 15.5px; font-weight: 400; color: var(--muted); line-height: 1.55; }
-  /* 본문 항목은 '이런 내용을 다뤄요'의 불릿과 같은 크기·굵기 */
-  .s-pts { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .s-pts li { font-size: 17px; color: var(--muted); display: flex; gap: 11px; align-items: baseline; }
-  .s-pts li::before {
-    content: "";
-    flex: none;
-    width: 5px; height: 5px;
-    border-radius: 99px;
-    background: rgba(22, 25, 42, 0.3);
-    transform: translateY(-2px);
-  }
-  @media (max-width: 640px) {
-    .s-card { flex-direction: column; }
-    .s-card img { width: 100%; }
-    .s-body { padding: 22px 24px 26px; }
-  }
+  .b-gift { border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; background: #fff; }
+  .b-gift .b-lab { color: var(--ink); }
+  .b-gift ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .b-gift li { display: flex; gap: 11px; align-items: baseline; font-size: 15.5px; line-height: 1.5; color: var(--muted); }
+  .b-gift li::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 99px; background: var(--faint); transform: translateY(-2px); }
 
-  /* ---------- 제공 자료 (다크 섹션) ---------- */
-  .materials { background: var(--ink); border-radius: 18px; padding: 34px 34px 36px; margin-bottom: 36px; }
-  .materials h2 { margin: 0 0 6px; color: #fff; }
-  .materials .m-sub { margin: 0 0 22px; font-size: 15.5px; color: rgba(255, 255, 255, 0.55); }
-  .m-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  @media (max-width: 600px) { .m-grid { grid-template-columns: 1fr; } }
+  /* 포스터가 있는 회차 (여러 연사가 나눠 맡는 강의) */
+  .b-poster { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; align-items: start; }
+  .b-poster img { width: 100%; display: block; border-radius: 14px; aspect-ratio: 1190 / 1684; object-fit: cover; background: var(--fill); }
+
+  /* 제공 자료 */
+  .m-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .m-item {
-    display: flex;
-    gap: 14px;
-    align-items: baseline;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 18px 20px;
+    display: flex; gap: 13px; align-items: baseline;
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+    background: var(--fill-soft);
   }
-  .m-num { flex: none; font-size: 13.5px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
-  .m-name { font-size: 16.5px; font-weight: 600; color: #fff; line-height: 1.45; }
-  .m-note { display: block; margin-top: 5px; font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, 0.55); }
+  .m-num { flex: none; font-size: 13px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
+  .m-name { font-size: 16px; font-weight: 600; line-height: 1.45; }
+  .m-note { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 400; color: var(--muted); }
 
-  /* ---------- 카드뉴스 상세 ---------- */
-  .detail { margin: 0 0 36px; }
-  /* 상세 이미지는 썸네일과 같은 폭으로 크게 보여 준다.
-     좁게 묶어 두면 카드 안 글씨가 작아져 읽히지 않는다. */
-  .detail-strip {
-    margin: 0 auto 36px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--line);
+  /* 수강료와 환불 */
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+  .steps li { counter-increment: step; display: flex; gap: 13px; font-size: 16.5px; line-height: 1.55; align-items: flex-start; }
+  .steps li::before {
+    content: counter(step);
+    flex: none; width: 23px; height: 23px; border-radius: 99px;
+    background: var(--ink); color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transform: translateY(3px);
   }
-  /* 흰 배경 카드뉴스를 여백 없이 이어 붙여 한 장의 상세페이지처럼 보이게 한다 */
-  .detail-strip img { width: 100%; display: block; margin: 0; }
+  .terms { margin: 0; display: flex; flex-direction: column; gap: 18px; }
+  .terms dt { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+  .terms dd { margin: 0; font-size: 15.5px; line-height: 1.7; color: var(--muted); }
+  .terms dd a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
-  /* 신청 버튼 옆 담당자 문의 */
-  .contact-note { font-size: 14.5px; color: var(--muted); font-weight: 500; }
-  .contact-note a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  /* ==================================================================
+     우측 결제 카드
+     스크롤을 아무리 내려도 금액과 신청 버튼이 따라온다.
+     ================================================================== */
+  /* 결제 카드는 제목 옆에 선다. 스크롤을 내리면 하단 고정 바가 이어받는다. */
+  .buy { border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; box-shadow: 0 6px 24px rgba(22, 25, 42, 0.06); }
+  .buy .b-label { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+  .buy .b-amount { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.25; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+  .buy .b-note { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .buy .btn { margin-top: 24px; width: 100%; text-align: center; display: block; padding: 16px; font-size: 16.5px; }
+  .buy .b-foot { margin: 14px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); text-align: center; }
+  .buy .b-foot a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
-  /* ---------- 하단 고정 신청 바 ----------
-     실행 가능한 CTA(신청·문의·다시보기)가 있을 때만 렌더된다.
-     '다시보기 준비 중'처럼 누를 게 없는 상태는 본문에 문구로만 남긴다. */
-  .apply-bar {
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    z-index: 30;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--line);
-    padding: 14px 0 calc(14px + env(safe-area-inset-bottom, 0px));
-  }
-  .apply-bar .bar-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .apply-bar .btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 18px 28px;
-    font-size: 17px;
-    border-radius: 14px;
-  }
-  .apply-bar .contact-note { font-size: 14px; }
   .btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    border: 0;
-    cursor: pointer;
-    font-family: inherit;
-    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    display: inline-block; padding: 14px 28px; border-radius: 12px;
+    font-size: 16px; font-weight: 700; text-decoration: none;
+    border: 0; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
   }
   .btn-primary { background: var(--ink); color: #fff; }
   .btn-primary:hover { background: #333333; }
-  .soon-note { font-size: 15px; color: var(--muted); font-weight: 500; }
+
+  /* ==================================================================
+     모바일 하단 고정 바
+     좁은 화면에는 우측 카드가 없으므로, 금액과 버튼을 여기에 둔다.
+     ================================================================== */
+  .apply-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .apply-bar.is-hidden { transform: translateY(110%); pointer-events: none; }
+  .apply-bar { transition: transform 0.2s ease; }
+  .apply-bar .bar-inner { display: flex; align-items: center; gap: 14px; }
+  .apply-bar .bar-title {
+    flex: 1; min-width: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .apply-bar .bar-price { flex: none; text-align: right; }
+  .apply-bar .btn { flex: none; min-width: 200px; }
+  .apply-bar .bar-price .k { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .apply-bar .bar-price .v { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+  .apply-bar .btn { flex: 1; text-align: center; padding: 15px 20px; font-size: 16px; }
+
+  .soon-note { font-size: 15.5px; color: var(--muted); font-weight: 500; margin: 0; }
   .closed-note {
-    margin-top: 20px;
-    background: var(--tint);
-    border-radius: 16px;
-    padding: 24px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
+    margin-top: 18px; background: var(--tint); border-radius: 16px; padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 16px; align-items: flex-start;
   }
   .closed-note[hidden] { display: none; }
-  .closed-note p { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.6; }
+  .closed-note p { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.6; }
 
-  .notfound { text-align: center; padding: 80px 0; }
-  .notfound h1 { margin-bottom: 12px; }
+  .notfound { text-align: center; padding: 90px 0 110px; }
+  .notfound h1 { margin: 0 0 12px; font-size: 26px; }
   .notfound p { color: var(--muted); margin: 0 0 28px; }
+
+  /* ---------- 좁은 화면 ---------- */
+  @media (max-width: 1023px) {
+    .narrow { max-width: none; }
+    .strip { max-width: none; }
+    .b-cols { grid-template-columns: 1fr; gap: 32px; }
+    .b-poster { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; }
+    .top { padding: 22px 0 34px; }
+    .top-grid { grid-template-columns: 1fr; gap: 30px; }
+    /* 결제 카드는 하단 고정 바가 이미 들고 있다. 같은 걸 두 번 보여 주지 않는다. */
+    .rail { display: none; }
+    main#body { padding-top: 36px; padding-bottom: 116px; }
+    .apply-bar .bar-title { display: none; }
+    .apply-bar .btn { flex: 1; min-width: 0; }
+  }
+  @media (max-width: 640px) {
+    .cover { margin-bottom: 24px; }
+    .facts { grid-template-columns: 1fr; gap: 14px; }
+    .m-grid { grid-template-columns: 1fr; }
+    .band { padding: 40px 0; }
+    .band-dark { padding: 44px 0; }
+    .b-list { grid-template-columns: 1fr; }
+    .i-pain { grid-template-columns: 1fr; }
+    .b-head { flex-direction: column; gap: 12px; }
+    .sec { padding-bottom: 40px; margin-bottom: 40px; }
+    .sec-h { font-size: 23px; }
+    .sub-h { margin-top: 34px; }
+    .info-rows > div { flex-direction: column; gap: 4px; }
+    .info-rows dt { width: auto; font-size: 13.5px; }
+  }
 
   footer {
     background: var(--fill);
@@ -356,7 +377,6 @@
   }
   .f-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
   .f-brand img { height: 22px; display: block; }
-  .f-brand .dot { color: var(--pink); }
   .f-sns { display: flex; gap: 18px; }
   .f-sns a { color: var(--muted); text-decoration: none; font-weight: 500; }
   .f-sns a:hover { color: var(--ink); }
@@ -374,7 +394,7 @@
   </div>
 </header>
 
-<main class="wrap" id="main"></main>
+<div id="page"></div>
 
 <footer>
   <div class="wrap">
@@ -394,8 +414,8 @@
     <div class="f-bottom">
       <span>&copy; 2026 CRABIT. All rights reserved.</span>
       <span>올커니(올바른 교육 커뮤니티)와 함께합니다</span>
-    
-      <span><a href="policy.html">이용약관과 환불 규정</a></span></div>
+      <span><a href="policy.html">이용약관과 환불 규정</a></span>
+    </div>
   </div>
 </footer>
 
@@ -404,35 +424,36 @@
 (function () {
   const id = new URLSearchParams(location.search).get("id");
   const ev = id && EVENTS_DB[id];
-  const main = document.getElementById("main");
+  const page = document.getElementById("page");
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   if (!ev) {
-    main.innerHTML = '<div class="notfound">'
+    page.innerHTML = '<main class="wrap"><div class="notfound">'
       + '<h1>행사를 찾을 수 없어요</h1>'
       + '<p>주소가 잘못되었거나, 종료되어 내려간 행사일 수 있습니다.</p>'
       + '<a class="btn btn-primary" href="./">홈으로 돌아가기</a>'
-      + '</div>';
+      + '</div></main>';
     return;
   }
 
   document.title = ev.title + " - 크래빗 아카데미";
 
-  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const fmt = eventFormat(ev);
+  const price = eventPriceInfo(ev);
 
+  /* ---------- 상태와 CTA ---------- */
   const BADGE_CLS = { today: "status-today", upcoming: "status-upcoming", closed: "status-soon" };
-  let statusBadge;
-  if (ev.status === "replay") {
-    statusBadge = "";
-  } else if (ev.status === "replay-soon") {
+  let statusBadge = "";
+  if (ev.status === "replay-soon") {
     statusBadge = '<span class="badge status-soon">다시보기 준비 중</span>';
-  } else {
+  } else if (ev.status !== "replay") {
     const t = eventStatusTag(ev);
     statusBadge = '<span class="badge ' + BADGE_CLS[t.cls] + '">' + t.text + '</span>';
   }
-
   const kindBadge = ev.kind ? '<span class="badge kind">' + esc(ev.kind) + '</span>' : '';
 
-  // ctaAction: 누를 수 있는 CTA가 있으면 하단 고정 바로, 없으면 본문에 문구로만 남긴다
+  /* ctaAction: 누를 수 있는 CTA가 있으면 결제 카드와 하단 바를 띄운다.
+     '다시보기 준비 중'처럼 누를 게 없는 상태는 본문에 문구로만 남긴다. */
   let cta = "", ctaAction = true, isClosedFlow = false, isApplyFlow = false;
   if (ev.status === "replay" && ev.replayUrl) {
     cta = '<a class="btn btn-primary" href="' + ev.replayUrl + '" target="_blank" rel="noopener">다시보기</a>';
@@ -442,39 +463,140 @@
     isApplyFlow = true;
     /* applyUrl 이 있으면 외부 폼을 우선한다. 공동 주최라 상대 쪽 폼으로
        받아야 하는 경우가 있어서 남겨 둔 통로다.
-       비워 두면 우리 신청 페이지(apply.html)로 보낸다. 그게 기본이다.
-       상세 안에 폼을 끼워 넣지 않고 페이지를 나눈 이유는, 신청하는 동안에는
-       신청에만 집중하게 하기 위해서다. */
+       비워 두면 우리 신청 페이지(apply.html)로 보낸다. 그게 기본이다. */
     cta = ev.applyUrl
       ? '<a class="btn btn-primary" href="' + ev.applyUrl + '" target="_blank" rel="noopener">신청하기</a>'
       : '<a class="btn btn-primary" href="apply.html?id=' + encodeURIComponent(id) + '">신청하기</a>';
   } else {
-    // 마감됐거나, 날짜가 지났는데 status를 아직 안 바꾼 경우
     cta = '<button class="btn btn-primary" id="closedApply" type="button">신청하기</button>';
     isClosedFlow = true;
   }
 
-  const sessionsHtml = ev.sessions
-    ? '<section class="sessions"><h2 class="sec-h">커리큘럼</h2><div class="s-grid">'
-      + ev.sessions.map(s =>
-          '<article class="s-card">'
-          + (s.poster ? '<img src="' + s.poster + '" alt="' + esc("SESSION " + s.no + " " + s.title + " - " + s.speaker) + '" loading="lazy" />' : '')
-          + '<div class="s-body">'
-          + '<div class="s-no">SESSION ' + esc(s.no) + '</div>'
-          + '<h3 class="s-title">' + esc(s.title) + '</h3>'
-          + '<p class="s-who">' + esc(s.speaker)
-          + (s.speakerRole ? '<span>' + esc(s.speakerRole) + '</span>' : '')
-          + '</p>'
-          + (s.points ? '<ul class="s-pts">' + s.points.map(p => '<li>' + esc(p) + '</li>').join("") + '</ul>' : '')
-          + '</div></article>'
-        ).join("")
-      + '</div></section>'
+  /* ---------- 상단 블록 ----------
+     커버 이미지를 먼저 크게 보여 주고, 아래에 제목과 결제 카드를 나란히 둔다. */
+  const placeText = fmt.isOffline && ev.place ? ev.place : "";
+  const facts = [];
+  facts.push({
+    k: "진행 방식",
+    v: esc(fmt.label),
+    sm: placeText
+      ? esc(placeText) + (ev.placeUrl ? ' <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : "")
+      /* 참여 링크 자체는 절대 싣지 않는다. 링크를 아는 사람은 누구나 들어올 수 있다. */
+      : (fmt.isOnline ? "참여 링크는 신청하신 분께 따로 보내드려요" : "")
+  });
+  facts.push({ k: "일정", v: esc(ev.date) });
+  if (ev.audience) facts.push({ k: "대상", v: esc(ev.audience) });
+  if (ev.materials) facts.push({ k: "제공 자료", v: ev.materials.length + "종" });
+
+  const crumb = [ev.kind, ev.category].filter(Boolean);
+
+  /* ---------- 강의 소개 ---------- */
+  const check = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">'
+    + '<path d="M3.5 10.5 8 15 16.5 5" stroke="#FB75BB" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* 이니셜 동그라미는 이름이 한 사람일 때만 쓴다.
+     "MU 조연심, 크래빗 김현지" 처럼 여러 명이 한 줄에 들어간 값에서는
+     첫 글자가 아무 뜻도 없어서, 그럴 땐 동그라미를 빼고 이름만 보여 준다. */
+  const spCard = (name, role, cls) => {
+    const solo = name.length <= 6 && name.indexOf(",") === -1;
+    return '<div class="sp' + (cls ? " " + cls : "") + '">'
+      + (solo ? '<div class="sp-ini">' + esc(name.slice(0, 1)) + '</div>' : '')
+      + '<div class="sp-txt"><div class="sp-name">' + esc(name) + '</div>'
+      + (role ? '<div class="sp-role">' + esc(role) + '</div>' : '')
+      + '</div></div>';
+  };
+
+  const speakerHtml = (ev.speaker || ev.assistant)
+    ? '<h3 class="sub-h">함께하는 사람</h3><div class="speakers">'
+      + (ev.speaker ? spCard(ev.speaker, ev.speakerRole, "") : '')
+      + (ev.assistant ? spCard(ev.assistant, "스페셜 조교", "assist") : '')
+      + '</div>'
     : '';
 
-  const materialsHtml = ev.materials
-    ? '<section class="materials">'
-      + '<h2>제공 자료 ' + ev.materials.length + '종</h2>'
-      + '<p class="m-sub">신청하신 원장님께 실무에 바로 쓰는 운영자료를 모두 드려요.</p>'
+  /* 추천 대상은 히어로의 '대상'에 이미 있다. 여기서 또 쓰면 같은 말을 두 번 읽게 된다. */
+  const extraRows = ev.prep ? [{ k: "준비물", v: ev.prep.map(esc).join(", ") }] : [];
+
+  const introHtml = '<section class="sec" id="intro"><div class="wrap"><div class="narrow">'
+    + '<h2 class="sec-h">강의 소개</h2>'
+    + '<p class="lead">' + esc(ev.desc) + '</p>'
+    + '<h3 class="sub-h">이런 내용을 다뤄요</h3>'
+    + '<ul class="checks">' + ev.points.map(p => '<li>' + check + '<span>' + esc(p) + '</span></li>').join("") + '</ul>'
+    + (extraRows.length
+        ? '<h3 class="sub-h">참고하실 점</h3><dl class="info-rows">'
+          + extraRows.map(r => '<div><dt>' + r.k + '</dt><dd>' + r.v + '</dd></div>').join("")
+          + '</dl>'
+        : '')
+    + speakerHtml
+    + '</div></div></section>';
+
+  /* ---------- 커리큘럼 (풀블리드) ----------
+     회차마다 배경을 화면 끝까지 깔고, 안쪽 내용만 .wrap 으로 잡는다.
+     이미지 대신 글로 그리는 이유는 어느 화면 폭에서도 선명하고,
+     화면이 좁아지면 단이 알아서 접히기 때문이다. */
+  const sessionBand = (sn, i) => {
+    const head = '<div class="b-head">'
+      + (sn.no ? '<span class="b-no">' + esc(sn.no) + '</span>' : '')
+      + '<div class="b-ttl"><h3 class="b-title">' + esc(sn.title) + '</h3>'
+      + (sn.sub ? '<p class="b-sub">' + esc(sn.sub) + '</p>' : '')
+      + (sn.speaker
+          ? '<p class="b-who">' + esc(sn.speaker)
+            + (sn.speakerRole ? ' <span>' + esc(sn.speakerRole) + '</span>' : '') + '</p>'
+          : '')
+      + '</div></div>';
+
+    const list = sn.points
+      ? '<div><p class="b-lab">강의 내용</p><ul class="b-list">'
+        + sn.points.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul></div>'
+      : '';
+    const gift = sn.gifts
+      ? '<aside class="b-gift"><p class="b-lab">함께 드리는 자료</p><ul>'
+        + sn.gifts.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul></aside>'
+      : '';
+
+    /* 포스터가 있는 회차는 포스터를 왼쪽에 세우고 설명을 오른쪽에 붙인다. */
+    const body = sn.poster
+      ? '<div class="b-poster">'
+        + '<img src="' + sn.poster + '" alt="' + esc(sn.no + " " + sn.title) + '" loading="lazy" />'
+        + '<div>' + head + (list || gift ? '<div class="b-cols">' + list + gift + '</div>' : '') + '</div>'
+        + '</div>'
+      : head + (list || gift ? '<div class="b-cols">' + list + gift + '</div>' : '');
+
+    return '<div class="band' + (i % 2 ? ' band-soft' : '') + '"><div class="wrap">'
+      + (sn.poster ? body : body) + '</div></div>';
+  };
+
+  const ci = ev.curriculumIntro;
+  const introBand = ci
+    ? '<div class="band band-dark"><div class="wrap">'
+      + (ci.eyebrow ? '<p class="i-eyebrow">' + esc(ci.eyebrow) + '</p>' : '')
+      + (ci.question ? '<h3 class="i-q">' + esc(ci.question) + '</h3>' : '')
+      + (ci.pains ? '<ul class="i-pain">' + ci.pains.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : '')
+      + '</div></div>'
+    : '';
+
+  const curriBody = ev.sessions
+    ? introBand + ev.sessions.map(sessionBand).join("")
+    : (ev.detailImages
+        /* 아직 글로 옮기지 못한 예전 강의는 이미지를 그대로 이어 붙인다. */
+        ? '<div class="band"><div class="wrap"><div class="strip">'
+          + ev.detailImages.map(d => '<img src="' + d.src + '" alt="' + esc(d.alt) + '" loading="lazy" />').join("")
+          + '</div></div></div>'
+        : '');
+  const curriHtml = curriBody
+    ? '<section class="sec" id="curriculum">'
+      + '<div class="wrap"><div class="narrow"><h2 class="sec-h">커리큘럼</h2></div></div>'
+      + curriBody
+      + '</section>'
+    : '';
+
+  /* ---------- 제공 자료 ---------- */
+  /* 강의에 따라 이 자리에 오는 게 자료가 아니라 혜택일 수도 있다.
+     그럴 땐 materialsTitle 로 제목을 바꿔 준다. */
+  const matHtml = ev.materials
+    ? '<section class="sec" id="materials"><div class="wrap"><div class="narrow">'
+      + '<h2 class="sec-h">' + esc(ev.materialsTitle || ("제공 자료 " + ev.materials.length + "종")) + '</h2>'
+      + '<p class="lead" style="margin-bottom:22px;">'
+      + esc(ev.materialsSub || "신청하신 원장님께 실무에 바로 쓰는 운영자료를 모두 드려요.") + '</p>'
       + '<div class="m-grid">'
       + ev.materials.map((m, i) =>
           '<div class="m-item"><span class="m-num">' + String(i + 1).padStart(2, "0") + '</span>'
@@ -482,116 +604,179 @@
           + (m.note ? '<span class="m-note">' + esc(m.note) + '</span>' : '')
           + '</span></div>'
         ).join("")
-      + '</div></section>'
+      + '</div></div></div></section>'
     : '';
 
-  const detailHtml = ev.detailImages
-    ? '<section class="detail"><div class="detail-strip">'
-      + ev.detailImages.map(d => '<img src="' + d.src + '" alt="' + esc(d.alt) + '" loading="lazy" />').join("")
-      + '</div></section>'
-    : '';
+  /* ---------- 수강료와 환불 ----------
+     계좌는 여기에 쓰지 않는다. 공개 레포라 검색에 노출되기 때문이다. */
+  const terms = [];
+  if (ev.provision) terms.push({ k: "서비스 제공", v: esc(ev.provision) });
+  if (price.paid) {
+    /* 녹화본처럼 시작일이 없는 상품은 날짜 기준 문구를 쓰면 안 된다.
+       그런 강의는 refundNote 에 자기 규칙을 적어 둔다. */
+    terms.push({
+      k: "취소와 환불",
+      v: (ev.refundNote ? esc(ev.refundNote) : "강의 전날까지는 전액, 당일 시작 전까지는 80% 환불해 드립니다.")
+        + ' 자세한 내용은 <a href="policy.html#refund" target="_blank" rel="noopener">환불 규정</a>에서 확인하세요.'
+    });
+  } else {
+    terms.push({
+      k: "참가비와 취소",
+      v: "참가비 없이 무료로 진행합니다. 참석이 어려우시면 언제든 문의처로 알려 주세요. "
+        + '자세한 내용은 <a href="policy.html#refund" target="_blank" rel="noopener">이용약관과 환불 규정</a>에서 확인하실 수 있습니다.'
+    });
+  }
 
-  // 연사와 스페셜 조교
-  const speakerHtml = (ev.speaker
-      ? '<p class="speaker"><span class="s-label">Speaker</span><strong>' + esc(ev.speaker) + '</strong>'
-        + (ev.speakerRole ? '<span class="s-role">' + esc(ev.speakerRole) + '</span>' : '')
-        + '</p>'
-      : '')
-    + (ev.assistant
-        ? '<p class="speaker assist"><span class="s-label">스페셜 조교</span><strong>' + esc(ev.assistant) + '</strong></p>'
-        : '');
-
-  // 준비물·추천 대상은 '이런 내용을 다뤄요' 콜아웃 안에 같은 규격(제목+핑크 불릿)으로 담는다
-  const extraHtml =
-      (ev.prep
-        ? '<div class="p-extra"><h3>준비물</h3><ul>'
-          + ev.prep.map(p => "<li>" + esc(p) + "</li>").join("")
-          + '</ul></div>'
-        : '')
-    + (ev.audience
-        ? '<div class="p-extra"><h3>추천 대상</h3><ul><li>' + esc(ev.audience) + '</li></ul></div>'
-        : '');
-
-  // 수강료와 신청 절차. 신청을 받는 중일 때만, 수강료가 적혀 있을 때만 보여 준다.
-  // 계좌는 여기에 쓰지 않는다. 신청서를 낸 분에게만 안내한다.
-  const fmt = eventFormat(ev);
-  const price = eventPriceInfo(ev);
-  /* 유료인데 금액이 비어 있으면 수강료 영역을 아예 내보내지 않는다.
-     잘못해서 '무료'라고 알리는 것보다 아무 말도 안 하는 편이 안전하다. */
-  const feeHtml = (isApplyFlow && !price.incomplete)
-    ? '<section class="fee">'
-      + '<h2>' + (price.paid ? "수강료와 신청 방법" : "참가비와 신청 방법") + '</h2>'
-      + '<p class="amount">' + esc(price.text) + '</p>'
-      + (price.note ? '<p class="amount-note">' + esc(price.note) + '</p>' : '')
-      + '<ol>'
+  /* 신청 절차는 접수 중일 때만 뜻이 있다. 하지만 서비스 제공 기간과 환불 규정은
+     상품마다 늘 적혀 있어야 한다. 전자상거래법이 요구하고, 카카오페이 심사도
+     상품 상세페이지에서 이 두 가지를 확인한다. 마감된 강의도 예외가 아니다. */
+  const stepsHtml = isApplyFlow
+    ? '<h3 class="sub-h" style="margin-top:0;">신청 절차</h3>'
+      + '<ol class="steps">'
       + '<li>신청하기 버튼을 눌러 신청서를 작성합니다.</li>'
       + (price.paid
-          ? '<li>이어지는 결제 화면에서 결제를 진행합니다.</li>'
-            + '<li>결제가 확인되면 안내를 보내드립니다.</li>'
+          ? '<li>이어지는 결제 화면에서 결제를 진행합니다.</li><li>결제가 확인되면 안내를 보내드립니다.</li>'
           : '<li>접수가 확인되면 안내 메일을 보내드립니다.</li>')
       + '</ol>'
-      + '<div class="caution">'
-      + (ev.provision
-          ? '<p class="cline"><b>서비스 제공</b> ' + esc(ev.provision) + '</p>'
-          : '')
-      + (price.paid
-          /* 녹화본처럼 시작일이 없는 상품은 날짜 기준 문구를 쓰면 안 된다.
-             그런 강의는 refundNote 에 자기 규칙을 적어 둔다. */
-          ? '<p class="cline"><b>취소와 환불</b> '
-            + (ev.refundNote
-                ? esc(ev.refundNote)
-                : '강의 전날까지는 전액, 당일 시작 전까지는 80% 환불해 드립니다.')
-            + ' 자세한 내용은 <a href="policy.html#refund" target="_blank" rel="noopener">환불 규정</a>에서 확인하세요.</p>'
-          : '<p class="cline">참가비 없이 무료로 진행합니다.</p>')
-      + '</div>'
-      + '</section>'
+      + '<h3 class="sub-h">약관과 안내</h3>'
     : '';
 
-  // 주최사 담당자가 따로 있으면 신청 버튼 옆에 문의처를 함께 안내한다
+  const feeHtml = !price.incomplete
+    ? '<section class="sec" id="fee"><div class="wrap"><div class="narrow">'
+      + '<h2 class="sec-h">'
+      + (isApplyFlow
+          ? (price.paid ? "수강료와 환불" : "참가비와 신청 방법")
+          : (price.paid ? "수강료와 환불" : "참가비와 안내"))
+      + '</h2>'
+      + stepsHtml
+      + '<dl class="terms">'
+      + terms.map(t => '<div><dt>' + t.k + '</dt><dd>' + t.v + '</dd></div>').join("")
+      + '</dl>'
+      + '</div></div></section>'
+    : '';
+
+  /* ---------- 결제 카드 ---------- */
   const contactHtml = (ev.contact && ev.status === "upcoming")
-    ? '<span class="contact-note">문의 ' + esc(ev.contact.name) + ' '
-      + '<a href="tel:' + esc(ev.contact.tel.replace(/-/g, "")) + '">' + esc(ev.contact.tel) + '</a></span>'
+    ? '문의 ' + esc(ev.contact.name)
+      + ' <a href="tel:' + esc(ev.contact.tel.replace(/-/g, "")) + '">' + esc(ev.contact.tel) + '</a>'
     : '';
 
-  main.innerHTML =
-    '<img class="thumb" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
-    + '<div class="meta-row">'
-    + kindBadge
-    + statusBadge
-    + '</div>'
+  /* 카드는 돈 이야기만 한다. 진행 방식이나 일정은 왼쪽 사실 목록이 이미
+     들고 있어서, 여기에 또 적으면 한 화면에서 같은 걸 두 번 읽게 된다. */
+  const buyHtml = (ctaAction && isApplyFlow && !price.incomplete)
+    ? '<div class="buy">'
+      + '<div class="b-label">' + (price.paid ? "수강료" : "참가비") + '</div>'
+      + '<p class="b-amount">' + esc(price.text) + '</p>'
+      + (price.note ? '<p class="b-note">' + esc(price.note) + '</p>' : '')
+      + cta
+      + '<p class="b-foot">' + (contactHtml || (price.paid
+          ? '결제를 마치면 바로 안내를 보내드려요.'
+          : '접수되면 안내 메일을 보내드려요.')) + '</p>'
+      + '</div>'
+    : (ctaAction ? '<div class="buy">' + cta + '</div>' : '');
+
+  /* ---------- 조립 ---------- */
+  const tabs = [
+    { id: "intro", label: "강의 소개", on: true },
+    { id: "curriculum", label: "커리큘럼", on: !!curriBody },
+    { id: "materials", label: ev.materialsTitle || "제공 자료", on: !!ev.materials },
+    { id: "fee", label: price.paid ? "수강료와 환불" : "신청 방법", on: !!feeHtml }
+  ].filter(t => t.on);
+
+  /* 탭이 하나뿐이면 띠만 남고 고를 게 없다. 그럴 땐 아예 내보내지 않는다. */
+  const tabsHtml = tabs.length > 1
+    ? '<nav class="tabs"><div class="wrap tab-inner">'
+      + tabs.map((t, i) => '<a href="#' + t.id + '"' + (i === 0 ? ' class="on"' : '') + '>' + t.label + '</a>').join("")
+      + '</div></nav>'
+    : '';
+
+  const topHtml = '<div class="top"><div class="wrap">'
+    + '<div class="top-grid"><div class="top-txt">'
+    + '<img class="cover" src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + (crumb.length
+        ? '<nav class="crumb">' + crumb.map(esc).join('<span class="sep">&rsaquo;</span>') + '</nav>'
+        : '')
+    + '<div class="meta-row">' + kindBadge + statusBadge + '</div>'
     + '<h1>' + esc(ev.title) + '</h1>'
-    + '<div class="date">' + esc(ev.date)
-    + '<br /><span class="fmt">' + esc(fmt.label) + '</span>'
-    + (fmt.isOffline && ev.place ? ' &nbsp; ' + esc(ev.place) : '')
-    + (fmt.isOnline && !fmt.isOffline ? ' &nbsp; 참여 링크는 신청하신 분께 따로 보내드려요.' : '')
-    + (fmt.isOffline && ev.placeUrl ? ' &nbsp; <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : '')
-    + '</div>'
-    + '<p class="desc">' + esc(ev.desc) + '</p>'
-    + speakerHtml
-    + '<div class="points"><h2>이런 내용을 다뤄요</h2><ul>'
-    + ev.points.map(p => "<li>" + esc(p) + "</li>").join("")
-    + '</ul>' + extraHtml + '</div>'
-    + sessionsHtml
-    + materialsHtml
-    + detailHtml
-    + feeHtml
+    + '<p class="tagline">' + esc(cardDesc(ev.desc, 60)) + '</p>'
+    + '<dl class="facts">'
+    + facts.map(f => '<div><dt>' + f.k + '</dt><dd>' + f.v
+        + (f.sm ? '<span class="sm">' + f.sm + '</span>' : '') + '</dd></div>').join("")
+    + '</dl>'
+    + '</div><aside class="rail">' + buyHtml + '</aside>'
+    + '</div></div></div>';
+
+  page.innerHTML = topHtml
+    + tabsHtml
+    + '<main id="body">'
+    + introHtml + curriHtml + matHtml + feeHtml
+    + '<div class="wrap"><div class="narrow">'
     + (ctaAction ? '' : '<p class="soon-note">다시보기 영상을 준비하고 있어요.</p>')
     + (isClosedFlow
         ? '<div class="closed-note" id="closedNote" hidden>'
           + '<p>이미 지난 교육이에요.<br />크래빗 아카데미에서 제공하는 다른 교육 일정을 둘러보세요!</p>'
           + '<a class="btn btn-primary" href="schedule">다른 교육 일정 보기</a>'
           + '</div>'
-        : '');
+        : '')
+    + '</div></div>'
+    + '</main>';
 
+  /* 헤더 높이를 재서 고정 탭이 정확히 그 아래 붙게 한다.
+     로고 이미지가 늦게 뜨면 높이가 달라지므로 로드 후에 한 번 더 잰다. */
+  const syncHeaderHeight = () => {
+    document.documentElement.style.setProperty("--hd", document.querySelector("header").offsetHeight + "px");
+  };
+  syncHeaderHeight();
+  window.addEventListener("resize", syncHeaderHeight);
+  window.addEventListener("load", syncHeaderHeight);
+
+  /* 모바일 하단 고정 바. 좁은 화면에는 우측 카드가 없어서 금액을 여기에 함께 둔다. */
   if (ctaAction) {
     const bar = document.createElement("div");
     bar.className = "apply-bar";
-    bar.innerHTML = '<div class="wrap bar-inner">' + cta + contactHtml + '</div>';
+    bar.innerHTML = '<div class="wrap bar-inner">'
+      + '<div class="bar-title">' + esc(ev.title) + '</div>'
+      + (isApplyFlow && !price.incomplete
+          ? '<div class="bar-price"><div class="k">' + (price.paid ? "수강료" : "참가비") + '</div>'
+            + '<div class="v">' + esc(price.text) + '</div></div>'
+          : '')
+      + cta + '</div>';
     document.body.appendChild(bar);
-    // 고정 바가 푸터를 가리지 않도록 바 높이만큼 본문 아래 여백을 확보한다
-    const padForBar = () => { document.body.style.paddingBottom = bar.offsetHeight + "px"; };
-    padForBar();
-    window.addEventListener("resize", padForBar);
+
+    /* 결제 카드가 화면에 있는 동안에는 하단 바를 숨긴다.
+       같은 버튼이 한 화면에 두 개 있으면 어느 쪽을 눌러야 하나 망설이게 된다.
+       카드가 위로 지나가고 나면 그때부터 하단 바가 이어받는다.
+       좁은 화면에는 카드 자체가 없으므로 언제나 띄운다. */
+    const card = document.querySelector(".top .buy");
+    const syncBar = () => {
+      const cardVisible = card && card.offsetParent !== null
+        && card.getBoundingClientRect().bottom > document.querySelector("header").offsetHeight;
+      bar.classList.toggle("is-hidden", !!cardVisible);
+    };
+    syncBar();
+    window.addEventListener("scroll", syncBar, { passive: true });
+    window.addEventListener("resize", syncBar);
+  }
+
+  /* 지금 보고 있는 구간을 탭에 표시한다.
+     고정 헤더와 탭 바에 가리는 높이를 기준선으로 삼고, 그 선을 이미 지난
+     섹션 중 마지막 것을 현재 위치로 본다.
+     IntersectionObserver 를 쓰지 않는 이유는, 화면을 그리지 않는 상황에서
+     콜백이 오지 않아 동작을 확인할 방법이 없기 때문이다. 스크롤 위치 계산은
+     언제든 같은 답을 준다. */
+  const links = [...document.querySelectorAll(".tab-inner a")];
+  const secs = links.map(a => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  if (secs.length > 1) {
+    const markCurrent = () => {
+      const line = document.querySelector("header").offsetHeight
+        + (document.querySelector(".tabs") || { offsetHeight: 0 }).offsetHeight + 8;
+      let cur = secs[0];
+      secs.forEach(sec => { if (sec.getBoundingClientRect().top <= line) cur = sec; });
+      links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + cur.id));
+    };
+    markCurrent();
+    window.addEventListener("scroll", markCurrent, { passive: true });
+    window.addEventListener("resize", markCurrent);
   }
 
   const closedBtn = document.getElementById("closedApply");

@@ -477,7 +477,7 @@ function openResource(id, isPrivate) {
   p2.appendChild(hrefWrap);
 
   /* 일부공개일 때: 비밀번호 + 상세페이지 내용 */
-  const pwIn = input("", "수강생에게 안내할 비밀번호");
+  const pwIn = input("", "신청자에게 안내할 비밀번호");
   pwIn.addEventListener("input", async () => {
     state.password = pwIn.value.trim();
     pwPath.textContent = state.password

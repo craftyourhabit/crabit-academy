@@ -41,7 +41,13 @@ function openEvent(id) {
          : (src.fee ? String(src.fee).replace(/[^0-9]/g, "") : ""),
     feeNote: src.feeNote || "",
     applyUrl: src.applyUrl || "",
-    replayUrl: src.replayUrl || ""
+    replayUrl: src.replayUrl || "",
+    provision: src.provision || "",
+    refundNote: src.refundNote || "",
+    /* 원본을 직접 건드리지 않도록 깊게 복사합니다. 취소하고 나갔을 때
+       화면에서 했던 편집이 남아 있으면 안 되기 때문입니다. */
+    article: (src.article || []).map(b => Object.assign({}, b,
+      b.items ? { items: b.items.slice() } : null))
   };
   /* 캘린더 등록 여부 */
   const sched = store.SCHEDULE.find(s => s.id === id);
@@ -58,7 +64,7 @@ function openEvent(id) {
   /* 고급 항목이 붙어 있으면 알려 줍니다. */
   const adv = ADVANCED_KEYS.filter(k => src[k]);
   if (adv.length) {
-    const names = { sessions: "커리큘럼", materials: "제공 자료", detailImages: "상세 이미지", contact: "문의처" };
+    const names = { sessions: "커리큘럼", materials: "제공 자료", detailImages: "상세 이미지", contact: "문의처", curriculumIntro: "커리큘럼 도입 배너" };
     const n = el("div", "note");
     n.innerHTML = "<strong>" + adv.map(k => names[k]).join(", ") + "</strong> 이 등록돼 있어요. "
       + "이 화면에서는 수정할 수 없지만 저장해도 <strong>그대로 유지됩니다.</strong> 바꾸시려면 알려 주세요.";
@@ -250,6 +256,29 @@ function openEvent(id) {
   p3.appendChild(field("신청 링크", ap, { hint: "넣으면 상세페이지에 신청 버튼이 생깁니다." }));
   view.appendChild(p3);
 
+  /* --- 상세 본문 --- */
+  const pA = panel("상세 본문", "강의 소개 아래에 붙는 글이에요. 블록을 쌓아 만듭니다.");
+  const artHint = el("div", "note");
+  artHint.innerHTML = "글 안에서 <strong>**이렇게**</strong> 별표 두 개로 감싸면 <strong>굵게</strong> 나옵니다. "
+    + "불릿은 한 줄에 하나씩 적어 주세요.";
+  pA.appendChild(artHint);
+  pA.appendChild(articleEditor(state));
+  view.appendChild(pA);
+
+  /* --- 제공과 환불 --- */
+  const pT = panel("서비스 제공과 환불", "유료 상품은 반드시 채워 주세요. 결제 심사에서 확인하는 항목입니다.");
+  const provIn = textarea(state.provision, "예: 결제를 마치시면 시청용 비밀번호를 바로 보내드립니다. 받으신 뒤에는 1년간 보실 수 있어요.");
+  provIn.addEventListener("input", () => state.provision = provIn.value);
+  pT.appendChild(field("서비스 제공", provIn, {
+    hint: "무엇을 언제까지 어떻게 드리는지 적습니다. 전자상거래법상 알려야 하는 내용이에요."
+  }));
+  const rn = textarea(state.refundNote, "비우면 '강의 전날까지 전액, 당일 시작 전까지 80%' 기본 문구가 나갑니다.");
+  rn.addEventListener("input", () => state.refundNote = rn.value);
+  pT.appendChild(field("환불 안내", rn, {
+    hint: "녹화본처럼 시작일이 없는 상품은 반드시 적어 주세요. 날짜 기준 문구가 그대로 나가면 규정과 실제가 어긋납니다."
+  }));
+  view.appendChild(pT);
+
   /* --- 공개 상태 --- */
   const p4 = panel("공개 상태", null);
   const stRow = el("div");
@@ -335,7 +364,9 @@ async function saveEvent(state, id, isNew, setMsg) {
     delete state.__upload_thumb;
   }
 
-  /* 3. EVENTS_DB 갱신. 고급 항목은 원본에서 그대로 가져옵니다. */
+  await uploadArticleImages(state, key);
+
+  /* 3. EVENTS_DB 갱신. 폼이 안 다루는 항목은 원본에서 그대로 가져옵니다. */
   const prev = store.EVENTS_DB[key] || {};
   const next = {};
   const put = (k, v) => { if (v !== "" && v != null && !(Array.isArray(v) && !v.length)) next[k] = v; };
@@ -370,7 +401,16 @@ async function saveEvent(state, id, isNew, setMsg) {
   }
   put("feeNote", state.feeNote.trim());
   put("applyUrl", state.applyUrl.trim());
-  ADVANCED_KEYS.forEach(k => { if (prev[k]) next[k] = prev[k]; });
+  put("provision", state.provision.trim());
+  put("refundNote", state.refundNote.trim());
+  put("article", cleanArticle(state.article));
+
+  /* 폼이 다루지 않는 항목은 원본에서 그대로 가져옵니다.
+     목록을 따로 관리하지 않고 "내가 안 쓴 건 전부 유지"로 두어야
+     새 항목이 생겨도 저장하다가 조용히 지워지는 일이 없습니다. */
+  Object.keys(prev).forEach(k => {
+    if (!OWNED_KEYS.includes(k) && !(k in next)) next[k] = prev[k];
+  });
   next.replayUrl = state.status === "replay" ? state.replayUrl.trim() : (state.replayUrl.trim() || "");
 
   const db = Object.assign({}, store.EVENTS_DB);
@@ -395,6 +435,160 @@ async function saveEvent(state, id, isNew, setMsg) {
   store.eventsSha = res.sha;
   store.EVENTS_DB = db;
   store.SCHEDULE = sch;
+}
+
+/* ---------------------------------------------------------------
+   상세 본문 블록 에디터
+
+   상세페이지의 '강의 소개' 아래에 붙는 글을 블록으로 쌓습니다.
+   블록은 문단, 소제목, 불릿, 인용, 사진 다섯 가지입니다.
+
+   사진은 고른 순간 올리지 않고 state 에 담아 두었다가 저장할 때 한꺼번에
+   올립니다. 쓰다가 그만두면 안 올린 것과 같아야 하기 때문입니다.
+   --------------------------------------------------------------- */
+const BLOCK_KINDS = [
+  { t: "p",     name: "문단" },
+  { t: "h",     name: "소제목" },
+  { t: "ul",    name: "불릿" },
+  { t: "quote", name: "인용" },
+  { t: "img",   name: "사진" }
+];
+const BLOCK_PLACEHOLDER = {
+  p: "본문을 적어 주세요. **별표 두 개**로 감싸면 굵게 나옵니다.",
+  h: "소제목",
+  ul: "한 줄에 하나씩 적어 주세요.\n두 번째 항목\n세 번째 항목",
+  quote: "따옴표로 크게 보여 줄 문장이에요.\n줄바꿈도 그대로 살아납니다."
+};
+
+function articleEditor(state) {
+  const wrap = el("div");
+  const list = el("div");
+  wrap.appendChild(list);
+
+  const add = el("div", "blk-add");
+  BLOCK_KINDS.forEach(k => {
+    const b = el("button", "btn btn-secondary btn-sm", "+ " + k.name);
+    b.type = "button";
+    b.addEventListener("click", () => {
+      state.article.push(k.t === "img" ? { type: "img", src: "", caption: "" }
+                        : k.t === "ul" ? { type: "ul", items: [] }
+                        : { type: k.t, text: "" });
+      draw();
+    });
+    add.appendChild(b);
+  });
+  wrap.appendChild(add);
+
+  function draw() {
+    list.innerHTML = "";
+    if (!state.article.length) {
+      list.appendChild(el("div", "blk-empty", "아직 본문이 없어요. 아래에서 블록을 더해 보세요."));
+      return;
+    }
+    state.article.forEach((b, i) => list.appendChild(blockRow(state, b, i, draw)));
+  }
+  draw();
+  return wrap;
+}
+
+function blockRow(state, b, i, draw) {
+  const box = el("div", "blk");
+
+  /* 위: 종류 고르기와 순서 바꾸기 */
+  const top = el("div", "blk-top");
+  const kinds = el("div", "blk-kind");
+  BLOCK_KINDS.forEach(k => {
+    const btn = el("button", b.type === k.t ? "on" : null, k.name);
+    btn.type = "button";
+    btn.addEventListener("click", () => {
+      if (b.type === k.t) return;
+      /* 종류를 바꿔도 적어 둔 글은 최대한 살립니다. */
+      const txt = b.type === "ul" ? (b.items || []).join("\n") : (b.text || "");
+      Object.keys(b).forEach(key => delete b[key]);
+      b.type = k.t;
+      if (k.t === "ul") b.items = txt ? txt.split("\n") : [];
+      else if (k.t === "img") { b.src = ""; b.caption = ""; }
+      else b.text = txt;
+      draw();
+    });
+    kinds.appendChild(btn);
+  });
+  top.appendChild(kinds);
+
+  const move = el("div", "blk-move");
+  const mk = (label, title, cls, fn, off) => {
+    const x = el("button", cls, label);
+    x.type = "button"; x.title = title; x.disabled = !!off;
+    x.addEventListener("click", fn);
+    move.appendChild(x);
+  };
+  mk("↑", "위로", null, () => {
+    state.article.splice(i - 1, 0, state.article.splice(i, 1)[0]); draw();
+  }, i === 0);
+  mk("↓", "아래로", null, () => {
+    state.article.splice(i + 1, 0, state.article.splice(i, 1)[0]); draw();
+  }, i === state.article.length - 1);
+  mk("×", "삭제", "del", () => {
+    if (!confirm("이 블록을 지울까요?")) return;
+    state.article.splice(i, 1); draw();
+  });
+  top.appendChild(move);
+  box.appendChild(top);
+
+  /* 아래: 내용 */
+  if (b.type === "img") {
+    /* 사진은 state 에 담아 두었다가 저장할 때 올립니다. */
+    const holder = { src: b.src || "" };
+    const pick = imagePicker(holder, "src", "", () => {
+      b.__upload = holder.__upload_src;
+      b.src = holder.src;
+    });
+    box.appendChild(pick);
+    const cap = input(b.caption || "", "사진 아래 설명 (비워도 됩니다)");
+    cap.className = "cap";
+    cap.addEventListener("input", () => b.caption = cap.value);
+    box.appendChild(cap);
+  } else if (b.type === "h") {
+    const t = input(b.text || "", BLOCK_PLACEHOLDER.h);
+    t.addEventListener("input", () => b.text = t.value);
+    box.appendChild(t);
+  } else {
+    const t = textarea(b.type === "ul" ? (b.items || []).join("\n") : (b.text || ""),
+                       BLOCK_PLACEHOLDER[b.type]);
+    t.addEventListener("input", () => {
+      if (b.type === "ul") b.items = t.value.split("\n");
+      else b.text = t.value;
+    });
+    box.appendChild(t);
+  }
+  return box;
+}
+
+/* 저장 직전에 빈 블록을 걸러 냅니다.
+   실수로 더해 놓고 비워 둔 블록이 그대로 나가면 상세페이지에 빈 줄이 생깁니다. */
+function cleanArticle(blocks) {
+  return (blocks || []).map(b => {
+    if (b.type === "img") return b.src ? { type: "img", src: b.src, caption: (b.caption || "").trim() } : null;
+    if (b.type === "ul") {
+      const items = (b.items || []).map(x => x.trim()).filter(Boolean);
+      return items.length ? { type: "ul", items: items } : null;
+    }
+    const text = (b.text || "").trim();
+    return text ? { type: b.type, text: text } : null;
+  }).filter(Boolean);
+}
+
+/* 본문 안의 사진을 올립니다. 저장할 때 한 번에 처리합니다. */
+async function uploadArticleImages(state, key) {
+  for (let i = 0; i < state.article.length; i++) {
+    const b = state.article[i];
+    if (!b.__upload) continue;
+    setMsg("본문 사진을 올리는 중… (" + (i + 1) + ")");
+    const path = "assets/events/" + key + "/body-" + Date.now().toString(36) + "-" + i + "." + b.__upload.ext;
+    await gh.writeBinary(path, b.__upload.base64, null, "어드민: " + state.title + " 본문 사진");
+    b.src = path;
+    delete b.__upload;
+  }
 }
 
 /* ---------------------------------------------------------------

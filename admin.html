@@ -361,6 +361,29 @@
     .thumb-pick img { width: 100%; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  /* ---------- 상세 본문 블록 에디터 ---------- */
+  .blk { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; background: #fff; }
+  .blk-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .blk-kind { flex: 1; display: flex; gap: 4px; flex-wrap: wrap; }
+  .blk-kind button {
+    font: inherit; font-size: 12.5px; font-weight: 600; padding: 5px 11px;
+    border-radius: 99px; border: 1px solid var(--line); background: #fff;
+    color: var(--muted); cursor: pointer;
+  }
+  .blk-kind button.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .blk-move { display: flex; gap: 4px; flex: none; }
+  .blk-move button {
+    font: inherit; font-size: 13px; width: 28px; height: 28px; line-height: 1;
+    border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; color: var(--muted);
+  }
+  .blk-move button:hover:not(:disabled) { color: var(--ink); border-color: var(--ink); }
+  .blk-move button:disabled { opacity: 0.35; cursor: default; }
+  .blk-move button.del:hover { color: #C0392B; border-color: #C0392B; }
+  .blk textarea { min-height: 74px; }
+  .blk .cap { margin-top: 8px; }
+  .blk-empty { font-size: 14px; color: var(--muted); padding: 18px 0; }
+  .blk-add { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -474,16 +497,27 @@ const EVENT_FILE = "assets/events.js";
 const RES_FILE = "assets/resources.js";
 const RES_PRIV_FILE = "assets/resources-private.js";
 
-/* 어드민이 다루는 공통 항목. 여기 없는 항목(sessions, materials, detailImages,
-   contact 등)은 수정 화면에 나오지 않지만 저장할 때 그대로 보존됩니다. */
+/* 어드민 수정 화면이 직접 다루는 항목입니다.
+   여기 없는 항목(sessions, materials, curriculumIntro 등)은 화면에 나오지
+   않지만 저장할 때 원본에서 그대로 되돌려 넣습니다.
+
+   예전에는 되돌릴 항목을 따로 나열했는데, 새 항목이 생길 때마다 그 목록에
+   추가하는 걸 잊으면 저장하는 순간 조용히 사라졌습니다. 실제로 provision 과
+   article 이 그렇게 날아갈 뻔했습니다. 그래서 "폼이 가진 것만 새로 쓰고
+   나머지는 전부 보존"하는 방식으로 뒤집었습니다. */
 const EVENT_FORM_KEYS = [
   "type", "category", "host", "kind", "title", "date", "startDate", "place", "placeUrl",
   "thumb", "desc", "points", "speaker", "speakerRole", "assistant", "prep", "audience",
-  "status", "format", "onlineUrl", "priceType", "price", "feeNote", "applyUrl", "replayUrl"
+  "status", "format", "onlineUrl", "priceType", "price", "feeNote", "applyUrl", "replayUrl",
+  "provision", "refundNote", "article"
 ];
-const ADVANCED_KEYS = ["sessions", "materials", "detailImages", "contact"];
+/* 폼이 소유한 키. 저장할 때 이 키들만 새로 쓰고 나머지는 원본을 유지합니다.
+   fee 는 더 이상 쓰지 않는 옛 항목이라 일부러 버립니다. */
+const OWNED_KEYS = EVENT_FORM_KEYS.concat(["fee"]);
+/* 화면에 안 나오지만 값이 있으면 안내 문구를 띄울 항목 */
+const ADVANCED_KEYS = ["sessions", "materials", "detailImages", "contact", "curriculumIntro"];
 
-const CATEGORIES_EVENT = ["AI·자동화", "학원 운영", "마케팅·브랜딩", "올커니"];
+const CATEGORIES_EVENT = ["학원 운영", "AI·자동화", "마케팅·브랜딩", "세무·노무"];
 const TYPES = ["Lecture", "Webinar", "Course", "Community", "Seminar"];
 const CATEGORIES_RES = ["강의자료", "가이드북", "인사이트"];
 
@@ -1106,6 +1140,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608191740"></script>
+<script src="admin-forms.js?v=202608200115"></script>
 </body>
 </html>

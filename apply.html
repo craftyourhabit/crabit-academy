@@ -23,9 +23,11 @@
     --fill-soft: #F9FAFC;
     --ink: #16192A;
     --muted: rgba(22, 25, 42, 0.55);
+    --faint: rgba(22, 25, 42, 0.30);
     --line: #E8E8E8;
     --pink: #FB75BB;
     --tint: #FEE9F4;
+    --hd: 63px;
   }
   * { box-sizing: border-box; }
   body {
@@ -36,16 +38,24 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-  header { box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06); position: sticky; top: 0; background: rgba(255, 255, 255,0.92); backdrop-filter: blur(8px); z-index: 20; }
-  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  /* 상세페이지와 같은 컨테이너를 씁니다. 오른쪽에 주문 요약이 서기 때문입니다. */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  header {
+    box-shadow: 0 1px 4px rgba(22, 25, 42, 0.06);
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+  }
+  /* .nav 는 .wrap 을 겸합니다. padding 을 통째로 쓰면 좌우 여백이 0 으로 덮여
+     좁은 화면에서 로고가 화면 끝에 붙습니다. 세로 값만 지정합니다. */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
   .brand img { height: 26px; display: block; }
   .brand a { color: inherit; text-decoration: none; }
   .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
   .nav > a:hover { color: var(--ink); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
 
-  main.wrap { padding-top: 40px; padding-bottom: 90px; }
+  main.wrap { padding-top: 34px; padding-bottom: 110px; }
 
   .back {
     display: inline-flex; align-items: center; gap: 7px;
@@ -54,46 +64,41 @@
   }
   .back:hover { color: var(--ink); }
 
-  .sec-h {
-    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
+  /* ---------- 진행 단계 ----------
+     신청서를 쓰다가 "이게 바로 결제되는 건가" 하고 멈칫하지 않도록
+     지금 어디쯤인지 먼저 보여 줍니다. */
+  .steps { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .steps .st { display: flex; align-items: center; gap: 9px; font-size: 14.5px; font-weight: 600; color: var(--faint); }
+  .steps .st .n {
+    flex: none; width: 24px; height: 24px; border-radius: 99px;
+    background: var(--fill); color: var(--muted);
+    font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
   }
+  .steps .st.on { color: var(--ink); }
+  .steps .st.on .n { background: var(--ink); color: #fff; }
+  .steps .st.done .n { background: var(--pink); color: #fff; }
+  .steps .arw { color: var(--faint); font-size: 13px; }
 
-  /* ---------- 무엇을 신청하는지 다시 보여 주는 요약 ----------
-     상세 페이지를 떠나 왔으니, 강의와 금액을 여기서 한 번 더 확인시켜 준다. */
-  .summary {
-    display: flex; gap: 18px; align-items: center;
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 34px;
+  /* ---------- 본문과 주문 요약 ---------- */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 332px; gap: 56px; align-items: start; }
+  .col { max-width: 680px; }
+
+  h1.sec-h {
+    font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: 27px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3;
+    margin: 0 0 8px;
   }
-  .summary img {
-    flex: none; width: 148px; aspect-ratio: 16 / 9;
-    object-fit: cover; border-radius: 10px; background: var(--fill); display: block;
-  }
-  .summary .s-txt { min-width: 0; }
-  .summary h2 { margin: 0 0 6px; font-size: 18px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.4; }
-  .summary .s-meta { margin: 0; font-size: 14.5px; color: var(--muted); }
-  .summary .s-price { margin: 8px 0 0; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+  .form-sub { margin: 0 0 28px; font-size: 15.5px; color: var(--muted); line-height: 1.6; }
 
   /* ---------- 신청 폼 ---------- */
-  .applyform h1 { margin: 0 0 6px; }
-  .applyform .form-sub { margin: 0 0 26px; font-size: 15.5px; color: var(--muted); line-height: 1.6; }
-  .applyform .fields { display: flex; flex-direction: column; gap: 18px; }
-  .applyform .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .applyform label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-  .applyform label .req { color: var(--pink); margin-left: 3px; }
-  .applyform input[type="text"],
-  .applyform input[type="tel"],
-  .applyform input[type="email"],
-  .applyform textarea {
+  .fields { display: flex; flex-direction: column; gap: 20px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  label { display: flex; align-items: center; font-size: 14.5px; font-weight: 700; margin-bottom: 8px; }
+  label .req { color: var(--pink); margin-left: 4px; }
+  .ic { flex: none; margin-right: 7px; color: var(--faint); }
+  input[type="text"], input[type="tel"], input[type="email"], textarea {
     width: 100%;
-    box-sizing: border-box;
     padding: 13px 15px;
     font: inherit;
     font-size: 16px;
@@ -103,102 +108,111 @@
     border-radius: 10px;
     transition: border-color 0.15s;
   }
-  .applyform input:focus, .applyform textarea:focus { outline: none; border-color: var(--ink); }
-  .applyform textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
-  /* 자동 프로그램만 채우는 칸. 사람 눈에는 안 보인다. */
-  .applyform .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  input:focus, textarea:focus { outline: none; border-color: var(--ink); }
+  textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+  /* 자동 프로그램만 채우는 칸. 사람 눈에는 안 보입니다. */
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-  .applyform .consent {
-    margin-top: 4px;
-    padding: 18px 20px;
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-  }
-  .applyform .consent-row { display: flex; gap: 10px; align-items: flex-start; }
-  .applyform .consent-row input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
-  .applyform .consent-row label { margin: 0; font-weight: 600; font-size: 15px; line-height: 1.5; }
-  .applyform .consent-detail { margin: 10px 0 0 28px; font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+  .consent { margin-top: 6px; padding: 20px 22px; background: var(--fill-soft); border-radius: 14px; }
+  .consent-row { display: flex; gap: 11px; align-items: flex-start; }
+  .consent-row input { flex: none; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--ink); }
+  .consent-row label { margin: 0; font-weight: 700; font-size: 15px; line-height: 1.5; }
+  .consent-detail { margin: 11px 0 0 29px; font-size: 13.5px; color: var(--muted); line-height: 1.7; }
 
-  .applyform .submit-row { margin-top: 22px; }
-  .applyform button.submit {
-    width: 100%;
-    padding: 16px;
-    font: inherit;
-    font-size: 17px;
-    font-weight: 700;
-    color: #fff;
-    background: var(--ink);
-    border: 0;
-    border-radius: 12px;
-    cursor: pointer;
+  .submit-row { margin-top: 26px; }
+  button.submit {
+    width: 100%; padding: 17px;
+    font: inherit; font-size: 17px; font-weight: 700;
+    color: #fff; background: var(--ink);
+    border: 0; border-radius: 12px; cursor: pointer;
     transition: background 0.15s;
   }
-  .applyform button.submit:hover { background: #333333; }
-  .applyform button.submit:disabled { opacity: 0.5; cursor: default; }
-  .applyform .formmsg { margin: 14px 0 0; font-size: 15px; line-height: 1.6; }
-  .applyform .formmsg.err { color: #C0392B; font-weight: 600; }
+  button.submit:hover { background: #333333; }
+  button.submit:disabled { opacity: 0.5; cursor: default; }
+  .formmsg { margin: 14px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
+  .formmsg.err { color: #C0392B; font-weight: 600; }
 
-  .applyform .done {
-    background: var(--fill-soft);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 34px;
-    text-align: center;
+  /* ---------- 접수 완료 ---------- */
+  .done { border: 1px solid var(--line); border-radius: 18px; padding: 40px 34px; text-align: center; }
+  .done .mark {
+    width: 52px; height: 52px; border-radius: 99px; background: var(--tint);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
   }
-  .applyform .done h3 { margin: 0 0 12px; font-size: 21px; font-weight: 700; }
-  .applyform .done p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--ink); }
-  .applyform .done .next { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; color: var(--muted); }
-  .applyform .done .btn-back {
-    display: inline-block; margin-top: 22px; padding: 12px 22px;
-    font-size: 15px; font-weight: 600; color: var(--ink);
-    background: #fff; border: 1px solid var(--line); border-radius: 10px; text-decoration: none;
+  .done h3 { margin: 0 0 10px; font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+  .done p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--muted); }
+  .done .btn-back {
+    display: inline-block; margin-top: 24px; padding: 13px 24px;
+    font-size: 15px; font-weight: 700; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: 11px; text-decoration: none;
   }
-  .applyform .done .btn-back:hover { background: #F0F0F0; }
+  .done .btn-back:hover { background: var(--fill-soft); }
 
-  /* ---------- 주문 확인과 결제 ---------- */
-  .order h3 { margin: 0 0 6px; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
-  .order .o-sub { margin: 0 0 22px; font-size: 15.5px; color: var(--muted); }
-  .o-box { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 26px; }
-  .o-row { display: flex; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+  /* ---------- 주문 확인 ---------- */
+  .order h1 { margin: 0 0 8px; }
+  .o-sub { margin: 0 0 26px; font-size: 15.5px; color: var(--muted); }
+  .o-box { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; margin-bottom: 28px; }
+  .o-row { display: flex; gap: 18px; padding: 15px 20px; border-bottom: 1px solid var(--line); font-size: 15.5px; line-height: 1.6; }
   .o-row:last-child { border-bottom: 0; }
-  .o-row > span { flex: none; width: 96px; color: var(--muted); }
+  .o-row > span { flex: none; width: 92px; color: var(--muted); font-weight: 500; }
   .o-row > b { font-weight: 600; flex: 1; }
   .o-row.total { background: var(--fill-soft); }
-  .o-row.total > b { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-  .o-h { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+  .o-row.total > b { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+  .o-h { margin: 0 0 12px; font-size: 14.5px; font-weight: 700; }
   .o-pay {
-    display: flex; align-items: center; gap: 10px;
-    border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px;
+    display: flex; align-items: center; gap: 11px;
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
     font-size: 15.5px; font-weight: 600; cursor: pointer; margin-bottom: 22px;
   }
   .o-pay input { width: 18px; height: 18px; accent-color: var(--ink); }
-  .o-agree { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.6; margin-bottom: 18px; }
+  .o-agree { display: flex; gap: 11px; align-items: flex-start; font-size: 14.5px; line-height: 1.6; margin-bottom: 20px; }
   .o-agree input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--ink); }
   .o-agree a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  .o-msg { margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: var(--muted); }
+  .o-msg { margin: 0 0 16px; font-size: 15px; line-height: 1.7; color: var(--muted); }
   .o-msg.err { color: #C0392B; font-weight: 600; }
-  .order .submit {
-    width: 100%; padding: 16px; font: inherit; font-size: 17px; font-weight: 700;
-    color: #fff; background: var(--ink); border: 0; border-radius: 12px; cursor: pointer;
-  }
-  .order .submit:hover { background: #333333; }
-  .order .submit:disabled { opacity: 0.5; cursor: default; }
 
-  .notfound { text-align: center; padding: 70px 0 90px; }
-  .notfound h1 { font-size: 24px; margin: 0 0 12px; }
+  /* ---------- 주문 요약 (오른쪽) ---------- */
+  .rail { position: sticky; top: calc(var(--hd) + 28px); }
+  .sum { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 28px rgba(22, 25, 42, 0.07); background: #fff; }
+  .sum img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: var(--fill); }
+  .sum .s-body { padding: 20px 22px 22px; }
+  .sum h2 { margin: 0 0 14px; font-size: 16.5px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.45; }
+  .sum .s-rows { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .sum .s-row { display: flex; gap: 12px; font-size: 14px; }
+  .sum .s-row .k { flex: none; width: 62px; color: var(--muted); }
+  .sum .s-row .v { flex: 1; font-weight: 600; word-break: keep-all; }
+  .sum .s-total { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .sum .s-total .k { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .sum .s-total .v { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .sum .s-note { margin: 12px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+  .notfound { text-align: center; padding: 90px 0 110px; }
+  .notfound h1 { margin: 0 0 12px; font-size: 26px; }
   .notfound p { color: var(--muted); margin: 0 0 28px; }
   .notfound a {
-    display: inline-block; padding: 13px 24px; font-size: 15px; font-weight: 600;
+    display: inline-block; padding: 14px 26px; font-size: 15px; font-weight: 700;
     color: #fff; background: var(--ink); border-radius: 12px; text-decoration: none;
   }
 
+  @media (max-width: 1023px) {
+    .layout { grid-template-columns: 1fr; gap: 30px; }
+    .col { max-width: none; }
+    /* 좁은 화면에서는 무엇을 신청하는지 먼저 보여 줍니다. */
+    .rail { position: static; order: -1; }
+    .sum { display: flex; align-items: stretch; }
+    .sum img { flex: none; width: 168px; aspect-ratio: 16 / 9; }
+    .sum .s-body { flex: 1; min-width: 0; padding: 16px 18px; }
+    .sum .s-rows, .sum h2 { margin-bottom: 0; }
+    .sum .s-rows { display: none; }
+    .sum .s-total { margin-top: 12px; padding-top: 12px; }
+  }
   @media (max-width: 640px) {
-    .applyform .row2 { grid-template-columns: 1fr; }
-    .o-row { flex-direction: column; gap: 4px; }
+    .row2 { grid-template-columns: 1fr; }
+    .o-row { flex-direction: column; gap: 5px; }
     .o-row > span { width: auto; font-size: 13.5px; }
-    .summary { flex-direction: column; align-items: stretch; }
-    .summary img { width: 100%; }
+    .sum { display: block; }
+    .sum img { width: 100%; }
+    .steps { gap: 7px; }
+    .steps .st { font-size: 13.5px; }
   }
 
   footer {
@@ -216,8 +230,6 @@
   .f-info { line-height: 1.8; }
   .f-info p { margin: 0; }
   .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
-  .f-bottom a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
-  .f-bottom a:hover { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -238,6 +250,7 @@
       <div class="f-sns">
         <a href="https://www.instagram.com/crabit_official" target="_blank" rel="noopener">인스타그램</a>
         <a href="https://pf.kakao.com/_nutkG" target="_blank" rel="noopener">카카오톡 채널</a>
+        <a href="mailto:craftyourhabit@gmail.com">이메일</a>
       </div>
     </div>
     <div class="f-info">
@@ -255,11 +268,8 @@
 
 <script>
 /* GitHub Pages 는 정적 파일을 10분간 캐시하라고 응답합니다(max-age=600).
-   그래서 어드민에서 강의를 고쳐도 이미 방문했던 분에게는 최대 10분간
-   옛 내용이 보입니다. 주소 뒤에 5분 단위로 바뀌는 값을 붙여 그 창을 줄입니다.
-   같은 5분 안에서는 주소가 같으므로 캐시는 그대로 살아 있습니다.
-   document.write 를 쓰는 이유는 아래 스크립트들이 EVENTS_DB 를 곧바로
-   쓰기 때문입니다. 순서를 지키려면 이 방법이 가장 단순합니다. */
+   주소 뒤에 5분 단위로 바뀌는 값을 붙여 그 창을 줄입니다.
+   document.write 를 쓰는 이유는 아래 스크립트가 EVENTS_DB 를 곧바로 쓰기 때문입니다. */
 document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() / 300000) + '"></scr' + 'ipt>');
 </script>
 <script>
@@ -293,8 +303,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
 
   /* 지난 교육은 접수하지 않습니다. 상세 페이지에서도 막고 있지만,
      주소를 직접 치고 들어오는 경우가 있어서 여기서 한 번 더 봅니다. */
-  const overable = ev.status === "replay" || ev.status === "replay-soon" || isEventOver(ev);
-  if (overable) {
+  if (ev.status === "replay" || ev.status === "replay-soon" || isEventOver(ev)) {
     notFound("접수가 끝난 교육이에요", "크래빗 아카데미에서 준비 중인 다른 교육을 둘러보세요.");
     return;
   }
@@ -302,19 +311,127 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   const fmt = eventFormat(ev);
   const price = eventPriceInfo(ev);
   const detailUrl = "event.html?id=" + encodeURIComponent(id);
+  document.title = ev.title + " 신청 - 크래빗 아카데미";
+
+  /* 라벨 앞에 붙는 2D 아이콘. 상세페이지와 같은 모양을 씁니다. */
+  const IC = d => '<svg class="ic" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">' + d + '</svg>';
+  const S = 'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  const ICONS = {
+    user: IC('<circle cx="10" cy="6.8" r="3.1" ' + S + '/><path d="M3.6 17c0-3 2.9-5.2 6.4-5.2s6.4 2.2 6.4 5.2" ' + S + '/>'),
+    phone: IC('<path d="M6.2 3.2h3l1.4 3.5-2 1.3a9.5 9.5 0 0 0 4.4 4.4l1.3-2 3.5 1.4v3a1.6 1.6 0 0 1-1.7 1.6C9.6 15.9 4.1 10.4 3.4 4.9a1.6 1.6 0 0 1 1.6-1.7z" ' + S + '/>'),
+    mail: IC('<rect x="2.6" y="4.4" width="14.8" height="11.2" rx="2" ' + S + '/><path d="m3.2 5.6 6.8 4.9 6.8-4.9" ' + S + '/>'),
+    home: IC('<path d="M3.2 8.6 10 3.2l6.8 5.4v7.2a1.4 1.4 0 0 1-1.4 1.4H4.6a1.4 1.4 0 0 1-1.4-1.4z" ' + S + '/>'),
+    route: IC('<path d="M5.4 16.6V7.4M14.6 3.4v9.2" ' + S + '/><circle cx="5.4" cy="4.6" r="2" ' + S + '/><circle cx="14.6" cy="15.4" r="2" ' + S + '/>'),
+    chat: IC('<path d="M17 11.4a2.6 2.6 0 0 1-2.6 2.6H7.2L3.6 17V5.4A2.6 2.6 0 0 1 6.2 2.8h8.2A2.6 2.6 0 0 1 17 5.4z" ' + S + '/>'),
+    check: IC('<path d="M4 10.4 8.2 14.6 16.4 5.6" stroke="#FB75BB" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>')
+  };
+
+  /* ---------- 진행 단계 ---------- */
+  const stepBar = at => {
+    const names = price.paid ? ["신청서 작성", "주문 확인", "결제"] : ["신청서 작성", "접수 완료"];
+    return '<div class="steps">' + names.map((n, i) => {
+      const cls = i < at ? "st done" : (i === at ? "st on" : "st");
+      return '<div class="' + cls + '"><span class="n">' + (i < at ? "✓" : (i + 1)) + '</span>' + n + '</div>'
+        + (i < names.length - 1 ? '<span class="arw">→</span>' : '');
+    }).join("") + '</div>';
+  };
+
+  /* ---------- 오른쪽 주문 요약 ---------- */
+  const sumRows = [{ k: "진행 방식", v: esc(fmt.label) }, { k: "일정", v: esc(ev.date) }]
+    .concat(ev.materials ? [{ k: "제공 자료", v: ev.materials.length + "종" }] : []);
+
+  const railHtml = '<aside class="rail"><div class="sum">'
+    + '<img src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + '<div class="s-body">'
+    + '<h2>' + esc(ev.title) + '</h2>'
+    + '<div class="s-rows">'
+    + sumRows.map(r => '<div class="s-row"><span class="k">' + r.k + '</span><span class="v">' + r.v + '</span></div>').join("")
+    + '</div>'
+    + (price.incomplete ? '' :
+        '<div class="s-total"><span class="k">' + (price.paid ? "수강료" : "참가비") + '</span>'
+        + '<span class="v">' + esc(price.text) + '</span></div>'
+        + (price.note ? '<p class="s-note">' + esc(price.note) + '</p>' : ''))
+    + '</div></div></aside>';
+
+  /* ---------- 화면 ---------- */
+  const fld = (icon, label, req, inner) =>
+    '<div><label for="' + req.id + '">' + icon + label
+    + (req.must ? '<span class="req">*</span>' : '') + '</label>' + inner + '</div>';
+
+  const formHtml = '<div class="col">'
+    + stepBar(0)
+    + '<h1 class="sec-h">신청하기</h1>'
+    + '<p class="form-sub">아래 내용을 남겨 주시면 접수됩니다.'
+    + (fmt.isOnline ? ' 참여 링크는 접수 후 따로 보내드려요.' : '')
+    + (price.paid ? ' 제출을 마치면 결제 화면으로 이어집니다.' : '')
+    + '</p>'
+    + '<form id="applyFormEl" novalidate><div class="fields">'
+    + '<div class="row2">'
+    + fld(ICONS.user, "이름", { id: "f-name", must: true },
+        '<input type="text" id="f-name" name="name" autocomplete="name" maxlength="40" required />')
+    + fld(ICONS.phone, "연락처", { id: "f-phone", must: true },
+        '<input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" maxlength="20" required />')
+    + '</div>'
+    + '<div class="row2">'
+    + fld(ICONS.mail, "이메일", { id: "f-email" },
+        '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" />')
+    + fld(ICONS.home, "학원명과 직책", { id: "f-org" },
+        '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" />')
+    + '</div>'
+    + fld(ICONS.route, "어떻게 알고 오셨나요", { id: "f-source" },
+        '<input type="text" id="f-source" name="source" placeholder="예: 인스타그램, 지인 소개" maxlength="120" />')
+    + fld(ICONS.chat, "문의사항", { id: "f-message" },
+        '<textarea id="f-message" name="message" maxlength="1000" placeholder="미리 궁금하신 점이 있으면 남겨 주세요."></textarea>')
+    /* 사람에게는 안 보이는 칸. 자동 프로그램이 채우면 접수하지 않습니다. */
+    + '<div class="hp" aria-hidden="true"><label for="f-website">website</label>'
+    + '<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>'
+    + '<div class="consent">'
+    + '<div class="consent-row">'
+    + '<input type="checkbox" id="f-consent" name="consent" required />'
+    + '<label for="f-consent">개인정보 수집과 이용에 동의합니다<span class="req">*</span></label>'
+    + '</div>'
+    + '<p class="consent-detail">수집 항목은 이름, 연락처, 이메일, 소속입니다. '
+    + '강의 접수와 안내 목적으로만 쓰고 강의 종료 후 1년간 보관한 뒤 파기합니다. '
+    + '동의하지 않으셔도 되지만 그 경우 신청 접수가 어렵습니다.</p>'
+    + '</div>'
+    + '</div>'
+    + '<div class="submit-row"><button class="submit" type="submit">신청 접수하기</button></div>'
+    + '<p class="formmsg" id="formMsg" hidden></p>'
+    + '</form></div>';
+
+  main.innerHTML = '<a class="back" href="' + detailUrl + '">&larr; 강의 상세로 돌아가기</a>'
+    + '<div class="layout" id="layout">' + formHtml + railHtml + '</div>';
+
+  const SB_URL = "https://ttolvlzubashyhdctbqr.supabase.co";
+  const SB_KEY = "sb_publishable_BLr1R3be079ViSLSoAtIqQ_ZTs7T6HG";
+  const APPLY_API = SB_URL + "/rest/v1/academy_applications";
+
+  const formEl = document.getElementById("applyFormEl");
+  const msg = document.getElementById("formMsg");
+  const btn = formEl.querySelector("button.submit");
+
+  const show = (text, isError) => {
+    msg.textContent = text;
+    msg.className = "formmsg" + (isError ? " err" : "");
+    msg.hidden = false;
+  };
 
   /* 무료 강의 완료 안내 */
-  const doneHtml = () => '<div class="done">'
+  const doneHtml = () => '<div class="col">'
+    + stepBar(1)
+    + '<div class="done">'
+    + '<div class="mark">' + ICONS.check + '</div>'
     + '<h3>신청이 접수되었습니다</h3>'
     + '<p>남겨 주신 연락처로 확정 안내를 보내드릴게요.</p>'
     + '<a class="btn-back" href="' + detailUrl + '">강의 상세로 돌아가기</a>'
-    + '</div>';
+    + '</div></div>';
 
   /* 유료 강의 주문 확인과 결제.
-     카카오페이 가맹 승인 전이라 마지막 버튼은 안내만 띄운다.
-     승인 후 이 자리에 결제창 호출만 넣으면 된다. */
-  const orderHtml = name => '<div class="order">'
-    + '<h3>주문 확인</h3>'
+     카카오페이 가맹 승인 전이라 마지막 버튼은 안내만 띄웁니다.
+     승인 후 이 자리에 결제창 호출만 넣으면 됩니다. */
+  const orderHtml = name => '<div class="col order">'
+    + stepBar(1)
+    + '<h1 class="sec-h">주문 확인</h1>'
     + '<p class="o-sub">' + esc(name) + '님, 아래 내용으로 결제를 진행합니다.</p>'
     + '<div class="o-box">'
     + '<div class="o-row"><span>강의</span><b>' + esc(ev.title) + '</b></div>'
@@ -330,71 +447,6 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     + '<p class="o-msg" id="oMsg" hidden></p>'
     + '<button class="submit" id="payBtn" type="button">결제하기</button>'
     + '</div>';
-
-  main.innerHTML =
-    '<a class="back" href="' + detailUrl + '">&larr; 강의 상세로 돌아가기</a>'
-    + '<div class="summary">'
-    + '<img src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
-    + '<div class="s-txt">'
-    + '<h2>' + esc(ev.title) + '</h2>'
-    + '<p class="s-meta">' + esc(ev.date) + ' | ' + esc(fmt.label) + '</p>'
-    + (price.incomplete ? '' : '<p class="s-price">' + esc(price.text) + '</p>')
-    + '</div></div>'
-    + '<section class="applyform" id="applyform">'
-    + '<h1 class="sec-h">신청하기</h1>'
-    + '<p class="form-sub">아래 내용을 남겨 주시면 접수됩니다.'
-    + (fmt.isOnline ? ' 온라인 참여 링크는 접수 후 따로 보내드려요.' : '')
-    + (price.paid ? ' 제출을 마치면 결제 화면으로 이어집니다.' : '')
-    + '</p>'
-    + '<form id="applyFormEl" novalidate><div class="fields">'
-    + '<div class="row2">'
-    + '<div><label for="f-name">이름<span class="req">*</span></label>'
-    + '<input type="text" id="f-name" name="name" autocomplete="name" maxlength="40" required /></div>'
-    + '<div><label for="f-phone">연락처<span class="req">*</span></label>'
-    + '<input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" maxlength="20" required /></div>'
-    + '</div>'
-    + '<div class="row2">'
-    + '<div><label for="f-email">이메일</label>'
-    + '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" /></div>'
-    + '<div><label for="f-org">학원명과 직책</label>'
-    + '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" /></div>'
-    + '</div>'
-    + '<div><label for="f-source">어떻게 알고 오셨나요</label>'
-    + '<input type="text" id="f-source" name="source" placeholder="예: 인스타그램, 지인 소개" maxlength="120" /></div>'
-    + '<div><label for="f-message">문의사항</label>'
-    + '<textarea id="f-message" name="message" maxlength="1000" placeholder="미리 궁금하신 점이 있으면 남겨 주세요."></textarea></div>'
-    /* 사람에게는 안 보이는 칸. 자동 프로그램이 채우면 접수하지 않는다. */
-    + '<div class="hp" aria-hidden="true"><label for="f-website">website</label>'
-    + '<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>'
-    + '<div class="consent">'
-    + '<div class="consent-row">'
-    + '<input type="checkbox" id="f-consent" name="consent" required />'
-    + '<label for="f-consent">개인정보 수집과 이용에 동의합니다<span class="req">*</span></label>'
-    + '</div>'
-    + '<p class="consent-detail">수집 항목은 이름, 연락처, 이메일, 소속입니다. '
-    + '강의 접수와 안내 목적으로만 쓰고 강의 종료 후 1년간 보관한 뒤 파기합니다. '
-    + '동의하지 않으셔도 되지만 그 경우 신청 접수가 어렵습니다.</p>'
-    + '</div>'
-    + '</div>'
-    + '<div class="submit-row"><button class="submit" type="submit">신청 접수하기</button></div>'
-    + '<p class="formmsg" id="formMsg" hidden></p>'
-    + '</form></section>';
-
-  document.title = ev.title + " 신청 - 크래빗 아카데미";
-
-  const SB_URL = "https://ttolvlzubashyhdctbqr.supabase.co";
-  const SB_KEY = "sb_publishable_BLr1R3be079ViSLSoAtIqQ_ZTs7T6HG";
-  const APPLY_API = SB_URL + "/rest/v1/academy_applications";
-
-  const formEl = document.getElementById("applyFormEl");
-  const msg = document.getElementById("formMsg");
-  const btn = formEl.querySelector("button.submit");
-
-  const show = (text, isError) => {
-    msg.textContent = text;
-    msg.className = "formmsg" + (isError ? " err" : "");
-    msg.hidden = false;
-  };
 
   /* 결제하기 버튼 동작 */
   function bindOrder() {
@@ -432,8 +484,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       show("개인정보 수집과 이용에 동의해 주셔야 신청할 수 있어요.", true); return;
     }
 
-    /* 사람 눈에 안 보이는 칸이 채워져 있으면 자동 프로그램이다.
-       조용히 성공한 척하고 보내지 않는다. */
+    /* 사람 눈에 안 보이는 칸이 채워져 있으면 자동 프로그램입니다.
+       조용히 성공한 척하고 보내지 않습니다. */
     if (val("website")) {
       show("신청이 접수되었습니다.", false);
       return;
@@ -442,7 +494,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     btn.disabled = true;
     show("접수하는 중이에요…", false);
 
-    /* 빈 칸은 아예 빼고 보낸다. 빈 문자열이 들어가면 길이 제약에 걸릴 수 있다. */
+    /* 빈 칸은 아예 빼고 보냅니다. 빈 문자열이 들어가면 길이 제약에 걸릴 수 있습니다. */
     const row = {
       event_id: id,
       event_title: ev.title,
@@ -464,15 +516,15 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
           "Content-Type": "application/json",
           "apikey": SB_KEY,
           "Authorization": "Bearer " + SB_KEY,
-          /* 넣기만 하고 돌려받지 않는다. anon 은 읽기 권한이 없으므로
-             return=representation 을 쓰면 오히려 실패한다. */
+          /* 넣기만 하고 돌려받지 않습니다. anon 은 읽기 권한이 없으므로
+             return=representation 을 쓰면 오히려 실패합니다. */
           "Prefer": "return=minimal"
         },
         body: JSON.stringify(row)
       });
 
       if (!res.ok) {
-        /* 23505 는 유니크 위반. 같은 강의에 같은 번호로 이미 넣은 경우다. */
+        /* 23505 는 유니크 위반. 같은 강의에 같은 번호로 이미 넣은 경우입니다. */
         const err = await res.json().catch(() => ({}));
         const dup = res.status === 409 || err.code === "23505";
         show(dup
@@ -482,10 +534,11 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
         return;
       }
 
-      /* 성공하면 폼 자리를 다음 단계로 바꾼다.
-         유료 강의는 주문 확인과 결제로, 무료 강의는 완료 안내로 간다. */
-      const sec = document.getElementById("applyform");
-      sec.innerHTML = price.paid ? orderHtml(val("name")) : doneHtml();
+      /* 성공하면 왼쪽 칸을 다음 단계로 바꿉니다.
+         유료 강의는 주문 확인과 결제로, 무료 강의는 완료 안내로 갑니다.
+         오른쪽 주문 요약은 그대로 두어 무엇을 신청했는지 계속 보이게 합니다. */
+      const layout = document.getElementById("layout");
+      layout.querySelector(".col").outerHTML = price.paid ? orderHtml(val("name")) : doneHtml();
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (price.paid) bindOrder();
     } catch {
@@ -495,6 +548,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   });
 })();
 </script>
+
 
 <script src="assets/track.js?v=202608191626" defer></script>
 </body>

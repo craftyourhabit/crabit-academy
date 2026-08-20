@@ -47,7 +47,22 @@ function openEvent(id) {
     /* 원본을 직접 건드리지 않도록 깊게 복사합니다. 취소하고 나갔을 때
        화면에서 했던 편집이 남아 있으면 안 되기 때문입니다. */
     article: (src.article || []).map(b => Object.assign({}, b,
-      b.items ? { items: b.items.slice() } : null))
+      b.items ? { items: b.items.slice() } : null)),
+    /* 커리큘럼과 제공 자료. 저장 전에 취소하고 나가도 원본이 그대로여야 하므로
+       배열과 그 안의 객체까지 새로 만들어 둡니다. */
+    sessions: (src.sessions || []).map(x => Object.assign({}, x, {
+      points: (x.points || []).slice(), gifts: (x.gifts || []).slice()
+    })),
+    materials: (src.materials || []).map(x => Object.assign({}, x)),
+    materialsTitle: src.materialsTitle || "",
+    materialsSub: src.materialsSub || "",
+    ci: {
+      eyebrow: (src.curriculumIntro || {}).eyebrow || "",
+      question: (src.curriculumIntro || {}).question || "",
+      pains: ((src.curriculumIntro || {}).pains || []).slice()
+    },
+    contactName: (src.contact || {}).name || "",
+    contactTel: (src.contact || {}).tel || ""
   };
   /* 캘린더 등록 여부 */
   const sched = store.SCHEDULE.find(s => s.id === id);
@@ -279,6 +294,26 @@ function openEvent(id) {
   }));
   view.appendChild(pT);
 
+  /* --- 커리큘럼 --- */
+  const pC = panel("커리큘럼", "회차별 내용이에요. 상세페이지에서 화면 끝까지 펼쳐집니다.");
+  pC.appendChild(curriculumEditor(state));
+  view.appendChild(pC);
+
+  /* --- 제공 자료 --- */
+  const pM = panel("제공 자료", "결제하시면 함께 드리는 것들이에요.");
+  pM.appendChild(materialsEditor(state));
+  view.appendChild(pM);
+
+  /* --- 문의처 --- */
+  const pQ = panel("문의처", "적으면 신청 카드 아래에 담당자 연락처가 붙습니다.");
+  const cn = input(state.contactName, "예: 조경이 대표");
+  cn.addEventListener("input", () => state.contactName = cn.value);
+  pQ.appendChild(field("담당자", cn));
+  const ct = input(state.contactTel, "예: 010-0000-0000");
+  ct.addEventListener("input", () => state.contactTel = ct.value);
+  pQ.appendChild(field("연락처", ct, { hint: "담당자와 연락처를 둘 다 적어야 표시됩니다." }));
+  view.appendChild(pQ);
+
   /* --- 공개 상태 --- */
   const p4 = panel("공개 상태", null);
   const stRow = el("div");
@@ -404,6 +439,15 @@ async function saveEvent(state, id, isNew, setMsg) {
   put("provision", state.provision.trim());
   put("refundNote", state.refundNote.trim());
   put("article", cleanArticle(state.article));
+  put("sessions", cleanSessions(state.sessions));
+  put("materials", cleanMaterials(state.materials));
+  put("materialsTitle", state.materialsTitle.trim());
+  put("materialsSub", state.materialsSub.trim());
+  const ci = cleanIntro(state.ci);
+  if (ci) next.curriculumIntro = ci;
+  if (state.contactName.trim() && state.contactTel.trim()) {
+    next.contact = { name: state.contactName.trim(), tel: state.contactTel.trim() };
+  }
 
   /* 폼이 다루지 않는 항목은 원본에서 그대로 가져옵니다.
      목록을 따로 관리하지 않고 "내가 안 쓴 건 전부 유지"로 두어야
@@ -435,6 +479,225 @@ async function saveEvent(state, id, isNew, setMsg) {
   store.eventsSha = res.sha;
   store.EVENTS_DB = db;
   store.SCHEDULE = sch;
+}
+
+/* ---------------------------------------------------------------
+   되풀이되는 목록을 다루는 도우미
+
+   커리큘럼 회차, 제공 자료처럼 "같은 모양이 여러 개" 인 것을 만듭니다.
+   순서 바꾸기와 삭제, 더하기가 다 같은 방식이라 한 곳에 모았습니다.
+   --------------------------------------------------------------- */
+function repeatList(arr, opts) {
+  const wrap = el("div");
+  const list = el("div");
+  wrap.appendChild(list);
+
+  const addBtn = el("button", "btn btn-secondary btn-sm", "+ " + opts.addLabel);
+  addBtn.type = "button";
+  addBtn.style.marginTop = "4px";
+  addBtn.addEventListener("click", () => { arr.push(opts.blank()); draw(); });
+  wrap.appendChild(addBtn);
+
+  function draw() {
+    list.innerHTML = "";
+    if (!arr.length) {
+      list.appendChild(el("div", "blk-empty", opts.empty));
+      return;
+    }
+    arr.forEach((item, i) => {
+      const box = el("div", "blk");
+      const top = el("div", "blk-top");
+      const t = el("div", "blk-kind");
+      const lab = el("span");
+      lab.style.cssText = "font-size:13px;font-weight:700;color:var(--muted)";
+      lab.textContent = opts.label(item, i);
+      t.appendChild(lab);
+      top.appendChild(t);
+
+      const move = el("div", "blk-move");
+      const mk = (txt, title, cls, fn, off) => {
+        const x = el("button", cls, txt);
+        x.type = "button"; x.title = title; x.disabled = !!off;
+        x.addEventListener("click", fn);
+        move.appendChild(x);
+      };
+      mk("↑", "위로", null, () => { arr.splice(i - 1, 0, arr.splice(i, 1)[0]); draw(); }, i === 0);
+      mk("↓", "아래로", null, () => { arr.splice(i + 1, 0, arr.splice(i, 1)[0]); draw(); }, i === arr.length - 1);
+      mk("×", "삭제", "del", () => {
+        if (!confirm(opts.confirmText || "이 항목을 지울까요?")) return;
+        arr.splice(i, 1); draw();
+      });
+      top.appendChild(move);
+      box.appendChild(top);
+      opts.body(box, item, i, draw);
+      list.appendChild(box);
+    });
+  }
+  draw();
+  return wrap;
+}
+
+/* 한 줄짜리 입력에 라벨을 붙여 되풀이 목록 안에 넣습니다. */
+function miniField(labelText, node, hint) {
+  const w = el("div");
+  w.style.marginTop = "10px";
+  const l = el("div", null, labelText);
+  l.style.cssText = "font-size:12.5px;font-weight:700;margin-bottom:5px";
+  if (hint) {
+    const h = el("span", null, "  " + hint);
+    h.style.cssText = "font-weight:400;color:var(--muted)";
+    l.appendChild(h);
+  }
+  w.appendChild(l); w.appendChild(node);
+  return w;
+}
+
+/* ---------------------------------------------------------------
+   커리큘럼 편집
+   --------------------------------------------------------------- */
+function curriculumEditor(state) {
+  const wrap = el("div");
+
+  /* 도입 배너 */
+  const introBox = el("div", "blk");
+  introBox.style.background = "var(--fill-soft)";
+  const ih = el("div", null, "도입 배너");
+  ih.style.cssText = "font-size:13px;font-weight:700;margin-bottom:2px";
+  introBox.appendChild(ih);
+  const ihd = el("div", null, "커리큘럼 맨 앞에 어둡게 깔리는 띠예요. 비워 두면 안 나옵니다.");
+  ihd.style.cssText = "font-size:12.5px;color:var(--muted);margin-bottom:10px";
+  introBox.appendChild(ihd);
+
+  const eb = input(state.ci.eyebrow, "예: 4년 만에 지점 7개까지 늘린 노하우 전격 공개");
+  eb.addEventListener("input", () => state.ci.eyebrow = eb.value);
+  introBox.appendChild(miniField("작은 배지", eb));
+
+  const q = textarea(state.ci.question, "예: 잘 가르치는 것만으로\n지역 1등이 될 수 있을까요?");
+  q.addEventListener("input", () => state.ci.question = q.value);
+  introBox.appendChild(miniField("큰 질문", q, "줄바꿈이 그대로 살아납니다"));
+
+  const pn = textarea(arrToLines(state.ci.pains), "한 줄에 하나씩\n두 번째\n세 번째");
+  pn.addEventListener("input", () => state.ci.pains = linesToArr(pn.value));
+  introBox.appendChild(miniField("이런 분께 필요합니다", pn, "한 줄에 하나씩, 세 개가 가장 보기 좋아요"));
+  wrap.appendChild(introBox);
+
+  /* 회차 */
+  const secLab = el("div", null, "회차");
+  secLab.style.cssText = "font-size:13px;font-weight:700;margin:18px 0 8px";
+  wrap.appendChild(secLab);
+
+  wrap.appendChild(repeatList(state.sessions, {
+    addLabel: "회차 더하기",
+    empty: "아직 회차가 없어요. 아래에서 더해 보세요.",
+    confirmText: "이 회차를 지울까요?",
+    blank: () => ({ no: "", title: "", sub: "", speaker: "", speakerRole: "", points: [], gifts: [] }),
+    label: (x, i) => x.no || (i + 1) + "번째 회차",
+    body: (box, x, i, draw) => {
+      const no = input(x.no, "예: 1강, 1부 특강");
+      no.addEventListener("input", () => { x.no = no.value; });
+      no.addEventListener("change", draw);
+      box.appendChild(miniField("회차 이름", no));
+
+      const ti = input(x.title, "예: 5년 뒤에도 살아남는 수학학원의 조건");
+      ti.addEventListener("input", () => x.title = ti.value);
+      box.appendChild(miniField("제목", ti));
+
+      const sb = input(x.sub, "제목 아래 한 줄 설명 (비워도 됩니다)");
+      sb.addEventListener("input", () => x.sub = sb.value);
+      box.appendChild(miniField("한 줄 설명", sb));
+
+      const sp = input(x.speaker, "이 회차를 맡는 분 (비워도 됩니다)");
+      sp.addEventListener("input", () => x.speaker = sp.value);
+      box.appendChild(miniField("진행", sp));
+
+      const sr = input(x.speakerRole, "소속이나 직함");
+      sr.addEventListener("input", () => x.speakerRole = sr.value);
+      box.appendChild(miniField("진행자 소개", sr));
+
+      const pt = textarea(arrToLines(x.points), "한 줄에 하나씩 적어 주세요.");
+      pt.addEventListener("input", () => x.points = linesToArr(pt.value));
+      box.appendChild(miniField("강의 내용", pt, "한 줄에 하나씩"));
+
+      const gf = textarea(arrToLines(x.gifts), "이 회차에 드리는 자료 (비워도 됩니다)");
+      gf.addEventListener("input", () => x.gifts = linesToArr(gf.value));
+      box.appendChild(miniField("함께 드리는 자료", gf, "한 줄에 하나씩"));
+    }
+  }));
+  return wrap;
+}
+
+/* ---------------------------------------------------------------
+   제공 자료 편집
+   --------------------------------------------------------------- */
+function materialsEditor(state) {
+  const wrap = el("div");
+
+  const ti = input(state.materialsTitle, "비우면 '제공 자료 N종'으로 나옵니다");
+  ti.addEventListener("input", () => state.materialsTitle = ti.value);
+  wrap.appendChild(miniField("섹션 제목", ti, "자료가 아니라 혜택이면 '참여 혜택' 처럼 바꿔 주세요"));
+
+  const sb = input(state.materialsSub, "비우면 기본 안내 문구가 나옵니다");
+  sb.addEventListener("input", () => state.materialsSub = sb.value);
+  wrap.appendChild(miniField("섹션 설명", sb));
+
+  const lab = el("div", null, "항목");
+  lab.style.cssText = "font-size:13px;font-weight:700;margin:18px 0 8px";
+  wrap.appendChild(lab);
+
+  wrap.appendChild(repeatList(state.materials, {
+    addLabel: "자료 더하기",
+    empty: "아직 자료가 없어요.",
+    confirmText: "이 자료를 지울까요?",
+    blank: () => ({ name: "", note: "" }),
+    label: (x, i) => String(i + 1).padStart(2, "0"),
+    body: (box, x) => {
+      const nm = input(x.name, "예: 강사 업무 체크리스트");
+      nm.addEventListener("input", () => x.name = nm.value);
+      box.appendChild(miniField("이름", nm));
+      const nt = input(x.note, "예: 현장 참가자와 동일하게 제공 (비워도 됩니다)");
+      nt.addEventListener("input", () => x.note = nt.value);
+      box.appendChild(miniField("덧붙임", nt));
+    }
+  }));
+  return wrap;
+}
+
+/* 저장 직전에 빈 것을 걸러 냅니다. */
+function cleanSessions(list) {
+  return (list || []).map(x => {
+    const title = (x.title || "").trim();
+    if (!title) return null;
+    const o = { no: (x.no || "").trim(), title: title };
+    if ((x.sub || "").trim()) o.sub = x.sub.trim();
+    if ((x.speaker || "").trim()) o.speaker = x.speaker.trim();
+    if ((x.speakerRole || "").trim()) o.speakerRole = x.speakerRole.trim();
+    const pts = (x.points || []).map(v => v.trim()).filter(Boolean);
+    if (pts.length) o.points = pts;
+    const gf = (x.gifts || []).map(v => v.trim()).filter(Boolean);
+    if (gf.length) o.gifts = gf;
+    if (x.poster) o.poster = x.poster;
+    return o;
+  }).filter(Boolean);
+}
+function cleanMaterials(list) {
+  return (list || []).map(x => {
+    const name = (x.name || "").trim();
+    if (!name) return null;
+    const o = { name: name };
+    if ((x.note || "").trim()) o.note = x.note.trim();
+    return o;
+  }).filter(Boolean);
+}
+function cleanIntro(ci) {
+  const eyebrow = (ci.eyebrow || "").trim();
+  const question = (ci.question || "").trim();
+  const pains = (ci.pains || []).map(v => v.trim()).filter(Boolean);
+  if (!eyebrow && !question && !pains.length) return null;
+  const o = {};
+  if (eyebrow) o.eyebrow = eyebrow;
+  if (question) o.question = question;
+  if (pains.length) o.pains = pains;
+  return o;
 }
 
 /* ---------------------------------------------------------------

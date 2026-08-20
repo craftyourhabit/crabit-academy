@@ -509,13 +509,14 @@ const EVENT_FORM_KEYS = [
   "type", "category", "host", "kind", "title", "date", "startDate", "place", "placeUrl",
   "thumb", "desc", "points", "speaker", "speakerRole", "assistant", "prep", "audience",
   "status", "format", "onlineUrl", "priceType", "price", "feeNote", "applyUrl", "replayUrl",
-  "provision", "refundNote", "article"
+  "provision", "refundNote", "article",
+  "sessions", "materials", "materialsTitle", "materialsSub", "curriculumIntro", "contact"
 ];
 /* 폼이 소유한 키. 저장할 때 이 키들만 새로 쓰고 나머지는 원본을 유지합니다.
    fee 는 더 이상 쓰지 않는 옛 항목이라 일부러 버립니다. */
 const OWNED_KEYS = EVENT_FORM_KEYS.concat(["fee"]);
 /* 화면에 안 나오지만 값이 있으면 안내 문구를 띄울 항목 */
-const ADVANCED_KEYS = ["sessions", "materials", "detailImages", "contact", "curriculumIntro"];
+const ADVANCED_KEYS = ["detailImages"];
 
 const CATEGORIES_EVENT = ["학원 운영", "AI·자동화", "마케팅·브랜딩", "세무·노무"];
 const TYPES = ["Lecture", "Webinar", "Course", "Community", "Seminar"];
@@ -1140,6 +1141,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608200115"></script>
+<script src="admin-forms.js?v=202608200200"></script>
 </body>
 </html>

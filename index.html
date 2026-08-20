@@ -237,13 +237,20 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
   }
+  /* 상세페이지와 같은 카드 언어를 씁니다.
+     얇은 테두리와 흰 바탕, 색은 꼭 필요한 곳에만. */
   .replay {
     background: var(--bg);
     display: flex;
     flex-direction: column;
     text-decoration: none;
     color: inherit;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
+  .replay:hover { border-color: rgba(22, 25, 42, 0.22); box-shadow: 0 6px 22px rgba(22, 25, 42, 0.07); }
   .replay .thumb-wrap { border-radius: 14px; overflow: hidden; transition: transform 0.18s; }
   .replay:hover .thumb-wrap { transform: translateY(-3px); }
 
@@ -260,6 +267,7 @@
   /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
      한 줄씩 눈으로 훑을 수 있게 한다. */
   .replay .thumb-wrap { position: relative; }
+  .replay .thumb-wrap::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 -1px 0 var(--line); pointer-events: none; }
   .replay .thumb {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -269,19 +277,25 @@
   }
   .replay .chip {
     position: absolute; top: 12px; left: 12px;
-    font-size: 12px; font-weight: 700; line-height: 1.5;
-    padding: 4px 11px; border-radius: 99px;
-    background: rgba(255, 255, 255, 0.92);
+    font-size: 12px; font-weight: 600; line-height: 1.5;
+    padding: 5px 11px; border-radius: 99px;
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(6px);
     color: var(--ink);
   }
+  /* 당일은 하루만 붙는 배지라 브랜드 핑크를 꽉 채워 가장 강하게 */
   .replay .chip.today { background: var(--pink); color: #fff; }
-  .replay .chip.closed { background: rgba(22, 25, 42, 0.72); color: #fff; }
-  /* 진행 형태는 오른쪽 위에. 상태 칩과 색을 달리해 역할이 다름을 보이게 한다. */
-  .replay .chip.fmt { left: auto; right: 12px; background: rgba(22, 25, 42, 0.72); color: #fff; }
+  .replay .chip.closed { color: var(--muted); }
+  /* 진행 형태는 사진 위가 아니라 본문에 둡니다.
+     사진 위에 어두운 딱지가 둘이면 정작 포스터가 안 보입니다. */
+  .replay .fmt-tag {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 99px; letter-spacing: 0.02em;
+    color: var(--ink); box-shadow: inset 0 0 0 1px var(--line);
+  }
 
   .replay .body {
-    padding: 16px 4px 22px;
+    padding: 18px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -298,6 +312,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .replay .meta-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .replay .cat { font-size: 13.5px; color: var(--muted); }
   .replay .cat .bar { margin: 0 7px; color: var(--faint); }
   .replay .foot { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 4px; }
@@ -591,15 +606,14 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       '<div class="thumb-wrap">'
       + '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />'
       + '<span class="chip ' + tag.cls + '"></span>'
-      + '<span class="chip fmt"></span>'
       + '</div>'
       + '<div class="body">'
+      + '<div class="meta-row"><span class="fmt-tag"></span><span class="cat"></span></div>'
       + '<strong></strong>'
-      + '<div class="cat"></div>'
       + '<div class="foot"><span class="date"></span><span class="price"></span></div>'
       + '</div>';
     a.querySelector(".chip").textContent = tag.text;
-    a.querySelector(".chip.fmt").textContent = eventFormat(ev).label;
+    a.querySelector(".fmt-tag").textContent = eventFormat(ev).label;
     a.querySelector("strong").textContent = ev.title;
     /* 분류와 주최를 한 줄로. 어느 쪽이 없어도 구분자가 남지 않게 조립한다. */
     const cat = [ev.category, ev.host].filter(Boolean);

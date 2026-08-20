@@ -99,18 +99,28 @@
     cursor: pointer;
   }
   .row.static { cursor: default; }
+  /* 마감된 강의. 홈 화면과 같은 규칙입니다.
+     썸네일만 눌러 두고 글자는 그대로 둡니다. 안 읽히면 목록에 있을 이유가 없어요. */
+  .row.is-closed .thumb { filter: grayscale(0.55); opacity: 0.62; transition: filter 0.18s, opacity 0.18s; }
+  .row.is-closed:hover .thumb { filter: none; opacity: 1; }
+  .row.is-closed h2 { color: rgba(22, 25, 42, 0.68); }
   .row .info { flex: 1; min-width: 0; }
   .badges { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  /* 상세페이지와 같은 배지 말투를 씁니다.
+     외곽선만 두른 것이 분류, 회색으로 채운 것이 상태입니다.
+     핑크는 '오늘' 하나에만 씁니다. 하루만 붙는 배지라서요. */
   .pill {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 8px;
-    background: var(--tint);
-    color: var(--pink);
+    padding: 5px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.02em;
+    background: var(--fill);
+    color: var(--ink);
   }
+  .pill.line { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
   .pill.gray { background: var(--fill); color: var(--muted); }
-  .pill.ink { background: var(--ink); color: #fff; }
+  .pill.today { background: var(--pink); color: #fff; }
   .row h2 {
     margin: 0 0 12px;
     font-size: 22px;
@@ -119,16 +129,16 @@
     line-height: 1.4;
     transition: color 0.15s;
   }
-  .row:not(.static):hover h2 { color: var(--pink); }
+  .row:not(.static):hover h2 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
   .row .sub { font-size: 15px; color: var(--muted); }
   .row .thumb {
     flex: none;
     width: 240px;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 16px;
+    border-radius: 14px;
     background: var(--fill);
-    box-shadow: 0 2px 8px rgba(22, 25, 42, 0.08);
+    border: 1px solid var(--line);
     display: block;
   }
   .empty { padding: 48px 0; text-align: center; color: var(--muted); font-size: 16px; }
@@ -210,8 +220,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
 </script>
 <script>
 /* ---------- 교육 / 설명회 전체 목록 ----------
-   SHOW_IDS에 나열한 실제 교육·설명회만 보여줍니다.
-   (웨비나 다시보기·커뮤니티 모임 등은 각 전용 페이지에서 다룹니다.)
+   SHOW_IDS에 나열한 실제 교육과 설명회만 보여줍니다.
+   (웨비나 다시보기와 커뮤니티 모임 등은 각 전용 페이지에서 다룹니다.)
    진행 예정이 위, 지난 일정이 아래. 상태 판단은 events.js의 공통 기준을 씁니다. */
 (function () {
   const SHOW_IDS = ["math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
@@ -227,14 +237,15 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   const rowsEl = document.getElementById("rows");
 
   function subLine(ev) {
-    return ev.place ? ev.date + " · " + ev.place : ev.date;
+    return ev.place ? ev.date + "  |  " + ev.place : ev.date;
   }
 
   function badges(ev) {
     const t = eventStatusTag(ev);
     const cls = t.cls === "today" ? "pill today" : (t.cls === "upcoming" ? "pill" : "pill gray");
     return (ev.kind ? '<span class="pill line">' + ev.kind + "</span>" : "")
-      + '<span class="' + cls + '">' + t.text + "</span>";
+      + '<span class="' + cls + '">' + t.text + "</span>"
+      + '<span class="pill line">' + eventFormat(ev).label + "</span>";
   }
 
   /* 예정을 먼저, 그 안에서는 가까운 날짜순. 지난 일정은 최근에 열린 것부터. */
@@ -274,7 +285,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     }
     entries.forEach(([id, ev]) => {
       const a = document.createElement("a");
-      a.className = "row";
+      a.className = "row" + (isEventOver(ev) ? " is-closed" : "");
       a.href = "event?id=" + id;
       a.innerHTML =
         '<div class="info">'

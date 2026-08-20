@@ -6,13 +6,15 @@
 /* ---------------------------------------------------------------
    교육 / 설명회 편집
    --------------------------------------------------------------- */
-function openEvent(id) {
+function openEvent(id, copyFrom, resume) {
   const isNew = !id;
-  const src = isNew ? {} : store.EVENTS_DB[id];
+  /* copyFrom 이 있으면 그 강의를 그대로 베껴 새 강의로 시작합니다.
+     제목과 주소, 날짜만 비워 두면 나머지 틀은 그대로 쓸 수 있습니다. */
+  const src = isNew ? (copyFrom ? store.EVENTS_DB[copyFrom] || {} : {}) : store.EVENTS_DB[id];
 
   /* 폼이 다루는 값만 state 로 복사합니다. 고급 항목은 src 에 남겨 두고
      저장할 때 그대로 되돌려 넣습니다. */
-  const state = {
+  const state = resume || {
     id: id || "",
     type: src.type || "Lecture",
     category: src.category || CATEGORIES_EVENT[0],
@@ -64,16 +66,29 @@ function openEvent(id) {
     contactName: (src.contact || {}).name || "",
     contactTel: (src.contact || {}).tel || ""
   };
+  if (isNew && copyFrom && !resume) {
+    /* 그대로 두면 안 되는 것만 비웁니다. 날짜와 신청 링크는 강의마다 다르고,
+       썸네일은 같은 파일을 가리켜도 되지만 헷갈리니 새로 고르게 합니다. */
+    state.title = state.title + " (복사본)";
+    state.date = "";
+    state.startDate = "";
+    state.applyUrl = "";
+    state.replayUrl = "";
+    state.status = "upcoming";
+  }
+
   /* 캘린더 등록 여부 */
-  const sched = store.SCHEDULE.find(s => s.id === id);
-  state.__onCalendar = !!sched;
-  state.__time = sched ? sched.time : "10:00";
+  if (!resume) {
+    const sched = store.SCHEDULE.find(s => s.id === id);
+    state.__onCalendar = !!sched;
+    state.__time = sched ? sched.time : "10:00";
+  }
 
   const view = document.getElementById("editView");
   view.innerHTML = "";
 
   const head = el("div", "head-row");
-  head.appendChild(el("h2", null, isNew ? "새 교육 / 설명회" : "교육 / 설명회 수정"));
+  head.appendChild(el("h2", null, isNew ? (copyFrom ? "교육 / 설명회 복제" : "새 교육 / 설명회") : "교육 / 설명회 수정"));
   view.appendChild(head);
 
   /* 고급 항목이 붙어 있으면 알려 줍니다. */
@@ -84,6 +99,13 @@ function openEvent(id) {
     n.innerHTML = "<strong>" + adv.map(k => names[k]).join(", ") + "</strong> 이 등록돼 있어요. "
       + "이 화면에서는 수정할 수 없지만 저장해도 <strong>그대로 유지됩니다.</strong> 바꾸시려면 알려 주세요.";
     view.appendChild(n);
+  }
+
+  /* --- 홍보문구 붙여넣기 (새로 만들 때만) --- */
+  if (isNew) {
+    const p0 = panel("홍보문구 붙여넣기", "카톡 공지가 있으면 여기에 붙여넣어 보세요. 채울 수 있는 칸을 먼저 채웁니다.");
+    p0.appendChild(promoPaster(state, () => openEvent(id, copyFrom, state)));
+    view.appendChild(p0);
   }
 
   /* --- 기본 --- */
@@ -345,6 +367,25 @@ function openEvent(id) {
     loadNotifications(id, state.title);
   }
 
+  /* --- 올리기 전에 확인 --- */
+  const p6 = panel("올리기 전에 확인", "결제 심사에서 보는 항목이에요.");
+  const chk = compliancePanel(state);
+  p6.appendChild(chk);
+  const pvRow = el("div", "blk-add");
+  const pvBtn = el("button", "btn btn-secondary btn-sm", "상세페이지 미리보기");
+  pvBtn.type = "button";
+  pvBtn.addEventListener("click", () => openPreview(state));
+  const reBtn = el("button", "btn btn-secondary btn-sm", "확인 다시 하기");
+  reBtn.type = "button";
+  reBtn.addEventListener("click", () => chk.__refresh());
+  pvRow.appendChild(pvBtn); pvRow.appendChild(reBtn);
+  p6.appendChild(pvRow);
+  const pvHint = el("div");
+  pvHint.style.cssText = "font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.6";
+  pvHint.textContent = "미리보기는 새 탭에서 열리고 아직 저장되지 않은 내용을 보여 줍니다. 사이트에는 아무 영향이 없어요.";
+  p6.appendChild(pvHint);
+  view.appendChild(p6);
+
   const p5 = panel("미리보기", "홈 화면에 이렇게 보입니다.");
   const pv = el("div", "pv");
   p5.appendChild(pv);
@@ -479,6 +520,217 @@ async function saveEvent(state, id, isNew, setMsg) {
   store.eventsSha = res.sha;
   store.EVENTS_DB = db;
   store.SCHEDULE = sch;
+}
+
+/* ---------------------------------------------------------------
+   홍보문구 붙여넣기
+
+   카톡 공지를 통째로 붙여넣으면 확실하게 알아볼 수 있는 것만 채웁니다.
+   날짜, 시간, 링크, 금액, 진행 형태 정도입니다.
+   제목과 커리큘럼은 사람이 판단해야 하는 영역이라 건드리지 않습니다.
+   덮어쓰지 않고 "비어 있는 칸만" 채웁니다. 쓰던 내용을 지우면 안 되니까요.
+   --------------------------------------------------------------- */
+function parsePromo(text) {
+  const t = String(text || "");
+  const out = {};
+
+  /* 날짜: 8월 21일 / 2026.08.21 / 2026-08-21 */
+  let y = new Date().getFullYear(), mo = null, d = null;
+  let m = t.match(/(20\d{2})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);
+  if (m) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else {
+    m = t.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
+    if (m) { mo = +m[1]; d = +m[2]; }
+  }
+  if (mo && d) {
+    const iso = y + "-" + String(mo).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    out.startDate = iso;
+    const wd = (t.match(/\(\s*([월화수목금토일])\s*\)/) || [])[1];
+    /* 시간: 오전 11시 / 밤 10:30 / 20:00 */
+    let time = "";
+    const tm = t.match(/(오전|오후|밤|저녁|아침)?\s*(\d{1,2})\s*(?::|시)\s*(\d{2})?\s*분?/);
+    if (tm) {
+      const ap = tm[1] || "";
+      let hh = +tm[2];
+      if ((ap === "오후" || ap === "밤" || ap === "저녁") && hh < 12) hh += 12;
+      time = String(hh).padStart(2, "0") + ":" + (tm[3] || "00");
+    }
+    out.date = y + "." + String(mo).padStart(2, "0") + "." + String(d).padStart(2, "0")
+      + (wd ? " (" + wd + ")" : "") + (time ? " " + time : "");
+    if (time) out.__time = time;
+  }
+
+  /* 신청 링크: 우리 도메인은 빼고 바깥 폼 주소만 */
+  const urls = t.match(/https?:\/\/[^\s)\]"']+/g) || [];
+  const ext = urls.find(u => !/craftyourhabit|crabit\.co\.kr/i.test(u));
+  if (ext) out.applyUrl = ext.replace(/[.,]$/, "");
+
+  /* 금액: 8만원 / 90,000원 / 무료 */
+  const man = t.match(/(\d+)\s*만\s*원/);
+  const won = t.match(/([\d,]{4,})\s*원/);
+  if (man) { out.priceType = "paid"; out.price = String(+man[1] * 10000); }
+  else if (won) { out.priceType = "paid"; out.price = won[1].replace(/,/g, ""); }
+  else if (/무료|참가비\s*없|free/i.test(t)) { out.priceType = "free"; }
+
+  /* 진행 형태 */
+  const online = /줌|zoom|유튜브|youtube|라이브|온라인|웨비나|비대면/i.test(t);
+  const offline = /오프라인|현장|장소\s*:|교육장|센터|호실|층\b/i.test(t);
+  const vod = /녹화본|다시보기|vod|영상\s*제공/i.test(t);
+  if (vod) out.format = "vod";
+  else if (online && offline) out.format = "hybrid";
+  else if (online) out.format = "online";
+  else if (offline) out.format = "offline";
+
+  return out;
+}
+
+function promoPaster(state, onFilled) {
+  const wrap = el("div");
+  const ta = textarea("", "카톡 공지나 홍보문구를 통째로 붙여넣어 주세요.");
+  ta.rows = 5;
+  wrap.appendChild(ta);
+
+  const row = el("div", "blk-add");
+  const btn = el("button", "btn btn-secondary btn-sm", "읽어와서 빈 칸 채우기");
+  btn.type = "button";
+  const msg = el("div");
+  msg.style.cssText = "font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6";
+
+  btn.addEventListener("click", () => {
+    const got = parsePromo(ta.value);
+    const filled = [];
+    const set = (k, label) => {
+      if (got[k] == null || got[k] === "") return;
+      /* 이미 쓰신 값은 건드리지 않습니다. */
+      if (state[k] !== "" && state[k] != null && state[k] !== "free") return;
+      state[k] = got[k];
+      filled.push(label);
+    };
+    set("date", "일정");
+    set("startDate", "시작일");
+    set("applyUrl", "신청 링크");
+    if (got.priceType && state.priceType === "free" && !state.price) {
+      state.priceType = got.priceType;
+      if (got.price) state.price = got.price;
+      filled.push(got.priceType === "paid" ? "가격" : "무료 여부");
+    }
+    if (got.format && !state.__formatTouched) { state.format = got.format; filled.push("진행 형태"); }
+    if (got.__time) state.__time = got.__time;
+
+    msg.textContent = filled.length
+      ? filled.join(", ") + " 을(를) 채웠어요. 나머지는 직접 확인해 주세요."
+      : "채울 수 있는 게 없었어요. 이미 값이 있거나 문구에서 찾지 못했습니다.";
+    if (filled.length && onFilled) onFilled();
+  });
+
+  row.appendChild(btn);
+  wrap.appendChild(row);
+  wrap.appendChild(msg);
+  return wrap;
+}
+
+/* ---------------------------------------------------------------
+   미리보기와 심사 항목 확인
+
+   저장하기 전에 실제 상세페이지가 어떻게 나오는지 보고,
+   결제 심사에서 확인하는 항목이 비어 있지 않은지 짚어 줍니다.
+   --------------------------------------------------------------- */
+
+/* 지금 폼의 값을 상세페이지가 읽는 모양(EVENTS_DB 의 한 칸)으로 바꿉니다.
+   저장 로직과 같은 규칙을 써야 미리보기와 실제가 어긋나지 않습니다. */
+function draftEvent(state) {
+  const o = {};
+  const put = (k, v) => { if (v !== "" && v != null && !(Array.isArray(v) && !v.length)) o[k] = v; };
+  put("type", state.type); put("category", state.category); put("host", state.host);
+  put("kind", state.kind); put("title", state.title.trim()); put("date", state.date.trim());
+  put("startDate", state.startDate); put("format", state.format);
+  if (state.format !== "offline") put("onlineUrl", state.onlineUrl.trim());
+  put("place", state.place.trim()); put("placeUrl", state.placeUrl.trim());
+  put("thumb", state.__upload_thumb ? ("data:image/jpeg;base64," + state.__upload_thumb.base64) : state.thumb);
+  put("desc", state.desc.trim()); put("points", linesToArr(state.points));
+  put("speaker", state.speaker.trim()); put("speakerRole", state.speakerRole.trim());
+  put("assistant", state.assistant.trim()); put("prep", linesToArr(state.prep));
+  put("audience", state.audience.trim()); put("status", state.status);
+  put("priceType", state.priceType);
+  if (state.priceType === "paid") {
+    const n = Number(String(state.price).replace(/[^0-9]/g, ""));
+    if (n > 0) o.price = n;
+  }
+  put("feeNote", state.feeNote.trim()); put("applyUrl", state.applyUrl.trim());
+  put("provision", state.provision.trim()); put("refundNote", state.refundNote.trim());
+  /* 아직 안 올린 본문 사진은 미리보기에서만 임시로 보여 줍니다. */
+  put("article", cleanArticle(state.article).map((b, i) => {
+    const src = state.article[i] && state.article[i].__upload;
+    return (b.type === "img" && src) ? Object.assign({}, b, { src: "data:image/jpeg;base64," + src.base64 }) : b;
+  }));
+  put("sessions", cleanSessions(state.sessions));
+  put("materials", cleanMaterials(state.materials));
+  put("materialsTitle", state.materialsTitle.trim());
+  put("materialsSub", state.materialsSub.trim());
+  const ci = cleanIntro(state.ci);
+  if (ci) o.curriculumIntro = ci;
+  if (state.contactName.trim() && state.contactTel.trim()) {
+    o.contact = { name: state.contactName.trim(), tel: state.contactTel.trim() };
+  }
+  return o;
+}
+
+function openPreview(state) {
+  try {
+    sessionStorage.setItem("crabit_preview", JSON.stringify(draftEvent(state)));
+  } catch (e) {
+    alert("미리보기를 준비하지 못했어요. 사진이 너무 크면 그럴 수 있습니다.");
+    return;
+  }
+  window.open("event.html?preview=1", "crabit_preview_win");
+}
+
+/* 결제 심사에서 확인하는 항목입니다.
+   빠지면 반려될 수 있어서 저장하기 전에 눈에 띄게 알려 줍니다. */
+function complianceRows(state) {
+  const paid = state.priceType === "paid";
+  const price = Number(String(state.price).replace(/[^0-9]/g, ""));
+  return [
+    { ok: !!state.title.trim(), t: "상품명", why: "제목이 있어야 상품으로 보입니다." },
+    { ok: !!state.thumb || !!state.__upload_thumb, t: "대표 이미지", why: "목록과 상세 맨 위에 쓰입니다." },
+    { ok: !!state.desc.trim(), t: "상품 설명", why: "무엇을 파는지 알 수 있어야 합니다." },
+    { ok: !paid || price > 0, t: "판매 가격", why: "유료인데 금액이 비어 있으면 상세페이지에 가격이 아예 안 나옵니다." },
+    { ok: !!state.provision.trim(), t: "서비스 제공 기간", why: "전자상거래법이 요구하고 결제 심사도 상품마다 확인합니다." },
+    { ok: !paid || !!state.refundNote.trim() || !!state.startDate,
+      t: "환불 기준", why: "시작일이 없는 상품(녹화본 등)은 환불 안내를 직접 적어야 합니다. 안 그러면 날짜 기준 문구가 그대로 나갑니다." }
+  ];
+}
+
+function compliancePanel(state) {
+  const box = el("div");
+  const draw = () => {
+    box.innerHTML = "";
+    const rows = complianceRows(state);
+    const bad = rows.filter(r => !r.ok);
+    const head = el("div");
+    head.style.cssText = "font-size:14px;font-weight:700;margin-bottom:10px";
+    head.textContent = bad.length ? ("채우셔야 할 항목이 " + bad.length + "개 있어요") : "모두 채워졌습니다";
+    head.style.color = bad.length ? "#C0392B" : "var(--muted)";
+    box.appendChild(head);
+    rows.forEach(r => {
+      const line = el("div");
+      line.style.cssText = "display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.6;margin-bottom:7px";
+      const mark = el("span", null, r.ok ? "O" : "X");
+      mark.style.cssText = "flex:none;width:16px;font-weight:700;color:" + (r.ok ? "#1E8E5A" : "#C0392B");
+      const txt = el("div");
+      txt.appendChild(el("strong", null, r.t));
+      if (!r.ok) {
+        const w = el("div", null, r.why);
+        w.style.cssText = "color:var(--muted);font-size:12.5px;margin-top:2px";
+        txt.appendChild(w);
+      }
+      line.appendChild(mark); line.appendChild(txt);
+      box.appendChild(line);
+    });
+  };
+  draw();
+  box.__refresh = draw;
+  return box;
 }
 
 /* ---------------------------------------------------------------
@@ -862,7 +1114,7 @@ function openResource(id, isPrivate) {
   const list = isPrivate ? store.RESOURCES_PRIVATE : store.RESOURCES;
   const src = isNew ? {} : (list.find(r => r.id === id) || {});
 
-  const state = {
+  const state = resume || {
     id: id || "",
     category: src.category || CATEGORIES_RES[0],
     title: src.title || "",

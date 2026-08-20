@@ -957,7 +957,16 @@ function renderList() {
     edit.addEventListener("click", () => isEv ? openEvent(id) : openResource(id, priv));
     const del = el("button", "btn btn-danger btn-sm", "삭제");
     del.addEventListener("click", () => confirmDelete(isEv, id, d.title, priv));
-    acts.appendChild(edit); acts.appendChild(del);
+    acts.appendChild(edit);
+    /* 비슷한 강의는 구조가 늘 닮아 있습니다. 복제하면 커리큘럼 틀이 그대로 따라오고
+       제목과 날짜만 바꾸면 됩니다. */
+    if (isEv) {
+      const dup = el("button", "btn btn-secondary btn-sm", "복제");
+      dup.title = "이 강의를 복사해 새 강의를 만듭니다";
+      dup.addEventListener("click", () => openEvent(null, id));
+      acts.appendChild(dup);
+    }
+    acts.appendChild(del);
     it.appendChild(acts);
 
     box.appendChild(it);
@@ -1071,6 +1080,31 @@ function imagePicker(state, key, pathPrefix, onPicked) {
   return box;
 }
 
+/* 그림의 가장자리 색을 읽습니다. 여백을 이 색으로 채우면 이어 붙인 티가 덜 납니다.
+   네 모서리 근처를 조금씩 훑어 평균을 냅니다. */
+function edgeColor(im) {
+  try {
+    const c = document.createElement("canvas");
+    c.width = Math.min(im.width, 60);
+    c.height = Math.min(im.height, 60);
+    const x = c.getContext("2d");
+    x.drawImage(im, 0, 0, c.width, c.height);
+    const d = x.getImageData(0, 0, c.width, c.height).data;
+    let r = 0, g = 0, b = 0, n = 0;
+    const at = (px, py) => {
+      const i = (py * c.width + px) * 4;
+      r += d[i]; g += d[i + 1]; b += d[i + 2]; n++;
+    };
+    for (let i = 0; i < c.height; i++) { at(0, i); at(c.width - 1, i); }
+    for (let i = 0; i < c.width; i++) { at(i, 0); at(i, c.height - 1); }
+    if (!n) return null;
+    return "rgb(" + Math.round(r / n) + "," + Math.round(g / n) + "," + Math.round(b / n) + ")";
+  } catch (e) {
+    /* 다른 곳에서 온 이미지는 캔버스를 읽을 수 없습니다. 그때는 흰색으로 둡니다. */
+    return null;
+  }
+}
+
 function prepareImage(f) {
   return new Promise((resolve, reject) => {
     const isSvg = f.type === "image/svg+xml" || /\.svg$/i.test(f.name);
@@ -1088,15 +1122,23 @@ function prepareImage(f) {
       const im = new Image();
       im.onerror = () => reject(new Error("이미지 형식이 아니에요"));
       im.onload = () => {
-        const MAX = 1280;
-        const scale = Math.min(1, MAX / im.width);
+        /* 사이트의 썸네일 자리는 어디서나 16:9 입니다 (카드, 상세 커버, 목록).
+           비율이 다른 그림을 넣으면 브라우저가 위아래나 좌우를 잘라내는데,
+           포스터는 대개 가장자리에 로고와 날짜가 있어서 그게 날아갑니다.
+           그래서 잘라내지 않고 16:9 판 위에 얹고, 남는 자리는 그림의
+           가장자리 색으로 채웁니다. */
+        const RATIO = 16 / 9;
+        const MAX = 1600;
+        const w = Math.min(MAX, Math.max(im.width, Math.round(im.height * RATIO)));
         const c = document.createElement("canvas");
-        c.width = Math.round(im.width * scale);
-        c.height = Math.round(im.height * scale);
+        c.width = w;
+        c.height = Math.round(w / RATIO);
         const ctx = c.getContext("2d");
-        ctx.fillStyle = "#fff";
+        ctx.fillStyle = edgeColor(im) || "#fff";
         ctx.fillRect(0, 0, c.width, c.height);
-        ctx.drawImage(im, 0, 0, c.width, c.height);
+        const sc = Math.min(c.width / im.width, c.height / im.height);
+        const dw = Math.round(im.width * sc), dh = Math.round(im.height * sc);
+        ctx.drawImage(im, Math.round((c.width - dw) / 2), Math.round((c.height - dh) / 2), dw, dh);
         const dataUrl = c.toDataURL("image/jpeg", 0.85);
         const base64 = dataUrl.split(",")[1];
         resolve({ base64, ext: "jpg", dataUrl, kb: Math.round(base64.length * 0.75 / 1024) });
@@ -1141,6 +1183,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608200200"></script>
+<script src="admin-forms.js?v=202608200230"></script>
 </body>
 </html>

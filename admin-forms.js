@@ -523,6 +523,274 @@ async function saveEvent(state, id, isNew, setMsg) {
 }
 
 /* ---------------------------------------------------------------
+   신청자 상세
+
+   목록에서는 한 줄로만 보이니 문의사항이 길면 잘립니다.
+   여기서는 남기신 내용을 그대로 다 보여 줍니다.
+   --------------------------------------------------------------- */
+function setApplicationStatus(id, next) {
+  return table("/academy_applications?id=eq." + id, {
+    method: "PATCH",
+    headers: { "Prefer": "return=minimal" },
+    body: { status: next, paid_at: next === "paid" ? new Date().toISOString() : null }
+  });
+}
+
+function openApplicantDetail(it) {
+  const view = document.getElementById("editView");
+  view.innerHTML = "";
+  showEdit();
+
+  const head = el("div", "head-row");
+  const back = el("button", "btn btn-secondary btn-sm", "← 신청자 목록으로");
+  back.type = "button";
+  back.addEventListener("click", () => renderList());
+  head.appendChild(back);
+  view.appendChild(head);
+
+  const st = AP_STATUS[it.status] || AP_STATUS.pending;
+  const p = panel(null, null);
+
+  const hb = el("div", "dv-h");
+  const b = el("div");
+  b.appendChild(el("span", "badge " + st.cls, st.label));
+  hb.appendChild(b);
+  hb.appendChild(el("h2", null, it.name || "(이름 없음)"));
+  hb.appendChild(el("div", "dv-sub", (it.org || "소속 미기재") + "  |  " + apDate(it.created_at) + " 신청"));
+  p.appendChild(hb);
+
+  /* 전화와 메일은 바로 누를 수 있게 링크로 둡니다. */
+  const tel = el("a", null, apPhone(it.phone));
+  tel.href = "tel:" + String(it.phone || "").replace(/[^0-9]/g, "");
+  tel.style.cssText = "color:var(--ink);font-weight:600";
+  const mail = it.email ? el("a", null, it.email) : null;
+  if (mail) { mail.href = "mailto:" + it.email; mail.style.cssText = "color:var(--ink);font-weight:600"; }
+
+  p.appendChild(dvTable([
+    ["연락처", it.phone ? tel : ""],
+    ["이메일", mail || ""],
+    ["학원명과 직책", it.org],
+    ["신청 강의", it.event_title || it.event_id],
+    ["결제 금액", it.event_fee],
+    ["알게 된 경로", it.source],
+    ["상태", st.label],
+    ["신청 일시", apDate(it.created_at)],
+    ["입금 확인", it.paid_at ? apDate(it.paid_at) : ""]
+  ]));
+  view.appendChild(p);
+
+  if (it.message) {
+    const pm = panel("문의사항", "신청하실 때 남겨 주신 내용이에요.");
+    const box = el("div");
+    box.style.cssText = "font-size:15px;line-height:1.8;white-space:pre-wrap";
+    box.textContent = it.message;
+    pm.appendChild(box);
+    view.appendChild(pm);
+  }
+  if (it.memo) {
+    const pn = panel("우리 메모", null);
+    const box = el("div");
+    box.style.cssText = "font-size:15px;line-height:1.8;white-space:pre-wrap;color:var(--muted)";
+    box.textContent = it.memo;
+    pn.appendChild(box);
+    view.appendChild(pn);
+  }
+
+  const acts = el("div", "dv-acts");
+  const isPaid = it.status === "paid";
+  const isCancelled = it.status === "cancelled";
+  const mk = (label, cls, next) => {
+    const x = el("button", "btn " + cls, label);
+    x.type = "button";
+    x.addEventListener("click", async () => {
+      x.disabled = true;
+      try {
+        await setApplicationStatus(it.id, next);
+        renderList();
+      } catch (e) {
+        x.disabled = false;
+        alert("상태를 바꾸지 못했어요. " + (e.message || ""));
+      }
+    });
+    acts.appendChild(x);
+  };
+  /* 취소된 건은 곧바로 '입금 확인'으로 넘기지 않습니다.
+     되돌리는 건 '대기'로 돌아오는 것이지 돈이 들어온 게 아니니까요. */
+  if (isCancelled) mk("취소 되돌리기", "btn-secondary", "pending");
+  else if (isPaid) mk("대기로 되돌리기", "btn-secondary", "pending");
+  else { mk("입금 확인", "btn-primary", "paid"); mk("신청 취소", "btn-danger", "cancelled"); }
+  view.appendChild(acts);
+}
+
+/* ---------------------------------------------------------------
+   상세 보기
+
+   목록에서 한 줄을 누르면 무엇이 들어 있는지 한눈에 보여 줍니다.
+   고칠 게 없으면 그냥 보고 나가고, 있으면 여기서 바로 수정으로 넘어갑니다.
+   --------------------------------------------------------------- */
+function dvTable(rows) {
+  const t = el("div", "dv-tbl");
+  rows.forEach(([k, v]) => {
+    t.appendChild(el("div", null, k));
+    const cell = el("div", v ? null : "dim");
+    if (v instanceof Node) cell.appendChild(v);
+    else cell.textContent = v || "비어 있음";
+    t.appendChild(cell);
+  });
+  return t;
+}
+function dvBullets(arr) {
+  const ul = el("ul", "dv-list");
+  (arr || []).forEach(x => ul.appendChild(el("li", null, x)));
+  return ul;
+}
+function dvSection(title, node) {
+  const w = el("div", "dv-sec");
+  w.appendChild(el("h3", null, title));
+  w.appendChild(node);
+  return w;
+}
+function dvBackBar(view) {
+  const head = el("div", "head-row");
+  const back = el("button", "btn btn-secondary btn-sm", "← 목록으로");
+  back.type = "button";
+  back.addEventListener("click", () => renderList());
+  head.appendChild(back);
+  view.appendChild(head);
+}
+
+function openEventDetail(id) {
+  const d = store.EVENTS_DB[id];
+  if (!d) return renderList();
+  const view = document.getElementById("editView");
+  view.innerHTML = "";
+  showEdit();
+  dvBackBar(view);
+
+  const fmtLabel = { vod: "VOD", offline: "오프라인", online: "온라인", hybrid: "오프라인 + 온라인 동시" };
+  const over = d.status !== "upcoming";
+  const price = (d.priceType === "paid" && Number(d.price) > 0)
+    ? Number(d.price).toLocaleString("ko-KR") + "원"
+    : (d.priceType === "paid" ? "유료 (금액 미입력)" : "무료");
+
+  const p = panel(null, null);
+  const head = el("div", "dv-head");
+  const img = el("img");
+  img.src = d.thumb || "assets/favicon.png";
+  img.alt = "";
+  img.onerror = () => { img.style.visibility = "hidden"; };
+  head.appendChild(img);
+  const hb = el("div", "dv-h");
+  const badges = el("div");
+  badges.appendChild(el("span", "badge " + (over ? "closed" : "up"), over ? "마감" : "예정"));
+  hb.appendChild(badges);
+  hb.appendChild(el("h2", null, d.title || "(제목 없음)"));
+  hb.appendChild(el("div", "dv-sub", [d.kind, d.category, d.host].filter(Boolean).join("  |  ")));
+  head.appendChild(hb);
+  p.appendChild(head);
+
+  const link = el("a", null, "사이트에서 보기");
+  link.href = "event.html?id=" + encodeURIComponent(id);
+  link.target = "_blank"; link.rel = "noopener";
+  link.style.cssText = "color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px";
+
+  p.appendChild(dvTable([
+    ["주소", id],
+    ["일정", d.date],
+    ["진행 방식", fmtLabel[d.format] || d.format || "온라인"],
+    ["장소", d.place],
+    ["대상", d.audience],
+    ["수강료", price],
+    ["금액 설명", d.feeNote],
+    ["서비스 제공", d.provision],
+    ["환불 안내", d.refundNote || "기본 문구 (강의 전날까지 전액, 당일 시작 전까지 80%)"],
+    ["신청 링크", d.applyUrl || "우리 신청 페이지 사용"],
+    ["상세페이지", link]
+  ]));
+  view.appendChild(p);
+
+  const p2 = panel("내용", null);
+  p2.appendChild(dvSection("소개", el("div", null, d.desc || "비어 있음")));
+  if (d.points) p2.appendChild(dvSection("이런 내용을 다뤄요", dvBullets(d.points)));
+  if (d.article && d.article.length) {
+    p2.appendChild(dvSection("상세 본문", el("div", null, d.article.length + "개 블록")));
+  }
+  if (d.sessions && d.sessions.length) {
+    p2.appendChild(dvSection("커리큘럼 " + d.sessions.length + "회차",
+      dvBullets(d.sessions.map(x => [x.no, x.title].filter(Boolean).join("  ")))));
+  }
+  if (d.materials && d.materials.length) {
+    p2.appendChild(dvSection((d.materialsTitle || "제공 자료") + " " + d.materials.length + "종",
+      dvBullets(d.materials.map(x => x.name + (x.note ? "  (" + x.note + ")" : "")))));
+  }
+  view.appendChild(p2);
+
+  const acts = el("div", "dv-acts");
+  const mk = (label, cls, fn) => {
+    const b = el("button", "btn " + cls, label);
+    b.type = "button"; b.addEventListener("click", fn); acts.appendChild(b);
+  };
+  mk("수정하기", "btn-primary", () => openEvent(id));
+  mk("복제해서 새로 만들기", "btn-secondary", () => openEvent(null, id));
+  mk("삭제", "btn-danger", () => confirmDelete(true, id, d.title, false));
+  view.appendChild(acts);
+}
+
+function openResourceDetail(id, priv) {
+  const list = priv ? store.RESOURCES_PRIVATE : store.RESOURCES;
+  const d = list.find(r => r.id === id);
+  if (!d) return renderList();
+  const view = document.getElementById("editView");
+  view.innerHTML = "";
+  showEdit();
+  dvBackBar(view);
+
+  const map = { public: ["open", "공개"], protected: ["locked", "일부공개"], soon: ["soon", "공개 예정"], private: ["priv", "비공개"] };
+  const [cls, lab] = map[priv ? "private" : d.access] || map.public;
+
+  const p = panel(null, null);
+  const head = el("div", "dv-head");
+  const img = el("img");
+  img.src = d.thumb || "assets/favicon.png";
+  img.alt = "";
+  img.onerror = () => { img.style.visibility = "hidden"; };
+  head.appendChild(img);
+  const hb = el("div", "dv-h");
+  const b = el("div");
+  b.appendChild(el("span", "badge " + cls, lab));
+  hb.appendChild(b);
+  hb.appendChild(el("h2", null, d.title || "(제목 없음)"));
+  hb.appendChild(el("div", "dv-sub", [d.category, d.date].filter(Boolean).join("  |  ")));
+  head.appendChild(hb);
+  p.appendChild(head);
+
+  p.appendChild(dvTable([
+    ["주소", id],
+    ["분류", d.category],
+    ["설명", d.sub],
+    ["공개 범위", lab],
+    ["파일", (d.files && d.files.length) ? d.files.length + "개" : ""],
+    ["영상", d.youtube]
+  ]));
+  view.appendChild(p);
+
+  if (d.files && d.files.length) {
+    const p2 = panel("첨부 파일", null);
+    p2.appendChild(dvBullets(d.files.map(f => f.name || f)));
+    view.appendChild(p2);
+  }
+
+  const acts = el("div", "dv-acts");
+  const mk = (label, c, fn) => {
+    const x = el("button", "btn " + c, label);
+    x.type = "button"; x.addEventListener("click", fn); acts.appendChild(x);
+  };
+  mk("수정하기", "btn-primary", () => openResource(id, priv));
+  mk("삭제", "btn-danger", () => confirmDelete(false, id, d.title, priv));
+  view.appendChild(acts);
+}
+
+/* ---------------------------------------------------------------
    홍보문구 붙여넣기
 
    카톡 공지를 통째로 붙여넣으면 확실하게 알아볼 수 있는 것만 채웁니다.
@@ -1694,7 +1962,12 @@ async function renderApplications() {
   }
 
   items.forEach(it => {
-    const row = el("div", "ap-row");
+    const row = el("div", "ap-row is-click");
+    /* 줄을 누르면 상세를 엽니다. 오른쪽 버튼과 메모 칸은 제외합니다. */
+    row.addEventListener("click", e => {
+      if (e.target.closest(".ap-acts") || e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      openApplicantDetail(it);
+    });
     const main = el("div", "ap-main");
 
     const st = AP_STATUS[it.status] || AP_STATUS.pending;

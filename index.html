@@ -246,6 +246,16 @@
   }
   .replay .thumb-wrap { border-radius: 14px; overflow: hidden; transition: transform 0.18s; }
   .replay:hover .thumb-wrap { transform: translateY(-3px); }
+
+  /* 마감된 강의.
+     같은 자리에 두되 한 걸음 물러나 보이게 합니다. 지난 강의도 어떤 걸
+     해왔는지 보여 주는 값이 있어서 감추지는 않습니다.
+     글자는 흐리게 하지 않습니다. 읽히지 않으면 목록에 있는 뜻이 없어요.
+     마우스를 올리면 원래대로 돌아옵니다. */
+  .replay.is-closed .thumb-wrap { filter: grayscale(0.55); opacity: 0.62; transition: filter 0.18s, opacity 0.18s; }
+  .replay.is-closed:hover .thumb-wrap { filter: none; opacity: 1; }
+  .replay.is-closed .body strong { color: rgba(22, 25, 42, 0.68); }
+  .replay.is-closed .price { color: var(--muted); font-weight: 600; }
   .replay:hover strong { text-decoration: underline; text-underline-offset: 3px; }
   /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
      한 줄씩 눈으로 훑을 수 있게 한다. */
@@ -575,7 +585,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     const tag = eventStatusTag(ev);
     const price = eventPriceInfo(ev);
     const a = document.createElement("a");
-    a.className = "replay";
+    a.className = "replay" + (tag.cls === "closed" ? " is-closed" : "");
     a.href = "event?id=" + id;
     a.innerHTML =
       '<div class="thumb-wrap">'

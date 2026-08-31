@@ -55,6 +55,15 @@ const RESOURCES = [
     thumb: "assets/thumbs/daegu-prompts30.svg",
     access: "protected",
     href: ""
+  },
+  {
+    id: "daegu-prompts3",
+    category: "강의자료",
+    title: "[대구학원연합회] 랜딩페이지 실습 프롬프트 3종",
+    sub: "설명회 모집, 오늘의 수업 퀴즈, 학생 학습리포트. 복사해서 바로 쓰는 실전 프롬프트",
+    thumb: "assets/thumbs/daegu-prompts3.svg",
+    access: "public",
+    href: "daegu-prompts"
   }
 ];
 /* @admin:RESOURCES:end */

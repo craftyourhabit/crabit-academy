@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <circle cx="750" cy="70" r="150" fill="#FEE9F4"/>
+  <circle cx="120" cy="420" r="10" fill="#FB75BB"/>
+  <!-- 문서 카드 모티프: 겹쳐 쌓인 프롬프트 카드 -->
+  <g transform="translate(508 118) rotate(6)">
+    <rect x="0" y="0" width="196" height="236" rx="16" fill="#E8E8E8"/>
+  </g>
+  <g transform="translate(524 108) rotate(-3)">
+    <rect x="0" y="0" width="196" height="236" rx="16" fill="#FFFFFF" stroke="#E8E8E8"/>
+    <rect x="24" y="28" width="72" height="22" rx="11" fill="#FEE9F4"/>
+    <rect x="24" y="72" width="148" height="10" rx="5" fill="#16192A"/>
+    <rect x="24" y="94" width="120" height="10" rx="5" fill="#B9BABF"/>
+    <rect x="24" y="116" width="140" height="10" rx="5" fill="#B9BABF"/>
+    <rect x="24" y="138" width="96" height="10" rx="5" fill="#FB75BB"/>
+    <rect x="24" y="176" width="148" height="34" rx="10" fill="#16192A"/>
+    <rect x="58" y="189" width="80" height="8" rx="4" fill="#FFFFFF"/>
+  </g>
+  <text x="600" y="96" font-size="88" fill="#FB75BB" font-weight="700" text-anchor="middle">3</text>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">PROMPTS</text>
+  <text x="64" y="222" font-size="52" fill="#16192A" font-weight="700">랜딩페이지</text>
+  <text x="64" y="290" font-size="52" fill="#16192A" font-weight="700">아이디어 <tspan fill="#FB75BB">30선</tspan></text>
+  <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 | 프롬프트집</text>
+</svg>

@@ -69,5 +69,6 @@ function resourceBadge(r) {
 /* 사이트에 노출할 항목만 반환.
    비공개 항목은 애초에 이 파일에 없지만, 혹시 섞여 들어와도 여기서 한 번 더 걸러집니다. */
 function visibleResources() {
-  return RESOURCES.filter(r => r.access !== "private");
+  /* 최근에 추가한 자료가 먼저 보이도록 역순으로 반환합니다 (배열 끝 = 최신). */
+  return RESOURCES.filter(r => r.access !== "private").slice().reverse();
 }

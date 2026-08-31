@@ -574,7 +574,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
    비공개 자료는 assets/resources.js 에 아예 들어오지 않으므로 여기 나타나지 않습니다. */
 (function () {
   const list = document.getElementById("resList");
-  const items = visibleResources().slice(0, 3);
+  const items = visibleResources().slice(0, 5);
   if (items.length === 0) {
     list.innerHTML = '<p style="color: var(--muted); font-size: 16px;">자료를 준비하고 있어요. 곧 채워 둘게요.</p>';
     return;

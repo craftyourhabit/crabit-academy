@@ -46,6 +46,15 @@ const RESOURCES = [
     thumb: "assets/thumbs/claude-cowork-windows.svg",
     access: "public",
     href: "claude-code-windows"
+  },
+  {
+    id: "daegu-prompts30",
+    category: "강의자료",
+    title: "[대구학원연합회] 랜딩페이지 아이디어 30선 + 프롬프트집",
+    sub: "모집, 상담, 수업, 관리까지 학원 운영 전 영역의 랜딩페이지 프롬프트 30개",
+    thumb: "assets/thumbs/daegu-prompts30.svg",
+    access: "protected",
+    href: ""
   }
 ];
 /* @admin:RESOURCES:end */

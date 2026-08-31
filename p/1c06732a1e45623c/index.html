@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>랜딩페이지 아이디어 30선 + 프롬프트집 - 크래빗 아카데미</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  /* 포인트 폰트: 엘리스 디지털 배움체 (제목용, OFL - 라이선스: ../../assets/fonts/EliceDigitalBaeum_License.pdf) */
+  @font-face {
+    font-family: "Elice Digital Baeum";
+    src: url("../../assets/fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  .eyebrow, h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  :root {
+    --page: #F2F3F6;
+    --bg: #FFFFFF;
+    --fill: #F2F3F6;
+    --fill-soft: #F9FAFC;
+    --ink: #16192A;
+    --muted: rgba(22, 25, 42, 0.55);
+    --line: #E8E8E8;
+    --pink: #FB75BB;
+    --tint: #FEE9F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 20px 0; }
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  .brand img { height: 26px; display: block; }
+  .nav > a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; }
+  .nav > a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 2px; }
+
+  .hero { padding: 26px 0 8px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--pink);
+    margin-bottom: 12px;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(28px, 6.5vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .hero p { margin: 0 0 26px; font-size: 17.5px; color: var(--ink); text-wrap: pretty; }
+
+  .flow {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    margin-bottom: 20px;
+  }
+  .flow h2 { margin: 0 0 14px; font-size: 21px; font-weight: 700; }
+  .flow ol { margin: 0; padding-left: 0; list-style: none; counter-reset: step; }
+  .flow li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 16px;
+  }
+  .flow li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .flow li::before {
+    content: counter(step);
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 99px;
+    background: var(--pink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .flow li strong { display: block; }
+  .flow li .f-sub { color: var(--muted); font-size: 14.5px; }
+  .flow mark { background: var(--tint); border-bottom: 2px solid var(--pink); padding: 0 3px; border-radius: 3px; color: var(--ink); }
+
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  .toc a {
+    display: inline-block;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .toc a:hover { background: var(--fill-soft); }
+  .toc a .toc-n { color: var(--pink); font-weight: 700; margin-right: 6px; }
+
+  .part { margin-bottom: 44px; scroll-margin-top: 20px; }
+  .part-head { margin-bottom: 18px; }
+  .part-num {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--pink);
+    margin-bottom: 6px;
+  }
+  .part-head h2 { margin: 0 0 8px; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  .part-head p { margin: 0; font-size: 16px; color: var(--muted); }
+
+  .card {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 24px 26px;
+    box-shadow: 0 2px 10px rgba(22, 25, 42, 0.07);
+    margin-bottom: 18px;
+  }
+  .card-top { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .card-top .no {
+    flex: none;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pink);
+    letter-spacing: 0.04em;
+  }
+  .card-top h3 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .card .use { margin: 0 0 14px; font-size: 15px; color: var(--muted); }
+  .card pre {
+    margin: 0 0 14px;
+    background: var(--fill-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+  .card mark {
+    background: var(--tint);
+    border-bottom: 2px solid var(--pink);
+    padding: 0 3px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+  .copy {
+    display: block;
+    width: 100%;
+    background: var(--ink);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy:hover { background: #333333; }
+  .copy.done { background: var(--pink); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0 36px;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer p { margin: 0 0 6px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand"><img src="../../assets/logo.png" alt="Crabit 아카데미" /></div>
+      <a href="../../">아카데미 홈으로</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="eyebrow">랜딩페이지 프롬프트집</span>
+    <h1>랜딩페이지 아이디어 30선<br />+ 프롬프트집</h1>
+    <p>
+      대구학원연합회 강의(2026.09.01) 후속 자료입니다. 모집부터 상담, 수업, 학부모 관리까지
+      학원 운영 전 영역에서 바로 쓸 수 있는 랜딩페이지 프롬프트 30개를 담았어요.
+    </p>
+  </div>
+
+  <div class="flow">
+    <h2>사용법은 딱 3단계입니다</h2>
+    <ol>
+      <li><div><strong>마음에 드는 카드에서 "복사하기"를 누릅니다</strong><span class="f-sub">프롬프트 전체가 그대로 복사돼요</span></div></li>
+      <li><div><strong>젠스파크 채팅창에 붙여넣고 전송해요</strong><span class="f-sub">붙여넣기는 Ctrl+V 또는 Cmd+V</span></div></li>
+      <li><div><strong><mark>분홍 표시</mark> 부분만 우리 학원 내용으로 바꿉니다</strong><span class="f-sub">나머지는 그대로 둬도 잘 작동해요</span></div></li>
+    </ol>
+  </div>
+
+  <nav class="toc" aria-label="섹션 바로가기">
+    <a href="#part1"><span class="toc-n">1부</span>학생 모집</a>
+    <a href="#part2"><span class="toc-n">2부</span>상담과 등록</a>
+    <a href="#part3"><span class="toc-n">3부</span>수업과 학습</a>
+    <a href="#part4"><span class="toc-n">4부</span>학생과 학부모 관리</a>
+  </nav>
+
+  <!-- ================= 1부. 학생 모집 ================= -->
+  <section class="part" id="part1">
+    <div class="part-head">
+      <span class="part-num">1부</span>
+      <h2>학생 모집</h2>
+      <p>새 학생을 데려오는 페이지 8종입니다. 전단지 대신 링크 하나로 신청까지 받아요.</p>
+    </div>
+
+    <article class="card">
+      <div class="card-top"><span class="no">01</span><h3>학부모 설명회 모집</h3></div>
+      <p class="use">설명회 참석 신청을 링크 하나로 받아 인원을 미리 파악할 수 있어요.</p>
+      <pre>학부모 설명회 신청을 받는 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>초등 5~6학년 자녀를 둔 학부모</mark>
+- 일시와 장소: <mark>3월 둘째 주 토요일 오후 2시, 학원 세미나실</mark>
+페이지 구성은 이렇게 해줘.
+1. 설명회 핵심 주제 3가지: <mark>신학기 학습 로드맵, 레벨별 커리큘럼, 중등 대비 전략</mark>
+2. "이런 고민이 있다면 꼭 오세요" 학부모 공감 문구 3개
+3. 진행 순서: 강연 40분, 질의응답 20분, 희망자 개별 상담 안내
+4. 참석 혜택: <mark>레벨테스트 무료 쿠폰 증정</mark>
+5. 맨 아래 신청 폼: 학부모 성함, 연락처, 자녀 학년
+디자인은 신뢰감 있는 네이비와 화이트 톤으로 정돈되게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">02</span><h3>특강 모집 상세페이지</h3></div>
+      <p class="use">단기 특강 하나를 제대로 소개하는 상세페이지입니다.</p>
+      <pre><mark>중2 대상 수학 서술형 집중 특강</mark> 모집 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>서술형에서 점수가 새는 중2 학생과 학부모</mark>
+- 기간과 정원: <mark>4주 과정, 주 2회, 선착순 12명</mark>
+페이지 구성은 이렇게 해줘.
+1. 문제 제기: "개념은 아는데 서술형만 틀리는 이유" 짧은 도입 문단
+2. 특강 커리큘럼 4주 로드맵을 주차별로 표처럼 정리
+3. 담당 선생님 소개: <mark>경력 10년, 서술형 채점 기준 분석 전문</mark>
+4. 수강료와 시간표: <mark>4주 20만 원, 화요일과 목요일 저녁 7시</mark>
+5. 맨 아래 신청 폼: 학생 이름, 학교와 학년, 학부모 연락처
+디자인은 집중력 있는 다크 배경에 포인트 컬러 하나만 써서 임팩트 있게.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">03</span><h3>신학기 신입생 모집</h3></div>
+      <p class="use">3월과 9월, 학원 홍보의 대목에 쓰는 대표 모집 페이지예요.</p>
+      <pre><mark>3월 신학기</mark> 신입생 모집 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>초등 3학년부터 중등 3학년까지 학생과 학부모</mark>
+- 위치: <mark>수성구 범어동, 범어역 도보 5분</mark>
+페이지 구성은 이렇게 해줘.
+1. 신학기 슬로건 한 줄과 학원 대표 사진 자리
+2. 우리 학원 강점 3가지: <mark>소수정예 8명, 주간 리포트 발송, 자체 교재</mark>
+3. 학년별 반 편성표: 반 이름, 대상 학년, 수업 요일과 시간
+4. 신학기 등록 혜택: <mark>2월 등록 시 첫 달 교재비 무료</mark>
+5. 맨 아래에 상담 신청 폼과 전화 걸기 버튼: <mark>053-000-0000</mark>
+디자인은 새 학기 느낌이 나는 밝고 산뜻한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">04</span><h3>방학특강 모집</h3></div>
+      <p class="use">방학 집중반을 시간표와 함께 한눈에 보여주는 페이지입니다.</p>
+      <pre><mark>여름방학 집중 특강</mark> 모집 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>방학 동안 한 학기 선행을 끝내고 싶은 중등 학생</mark>
+- 기간: <mark>7월 22일부터 8월 16일까지 4주</mark>
+페이지 구성은 이렇게 해줘.
+1. "방학 4주가 다음 학기를 결정합니다" 같은 헤드라인
+2. 개설 강좌 목록을 카드로: <mark>중1 도형 완성반, 중2 함수 선행반, 중3 고등수학 입문반</mark>
+3. 하루 시간표 예시: 오전 수업, 점심, 오후 자습과 질문 시간
+4. 지난 방학특강 성과: <mark>수강생 평균 내신 12점 상승</mark>
+5. 맨 아래 신청 폼: 학생 이름, 학년, 희망 강좌, 학부모 연락처
+디자인은 시원한 여름 느낌의 블루 톤으로 활기차게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">05</span><h3>무료 레벨테스트 신청</h3></div>
+      <p class="use">부담 없는 첫 방문 명분을 만들어 주는 모집 장치예요.</p>
+      <pre>무료 레벨테스트 신청 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>우리 아이 실력이 어느 정도인지 궁금한 초등 학부모</mark>
+- 소요 시간: <mark>테스트 30분과 결과 상담 20분</mark>
+페이지 구성은 이렇게 해줘.
+1. "학원 등록 전에 실력부터 정확히 확인하세요" 헤드라인
+2. 테스트로 알 수 있는 것 3가지: 현재 레벨, 취약 영역, 추천 커리큘럼
+3. 진행 방식 3단계: 신청, 방문 테스트, 결과지 들고 상담
+4. 안내 문구: 테스트는 무료이고 등록을 권유받을 부담이 없다는 점을 부드럽게
+5. 맨 아래 신청 폼: 학생 이름, 학년, 희망 요일, 학부모 연락처
+디자인은 부담 없고 친근한 파스텔 톤으로 가볍게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">06</span><h3>친구추천 이벤트</h3></div>
+      <p class="use">재원생 학부모의 입소문을 이벤트로 만드는 페이지입니다.</p>
+      <pre>재원생 친구추천 이벤트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>지금 다니고 있는 학생과 학부모</mark>
+- 이벤트 기간: <mark>3월 한 달간</mark>
+페이지 구성은 이렇게 해줘.
+1. "좋은 건 친구랑 같이" 같은 밝은 헤드라인
+2. 혜택 안내를 양쪽 모두 보이게: 추천한 학생 <mark>문화상품권 3만 원</mark>, 등록한 친구 <mark>첫 달 수강료 10% 할인</mark>
+3. 참여 방법 3단계: 친구에게 이 링크 공유, 친구가 상담 신청, 등록 확정 시 혜택 지급
+4. 자주 묻는 질문 3개: 중복 추천 가능 여부, 지급 시점, 형제 등록도 되는지
+5. 맨 아래에 "친구 추천하기" 신청 폼: 내 이름, 친구 이름, 친구 학부모 연락처
+디자인은 선물 상자 느낌이 나는 즐겁고 경쾌한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">07</span><h3>마감반 대기자 등록</h3></div>
+      <p class="use">정원 마감을 오히려 신뢰의 증거로 바꾸는 페이지예요.</p>
+      <pre>마감된 반의 대기자 등록 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>인기 반에 자리가 나길 기다리는 학부모</mark>
+- 대상 반: <mark>중2 심화반 (정원 8명 마감)</mark>
+페이지 구성은 이렇게 해줘.
+1. "이 반은 현재 정원이 마감되었습니다" 정중한 안내와 함께 반 소개 한 문단
+2. 이 반이 빨리 마감되는 이유 3가지: <mark>소수정예, 담임제 관리, 검증된 성적 향상</mark>
+3. 대기 등록 안내: 자리가 나면 등록 순서대로 연락드린다는 원칙
+4. 기다리는 동안의 대안 제안: <mark>비슷한 시간대의 다른 반 안내</mark>
+5. 맨 아래 대기 등록 폼: 학생 이름, 학년, 학부모 연락처, 희망 시작 시기
+디자인은 차분하고 신뢰감 있는 미니멀 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">08</span><h3>신규 개원 오픈 이벤트</h3></div>
+      <p class="use">새로 문을 여는 학원의 첫인상을 만드는 오픈 안내 페이지입니다.</p>
+      <pre>학원 신규 개원 오픈 이벤트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>동네에 새 학원을 찾고 있는 초등과 중등 학부모</mark>
+- 오픈일과 위치: <mark>3월 2일, 범어동 크래빗빌딩 3층</mark>
+페이지 구성은 이렇게 해줘.
+1. "우리 동네에 새로운 영어학원이 문을 엽니다" 헤드라인과 오픈 날짜 강조
+2. 원장 인사말: 어떤 마음으로 학원을 열었는지 진심이 느껴지는 짧은 글
+3. 학원 소개: 커리큘럼 특징, 시설 사진 자리, 반별 시간표
+4. 오픈 기념 혜택: <mark>선착순 20명 입학금 면제와 첫 달 50% 할인</mark>
+5. 맨 아래에 오픈 상담 예약 폼과 전화 걸기 버튼, 찾아오는 길 지도 자리
+디자인은 새 출발 느낌의 화이트 베이스에 밝은 포인트 컬러로 깨끗하게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+  </section>
+
+  <!-- ================= 2부. 상담과 등록 ================= -->
+  <section class="part" id="part2">
+    <div class="part-head">
+      <span class="part-num">2부</span>
+      <h2>상담과 등록</h2>
+      <p>관심을 등록으로 잇는 페이지 7종이에요. 상담 문턱을 낮추고 안내를 자동화합니다.</p>
+    </div>
+
+    <article class="card">
+      <div class="card-top"><span class="no">09</span><h3>온라인 상담 신청</h3></div>
+      <p class="use">전화가 부담스러운 학부모를 위한 상시 상담 창구입니다.</p>
+      <pre>온라인 상담 신청 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>전화보다 온라인 신청이 편한 학부모</mark>
+- 상담 방식: <mark>전화 상담 또는 방문 상담 중 선택</mark>
+페이지 구성은 이렇게 해줘.
+1. "궁금한 점, 부담 없이 물어보세요" 헤드라인과 안심 문구 한 줄
+2. 상담에서 다루는 내용: 레벨 진단, 반 배정, 수강료, 셔틀 노선
+3. 상담 가능 시간 안내: <mark>평일 오후 1시부터 9시까지</mark>
+4. 신청 후 진행 안내: 접수 확인 문자, 하루 안에 연락, 원하는 시간 조율
+5. 맨 아래 신청 폼: 학부모 성함, 연락처, 자녀 학년, 궁금한 점 자유 입력칸
+디자인은 따뜻하고 편안한 베이지 톤으로 부드럽게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">10</span><h3>3분 입학상담 사전진단</h3></div>
+      <p class="use">상담 전에 미리 답을 받아 두면 상담의 질이 완전히 달라져요.</p>
+      <pre>입학상담 전에 작성하는 3분 사전진단 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>상담을 예약했거나 예약하려는 학부모</mark>
+- 목적: 상담 전에 아이 상황을 미리 파악해서 상담 시간을 알차게 쓰기
+페이지 구성은 이렇게 해줘.
+1. "3분만 답해 주시면 상담이 두 배로 깊어집니다" 안내 헤드라인
+2. 진단 문항을 한 화면에 하나씩: 현재 다니는 학원 여부, 최근 시험 점수대, 하루 공부 시간, 아이가 가장 어려워하는 단원, 학부모가 가장 걱정하는 점
+3. 문항은 대부분 객관식 버튼으로 만들고 마지막 한 개만 자유 입력
+4. 제출하면 "상담 때 뵙겠습니다" 완료 화면과 학원 위치 안내
+5. 마지막에 이름과 연락처를 받아서 제출하는 폼으로 마무리
+디자인은 설문 도구 느낌의 깔끔한 단색 톤으로 심플하게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">11</span><h3>학생 학습성향 진단</h3></div>
+      <p class="use">재미로 하는 성향 테스트가 자연스럽게 상담 신청으로 이어집니다.</p>
+      <pre>학생 학습성향 진단 테스트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>우리 아이 공부 스타일이 궁금한 학부모와 학생</mark>
+- 형식: 10문항 객관식 테스트, 결과는 4가지 유형 중 하나
+페이지 구성은 이렇게 해줘.
+1. "우리 아이는 어떤 공부 유형일까요?" 헤드라인과 테스트 시작 버튼
+2. 문항 10개를 한 번에 하나씩, 진행률 바와 함께 보여주기
+3. 결과 유형 4가지를 만들어줘: <mark>꾸준한 성실형, 벼락치기 집중형, 호기심 탐구형, 친구따라 분위기형</mark>
+4. 결과 화면에는 유형 설명, 강점, 부모님이 도와줄 포인트, 추천 학습법
+5. 결과 아래에 "우리 아이 유형에 맞는 반이 궁금하다면" 상담 신청 폼: 이름, 연락처
+디자인은 캐릭터 일러스트 느낌의 밝고 귀여운 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">12</span><h3>우리 학원 프로그램 추천</h3></div>
+      <p class="use">몇 가지 질문에 답하면 맞는 반을 찾아 주는 안내 도우미예요.</p>
+      <pre>몇 가지 질문에 답하면 맞는 반을 추천해 주는 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>반이 많아서 뭘 골라야 할지 모르는 신규 학부모</mark>
+- 우리 학원 반 목록: <mark>파닉스반, 초등 리딩반, 초등 문법반, 중등 내신반, 중등 심화반</mark>
+페이지 구성은 이렇게 해줘.
+1. "질문 4개면 우리 아이에게 맞는 반을 찾아드려요" 헤드라인
+2. 질문 4개를 버튼 선택식으로: 학년, 영어 학습 경험, 현재 수준 체감, 목표
+3. 답 조합에 따라 위 반 목록 중 하나를 추천하고 그 이유를 두 문장으로 설명
+4. 추천 반의 상세 정보: 수업 요일과 시간, 정원, 한 달 커리큘럼 예시
+5. 결과 화면 아래에 "이 반으로 상담 신청하기" 폼: 학생 이름, 학년, 연락처
+디자인은 안내 데스크처럼 친절하고 정돈된 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">13</span><h3>수강료와 프로그램 안내</h3></div>
+      <p class="use">전화로 매번 설명하던 수강료 안내를 링크 하나로 끝냅니다.</p>
+      <pre>수강료와 프로그램 안내 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>수강료가 궁금해서 문의하는 학부모</mark>
+- 안내 원칙: 숨기지 않고 투명하게, 표로 한눈에
+페이지 구성은 이렇게 해줘.
+1. "수강료, 투명하게 안내드립니다" 헤드라인
+2. 프로그램별 안내 표: <mark>초등 기본반 25만 원, 중등 내신반 32만 원, 중등 심화반 38만 원</mark> (주당 횟수와 수업 시간 포함)
+3. 수강료에 포함된 것: <mark>교재, 테스트, 월간 리포트, 보충수업</mark>
+4. 할인 안내: <mark>형제 등록 10%, 분기 선납 5%</mark>
+5. 맨 아래에 "우리 아이에게 맞는 반 상담받기" 신청 폼과 전화 버튼
+디자인은 가격표가 잘 읽히는 깔끔한 화이트 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">14</span><h3>등록 전 FAQ</h3></div>
+      <p class="use">반복되는 질문을 모아 두면 상담 전화가 절반으로 줄어요.</p>
+      <pre>학원 등록 전 자주 묻는 질문 FAQ 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>등록을 고민하며 이것저것 궁금한 학부모</mark>
+- 형식: 질문을 누르면 답이 펼쳐지는 아코디언
+페이지 구성은 이렇게 해줘.
+1. "등록 전 궁금한 점, 여기 다 있습니다" 헤드라인
+2. 카테고리 3개로 나눠줘: 수업과 커리큘럼, 수강료와 결제, 등원과 관리
+3. 카테고리마다 질문 4개씩, 총 12개를 만들어줘. 예: <mark>레벨테스트는 어떻게 보나요, 보강은 어떻게 해주나요, 셔틀 노선이 어떻게 되나요</mark>
+4. 답변은 3~4문장으로 구체적으로, 학원에서 실제로 안내하듯 친절하게
+5. 맨 아래에 "더 궁금한 점은 바로 물어보세요" 상담 신청 폼과 전화 버튼
+디자인은 읽기 편한 큰 글자의 미니멀 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">15</span><h3>신규생 온보딩 안내</h3></div>
+      <p class="use">등록 직후 학부모에게 보내는 첫 등원 안내서입니다. 첫인상이 좋아져요.</p>
+      <pre>등록을 마친 신규생 학부모에게 보내는 첫 등원 안내 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>이번 주 첫 등원을 앞둔 신규생과 학부모</mark>
+- 목표: 첫날 헤매지 않게, 등록하길 잘했다고 느끼게
+페이지 구성은 이렇게 해줘.
+1. "등록을 환영합니다" 환영 인사와 담임 선생님 소개 한 줄
+2. 첫 등원 체크리스트: <mark>교재 수령, 필기구, 등원 시간 10분 전 도착</mark>
+3. 첫 주 진행 안내: 자리 배정, 진단 테스트, 학습 계획 상담 순서
+4. 학부모 안내: 출결 알림 받는 법, 상담 요청하는 법, <mark>학원 카카오채널 링크</mark>
+5. 맨 아래에 "궁금한 점 미리 남기기" 입력 폼과 학원 전화 버튼
+디자인은 환영 카드 느낌의 밝고 따뜻한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+  </section>
+
+  <!-- ================= 3부. 수업과 학습 ================= -->
+  <section class="part" id="part3">
+    <div class="part-head">
+      <span class="part-num">3부</span>
+      <h2>수업과 학습</h2>
+      <p>수업 시간에 바로 띄워 쓰는 페이지 8종입니다. 랜딩페이지가 수업 도구가 돼요.</p>
+    </div>
+
+    <article class="card">
+      <div class="card-top"><span class="no">16</span><h3>오늘의 수업</h3></div>
+      <p class="use">오늘 배울 내용과 숙제를 한 페이지로 정리해 교실 화면에 띄워요.</p>
+      <pre>수업 시작할 때 화면에 띄우는 "오늘의 수업" 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>, 반 이름: <mark>중2 내신반</mark>
+- 누구에게: 오늘 수업에 들어온 학생들
+- 날짜: <mark>3월 5일 수요일</mark>
+페이지 구성은 이렇게 해줘.
+1. 오늘의 한 줄 목표: <mark>연립방정식 활용 문제 3유형 정복</mark>
+2. 수업 순서 타임라인: <mark>지난 시간 복습 10분, 개념 설명 30분, 문제 풀이 40분, 정리 10분</mark>
+3. 오늘의 핵심 개념 요약 카드 2~3장
+4. 숙제 안내: <mark>워크북 42~45쪽, 오답노트 정리</mark>와 제출 기한
+5. 맨 아래에 "숙제 다 하면 체크" 버튼과 다음 수업 예고 한 줄
+디자인은 교실 스크린에 크게 띄워도 잘 보이게 글자를 큼직하게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">17</span><h3>일일테스트</h3></div>
+      <p class="use">매일 보는 쪽지시험을 웹 페이지로 만들어 채점까지 자동으로 해요.</p>
+      <pre>학생들이 직접 푸는 일일테스트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>, 반 이름: <mark>초등 리딩반</mark>
+- 누구에게: 오늘 수업에 온 학생들, 수업 시작 전 5분 동안
+- 범위: <mark>지난 시간에 배운 단어 20개와 핵심 문법 1개</mark>
+페이지 구성은 이렇게 해줘.
+1. 시작 화면: 이름 입력하고 시작 버튼 누르면 테스트 시작
+2. 문제 10개를 한 번에 하나씩: <mark>단어 뜻 고르기 7개, 문법 빈칸 3개</mark>
+3. 제한 시간 5분 타이머를 위에 항상 보이게
+4. 제출하면 바로 채점: 점수, 맞은 문제와 틀린 문제, 정답 해설
+5. 결과 화면에 "틀린 문제 다시 풀기" 버튼으로 마무리
+디자인은 게임처럼 몰입되는 카드 스타일로 만들어줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">18</span><h3>오답분석</h3></div>
+      <p class="use">틀린 문제를 스스로 돌아보게 하는 오답노트 작성 도우미예요.</p>
+      <pre>학생이 틀린 문제를 정리하는 오답분석 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>테스트를 마친 중등 학생</mark>, 수업 마지막 10분 동안
+- 목표: 틀린 이유를 스스로 분류하는 습관 만들기
+페이지 구성은 이렇게 해줘.
+1. "틀린 문제가 진짜 선생님입니다" 헤드라인
+2. 오답 입력 폼: 과목 단원, 문제 번호, 틀린 이유를 4가지 중 선택 (<mark>개념 몰랐음, 계산 실수, 문제 잘못 읽음, 시간 부족</mark>)
+3. 한 문제 입력할 때마다 "다음 문제 추가" 버튼으로 계속 쌓을 수 있게
+4. 다 입력하면 틀린 이유별 개수를 그래프로 보여주고 유형별 처방 한 줄씩
+5. 마지막에 "오늘의 다짐 한 줄" 입력하고 제출 버튼으로 마무리
+디자인은 노트 필기 느낌의 차분한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">19</span><h3>시험지 분석 리포트</h3></div>
+      <p class="use">학교 시험지를 단원별로 분석해 다음 대비 방향을 보여줍니다.</p>
+      <pre>학교 시험지 분석 리포트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>중간고사를 마친 학생과 학부모</mark>
+- 분석 대상: <mark>범어중 2학년 1학기 중간고사 수학</mark>
+페이지 구성은 이렇게 해줘.
+1. 시험 총평 3줄: 난이도, 출제 경향, 작년과 달라진 점
+2. 단원별 출제 분석 표: 단원명, 문항 수, 배점, 난이도 별점
+3. 핵심 문항 3개 해설: 왜 어려웠는지, 어떻게 접근해야 했는지
+4. 기말고사 대비 전략: <mark>서술형 비중 증가 대비, 함수 단원 집중</mark>
+5. 맨 아래에 "우리 아이 시험지 분석 상담 신청" 폼: 학생 이름, 학교, 연락처
+디자인은 리포트 문서 느낌의 신뢰감 있는 톤으로, 표와 그래프가 잘 보이게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">20</span><h3>영어 단어시험</h3></div>
+      <p class="use">단어 리스트만 갈아 끼우면 매주 새 시험이 되는 만능 페이지입니다.</p>
+      <pre>영어 단어시험 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>, 반 이름: <mark>초등 리딩반</mark>
+- 누구에게: 이번 주 단어를 외워 온 학생들
+- 이번 주 단어 20개: <mark>apple(사과), brave(용감한), climb(오르다) 같은 식으로 20개를 여기에 넣을게</mark>
+페이지 구성은 이렇게 해줘.
+1. 시작 화면: 이름 입력, "시험 시작" 버튼, 문제 수와 제한 시간 안내
+2. 영어 단어를 보여주고 4개 보기 중 뜻을 고르는 객관식으로 출제
+3. 문제 순서와 보기 순서는 매번 랜덤으로 섞어줘
+4. 제출하면 점수와 틀린 단어 목록을 보여주고, <mark>80점</mark> 이상이면 축하 효과
+5. 결과 화면에 "틀린 단어만 다시 시험보기" 버튼으로 마무리
+디자인은 알록달록한 플래시카드 느낌으로 재밌게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">21</span><h3>발표자 사다리타기와 랜덤뽑기</h3></div>
+      <p class="use">"누가 발표할래?" 대신 화면에 띄우면 교실 분위기가 살아나요.</p>
+      <pre>수업 시간에 쓰는 발표자 뽑기 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>, 반 이름: <mark>초등 문법반</mark>
+- 누구에게: 수업 중인 학생들, 선생님이 화면에 띄워 놓고 사용
+- 학생 명단: <mark>지민, 서준, 하은, 도윤, 수아, 예준, 시우, 하린</mark>
+페이지 구성은 이렇게 해줘.
+1. 상단에 모드 2개 탭: "랜덤뽑기"와 "사다리타기"
+2. 랜덤뽑기: 큰 버튼을 누르면 두구두구 애니메이션 후 한 명 이름이 크게 등장
+3. 사다리타기: 학생 이름을 위에 놓고 사다리를 타고 내려가 결과 확인
+4. 한 번 뽑힌 학생은 표시해 두고 "제외하고 다시 뽑기" 옵션
+5. "전체 초기화" 버튼과 "발표 시작!" 큰 버튼으로 마무리
+디자인은 교실 스크린용으로 글자를 아주 크게, 예능 자막처럼 신나는 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">22</span><h3>숙제 완료 보상 룰렛</h3></div>
+      <p class="use">숙제 검사가 끝난 학생에게 돌리게 하는 작은 보상 장치입니다.</p>
+      <pre>숙제를 다 해온 학생이 돌리는 보상 룰렛 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: 숙제 검사를 통과한 학생, 한 명씩 앞에 나와서 돌리기
+- 보상 목록 6칸: <mark>간식 쿠폰, 포인트 2배, 자리 선택권, 숙제 1회 패스, 칭찬 도장 2개, 꽝(다음 기회에)</mark>
+페이지 구성은 이렇게 해줘.
+1. "숙제 완료! 룰렛을 돌려보세요" 헤드라인과 학생 이름 입력칸
+2. 가운데에 6칸짜리 원형 룰렛, 각 칸에 보상 이름과 아이콘
+3. "돌리기" 버튼을 누르면 룰렛이 빙글빙글 돌다가 서서히 멈추는 애니메이션
+4. 멈추면 당첨 결과를 팡파레 효과와 함께 크게 보여주기
+5. "다음 친구 돌리기" 버튼으로 이어서 쓸 수 있게 마무리
+디자인은 오락실 뽑기 기계처럼 화려하고 신나게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">23</span><h3>시험 D-Day 카운트다운</h3></div>
+      <p class="use">교실 모니터에 항상 띄워 두는 시험 카운트다운 보드예요.</p>
+      <pre>시험 D-Day 카운트다운 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: 자습실과 교실의 학생들, 모니터에 상시 표시
+- 시험 정보: <mark>범어중 1학기 기말고사, 7월 1일 시작</mark>
+페이지 구성은 이렇게 해줘.
+1. 화면 가운데에 D-Day 숫자를 아주 크게, 실시간으로 계산되게
+2. 그 아래 오늘 날짜와 시험까지 남은 주말 횟수
+3. 주차별 대비 로드맵: <mark>3주 전 개념 정리, 2주 전 기출 풀이, 1주 전 오답 정리</mark>
+4. 매일 바뀌는 응원 문구 한 줄 (10개를 만들어 두고 날짜별로 순환)
+5. 맨 아래에 "오늘 공부 시작하기" 버튼을 누르면 응원 메시지가 크게 나오게
+디자인은 다크 배경에 숫자가 빛나는 전광판 느낌으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+  </section>
+
+  <!-- ================= 4부. 학생과 학부모 관리 ================= -->
+  <section class="part" id="part4">
+    <div class="part-head">
+      <span class="part-num">4부</span>
+      <h2>학생과 학부모 관리</h2>
+      <p>재원생을 오래 다니게 하는 페이지 7종입니다. 관리가 보이면 이탈이 줄어요.</p>
+    </div>
+
+    <article class="card">
+      <div class="card-top"><span class="no">24</span><h3>월간 학습리포트</h3></div>
+      <p class="use">매달 학부모에게 보내는 개인별 학습 리포트 페이지입니다.</p>
+      <pre>학부모에게 보내는 월간 학습리포트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>초등 리딩반 김지민 학생</mark>의 학부모
+- 기간: <mark>3월 한 달</mark>
+페이지 구성은 이렇게 해줘.
+1. 인사말과 이달의 종합 평가 3줄: 잘한 점 2가지와 보완할 점 1가지
+2. 이달의 숫자 카드: <mark>출석 12회 중 12회, 단어시험 평균 88점, 숙제 완료율 95%</mark>
+3. 주차별 학습 내용과 테스트 점수 추이 그래프
+4. 담임 코멘트: 수업 태도, 성장한 부분, 다음 달 목표를 따뜻한 문장으로
+5. 맨 아래에 "상담 신청하기" 버튼과 학원 전화 버튼으로 마무리
+디자인은 성적표보다 편지에 가까운 따뜻하고 정갈한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">25</span><h3>성장 비교 리포트</h3></div>
+      <p class="use">입학 때와 지금을 나란히 보여주면 학원의 가치가 증명돼요.</p>
+      <pre>입학 시점과 현재를 비교하는 성장 리포트 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>등록 6개월이 지난 중2 박서준 학생</mark>의 학부모
+- 목적: 재등록 시즌에 "다니길 잘했다"를 눈으로 보여주기
+페이지 구성은 이렇게 해줘.
+1. "6개월, 이만큼 자랐습니다" 헤드라인과 학생 이름
+2. 입학 때와 현재를 나란히 비교: <mark>진단 62점에서 84점, 레벨 2단계 상승, 하루 자습 20분에서 50분</mark>
+3. 월별 테스트 점수 변화를 상승 그래프로
+4. 아직 남은 과제와 다음 6개월 로드맵: <mark>서술형 완성도, 심화반 진입</mark>
+5. 맨 아래에 "다음 학기 계획 상담하기" 신청 버튼으로 마무리
+디자인은 비포와 애프터가 극적으로 대비되는 구성으로, 상승 느낌을 살려줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">26</span><h3>시험결과 분석</h3></div>
+      <p class="use">시험 직후 학부모에게 점수 너머의 이야기를 전하는 페이지입니다.</p>
+      <pre>학교 시험이 끝난 뒤 학부모에게 보내는 시험결과 분석 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>중간고사를 마친 중2 학생</mark>의 학부모
+- 시험 정보: <mark>1학기 중간고사 수학, 원점수 84점</mark>
+페이지 구성은 이렇게 해줘.
+1. 결과 요약: 점수, 지난 시험 대비 변화, 반 평균과의 비교
+2. 영역별 분석 표: 계산, 개념, 응용, 서술형 각각의 득점률
+3. 틀린 문제 유형 분석과 원인 진단 2~3줄
+4. 기말고사 대비 계획: <mark>서술형 주 2회 첨삭, 취약 단원 보충수업</mark>
+5. 맨 아래에 "결과 상담 예약하기" 폼: 희망 날짜와 시간대 선택
+디자인은 데이터가 잘 읽히는 차분한 리포트 톤으로, 긍정적인 부분이 먼저 보이게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">27</span><h3>학부모 상담 사전설문</h3></div>
+      <p class="use">상담 주간 전에 돌리면 상담 시간이 두 배로 깊어집니다.</p>
+      <pre>학부모 상담 주간 전에 보내는 사전설문 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>4월 상담 주간</mark>에 상담을 예약한 재원생 학부모
+- 목적: 학부모가 정말 궁금한 것을 미리 받아 맞춤 상담 준비하기
+페이지 구성은 이렇게 해줘.
+1. "더 깊은 상담을 위해 2분만 내주세요" 안내와 상담 주간 일정
+2. 설문 문항: 아이 학습에서 가장 궁금한 점(객관식), 집에서 본 아이의 공부 모습, 학원에 바라는 점, 상담에서 꼭 다루고 싶은 주제(자유 입력)
+3. 상담 희망 방식 선택: 방문, 전화, 온라인
+4. 희망 날짜와 시간대 선택지: <mark>4월 15일부터 19일, 오후 2시부터 8시</mark>
+5. 학생 이름과 학부모 연락처를 받고 제출 버튼으로 마무리
+디자인은 부담 없이 술술 답하게 되는 간결한 설문 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">28</span><h3>수업 만족도 조사</h3></div>
+      <p class="use">분기마다 돌리는 짧은 만족도 조사예요. 불만을 이탈 전에 발견합니다.</p>
+      <pre>학부모 대상 수업 만족도 조사 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: 전체 재원생 학부모, <mark>분기에 한 번</mark>
+- 원칙: 1분 안에 끝나게 짧게, 익명 선택 가능
+페이지 구성은 이렇게 해줘.
+1. "더 좋은 수업을 위해 딱 1분만 부탁드려요" 헤드라인
+2. 별점 문항 4개: 수업 내용, 선생님 소통, 학습 관리, 상담과 안내
+3. 객관식 1개: 지인에게 추천할 의향이 얼마나 되는지 5단계
+4. 자유 입력 1개: "이것 하나만 바뀌면 좋겠다 하는 점이 있다면요?"
+5. 익명 제출 또는 이름 남기기를 선택하고 제출 버튼으로 마무리
+디자인은 클릭 몇 번이면 끝나 보이는 가볍고 산뜻한 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">29</span><h3>학생 칭찬카드</h3></div>
+      <p class="use">잘한 날 학부모에게 링크로 보내는 디지털 칭찬카드입니다.</p>
+      <pre>학부모에게 보내는 학생 칭찬카드 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗영어학원</mark>
+- 누구에게: <mark>초등 리딩반 이하은 학생</mark>의 학부모
+- 칭찬 사유: <mark>단어시험 3주 연속 100점</mark>
+페이지 구성은 이렇게 해줘.
+1. 카드가 봉투에서 나오는 듯한 등장 연출과 "칭찬합니다" 타이틀
+2. 학생 이름을 크게, 칭찬 내용을 상장 문구처럼 정중하고 따뜻하게
+3. 담임 선생님의 손편지 느낌 코멘트 3~4줄
+4. 그동안의 칭찬 기록 배지: <mark>숙제 성실왕, 발표왕, 출석 개근</mark>
+5. 맨 아래에 "우리 아이에게 응원 한마디 남기기" 입력 폼과 보내기 버튼
+디자인은 상장과 카드 사이의 느낌으로, 고급스럽고 사랑스럽게 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+
+    <article class="card">
+      <div class="card-top"><span class="no">30</span><h3>출석 챌린지 현황판</h3></div>
+      <p class="use">반 전체의 출석 레이스를 보여주는 현황판으로 등원 동기를 만들어요.</p>
+      <pre>반별 출석 챌린지 현황판 랜딩페이지를 만들어줘.
+- 학원 이름: <mark>크래빗수학학원</mark>
+- 누구에게: <mark>중1 기본반</mark> 학생들과 학부모, 교실 화면과 단체방 공유용
+- 챌린지 규칙: <mark>한 달 개근하면 반 전체 간식 파티</mark>
+페이지 구성은 이렇게 해줘.
+1. "이번 달 개근 챌린지 진행 중" 헤드라인과 남은 날짜
+2. 반 전체 출석률을 큰 게이지 바로: <mark>현재 92%</mark>
+3. 학생별 출석 스탬프 판: 이름 옆에 날짜별 도장이 채워지는 그리드
+4. 이번 주 개근 학생 명단과 축하 문구
+5. 맨 아래에 "우리 반 응원하기" 버튼을 누르면 응원 카운트가 올라가게
+디자인은 게임 퀘스트 보드처럼 진행 상황이 한눈에 보이게 신나는 톤으로 해줘.
+모바일에서 보기 좋게 만들어줘. 완성되면 배포까지 진행해서 공유할 수 있는 링크를 만들어줘.</pre>
+      <button class="copy" type="button">복사하기</button>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>크래빗 아카데미 | 문의는 크래빗 습관연구소 톡방으로</p>
+    <p>&copy; 2026 CRABIT. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll(".copy").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const pre = btn.closest(".card").querySelector("pre");
+    const text = pre.textContent;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch {
+      /* 구형 브라우저 대비 */
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    if (ok) {
+      btn.textContent = "복사 완료!";
+      btn.classList.add("done");
+      setTimeout(() => {
+        btn.textContent = "복사하기";
+        btn.classList.remove("done");
+      }, 1600);
+    } else {
+      btn.textContent = "복사가 안 되면 위 글을 드래그해 복사해 주세요";
+    }
+  });
+});
+</script>
+
+</body>
+</html>

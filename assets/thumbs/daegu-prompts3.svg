@@ -18,7 +18,7 @@
   </g>
   <text x="600" y="96" font-size="88" fill="#FB75BB" font-weight="700" text-anchor="middle">3</text>
   <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">PROMPTS</text>
-  <text x="64" y="222" font-size="52" fill="#16192A" font-weight="700">랜딩페이지</text>
-  <text x="64" y="290" font-size="52" fill="#16192A" font-weight="700">아이디어 <tspan fill="#FB75BB">30선</tspan></text>
+  <text x="64" y="222" font-size="52" fill="#16192A" font-weight="700">복사해서 쓰는</text>
+  <text x="64" y="290" font-size="52" fill="#16192A" font-weight="700">실습 프롬프트 3종<tspan fill="#FB75BB">30선</tspan></text>
   <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 | 프롬프트집</text>
 </svg>

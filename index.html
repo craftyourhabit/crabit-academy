@@ -266,8 +266,28 @@
   .replay:hover strong { text-decoration: underline; text-underline-offset: 3px; }
   /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
      한 줄씩 눈으로 훑을 수 있게 한다. */
-  .replay .thumb-wrap { position: relative; }
+  .replay .thumb-wrap { position: relative; container-type: inline-size; }
   .replay .thumb-wrap::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 -1px 0 var(--line); pointer-events: none; }
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 데이터를 쓴다. */
+  .cov-ov {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 7cqw 6cqw; pointer-events: none;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  .cov-ov.t-navy { background: linear-gradient(100deg, #16192A 0%, #16192A 56%, rgba(22,25,42,0) 74%); }
+  .cov-ov.t-white { background: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 45%, rgba(255,255,255,0) 63%); }
+  .cov-ov .ov-eyebrow {
+    align-self: flex-start; background: #0B0D18; color: #fff; font-weight: 700;
+    font-size: 2.5cqw; padding: 1.1cqw 2.3cqw; border-radius: 99px; margin-bottom: 2cqw;
+    letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .cov-ov .ov-line { font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; margin: 0; white-space: pre; }
+  .cov-ov .ov-line.sz-huge { font-size: 10.5cqw; }
+  .cov-ov .ov-line.sz-title { font-size: 6cqw; }
+  .cov-ov .ov-line.sz-sub { font-size: 3.1cqw; font-weight: 600; margin-top: 1.4cqw; }
+  .cov-ov.t-navy .ov-line { color: #fff; }
+  .cov-ov.t-white .ov-line { color: var(--ink); }
+  .cov-ov .ov-line.accent { color: var(--pink); }
   .replay .thumb {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -587,7 +607,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
    SHOW_IDS에 나열한 교육만 노출합니다.
    진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */
 (function () {
-  const SHOW_IDS = ["math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
+  const SHOW_IDS = ["daegu-landing-lecture", "ai-ace-webinar", "math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
   const grid = document.getElementById("upcomingGrid");
   const entries = Object.entries(EVENTS_DB)
     .filter(([id]) => SHOW_IDS.includes(id))
@@ -596,6 +616,27 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육과 설명회 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
     return;
   }
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 ev.coverOverlay 데이터를 쓴다.
+     AI로 만든 일러스트 위의 글자는 프리텐다드가 아니라서 쓰지 않고, 이 자리에 진짜 글자를 그린다. */
+  const coverOverlayEl = ov => {
+    if (!ov) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "cov-ov t-" + (ov.theme || "navy");
+    if (ov.eyebrow) {
+      const eb = document.createElement("span");
+      eb.className = "ov-eyebrow";
+      eb.textContent = ov.eyebrow;
+      wrap.appendChild(eb);
+    }
+    (ov.lines || []).forEach(l => {
+      const p = document.createElement("p");
+      p.className = "ov-line sz-" + (l.size || "title") + (l.accent ? " accent" : "");
+      p.textContent = l.text;
+      wrap.appendChild(p);
+    });
+    return wrap;
+  };
+
   entries.forEach(([id, ev]) => {
     const tag = eventStatusTag(ev);
     const price = eventPriceInfo(ev);
@@ -613,6 +654,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       + '<div class="foot"><span class="date"></span><span class="price"></span></div>'
       + '</div>';
     a.querySelector(".chip").textContent = tag.text;
+    const ov = coverOverlayEl(ev.coverOverlay);
+    if (ov) a.querySelector(".thumb-wrap").appendChild(ov);
     a.querySelector(".fmt-tag").textContent = eventFormat(ev).label;
     a.querySelector("strong").textContent = ev.title;
     /* 분류와 주최를 한 줄로. 어느 쪽이 없어도 구분자가 남지 않게 조립한다. */

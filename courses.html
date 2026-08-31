@@ -131,12 +131,35 @@
   }
   .row:not(.static):hover h2 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
   .row .sub { font-size: 15px; color: var(--muted); }
+  .row .thumb-wrap {
+    position: relative; flex: none; width: 240px;
+    aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+    container-type: inline-size;
+  }
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 데이터를 쓴다. */
+  .cov-ov {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 7cqw 6cqw; pointer-events: none;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  .cov-ov.t-navy { background: linear-gradient(100deg, #16192A 0%, #16192A 56%, rgba(22,25,42,0) 74%); }
+  .cov-ov.t-white { background: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 45%, rgba(255,255,255,0) 63%); }
+  .cov-ov .ov-eyebrow {
+    align-self: flex-start; background: #0B0D18; color: #fff; font-weight: 700;
+    font-size: 2.5cqw; padding: 1.1cqw 2.3cqw; border-radius: 99px; margin-bottom: 2cqw;
+    letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .cov-ov .ov-line { font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; margin: 0; white-space: pre; }
+  .cov-ov .ov-line.sz-huge { font-size: 10.5cqw; }
+  .cov-ov .ov-line.sz-title { font-size: 6cqw; }
+  .cov-ov .ov-line.sz-sub { font-size: 3.1cqw; font-weight: 600; margin-top: 1.4cqw; }
+  .cov-ov.t-navy .ov-line { color: #fff; }
+  .cov-ov.t-white .ov-line { color: var(--ink); }
+  .cov-ov .ov-line.accent { color: var(--pink); }
   .row .thumb {
-    flex: none;
-    width: 240px;
-    aspect-ratio: 16 / 9;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 14px;
     background: var(--fill);
     border: 1px solid var(--line);
     display: block;
@@ -224,7 +247,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
    (웨비나 다시보기와 커뮤니티 모임 등은 각 전용 페이지에서 다룹니다.)
    진행 예정이 위, 지난 일정이 아래. 상태 판단은 events.js의 공통 기준을 씁니다. */
 (function () {
-  const SHOW_IDS = ["math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
+  const SHOW_IDS = ["daegu-landing-lecture", "ai-ace-webinar", "math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
   const CATEGORIES = ["전체", "교육", "설명회"];
   const EMPTY_MSG = {
     "전체": "일정을 준비하고 있어요.",
@@ -238,6 +261,27 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
 
   function subLine(ev) {
     return ev.place ? ev.date + "  |  " + ev.place : ev.date;
+  }
+
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 ev.coverOverlay 데이터를 쓴다.
+     AI로 만든 일러스트 위의 글자는 프리텐다드가 아니라서 쓰지 않고, 이 자리에 진짜 글자를 그린다. */
+  function coverOverlayEl(ov) {
+    if (!ov) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "cov-ov t-" + (ov.theme || "navy");
+    if (ov.eyebrow) {
+      const eb = document.createElement("span");
+      eb.className = "ov-eyebrow";
+      eb.textContent = ov.eyebrow;
+      wrap.appendChild(eb);
+    }
+    (ov.lines || []).forEach(l => {
+      const p = document.createElement("p");
+      p.className = "ov-line sz-" + (l.size || "title") + (l.accent ? " accent" : "");
+      p.textContent = l.text;
+      wrap.appendChild(p);
+    });
+    return wrap;
   }
 
   function badges(ev) {
@@ -293,9 +337,11 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
         + "<h2></h2>"
         + '<div class="sub"></div>'
         + "</div>"
-        + '<img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" />';
+        + '<div class="thumb-wrap"><img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" /></div>';
       a.querySelector("h2").textContent = ev.title;
       a.querySelector(".sub").textContent = subLine(ev);
+      const ov = coverOverlayEl(ev.coverOverlay);
+      if (ov) a.querySelector(".thumb-wrap").appendChild(ov);
       rowsEl.appendChild(a);
     });
   }

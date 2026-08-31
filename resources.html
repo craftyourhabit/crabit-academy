@@ -268,7 +268,13 @@
   <div class="modal">
     <h3 id="pwTitle">비밀번호 입력</h3>
     <p class="m-sub">일부공개 자료예요. 안내받으신 비밀번호를 입력해 주세요.</p>
-    <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" />
+    <div style="position:relative">
+      <input type="password" id="pwInput" autocomplete="off" placeholder="비밀번호" style="width:100%;padding-right:48px" />
+      <button type="button" id="pwToggle" aria-label="비밀번호 표시" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center">
+        <svg id="pwEyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="pwEyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M2.5 12S6 5.5 12 5.5c1.8 0 3.4.6 4.8 1.4M21.5 12S18 18.5 12 18.5c-1.8 0-3.4-.6-4.8-1.4M4 20 20 4"/></svg>
+      </button>
+    </div>
     <p class="m-error" id="pwError"></p>
     <div class="m-actions">
       <button class="btn btn-ghost" type="button" id="pwCancel">닫기</button>
@@ -367,6 +373,14 @@
   backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("show"); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") backdrop.classList.remove("show"); });
   pwInput.addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+  const pwToggle = document.getElementById("pwToggle");
+  pwToggle.addEventListener("click", () => {
+    const show = pwInput.type === "password";
+    pwInput.type = show ? "text" : "password";
+    document.getElementById("pwEyeOpen").style.display = show ? "none" : "block";
+    document.getElementById("pwEyeClosed").style.display = show ? "block" : "none";
+    pwInput.focus();
+  });
   document.getElementById("pwSubmit").addEventListener("click", tryUnlock);
 
   async function sha256hex(text) {

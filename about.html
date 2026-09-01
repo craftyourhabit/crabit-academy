@@ -242,10 +242,16 @@
 </head>
 <body>
 
-<header>
-  <div class="wrap nav">
-    <div class="brand"><a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" /></a></div>
-    <a href="./">홈으로 돌아가기</a>
+<header style="position:sticky;top:0;z-index:60;background:rgba(244,246,248,.93);backdrop-filter:blur(8px);border-bottom:1px solid #E8E8E8;padding:0;margin:0">
+  <div style="max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 24px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <a href="javascript:history.back()" aria-label="뒤로가기" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #E8E8E8;color:#16192A;font-size:16px;text-decoration:none">&#8249;</a>
+      <a href="./"><img src="assets/logo.png" alt="Crabit 아카데미" style="height:24px;display:block"></a>
+    </div>
+    <nav style="display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600">
+      <a href="courses" style="color:rgba(22,25,42,.55);text-decoration:none">교육 / 설명회</a>
+      <a href="resources" style="color:rgba(22,25,42,.55);text-decoration:none">자료 / 인사이트</a>
+    </nav>
   </div>
 </header>
 

@@ -39,7 +39,9 @@ h1 .pink{color:var(--ink)}
 .copy-btn:hover{background:#333}
 .copy-btn.done{background:var(--pink)}
 pre{padding:22px 26px;font-family:inherit;font-size:14.5px;line-height:1.75;white-space:pre-wrap;word-break:keep-all;color:var(--ink);background:#fff}
-pre mark{background:var(--pink-tint);color:#B23A72;font-weight:600;border-radius:4px;padding:1px 5px}
+pre mark{background:var(--pink-tint);color:#B23A72;font-weight:600;border-radius:4px;padding:1px 5px;border-bottom:1.5px dashed #F3A8CF;cursor:text}
+pre mark:hover{background:#FBD9EB}
+pre mark:focus{outline:2px solid var(--pink);outline-offset:1px;background:#fff}
 .site-bar{position:sticky;top:0;z-index:20;background:rgba(249,250,252,.94);backdrop-filter:blur(8px);padding:0 20px;border-bottom:1px solid var(--border)}
 footer{margin-top:44px;text-align:center;font-size:13.5px;color:var(--ink55);line-height:1.8}
 </style>
@@ -70,9 +72,9 @@ footer{margin-top:44px;text-align:center;font-size:13.5px;color:var(--ink55);lin
 <div class="howto">
   <div class="howto-t">사용 순서</div>
   <ol>
-    <li>주제를 하나 골라 <b>복사하기</b> 버튼을 누릅니다.</li>
-    <li>젠스파크 입력창에 붙여넣습니다.</li>
-    <li><b>분홍색 표시 부분</b>(학원 이름, 날짜 등)을 우리 학원 내용으로 바꿉니다.</li>
+    <li>주제를 하나 고릅니다.</li>
+    <li><b>분홍색 표시 부분</b>을 화면에서 바로 클릭해 우리 학원 내용으로 고칩니다.</li>
+    <li>고친 상태 그대로 <b>복사하기</b>를 눌러 젠스파크에 붙여넣습니다.</li>
     <li>실행하고, 완성되면 배포 버튼을 눌러 링크를 받습니다.</li>
   </ol>
 </div>
@@ -287,6 +289,7 @@ Pretendard 계열의 깔끔한 한글 산세리프 느낌. 본문 가독성을 �
 </div>
 
 <script>
+document.querySelectorAll('pre mark').forEach(m=>{ m.contentEditable = 'plaintext-only'; m.spellcheck = false; });
 document.querySelectorAll('.copy-btn').forEach(btn=>{
   btn.addEventListener('click', async ()=>{
     const text = document.getElementById(btn.dataset.target).innerText;

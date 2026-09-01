@@ -441,7 +441,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     + stepBar(0)
     + '<h1 class="sec-h">신청하기</h1>'
     + '<p class="form-sub">아래 내용을 남겨 주시면 접수됩니다.'
-    + (fmt.isOnline ? ' 참여 링크는 접수 후 따로 보내드려요.' : '')
+    + (fmt.isOnline ? ' 줌 참여 링크는 행사 당일 오전에 보내드려요.' : '')
     + (price.paid ? ' 제출을 마치면 결제 화면으로 이어집니다.' : '')
     + '</p>'
     + '<form id="applyFormEl" novalidate><div class="fields">'
@@ -542,7 +542,9 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     + '<div class="done">'
     + '<div class="mark">' + ICONS.check + '</div>'
     + '<h3>신청이 접수되었습니다</h3>'
-    + '<p>남겨 주신 연락처로 확정 안내를 보내드릴게요.</p>'
+    + '<p>' + (fmt.isOnline
+        ? '행사 당일 오전에 줌 참여 링크를 보내드릴게요.'
+        : '남겨 주신 연락처로 확정 안내를 보내드릴게요.') + '</p>'
     + '<a class="btn-back" href="' + detailUrl + '">강의 상세로 돌아가기</a>'
     + '</div></div>';
 

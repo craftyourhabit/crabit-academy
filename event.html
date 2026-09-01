@@ -658,7 +658,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     sm: placeText
       ? esc(placeText) + (ev.placeUrl ? ' <a href="' + ev.placeUrl + '" target="_blank" rel="noopener">위치 보기</a>' : "")
       /* 참여 링크 자체는 절대 싣지 않는다. 링크를 아는 사람은 누구나 들어올 수 있다. */
-      : (fmt.isOnline ? "참여 링크는 신청하신 분께 따로 보내드려요" : "")
+      : (fmt.isOnline ? "줌 참여 링크는 당일 오전에 보내드려요" : "")
   });
   facts.push({ k: "일정", v: esc(ev.date) });
   if (ev.audience) facts.push({ k: "대상", v: esc(ev.audience) });
@@ -858,7 +858,10 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       + '<li>신청하기 버튼을 눌러 신청서를 작성합니다.</li>'
       + (price.paid
           ? '<li>이어지는 결제 화면에서 결제를 진행합니다.</li><li>결제가 확인되면 안내를 보내드립니다.</li>'
-          : '<li>접수가 확인되면 안내 메일을 보내드립니다.</li>')
+          /* 온라인 무료 행사는 접수 확인 메일이 따로 없다. 당일 오전 줌 링크가 안내의 전부다. */
+          : (fmt.isOnline
+              ? '<li>행사 당일 오전에 줌 참여 링크를 보내드립니다.</li>'
+              : '<li>접수가 확인되면 안내 메일을 보내드립니다.</li>'))
       + '</ol>'
       + '<h3 class="sub-h">약관과 안내</h3>'
     : '';
@@ -893,7 +896,9 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       + cta
       + '<p class="b-foot">' + (contactHtml || (price.paid
           ? '결제를 마치면 바로 안내를 보내드려요.'
-          : '접수되면 안내 메일을 보내드려요.')) + '</p>'
+          : (fmt.isOnline
+              ? '당일 오전에 줌 참여 링크를 보내드려요.'
+              : '접수되면 안내 메일을 보내드려요.'))) + '</p>'
       + '</div>'
     : (ctaAction ? '<div class="buy">' + cta + '</div>' : '');
 

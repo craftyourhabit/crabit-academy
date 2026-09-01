@@ -144,6 +144,9 @@
   }
   .cov-ov.t-navy { background: linear-gradient(100deg, #16192A 0%, #16192A 56%, rgba(22,25,42,0) 74%); }
   .cov-ov.t-white { background: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 45%, rgba(255,255,255,0) 63%); }
+  /* 로고와 간격을 두고 제목을 조금 아래로 내릴 때 쓴다. */
+  .cov-ov.shift { justify-content: flex-end; padding-bottom: 7cqw; }
+  .cov-ov .ov-logo { position: absolute; top: 6cqw; left: 6cqw; height: 5cqw; width: auto; display: block; }
   .cov-ov .ov-eyebrow {
     align-self: flex-start; background: #0B0D18; color: #fff; font-weight: 700;
     font-size: 2.5cqw; padding: 1.1cqw 2.3cqw; border-radius: 99px; margin-bottom: 2cqw;
@@ -151,7 +154,9 @@
   }
   .cov-ov .ov-line { font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; margin: 0; white-space: pre; }
   .cov-ov .ov-line.sz-huge { font-size: 10.5cqw; }
-  .cov-ov .ov-line.sz-title { font-size: 6cqw; }
+  .cov-ov .ov-line.sz-title { font-size: 7.4cqw; }
+  /* 긴 제목용. 우측 일러스트를 침범하지 않는 최대 크기다. */
+  .cov-ov .ov-line.sz-mid { font-size: 5.8cqw; }
   .cov-ov .ov-line.sz-sub { font-size: 3.1cqw; font-weight: 600; margin-top: 1.4cqw; }
   .cov-ov.t-navy .ov-line { color: #fff; }
   .cov-ov.t-white .ov-line { color: var(--ink); }
@@ -274,7 +279,14 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   function coverOverlayEl(ov) {
     if (!ov) return null;
     const wrap = document.createElement("div");
-    wrap.className = "cov-ov t-" + (ov.theme || "navy");
+    wrap.className = "cov-ov t-" + (ov.theme || "navy") + (ov.shift ? " shift" : "");
+    if (ov.logo) {
+      const lg = document.createElement("img");
+      lg.className = "ov-logo";
+      lg.src = ov.logo;
+      lg.alt = "";
+      wrap.appendChild(lg);
+    }
     if (ov.eyebrow) {
       const eb = document.createElement("span");
       eb.className = "ov-eyebrow";

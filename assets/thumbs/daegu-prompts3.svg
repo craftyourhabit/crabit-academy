@@ -1,24 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 자료/인사이트 썸네일 표준 템플릿:
+       연회색 배경 + 좌측 영단어 라벨과 타이틀 + 우측 큼직한 일러스트.
+       장식 원형, 하단 캡션은 절대 넣지 않는다. -->
   <rect width="800" height="450" fill="#F9FAFC"/>
-  <circle cx="750" cy="70" r="150" fill="#FEE9F4"/>
-  <circle cx="120" cy="420" r="10" fill="#FB75BB"/>
-  <!-- 문서 카드 모티프: 겹쳐 쌓인 프롬프트 카드 -->
-  <g transform="translate(508 118) rotate(6)">
-    <rect x="0" y="0" width="196" height="236" rx="16" fill="#E8E8E8"/>
+  <!-- 겹쳐 쌓인 프롬프트 카드 -->
+  <g transform="translate(474 96) rotate(6)">
+    <rect x="0" y="0" width="240" height="288" rx="20" fill="#E8E8E8"/>
   </g>
-  <g transform="translate(524 108) rotate(-3)">
-    <rect x="0" y="0" width="196" height="236" rx="16" fill="#FFFFFF" stroke="#E8E8E8"/>
-    <rect x="24" y="28" width="72" height="22" rx="11" fill="#FEE9F4"/>
-    <rect x="24" y="72" width="148" height="10" rx="5" fill="#16192A"/>
-    <rect x="24" y="94" width="120" height="10" rx="5" fill="#B9BABF"/>
-    <rect x="24" y="116" width="140" height="10" rx="5" fill="#B9BABF"/>
-    <rect x="24" y="138" width="96" height="10" rx="5" fill="#FB75BB"/>
-    <rect x="24" y="176" width="148" height="34" rx="10" fill="#16192A"/>
-    <rect x="58" y="189" width="80" height="8" rx="4" fill="#FFFFFF"/>
+  <g transform="translate(494 84) rotate(-3)">
+    <rect x="0" y="0" width="240" height="288" rx="20" fill="#FFFFFF" stroke="#E8E8E8"/>
+    <rect x="30" y="34" width="88" height="27" rx="13.5" fill="#FEE9F4"/>
+    <rect x="30" y="88" width="180" height="12" rx="6" fill="#16192A"/>
+    <rect x="30" y="115" width="146" height="12" rx="6" fill="#B9BABF"/>
+    <rect x="30" y="142" width="170" height="12" rx="6" fill="#B9BABF"/>
+    <rect x="30" y="169" width="117" height="12" rx="6" fill="#FB75BB"/>
+    <rect x="30" y="215" width="180" height="42" rx="12" fill="#16192A"/>
+    <rect x="72" y="231" width="97" height="10" rx="5" fill="#FFFFFF"/>
   </g>
-  <text x="600" y="96" font-size="88" fill="#FB75BB" font-weight="700" text-anchor="middle">3</text>
   <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">PROMPTS</text>
-  <text x="64" y="222" font-size="52" fill="#16192A" font-weight="700">복사해서 쓰는</text>
-  <text x="64" y="290" font-size="52" fill="#16192A" font-weight="700">실습 프롬프트 3종<tspan fill="#FB75BB">30선</tspan></text>
-  <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 | 프롬프트집</text>
+  <text x="64" y="230" font-size="52" fill="#16192A" font-weight="700">복사해서 쓰는</text>
+  <text x="64" y="298" font-size="52" fill="#16192A" font-weight="700">실습 <tspan fill="#FB75BB">프롬프트 3종</tspan></text>
 </svg>

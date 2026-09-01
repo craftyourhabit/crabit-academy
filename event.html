@@ -69,7 +69,7 @@
      잘라내지 않는 이유는 포스터 위아래에 로고와 수식이 들어 있어서다. */
   .cover-wrap {
     position: relative; width: 100%; margin: 0 0 30px;
-    border-radius: 16px; overflow: hidden;
+    border-radius: 22px; overflow: hidden;
     container-type: inline-size;
   }
   .cover {
@@ -91,6 +91,9 @@
   }
   .cov-ov.t-navy { background: linear-gradient(100deg, #16192A 0%, #16192A 56%, rgba(22,25,42,0) 74%); }
   .cov-ov.t-white { background: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 45%, rgba(255,255,255,0) 63%); }
+  /* 로고와 간격을 두고 제목을 조금 아래로 내릴 때 쓴다. */
+  .cov-ov.shift { justify-content: flex-end; padding-bottom: 7cqw; }
+  .cov-ov .ov-logo { position: absolute; top: 6cqw; left: 6cqw; height: 5cqw; width: auto; display: block; }
   .cov-ov .ov-eyebrow {
     align-self: flex-start; background: #0B0D18; color: #fff; font-weight: 700;
     font-size: 2.5cqw; padding: 1.1cqw 2.3cqw; border-radius: 99px; margin-bottom: 2cqw;
@@ -98,7 +101,9 @@
   }
   .cov-ov .ov-line { font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; margin: 0; white-space: pre; }
   .cov-ov .ov-line.sz-huge { font-size: 10.5cqw; }
-  .cov-ov .ov-line.sz-title { font-size: 6cqw; }
+  .cov-ov .ov-line.sz-title { font-size: 7.4cqw; }
+  /* 긴 제목용. 우측 일러스트를 침범하지 않는 최대 크기다. */
+  .cov-ov .ov-line.sz-mid { font-size: 5.8cqw; }
   .cov-ov .ov-line.sz-sub { font-size: 3.1cqw; font-weight: 600; margin-top: 1.4cqw; }
   .cov-ov.t-navy .ov-line { color: #fff; }
   .cov-ov.t-white .ov-line { color: var(--ink); }
@@ -209,7 +214,7 @@
   .checks svg { flex: none; margin-top: 5px; }
 
   /* 준비물과 추천 대상처럼 짧게 덧붙는 정보 */
-  .info-rows { margin: 0; display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .info-rows { margin: 0; display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
   .info-rows > div { display: flex; gap: 20px; background: #fff; padding: 16px 20px; font-size: 16px; }
   .info-rows dt { flex: none; width: 92px; color: var(--muted); font-weight: 500; }
   .info-rows dd { margin: 0; flex: 1; font-weight: 500; }
@@ -231,15 +236,41 @@
   .art ul li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 99px; background: var(--pink); transform: translateY(-3px); }
   .art blockquote {
     margin: 34px 0; padding: 26px 24px; text-align: center;
-    background: var(--fill-soft); border-radius: 16px;
+    background: var(--fill-soft); border-radius: 22px;
     font-size: 18px; line-height: 1.75; color: var(--ink); white-space: pre-line;
   }
   .art blockquote::before {
     content: "\201C"; display: block; font-size: 40px; line-height: 0.9;
     color: var(--faint); margin-bottom: 8px; font-family: Georgia, serif;
   }
+  /* 공식 블로그처럼 중요한 대목에 얹는 연핑크 형광펜 */
+  .art mark.hl { background: var(--tint); color: inherit; padding: 1px 4px; border-radius: 5px; }
+
+  /* 본문에서 외부 자료로 보내는 텍스트 버튼 */
+  .art .art-link { margin-top: 18px; }
+  .art .art-link a {
+    display: inline-block; padding: 11px 20px; border-radius: 24px;
+    border: 1px solid var(--line); background: var(--fill-soft);
+    color: var(--ink); font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .art .art-link a:hover { background: var(--tint); border-color: var(--pink); }
+
+  /* 진행 순서 표. 표가 컨테이너보다 넓어지면 표만 가로 스크롤한다. */
+  .art .tbl-wrap { margin: 26px 0; border: 1px solid var(--line); border-radius: 18px; overflow-x: auto; }
+  .art .art-tbl { width: 100%; border-collapse: collapse; font-size: 15.5px; line-height: 1.6; min-width: 480px; }
+  .art .art-tbl th {
+    background: var(--ink); color: #fff; font-weight: 700; text-align: left;
+    padding: 13px 18px; font-size: 14px; letter-spacing: 0.01em; white-space: nowrap;
+  }
+  .art .art-tbl td { padding: 14px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+  .art .art-tbl tbody tr:first-child td { border-top: 0; }
+  .art .art-tbl td.c-no { font-weight: 700; color: var(--pink); white-space: nowrap; }
+  .art .art-tbl td:nth-child(2) { font-weight: 600; white-space: nowrap; }
+  .art .art-tbl td:last-child { color: rgba(22, 25, 42, 0.72); }
+
   .art figure { margin: 30px 0; }
-  .art figure img { width: 100%; display: block; border-radius: 14px; background: var(--fill); }
+  .art figure img { width: 100%; display: block; border-radius: 20px; background: var(--fill); }
   .art figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); text-align: center; }
 
   /* 컬러 배너. 레퍼런스의 통짜 색 배경 + 3D 아이콘 섹션을 본뜬 블록이다. */
@@ -257,7 +288,7 @@
 
   /* 번호 스텝. 레퍼런스의 01/02/03 다크 카드 리스트를 본뜬 블록이다. */
   .art .num-steps { display: flex; flex-direction: column; gap: 12px; margin: 30px 0; }
-  .art .num-item { display: flex; align-items: center; gap: 18px; background: var(--ink); color: #fff; border-radius: 16px; padding: 20px 24px; }
+  .art .num-item { display: flex; align-items: center; gap: 18px; background: var(--ink); color: #fff; border-radius: 20px; padding: 20px 24px; }
   .art .num-badge {
     flex: none; width: 38px; height: 38px; border-radius: 50%;
     background: rgba(255,255,255,0.14); color: var(--pink);
@@ -270,7 +301,7 @@
   .speakers { display: flex; flex-direction: column; gap: 12px; }
   .sp {
     display: flex; align-items: center; gap: 16px;
-    border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
+    border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px;
   }
   .sp-ini {
     flex: none; width: 46px; height: 46px; border-radius: 99px;
@@ -284,7 +315,7 @@
   .sp.assist .sp-ini { background: var(--fill); }
 
   /* 아직 글로 옮기지 못한 예전 강의의 상세 이미지 */
-  .strip { max-width: 736px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .strip { max-width: 736px; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
   .strip img { width: 100%; display: block; margin: 0; }
 
   /* ==================================================================
@@ -294,7 +325,7 @@
      ================================================================== */
 
   /* 도입. 커리큘럼 앞에 한 번만 서는 요약 상자입니다. */
-  .c-intro { background: var(--fill-soft); border: 1px solid var(--line); border-radius: 18px; padding: 32px 34px; margin-bottom: 44px; }
+  .c-intro { background: var(--fill-soft); border: 1px solid var(--line); border-radius: 24px; padding: 32px 34px; margin-bottom: 44px; }
   .i-eyebrow {
     display: inline-block; margin: 0 0 16px;
     background: var(--tint); color: var(--ink);
@@ -325,7 +356,7 @@
   .b-list li::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 99px; background: var(--pink); transform: translateY(-2px); }
 
   /* 함께 드리는 자료. 회색 상자 하나만 씁니다. */
-  .b-gift { margin-top: 26px; background: var(--fill-soft); border-radius: 14px; padding: 22px 24px; }
+  .b-gift { margin-top: 26px; background: var(--fill-soft); border-radius: 18px; padding: 22px 24px; }
   .b-gift ul { list-style: none; margin: 0; padding: 0; display: grid;
                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 9px 32px; }
   .b-gift li { display: flex; gap: 10px; align-items: baseline; font-size: 15.5px; line-height: 1.55; color: var(--muted); }
@@ -333,13 +364,13 @@
 
   /* 포스터가 있는 회차 */
   .b-poster { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 36px; align-items: start; }
-  .b-poster img { width: 100%; display: block; border-radius: 14px; aspect-ratio: 1190 / 1684; object-fit: cover; background: var(--fill); }
+  .b-poster img { width: 100%; display: block; border-radius: 18px; aspect-ratio: 1190 / 1684; object-fit: cover; background: var(--fill); }
 
   /* 제공 자료 */
   .m-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .m-item {
     display: flex; gap: 13px; align-items: baseline;
-    border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+    border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px;
     background: var(--fill-soft);
   }
   .m-num { flex: none; font-size: 13px; font-weight: 700; color: var(--pink); font-variant-numeric: tabular-nums; }
@@ -373,7 +404,8 @@
   .rail { display: none; }
   @media (min-width: 1024px) {
     .rail {
-      display: block; position: fixed; z-index: 25;
+      /* 신청 카드는 어떤 것에도 가려지면 안 된다. 고정 탭(30)과 하단 바(35)보다 위. */
+      display: block; position: fixed; z-index: 45;
       top: calc(var(--hd) + 92px); width: 332px;
       left: 50%; transform: translateX(284px);
     }
@@ -382,23 +414,24 @@
   }
   /* 배경을 반드시 채운다. 카드가 페이지 위에 떠서 다크 밴드 위를 지나가는데,
      배경이 없으면 어두운 띠가 그대로 비쳐 글자가 통째로 묻힌다. */
-  .buy { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px;
+  .buy { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 26px 24px;
          box-shadow: 0 8px 28px rgba(22, 25, 42, 0.10); }
   .buy .b-label { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
-  .buy .b-amount { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.25; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+  .buy .b-amount { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.25; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
   .buy .b-note { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
   .buy .btn { margin-top: 24px; width: 100%; text-align: center; display: block; padding: 16px; font-size: 16.5px; }
   .buy .b-foot { margin: 14px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); text-align: center; }
   .buy .b-foot a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
   .btn {
-    display: inline-block; padding: 14px 28px; border-radius: 12px;
+    /* 결제 카드(24px)와 같은 라운드. 완전한 알약 모양은 카드 안에서 튄다. */
+    display: inline-block; padding: 14px 28px; border-radius: 24px;
     font-size: 16px; font-weight: 700; text-decoration: none;
     border: 0; cursor: pointer; font-family: inherit;
-    transition: background 0.15s;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
   }
   .btn-primary { background: var(--ink); color: #fff; }
-  .btn-primary:hover { background: #333333; }
+  .btn-primary:hover { background: #333333; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(22, 25, 42, 0.18); }
 
   /* ==================================================================
      모바일 하단 고정 바
@@ -426,7 +459,7 @@
 
   .soon-note { font-size: 15.5px; color: var(--muted); font-weight: 500; margin: 0; }
   .closed-note {
-    margin-top: 18px; background: var(--tint); border-radius: 16px; padding: 22px 24px;
+    margin-top: 18px; background: var(--tint); border-radius: 20px; padding: 22px 24px;
     display: flex; flex-direction: column; gap: 16px; align-items: flex-start;
   }
   .closed-note[hidden] { display: none; }
@@ -563,7 +596,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     const lines = (ov.lines || []).map(l =>
       '<p class="ov-line sz-' + (l.size || "title") + (l.accent ? " accent" : "") + '">' + esc(l.text) + '</p>'
     ).join("");
-    return '<div class="cov-ov t-' + (ov.theme || "navy") + '">'
+    return '<div class="cov-ov t-' + (ov.theme || "navy") + (ov.shift ? ' shift' : '') + '">'
+      + (ov.logo ? '<img class="ov-logo" src="' + ov.logo + '" alt="" />' : '')
       + (ov.eyebrow ? '<span class="ov-eyebrow">' + esc(ov.eyebrow) + '</span>' : '')
       + lines
       + '</div>';
@@ -677,7 +711,10 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   };
   const FACT_ICON = { "진행 방식": "screen", "일정": "calendar", "대상": "people", "제공 자료": "folder", "수강료": "tag", "참가비": "tag" };
 
-  const rich = t => esc(t).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  /* **굵게** 와 ==연핑크 하이라이트== 를 지원한다. escape 후에 바꾸므로 태그 주입은 안 된다. */
+  const rich = t => esc(t)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/==([^=]+)==/g, '<mark class="hl">$1</mark>');
   const artHtml = Array.isArray(ev.article) && ev.article.length
     ? '<div class="art">' + ev.article.map(b => {
         if (b.type === "h") return '<h4>' + (ICONS[b.icon] || ICONS.bulb) + '<span>' + rich(b.text) + '</span></h4>';
@@ -690,6 +727,14 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
           + (b.eyebrow ? '<p class="b-eyebrow">' + esc(b.eyebrow) + '</p>' : '')
           + '<p class="b-headline">' + rich(b.headline) + '</p>'
           + '</div>';
+        if (b.type === "link") return '<p class="art-link"><a href="' + b.href + '" target="_blank" rel="noopener">'
+          + esc(b.text) + '<span aria-hidden="true"> &nearr;</span></a></p>';
+        if (b.type === "table") return '<div class="tbl-wrap"><table class="art-tbl">'
+          + (b.head ? '<thead><tr>' + b.head.map(h => '<th>' + esc(h) + '</th>').join("") + '</tr></thead>' : '')
+          + '<tbody>' + (b.rows || []).map(r =>
+              '<tr>' + r.map((c, i) => '<td' + (i === 0 ? ' class="c-no"' : '') + '>' + rich(c) + '</td>').join("") + '</tr>'
+            ).join("") + '</tbody>'
+          + '</table></div>';
         if (b.type === "steps") return '<div class="num-steps">' + (b.items || []).map((x, i) =>
             '<div class="num-item"><span class="num-badge">' + String(i + 1).padStart(2, "0") + '</span>'
             + '<span class="num-text">' + rich(x) + '</span></div>'

@@ -1,19 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 자료/인사이트 썸네일 표준 템플릿:
+       연회색 배경 + 좌측 영단어 라벨과 타이틀 + 우측 큼직한 일러스트.
+       장식 원형, 하단 캡션은 절대 넣지 않는다. -->
   <rect width="800" height="450" fill="#F9FAFC"/>
-  <circle cx="740" cy="380" r="180" fill="#FEE9F4"/>
-  <circle cx="628" cy="120" r="12" fill="#FB75BB"/>
   <!-- 터미널 창 모티프 -->
-  <g transform="translate(548 176)">
-    <rect x="0" y="0" width="210" height="132" rx="14" fill="#16192A"/>
-    <circle cx="22" cy="24" r="6" fill="#FB75BB"/>
-    <circle cx="42" cy="24" r="6" fill="#3B3E52"/>
-    <circle cx="62" cy="24" r="6" fill="#3B3E52"/>
-    <rect x="22" y="52" width="120" height="9" rx="4.5" fill="#6ED6A6"/>
-    <rect x="22" y="74" width="166" height="9" rx="4.5" fill="#4A4D63"/>
-    <rect x="22" y="96" width="96" height="9" rx="4.5" fill="#4A4D63"/>
+  <g transform="translate(492 128) rotate(-3)">
+    <rect x="12" y="12" width="264" height="180" rx="18" fill="#E8E8E8"/>
+    <rect x="0" y="0" width="264" height="180" rx="18" fill="#16192A"/>
+    <circle cx="28" cy="30" r="7.5" fill="#FB75BB"/>
+    <circle cx="53" cy="30" r="7.5" fill="#3B3E52"/>
+    <circle cx="78" cy="30" r="7.5" fill="#3B3E52"/>
+    <rect x="28" y="66" width="150" height="12" rx="6" fill="#6ED6A6"/>
+    <rect x="28" y="94" width="208" height="12" rx="6" fill="#4A4D63"/>
+    <rect x="28" y="122" width="120" height="12" rx="6" fill="#4A4D63"/>
+    <rect x="28" y="150" width="76" height="12" rx="6" fill="#FB75BB"/>
   </g>
   <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">INSIGHT</text>
-  <text x="64" y="222" font-size="54" fill="#16192A" font-weight="700">원장님을 위한</text>
-  <text x="64" y="290" font-size="54" fill="#16192A" font-weight="700">클로드 코워크</text>
-  <text x="64" y="386" font-size="22" fill="#7F808A" font-weight="500">크래빗 아카데미 · 설치 가이드</text>
+  <text x="64" y="230" font-size="52" fill="#16192A" font-weight="700">원장님을 위한</text>
+  <text x="64" y="298" font-size="52" fill="#16192A" font-weight="700"><tspan fill="#FB75BB">클로드 코워크</tspan></text>
 </svg>

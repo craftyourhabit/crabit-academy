@@ -97,7 +97,7 @@
   label { display: flex; align-items: center; font-size: 14.5px; font-weight: 700; margin-bottom: 8px; }
   label .req { color: var(--pink); margin-left: 4px; }
   .ic { flex: none; margin-right: 7px; color: var(--faint); }
-  input[type="text"], input[type="tel"], input[type="email"], textarea {
+  input[type="text"], input[type="tel"], input[type="email"], textarea, select {
     width: 100%;
     padding: 13px 15px;
     font: inherit;
@@ -108,7 +108,37 @@
     border-radius: 10px;
     transition: border-color 0.15s;
   }
-  input:focus, textarea:focus { outline: none; border-color: var(--ink); }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
+  select { cursor: pointer; }
+
+  /* ---------- 자체 드롭다운 ----------
+     브라우저 기본 셀렉트 대신 사이트 톤에 맞는 메뉴를 직접 그립니다. */
+  .dd { position: relative; }
+  .dd-btn {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 13px 15px; font: inherit; font-size: 16px; text-align: left;
+    color: var(--ink); background: #fff;
+    border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .dd.open .dd-btn, .dd-btn:focus { outline: none; border-color: var(--ink); }
+  .dd-btn .dd-val.placeholder { color: var(--faint); }
+  .dd-btn .caret { flex: none; transition: transform 0.15s; color: var(--muted); }
+  .dd.open .caret { transform: rotate(180deg); }
+  .dd-menu {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 30;
+    margin: 0; padding: 8px; list-style: none;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(22, 25, 42, 0.16);
+  }
+  .dd-menu[hidden] { display: none; }
+  .dd-menu li {
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    font-size: 15.5px; font-weight: 500; line-height: 1.5;
+    transition: background 0.12s;
+  }
+  .dd-menu li:hover { background: var(--fill-soft); }
+  .dd-menu li[aria-selected="true"] { background: var(--tint); font-weight: 700; }
   textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
   /* 자동 프로그램만 채우는 칸. 사람 눈에는 안 보입니다. */
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -173,7 +203,33 @@
   /* ---------- 주문 요약 (오른쪽) ---------- */
   .rail { position: sticky; top: calc(var(--hd) + 28px); }
   .sum { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 28px rgba(22, 25, 42, 0.07); background: #fff; }
+  .sum .thumb-wrap { position: relative; container-type: inline-size; }
   .sum img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: var(--fill); }
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 ev.coverOverlay 데이터를 쓴다. */
+  .cov-ov {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 7cqw 6cqw; pointer-events: none;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  .cov-ov.t-navy { background: linear-gradient(100deg, #16192A 0%, #16192A 56%, rgba(22,25,42,0) 74%); }
+  .cov-ov.t-white { background: linear-gradient(100deg, #FFFFFF 0%, #FFFFFF 45%, rgba(255,255,255,0) 63%); }
+  /* 로고와 간격을 두고 제목을 조금 아래로 내릴 때 쓴다. */
+  .cov-ov.shift { justify-content: flex-end; padding-bottom: 7cqw; }
+  .cov-ov .ov-logo { position: absolute; top: 6cqw; left: 6cqw; height: 5cqw; width: auto; display: block; }
+  .cov-ov .ov-eyebrow {
+    align-self: flex-start; background: #0B0D18; color: #fff; font-weight: 700;
+    font-size: 2.5cqw; padding: 1.1cqw 2.3cqw; border-radius: 99px; margin-bottom: 2cqw;
+    letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .cov-ov .ov-line { font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; margin: 0; white-space: pre; }
+  .cov-ov .ov-line.sz-huge { font-size: 10.5cqw; }
+  .cov-ov .ov-line.sz-title { font-size: 7.4cqw; }
+  /* 긴 제목용. 우측 일러스트를 침범하지 않는 최대 크기다. */
+  .cov-ov .ov-line.sz-mid { font-size: 5.8cqw; }
+  .cov-ov .ov-line.sz-sub { font-size: 3.1cqw; font-weight: 600; margin-top: 1.4cqw; }
+  .cov-ov.t-navy .ov-line { color: #fff; }
+  .cov-ov.t-white .ov-line { color: var(--ink); }
+  .cov-ov .ov-line.accent { color: var(--pink); }
   .sum .s-body { padding: 20px 22px 22px; }
   .sum h2 { margin: 0 0 14px; font-size: 16.5px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.45; }
   .sum .s-rows { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
@@ -182,7 +238,8 @@
   .sum .s-row .v { flex: 1; font-weight: 600; word-break: keep-all; }
   .sum .s-total { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
   .sum .s-total .k { font-size: 14px; color: var(--muted); font-weight: 600; }
-  .sum .s-total .v { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  /* 금액도 다른 요약 값과 같은 크기로. 여기서만 커지면 카드가 시끄럽다. */
+  .sum .s-total .v { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .sum .s-note { margin: 12px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
 
   .notfound { text-align: center; padding: 90px 0 110px; }
@@ -199,7 +256,8 @@
     /* 좁은 화면에서는 무엇을 신청하는지 먼저 보여 줍니다. */
     .rail { position: static; order: -1; }
     .sum { display: flex; align-items: stretch; }
-    .sum img { flex: none; width: 168px; aspect-ratio: 16 / 9; }
+    .sum .thumb-wrap { flex: none; width: 168px; }
+    .sum img { width: 100%; height: 100%; aspect-ratio: 16 / 9; }
     .sum .s-body { flex: 1; min-width: 0; padding: 16px 18px; }
     .sum .s-rows, .sum h2 { margin-bottom: 0; }
     .sum .s-rows { display: none; }
@@ -210,6 +268,7 @@
     .o-row { flex-direction: column; gap: 5px; }
     .o-row > span { width: auto; font-size: 13.5px; }
     .sum { display: block; }
+    .sum .thumb-wrap { width: 100%; }
     .sum img { width: 100%; }
     .steps { gap: 7px; }
     .steps .st { font-size: 13.5px; }
@@ -346,8 +405,22 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   const sumRows = [{ k: "진행 방식", v: esc(fmt.label) }, { k: "일정", v: esc(ev.date) }]
     .concat(ev.materials ? [{ k: "제공 자료", v: ev.materials.length + "종" }] : []);
 
+  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 데이터를 쓴다. */
+  const coverOverlayHtml = ov => {
+    if (!ov) return "";
+    const lines = (ov.lines || []).map(l =>
+      '<p class="ov-line sz-' + (l.size || "title") + (l.accent ? " accent" : "") + '">' + esc(l.text) + '</p>'
+    ).join("");
+    return '<div class="cov-ov t-' + (ov.theme || "navy") + (ov.shift ? ' shift' : '') + '">'
+      + (ov.logo ? '<img class="ov-logo" src="' + ov.logo + '" alt="" />' : '')
+      + (ov.eyebrow ? '<span class="ov-eyebrow">' + esc(ov.eyebrow) + '</span>' : '')
+      + lines
+      + '</div>';
+  };
+
   const railHtml = '<aside class="rail"><div class="sum">'
-    + '<img src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + '<div class="thumb-wrap"><img src="' + ev.thumb + '" alt="' + esc(ev.title) + ' 썸네일" />'
+    + coverOverlayHtml(ev.coverOverlay) + '</div>'
     + '<div class="s-body">'
     + '<h2>' + esc(ev.title) + '</h2>'
     + '<div class="s-rows">'
@@ -379,13 +452,24 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
         '<input type="tel" id="f-phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" maxlength="20" required />')
     + '</div>'
     + '<div class="row2">'
-    + fld(ICONS.mail, "이메일", { id: "f-email" },
-        '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" />')
-    + fld(ICONS.home, "학원명과 직책", { id: "f-org" },
-        '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" />')
+    + fld(ICONS.mail, "이메일", { id: "f-email", must: true },
+        '<input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" required />')
+    + fld(ICONS.home, "학원명과 직책", { id: "f-org", must: true },
+        '<input type="text" id="f-org" name="org" placeholder="예: 크래빗학원 원장" maxlength="120" required />')
     + '</div>'
-    + fld(ICONS.route, "어떻게 알고 오셨나요", { id: "f-source" },
-        '<input type="text" id="f-source" name="source" placeholder="예: 인스타그램, 지인 소개" maxlength="120" />')
+    + fld(ICONS.route, "유입 경로", { id: "f-source-btn" },
+        '<div class="dd" id="dd-source">'
+        + '<button type="button" class="dd-btn" id="f-source-btn" aria-haspopup="listbox" aria-expanded="false">'
+        + '<span class="dd-val placeholder">선택해 주세요</span>'
+        + '<svg class="caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        + '</button>'
+        + '<ul class="dd-menu" role="listbox" hidden>'
+        + ["크래빗 장학카드 사용 중인 학원", "올커니 멤버", "지인 소개", "인스타그램 및 기타 SNS", "직접 입력"]
+            .map(v => '<li role="option" data-v="' + v + '">' + v + '</li>').join("")
+        + '</ul>'
+        + '<input type="hidden" id="f-source" name="source" value="" />'
+        + '</div>'
+        + '<input type="text" id="f-source-custom" name="sourceCustom" placeholder="어떻게 알고 오셨는지 적어 주세요" maxlength="120" style="display:none; margin-top:10px;" />')
     + fld(ICONS.chat, "문의사항", { id: "f-message" },
         '<textarea id="f-message" name="message" maxlength="1000" placeholder="미리 궁금하신 점이 있으면 남겨 주세요."></textarea>')
     /* 사람에게는 안 보이는 칸. 자동 프로그램이 채우면 접수하지 않습니다. */
@@ -413,6 +497,36 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   const APPLY_API = SB_URL + "/rest/v1/academy_applications";
 
   const formEl = document.getElementById("applyFormEl");
+
+  /* 유입 경로 자체 드롭다운. '직접 입력'을 고르면 그때만 입력칸을 연다. */
+  const dd = document.getElementById("dd-source");
+  if (dd) {
+    const btn = dd.querySelector(".dd-btn");
+    const menu = dd.querySelector(".dd-menu");
+    const valEl = dd.querySelector(".dd-val");
+    const hidden = document.getElementById("f-source");
+    const srcCustom = document.getElementById("f-source-custom");
+    const setOpen = open => {
+      dd.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      menu.hidden = !open;
+    };
+    btn.addEventListener("click", () => setOpen(menu.hidden));
+    menu.addEventListener("click", e => {
+      const li = e.target.closest("li[data-v]");
+      if (!li) return;
+      hidden.value = li.dataset.v;
+      valEl.textContent = li.dataset.v;
+      valEl.classList.remove("placeholder");
+      menu.querySelectorAll("li").forEach(x => x.setAttribute("aria-selected", x === li ? "true" : "false"));
+      setOpen(false);
+      const custom = li.dataset.v === "직접 입력";
+      srcCustom.style.display = custom ? "block" : "none";
+      if (custom) srcCustom.focus();
+    });
+    document.addEventListener("click", e => { if (!dd.contains(e.target)) setOpen(false); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") setOpen(false); });
+  }
   const msg = document.getElementById("formMsg");
   const btn = formEl.querySelector("button.submit");
 
@@ -486,6 +600,12 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     if (digits.length < 9 || digits.length > 11) {
       show("연락처를 다시 확인해 주세요.", true); formEl.elements.phone.focus(); return;
     }
+    /* 이메일과 학원명도 필수. 참여 링크와 자료를 이메일로 보내고,
+       같은 학원에서 여러 명이 신청할 때 학원명으로 구분하기 때문입니다. */
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email"))) {
+      show("이메일을 다시 확인해 주세요.", true); formEl.elements.email.focus(); return;
+    }
+    if (!val("org")) { show("학원명과 직책을 입력해 주세요.", true); formEl.elements.org.focus(); return; }
     if (!formEl.elements.consent.checked) {
       show("개인정보 수집과 이용에 동의해 주셔야 신청할 수 있어요.", true); return;
     }
@@ -508,9 +628,9 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       event_price: price.amount,
       name: val("name"),
       phone: digits,
-      email: val("email") || null,
-      org: val("org") || null,
-      source: val("source") || null,
+      email: val("email"),
+      org: val("org"),
+      source: (val("source") === "직접 입력" ? (val("sourceCustom") || "직접 입력") : val("source")) || null,
       message: val("message") || null,
       consent: true
     };

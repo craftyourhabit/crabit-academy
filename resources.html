@@ -105,11 +105,12 @@
     font-size: 13px;
     font-weight: 600;
     padding: 4px 10px;
-    border-radius: 8px;
+    border-radius: 999px;
     background: var(--tint);
     color: var(--pink);
   }
   .pill.gray { background: var(--fill); color: var(--muted); }
+  .pill.yellow { background: #FEF3D8; color: #B07D1E; }
   .pill.ink { background: var(--ink); color: #fff; }
   .cat { font-size: 14px; color: var(--muted); font-weight: 500; }
   .row h2 {
@@ -122,12 +123,16 @@
   }
   .row:not(.static):hover h2 { color: var(--pink); }
   .row .sub { font-size: 15px; color: var(--muted); }
+  .row .thumb-wrap { position: relative; flex: none; width: 240px; }
+  .row .thumb-wrap .thumb { width: 100%; }
+  .lock-badge { position: absolute; top: 10px; right: 10px; }
+  .lock-badge svg { display: block; filter: drop-shadow(0 2px 5px rgba(22, 25, 42, 0.18)); }
   .row .thumb {
     flex: none;
     width: 240px;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 16px;
+    border-radius: 20px;
     background: var(--fill);
     box-shadow: 0 2px 8px rgba(22, 25, 42, 0.08);
     display: block;
@@ -207,6 +212,7 @@
   @media (max-width: 720px) {
     .panel { padding: 8px 20px 16px; border-radius: 20px; }
     .row { flex-direction: column-reverse; align-items: stretch; gap: 18px; padding: 28px 0; }
+    .row .thumb-wrap { width: 100%; }
     .row .thumb { width: 100%; }
     .row h2 { font-size: 20px; }
   }
@@ -283,7 +289,10 @@
   </div>
 </div>
 
-<script src="assets/resources.js"></script>
+<script>
+/* events.js와 같은 이유로 캐시를 우회한다. admin/사용안내.md 참고. */
+document.write('<scr' + 'ipt src="assets/resources.js?v=' + Math.floor(Date.now() / 300000) + '"></scr' + 'ipt>');
+</script>
 <script>
 /* 자료 데이터는 assets/resources.js 에 있습니다. 어드민(admin.html)이 그 파일을 고쳐 씁니다. */
 (function () {
@@ -296,11 +305,22 @@
   /* 사이트에 보일 자료만. 비공개 항목은 assets/resources.js 에 아예 없습니다. */
   const ITEMS = visibleResources();
 
+  /* 공개 여부는 글자로 달지 않는다. 공개 예정만 글자 배지,
+     일부공개는 썸네일 위 자물쇠가 대신 말한다. */
   function badge(r) {
     const b = resourceBadge(r);
-    const cls = b.cls === "locked" ? "pill ink" : (b.cls === "soon" ? "pill gray" : "pill");
-    return '<span class="' + cls + '">' + b.text + '</span>';
+    if (b.cls === "soon") return '<span class="pill gray">' + b.text + '</span>';
+    if (b.cls === "locked") return '<span class="pill yellow">일부공개</span>';
+    return '';
   }
+
+  /* 일부공개 자료 썸네일에 얹는 2D 자물쇠. index.html과 같은 그림. */
+  const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" aria-hidden="true">'
+    + '<path d="M14 24V15a10 10 0 0 1 20 0v9" stroke="#3E5060" stroke-width="7" stroke-linecap="round"/>'
+    + '<rect x="6" y="22" width="36" height="27" rx="7" fill="#FDB52A"/>'
+    + '<circle cx="24" cy="33" r="4.5" fill="#3E5060"/>'
+    + '<path d="M22.2 35.5 20.8 43a1.6 1.6 0 0 0 1.6 1.9h3.2a1.6 1.6 0 0 0 1.6-1.9l-1.4-7.5Z" fill="#3E5060"/>'
+    + '</svg>';
 
   function renderTabs() {
     tabsEl.innerHTML = "";
@@ -350,7 +370,9 @@
         + '<h2></h2>'
         + '<div class="sub"></div>'
         + '</div>'
-        + '<img class="thumb" src="' + r.thumb + '" alt="" loading="lazy" />';
+        + '<span class="thumb-wrap"><img class="thumb" src="' + r.thumb + '" alt="" loading="lazy" />'
+        + (r.access === "protected" ? '<span class="lock-badge">' + LOCK_SVG + '</span>' : '')
+        + '</span>';
       el.querySelector("h2").textContent = r.title;
       el.querySelector(".sub").textContent = r.sub;
       rowsEl.appendChild(el);

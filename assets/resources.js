@@ -25,7 +25,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "학원 홈페이지형 블로그 마스터 과정 후속 자료",
     sub: "강의 실습 프롬프트, 템플릿, 워크북, 가이드북 등 전체 자료를 전달",
-    thumb: "assets/events/homepage-blog-master/hero.jpg",
+    thumb: "assets/thumbs/blog-master-followup.svg",
     access: "protected",
     href: "blog-followup"
   },
@@ -34,7 +34,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료",
     sub: "강의 자료, 프롬프트 모음집, 핵심 자료 파일 전부 전달",
-    thumb: "assets/thumbs/daegu-lecture.jpg",
+    thumb: "assets/thumbs/ai-marketer-followup.svg",
     access: "protected",
     href: "daegu-followup"
   },

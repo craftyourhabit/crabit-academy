@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 자료/인사이트 썸네일 표준 템플릿:
+       연회색 배경 + 좌측 영단어 라벨과 타이틀 + 우측 큼직한 일러스트.
+       장식 원형, 하단 캡션은 절대 넣지 않는다. -->
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <!-- 확성기 모티프 -->
+  <g transform="translate(492 108) rotate(-6)">
+    <path d="M46 100 L200 28 L200 202 L46 130 Z" fill="#16192A"/>
+    <rect x="0" y="90" width="56" height="52" rx="13" fill="#16192A"/>
+    <rect x="192" y="12" width="28" height="206" rx="14" fill="#FB75BB"/>
+    <rect x="66" y="133" width="30" height="74" rx="15" fill="#FB75BB"/>
+    <path d="M252 66 q33 49 0 98" stroke="#FB75BB" stroke-width="15" stroke-linecap="round" fill="none"/>
+    <path d="M290 44 q51 71 0 142" stroke="#FEE9F4" stroke-width="15" stroke-linecap="round" fill="none"/>
+  </g>
+  <text x="64" y="130" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">MATERIALS</text>
+  <text x="64" y="230" font-size="52" fill="#16192A" font-weight="700">AI 마케터 고용하기</text>
+  <text x="64" y="298" font-size="52" fill="#16192A" font-weight="700"><tspan fill="#FB75BB">후속 자료</tspan></text>
+</svg>

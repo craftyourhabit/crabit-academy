@@ -18,7 +18,7 @@
     font-weight: 700;
     font-display: swap;
   }
-  .eyebrow, h2, .wn-h { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  h2, .wn-h { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif; }
   :root {
     --page: #F2F3F6;
     --bg: #FFFFFF;
@@ -456,6 +456,14 @@
         footer { font-size: 13px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ---- 우측 고정 아웃라인 ---- */
+.side-toc{position:fixed;top:96px;right:26px;width:196px;display:none;z-index:40}
+@media(min-width:1180px){.side-toc{display:block}}
+.side-toc .toc-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:rgba(22,25,42,.3);margin-bottom:10px}
+.side-toc a{display:block;font-size:13px;line-height:1.5;color:rgba(22,25,42,.45);text-decoration:none;padding:5px 0 5px 12px;border-left:2px solid #EDEDEF;transition:color .15s,border-color .15s}
+.side-toc a:hover{color:#16192A}
+.side-toc a.on{color:#16192A;font-weight:700;border-left-color:#FB75BB}
 </style>
 </head>
 <body>
@@ -472,6 +480,15 @@
     </nav>
   </div>
 </header>
+<nav class="side-toc" id="sideToc" aria-label="목차">
+  <div class="toc-label">목차</div>
+    <a href="#cw1">시작 전 3가지</a>
+    <a href="#cw2">화면 그대로 따라하기</a>
+    <a href="#cw3">웹 vs 데스크탑 앱</a>
+    <a href="#cw4">활용 아이디어</a>
+    <a href="#cw5">자주 묻는 질문</a>
+</nav>
+
 
 <nav class="toc" aria-label="개요">
   <div class="toc-h">개요</div>
@@ -511,7 +528,7 @@
 
   <!-- 준비물 -->
   <section class="sec" id="prep">
-    <h2>시작 전, 이 3가지만요</h2>
+    <h2 id="cw1">시작 전, 이 3가지만요</h2>
     <p class="sec-sub">복잡한 준비물은 없어요. 딱 세 가지만 확인해 주세요.</p>
     <div class="prep">
       <div class="prep-card">
@@ -540,7 +557,7 @@
 
   <!-- 설치 단계 -->
   <section class="sec" id="install">
-    <h2>이제 실제 화면 그대로 따라오세요</h2>
+    <h2 id="cw2">이제 실제 화면 그대로 따라오세요</h2>
     <p class="sec-sub">아래 <strong>실제 영상</strong>은 윈도우 화면 예시예요. <strong>맥도 흐름은 똑같고</strong>, 화면이 달라지는 부분만 각 단계에서 <strong style="color:var(--pink)">맥은 이렇게</strong>로 따로 짚어드릴게요. 눌러야 하는 곳은 <strong style="color:var(--pink)">분홍 동그라미</strong>로 표시해 드릴게요.</p>
     <div class="steps">
 
@@ -648,7 +665,7 @@
 
   <!-- 웹 vs 데스크탑 앱 -->
   <section class="sec" id="webapp">
-    <h2>코워크, 웹으로 쓸까 데스크탑 앱으로 쓸까?</h2>
+    <h2 id="cw3">코워크, 웹으로 쓸까 데스크탑 앱으로 쓸까?</h2>
     <p class="sec-sub">
       클로드 코워크는 ① <strong>웹사이트(claude.ai)</strong>에서 바로 접속하거나
       ② <strong>데스크탑 앱</strong>을 설치해서 쓸 수 있어요. 둘 다 코워크를 쓸 수 있지만,
@@ -802,7 +819,7 @@
   <section class="sec" id="usecases">
     <div class="closing">
       <span class="cl-label">이제 진짜 시작이에요</span>
-      <h2>코워크로, 학원 일의 절반을 맡겨보세요</h2>
+      <h2 id="cw4">코워크로, 학원 일의 절반을 맡겨보세요</h2>
       <p>설치는 끝났어요. 코워크는 원장님이 매일·매주 반복하는 일을 대신 해주는 데 특히 강해요. 예를 들면요.</p>
       <div class="use-list">
         <div class="use-item">
@@ -850,7 +867,7 @@
 
   <!-- 자주 막히는 부분 -->
   <section class="sec" id="faq">
-    <h2>혹시 이런 게 궁금하다면</h2>
+    <h2 id="cw5">혹시 이런 게 궁금하다면</h2>
     <div class="faq">
       <div class="qa">
         <div class="q">로그인했는데 "요금제를 올려달라"고 떠요.</div>
@@ -942,5 +959,23 @@
 
 
 <script src="assets/track.js?v=202608191626" defer></script>
+
+<script>
+(function(){
+  var toc=document.getElementById('sideToc'); if(!toc) return;
+  var links=[].slice.call(toc.querySelectorAll('a'));
+  var targets=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))}).filter(Boolean);
+  function spy(){
+    var cur=targets[0];
+    targets.forEach(function(t){ if(t.getBoundingClientRect().top<=150) cur=t; });
+    links.forEach(function(a){ a.classList.toggle('on', cur && a.getAttribute('href')==='#'+cur.id); });
+  }
+  window.addEventListener('scroll', spy, {passive:true}); spy();
+  links.forEach(function(a){ a.addEventListener('click', function(e){
+    var t=document.getElementById(a.getAttribute('href').slice(1));
+    if(t){ e.preventDefault(); window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-100, behavior:'smooth'}); }
+  });});
+})();
+</script>
 </body>
 </html>

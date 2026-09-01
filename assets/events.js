@@ -431,7 +431,7 @@ const EVENTS_DB = {
     host: "크래빗",
     kind: "설명회",
     title: "AI 적성진로 교육전문가(AI ACE) 과정 온라인 웨비나",
-    date: "2026.09.03 (목) 오전 10:30 · 온라인 웨비나(줌)",
+    date: "2026.09.03 (목) 오후 10:30 | 온라인 웨비나(줌)",
     startDate: "2026-09-03",
     thumb: "assets/events/ai-ace-webinar/hero.jpg?v=2",
     /* 일러스트 위 글자는 AI가 그린 글자 대신 실제 프리텐다드로 얹는다. assets/events.js 주석 규칙 참고. */
@@ -642,7 +642,7 @@ function eventPriceInfo(ev) {
 const SCHEDULE = [
   { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
   { date: "2026-07-18", time: "10:00", id: "homepage-blog-master" },
-  { date: "2026-09-03", time: "10:30", id: "ai-ace-webinar" },
+  { date: "2026-09-03", time: "22:30", id: "ai-ace-webinar" },
   { date: "2026-09-01", time: "10:00", id: "daegu-landing-lecture" }
 ];
 /* @admin:SCHEDULE:end */

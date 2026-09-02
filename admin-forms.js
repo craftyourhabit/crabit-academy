@@ -2158,46 +2158,53 @@ async function renderApplications() {
     return;
   }
 
+  /* 목록은 표로 보여 줍니다. 줄을 누르면 상세가 열리고, 오른쪽 버튼은 제외합니다. */
+  const wrap = el("div", "ap-tbl-wrap");
+  const tbl = el("table", "ap-tbl");
+  const thead = document.createElement("thead");
+  const hr = document.createElement("tr");
+  ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시", "메모", "관리"].forEach(h => {
+    const th = document.createElement("th");
+    th.textContent = h;
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+  const tbody = document.createElement("tbody");
+
   items.forEach(it => {
-    const row = el("div", "ap-row is-click");
-    /* 줄을 누르면 상세를 엽니다. 오른쪽 버튼과 메모 칸은 제외합니다. */
-    row.addEventListener("click", e => {
-      if (e.target.closest(".ap-acts") || e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    const tr = document.createElement("tr");
+    tr.className = "is-click";
+    tr.addEventListener("click", e => {
+      if (e.target.closest(".ap-acts") || e.target.tagName === "BUTTON") return;
       openApplicantDetail(it);
     });
-    const main = el("div", "ap-main");
+    const td = (v, cls) => {
+      const c = document.createElement("td");
+      if (cls) c.className = cls;
+      if (v instanceof Node) c.appendChild(v); else c.textContent = v || "";
+      tr.appendChild(c);
+      return c;
+    };
 
     const st = AP_STATUS[it.status] || AP_STATUS.pending;
-    const name = el("div", "ap-name");
-    name.appendChild(el("span", "badge " + st.cls, st.label));
-    name.appendChild(document.createTextNode(it.name || "(이름 없음)"));
-    main.appendChild(name);
+    td(el("span", "badge " + st.cls, st.label));
+    td(it.name || "(이름 없음)", "ap-td-name");
+    td(apPhone(it.phone), "ap-td-num");
+    td(it.email);
+    td(it.org);
+    td(it.source);
+    td(apDate(it.created_at), "ap-td-num");
+    /* 메모 칸은 좁게 자르고, 남긴 말까지 툴팁으로 보여 줍니다. */
+    const memoTd = td(it.memo || "", "ap-td-memo");
+    const tip = [it.message ? "남긴 말: " + it.message : "", it.memo ? "메모: " + it.memo : ""].filter(Boolean).join("\n");
+    if (tip) memoTd.title = tip;
 
-    const meta = [
-      apPhone(it.phone),
-      it.email,
-      it.org,
-      it.event_title || it.event_id,
-      it.event_fee,
-      apDate(it.created_at) + " 신청"
-    ].filter(Boolean).join("  |  ");
-    main.appendChild(el("div", "ap-meta", meta));
-
-    if (it.source) main.appendChild(el("div", "ap-meta", "경로: " + it.source));
-    if (it.message) main.appendChild(el("div", "ap-msg", it.message));
-    if (it.memo) main.appendChild(el("div", "ap-msg", "메모: " + it.memo));
-
-    row.appendChild(main);
-
-    /* --- 입금 확인 토글과 메모 --- */
     const acts = el("div", "ap-acts");
-    /* 취소된 건은 곧바로 '입금 확인'으로 넘기지 않습니다.
-       취소를 되돌리는 건 '대기'로 돌아오는 것이지 돈이 들어온 게 아니니까요.
-       대기 -> 입금 확인 -> 대기 는 서로 오갑니다. */
     const isPaid = it.status === "paid";
     const isCancelled = it.status === "cancelled";
     const toggle = el("button", "btn btn-sm " + (isPaid || isCancelled ? "btn-secondary" : "btn-primary"),
-      isCancelled ? "취소 되돌리기" : (isPaid ? "대기로 되돌리기" : "입금 확인"));
+      isCancelled ? "취소 되돌리기" : (isPaid ? "대기로" : "입금 확인"));
     toggle.addEventListener("click", async () => {
       toggle.disabled = true;
       try {
@@ -2244,7 +2251,7 @@ async function renderApplications() {
     acts.appendChild(memo);
 
     if (it.status !== "cancelled") {
-      const cancel = el("button", "btn btn-danger btn-sm", "취소 처리");
+      const cancel = el("button", "btn btn-danger btn-sm", "취소");
       cancel.addEventListener("click", async () => {
         if (!confirm(it.name + " 님의 신청을 취소 처리할까요?")) return;
         try {
@@ -2261,9 +2268,13 @@ async function renderApplications() {
       acts.appendChild(cancel);
     }
 
-    row.appendChild(acts);
-    card.appendChild(row);
+    td(acts, "ap-td-acts");
+    tbody.appendChild(tr);
   });
+
+  tbl.appendChild(tbody);
+  wrap.appendChild(tbl);
+  card.appendChild(wrap);
 }
 
 /* 엑셀에서 바로 열리도록 UTF-8 BOM을 붙입니다.

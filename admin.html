@@ -280,6 +280,22 @@
   .ap-sum .chip:hover { background: #F8F8FA; }
   .ap-sum .chip.on { border-color: var(--ink); background: #F8F8FA; }
   .ap-sum .chip strong { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ap-tbl-wrap { overflow-x: auto; }
+  .ap-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .ap-tbl th {
+    text-align: left; font-weight: 600; color: #7F808A; font-size: 12.5px;
+    padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; background: #F9FAFC;
+  }
+  .ap-tbl td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .ap-tbl tbody tr:last-child td { border-bottom: 0; }
+  .ap-tbl tbody tr.is-click { cursor: pointer; }
+  .ap-tbl tbody tr:hover { background: #F8F8FA; }
+  .ap-tbl .badge { white-space: nowrap; }
+  .ap-td-num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .ap-td-name { font-weight: 700; white-space: nowrap; }
+  .ap-td-memo { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #7F808A; }
+  .ap-td-acts { white-space: nowrap; text-align: right; }
+  .ap-td-acts .btn { margin-left: 6px; }
   .pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 16px; }
   .pager .pg-label { font-size: 13px; color: #7F808A; font-variant-numeric: tabular-nums; }
   .ap-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }

@@ -280,6 +280,19 @@
   .ap-sum .chip:hover { background: #F8F8FA; }
   .ap-sum .chip.on { border-color: var(--ink); background: #F8F8FA; }
   .ap-sum .chip strong { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 16px; }
+  .pager .pg-label { font-size: 13px; color: #7F808A; font-variant-numeric: tabular-nums; }
+  .ap-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+  .ap-pick .pk {
+    text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 20px; cursor: pointer; display: flex; flex-direction: column; gap: 8px;
+    font: inherit; color: inherit;
+  }
+  .ap-pick .pk:hover { background: #F8F8FA; }
+  .ap-pick .pk .pk-t { font-weight: 700; line-height: 1.4; }
+  .ap-pick .pk .pk-n { font-size: 13px; color: #7F808A; }
+  .ap-pick .pk .pk-n strong { color: var(--ink); font-weight: 700; }
+  .dv-frame { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 12px; background: #fff; display: block; margin-top: 10px; }
   .ap-sum .dot { width: 8px; height: 8px; border-radius: 99px; flex: none; }
   .dot-all    { background: var(--deco); }
   .dot-wait   { background: #F0A020; }
@@ -732,9 +745,10 @@ const store = {
 };
 let currentTab = "dashboard";
 /* 목록 필터. 탭마다 따로 기억합니다. */
+/* 교육 탭은 마감 강의가 금세 쌓여서 기본값을 '예정'으로 둡니다. */
 const listFilter = {
-  events: { q: "", status: "전체", cat: "전체" },
-  resources: { q: "", status: "전체", cat: "전체" }
+  events: { q: "", status: "예정", cat: "전체", page: 1 },
+  resources: { q: "", status: "전체", cat: "전체", page: 1 }
 };
 let editing = null;   // { kind: 'event'|'resource', id, isNew, data }
 
@@ -888,6 +902,8 @@ $("#logoutBtn").addEventListener("click", () => { auth.clear(); showLogin(); });
 document.querySelectorAll(".nav").forEach(t => t.addEventListener("click", () => {
   currentTab = t.dataset.tab;
   document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === t));
+  /* 신청자 탭은 들어올 때마다 강의 선택 화면부터 시작합니다. */
+  if (currentTab === "applications" && typeof apFilter !== "undefined") { apFilter = null; apStatus = ""; }
   editing = null;
   closeSide();
   renderList();
@@ -964,6 +980,15 @@ function renderList() {
     return true;
   });
 
+  /* 교육 탭은 최신 일정이 위로 오게 정렬합니다. 날짜가 없는 항목은 맨 뒤로. */
+  if (isEv) {
+    const dkey = ({ d }) => {
+      const m = String(d.startDate || d.date || "").match(/(\d{4})[.\-\/]\s?(\d{1,2})[.\-\/]\s?(\d{1,2})/);
+      return m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() : 0;
+    };
+    rows.sort((a, b) => dkey(b) - dkey(a));
+  }
+
   $("#listCnt").textContent = all.length
     ? ("  " + (rows.length === all.length ? all.length + "건" : rows.length + " / " + all.length + "건"))
     : "";
@@ -975,7 +1000,7 @@ function renderList() {
   q.className = "lf-q";
   q.placeholder = isEv ? "제목, 주최, 분류로 찾기" : "제목으로 찾기";
   q.value = f.q;
-  q.addEventListener("input", () => { f.q = q.value.trim(); renderList(); requestAnimationFrame(() => { const n = $(".lf-q"); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }); });
+  q.addEventListener("input", () => { f.q = q.value.trim(); f.page = 1; renderList(); requestAnimationFrame(() => { const n = $(".lf-q"); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }); });
   bar.appendChild(q);
 
   const chipRow = (label, key, opts) => {
@@ -984,7 +1009,7 @@ function renderList() {
     opts.forEach(o => {
       const b = el("button", "lf-chip" + (f[key] === o ? " on" : ""), o);
       b.type = "button";
-      b.addEventListener("click", () => { f[key] = o; renderList(); });
+      b.addEventListener("click", () => { f[key] = o; f.page = 1; renderList(); });
       g.appendChild(b);
     });
     return g;
@@ -998,7 +1023,7 @@ function renderList() {
   if (f.q || f.status !== "전체" || f.cat !== "전체") {
     const clr = el("button", "lf-clear", "조건 지우기");
     clr.type = "button";
-    clr.addEventListener("click", () => { f.q = ""; f.status = "전체"; f.cat = "전체"; renderList(); });
+    clr.addEventListener("click", () => { f.q = ""; f.status = "전체"; f.cat = "전체"; f.page = 1; renderList(); });
     bar.appendChild(clr);
   }
   box.appendChild(bar);
@@ -1012,7 +1037,13 @@ function renderList() {
     return;
   }
 
-  rows.forEach(({ id, d, priv }) => {
+  const PAGE_SIZE = 10;
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if (!f.page || f.page > pageCount) f.page = pageCount;
+  if (f.page < 1) f.page = 1;
+  const pageRows = rows.slice((f.page - 1) * PAGE_SIZE, f.page * PAGE_SIZE);
+
+  pageRows.forEach(({ id, d, priv }) => {
     const it = el("div", "item is-click" + (priv ? " is-private" : ""));
     /* 줄을 누르면 상세를 엽니다. 오른쪽 버튼을 누른 건 제외합니다. */
     it.addEventListener("click", e => {
@@ -1069,6 +1100,19 @@ function renderList() {
 
     box.appendChild(it);
   });
+
+  if (pageCount > 1) {
+    const pg = el("div", "pager");
+    const prev = el("button", "btn btn-secondary btn-sm", "← 이전");
+    prev.disabled = f.page <= 1;
+    prev.addEventListener("click", () => { f.page--; renderList(); });
+    const label = el("span", "pg-label", f.page + " / " + pageCount + " 페이지");
+    const next = el("button", "btn btn-secondary btn-sm", "다음 →");
+    next.disabled = f.page >= pageCount;
+    next.addEventListener("click", () => { f.page++; renderList(); });
+    pg.appendChild(prev); pg.appendChild(label); pg.appendChild(next);
+    box.appendChild(pg);
+  }
 }
 
 $("#newBtn").addEventListener("click", () => currentTab === "events" ? openEvent(null) : openResource(null, false));

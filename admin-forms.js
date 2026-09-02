@@ -725,6 +725,14 @@ function openEventDetail(id) {
   }
   view.appendChild(p2);
 
+  /* 사이트에서 보이는 모습 그대로 확인하며 고칠 수 있게 상세페이지를 통째로 띄웁니다. */
+  const pv = panel("실제 상세페이지 미리보기", null);
+  const fr = el("iframe", "dv-frame");
+  fr.src = "event.html?id=" + encodeURIComponent(id) + "&_pv=" + Date.now();
+  fr.loading = "lazy";
+  pv.appendChild(fr);
+  view.appendChild(pv);
+
   const acts = el("div", "dv-acts");
   const mk = (label, cls, fn) => {
     const b = el("button", "btn " + cls, label);
@@ -780,14 +788,93 @@ function openResourceDetail(id, priv) {
     view.appendChild(p2);
   }
 
+  /* href가 우리 사이트 안의 페이지면 글 내용을 그대로 보여 주고 고칠 수 있게 합니다.
+     외부 링크(노션 등)는 페이지를 품을 수 없어 링크만 안내합니다. */
+  const contentPage = (d.href && !/^https?:/i.test(d.href))
+    ? (d.href.indexOf(".") > -1 ? d.href : d.href + ".html")
+    : null;
+  if (contentPage) {
+    const pv = panel("실제 콘텐츠 페이지 미리보기", null);
+    const fr = el("iframe", "dv-frame");
+    fr.src = contentPage + "?_pv=" + Date.now();
+    fr.loading = "lazy";
+    pv.appendChild(fr);
+    view.appendChild(pv);
+  } else if (d.href) {
+    const pv = panel("콘텐츠", null);
+    const a = el("a", null, "외부 페이지에서 열기: " + d.href);
+    a.href = d.href; a.target = "_blank"; a.rel = "noopener";
+    a.style.cssText = "color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px";
+    pv.appendChild(a);
+    view.appendChild(pv);
+  }
+
   const acts = el("div", "dv-acts");
   const mk = (label, c, fn) => {
     const x = el("button", "btn " + c, label);
     x.type = "button"; x.addEventListener("click", fn); acts.appendChild(x);
   };
   mk("수정하기", "btn-primary", () => openResource(id, priv));
+  if (contentPage) mk("본문 수정 (HTML)", "btn-secondary",
+    () => openPageEditor(contentPage, () => openResourceDetail(id, priv)));
   mk("삭제", "btn-danger", () => confirmDelete(false, id, d.title, priv));
   view.appendChild(acts);
+}
+
+/* 콘텐츠 페이지 HTML을 통째로 열어 고치는 간이 편집기.
+   구조를 바꾸는 큰 수정은 코드에서 하는 게 안전하고, 여기서는 글 위주로 고칩니다. */
+async function openPageEditor(path, back) {
+  const view = document.getElementById("editView");
+  view.innerHTML = "";
+  showEdit();
+  const head = el("div", "head-row");
+  const b = el("button", "btn btn-secondary btn-sm", "← 돌아가기");
+  b.type = "button";
+  b.addEventListener("click", back);
+  head.appendChild(b);
+  view.appendChild(head);
+
+  const p = panel("본문 수정 - " + path, null);
+  p.appendChild(el("div", "dv-sub",
+    "페이지 HTML을 그대로 편집합니다. 저장하면 깃허브에 커밋되고 1~2분 안에 사이트에 반영돼요. 태그 구조는 두고 글 내용 위주로 고쳐 주세요."));
+  const ta = document.createElement("textarea");
+  ta.style.cssText = "width:100%;height:62vh;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.6;border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px;box-sizing:border-box;resize:vertical";
+  ta.value = "불러오는 중이에요…";
+  ta.disabled = true;
+  p.appendChild(ta);
+  const acts = el("div", "dv-acts");
+  const save = el("button", "btn btn-primary", "저장하고 배포");
+  save.type = "button";
+  acts.appendChild(save);
+  p.appendChild(acts);
+  view.appendChild(p);
+
+  let sha = null;
+  try {
+    const f = await gh.read(path);
+    if (!f.exists) { ta.value = "파일을 찾지 못했어요: " + path; return; }
+    sha = f.sha;
+    ta.value = f.text;
+    ta.disabled = false;
+  } catch (e) {
+    ta.value = "불러오지 못했어요. " + (e.message || "");
+    return;
+  }
+
+  save.addEventListener("click", async () => {
+    if (!confirm(path + " 를 저장할까요? 사이트에 바로 반영됩니다.")) return;
+    save.disabled = true;
+    save.textContent = "저장 중…";
+    try {
+      await gh.writeText(path, ta.value, sha, "어드민에서 본문 수정: " + path);
+      alert("저장했어요. 1~2분 안에 사이트에 반영됩니다.");
+      back();
+    } catch (e) {
+      alert("저장하지 못했어요. " + (e.message || ""));
+      save.disabled = false;
+      save.textContent = "저장하고 배포";
+    }
+  });
 }
 
 /* ---------------------------------------------------------------
@@ -1845,8 +1932,9 @@ async function deleteResource(id, isPrivate) {
    비로그인(anon)으로는 RLS와 테이블 권한 양쪽에서 막힙니다.
    --------------------------------------------------------------- */
 
-/* 현재 보고 있는 강의 필터. 빈 문자열이면 전체입니다. */
-let apFilter = "";
+/* 현재 보고 있는 강의 필터. null이면 아직 강의를 고르지 않아 선택 화면을 보여 줍니다.
+   빈 문자열이면 전체입니다. */
+let apFilter = null;
 /* 상태 칩으로 거르는 값. 빈 문자열이면 전체입니다. */
 let apStatus = "";
 
@@ -1872,10 +1960,83 @@ function apPhone(v) {
   return s;
 }
 
+/* 신청 완료 안내 문자 본문. 줌 링크는 공개 레포에 올리지 않고
+   어드민 브라우저(localStorage)에만 저장해 씁니다. */
+function apSmsBody(it, link) {
+  const ev = store.EVENTS_DB[it.event_id] || {};
+  return "[크래빗 아카데미] " + (it.name || "") + "님, \"" + (it.event_title || ev.title || "") + "\" 신청이 완료됐어요."
+    + (ev.date ? "\n일시: " + ev.date : "")
+    + (link ? "\n줌 참여 링크: " + link : "")
+    + "\n궁금한 점은 이 번호로 회신해 주세요.";
+}
+
+/* 신청자 탭 첫 화면. 강의별 신청 현황을 카드로 보여 주고, 고르면 목록으로 들어갑니다. */
+async function renderApplicationPicker(box) {
+  box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
+  let rows = [];
+  try {
+    rows = (await table("/academy_applications?select=event_id,event_title,status&limit=2000")) || [];
+  } catch (e) {
+    box.innerHTML = "";
+    box.appendChild(el("div", "empty", "신청 현황을 불러오지 못했어요. " + (e.message || "")));
+    return;
+  }
+
+  const byEv = {};
+  rows.forEach(r => {
+    const k = r.event_id || "unknown";
+    const o = byEv[k] = byEv[k] || { title: r.event_title || k, total: 0, pending: 0, paid: 0, cancelled: 0 };
+    o.total++;
+    if (o[r.status] !== undefined) o[r.status]++;
+  });
+
+  /* 강의 목록: EVENTS_DB 전체 + 데이터에만 남아 있는 옛 강의. 최신 일정이 위로. */
+  const ids = Object.keys(store.EVENTS_DB);
+  Object.keys(byEv).forEach(id => { if (ids.indexOf(id) < 0) ids.push(id); });
+  const dkey = id => {
+    const d = store.EVENTS_DB[id];
+    const m = String((d && (d.startDate || d.date)) || "").match(/(\d{4})[.\-\/]\s?(\d{1,2})[.\-\/]\s?(\d{1,2})/);
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() : 0;
+  };
+  ids.sort((a, b) => dkey(b) - dkey(a));
+
+  box.innerHTML = "";
+  const bar = el("div", "ap-bar");
+  bar.appendChild(el("div", null, "어느 강의의 신청자를 볼까요?"));
+  bar.appendChild(el("div", "spacer"));
+  const allBtn = el("button", "btn btn-secondary btn-sm", "전체 신청자 보기");
+  allBtn.addEventListener("click", () => { apFilter = ""; renderApplications(); });
+  bar.appendChild(allBtn);
+  box.appendChild(bar);
+
+  const grid = el("div", "ap-pick");
+  ids.forEach(id => {
+    const d = store.EVENTS_DB[id] || {};
+    const c = byEv[id] || { total: 0, pending: 0, paid: 0, cancelled: 0 };
+    const card = el("button", "pk");
+    card.type = "button";
+    card.appendChild(el("div", "pk-t", d.title || c.title || id));
+    if (d.date) card.appendChild(el("div", "pk-n", d.date));
+    const n = el("div", "pk-n");
+    if (c.total) {
+      n.appendChild(el("strong", null, "신청 " + c.total + "건"));
+      n.appendChild(document.createTextNode("  |  대기 " + c.pending + "  |  확인 " + c.paid + "  |  취소 " + c.cancelled));
+    } else {
+      n.textContent = "아직 신청자가 없어요";
+    }
+    card.appendChild(n);
+    card.addEventListener("click", () => { apFilter = id; apStatus = ""; renderApplications(); });
+    grid.appendChild(card);
+  });
+  box.appendChild(grid);
+  document.querySelector("#listCnt").textContent = rows.length ? "  전체 " + rows.length + "건" : "";
+}
+
 async function renderApplications() {
   const box = document.getElementById("list");
   document.querySelector("#listTitle").firstChild.textContent = "신청자";
   document.querySelector("#listCnt").textContent = "";
+  if (apFilter === null) return renderApplicationPicker(box);
   box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
 
   let items = [];
@@ -1895,6 +2056,9 @@ async function renderApplications() {
 
   /* --- 강의 필터와 CSV 내보내기 --- */
   const bar = el("div", "ap-bar");
+  const back = el("button", "btn btn-secondary btn-sm", "← 강의 선택");
+  back.addEventListener("click", () => { apFilter = null; apStatus = ""; renderApplications(); });
+  bar.appendChild(back);
   const sel = document.createElement("select");
   sel.appendChild(new Option("전체 강의", ""));
   Object.keys(store.EVENTS_DB).forEach(id => {
@@ -1912,6 +2076,39 @@ async function renderApplications() {
   const refresh = el("button", "btn btn-secondary btn-sm", "새로고침");
   refresh.addEventListener("click", () => renderApplications());
   bar.appendChild(refresh);
+
+  /* 특정 강의를 보고 있을 때만 문자 도구를 보여 줍니다. 전체 목록에서
+     일괄 문자를 돌리면 다른 강의 신청자에게 엉뚱한 링크가 갈 수 있어서예요. */
+  if (apFilter) {
+    const zl = el("button", "btn btn-secondary btn-sm", "줌링크 설정");
+    zl.title = "문자에 담을 줌 참여 링크를 이 브라우저에 저장해 둡니다";
+    zl.addEventListener("click", () => {
+      const KEY = "crabit_zoom_" + apFilter;
+      const v = prompt("문자에 담을 줌 참여 링크를 넣어 주세요. 비우면 링크 없이 보냅니다.",
+        localStorage.getItem(KEY) || "");
+      if (v === null) return;
+      if (v.trim()) localStorage.setItem(KEY, v.trim()); else localStorage.removeItem(KEY);
+    });
+    bar.appendChild(zl);
+
+    const copyMsg = el("button", "btn btn-secondary btn-sm", "안내문 복사");
+    copyMsg.addEventListener("click", () => {
+      const sample = Object.assign({}, items[0] || { event_id: apFilter }, { name: "원장님" });
+      navigator.clipboard.writeText(apSmsBody(sample, localStorage.getItem("crabit_zoom_" + apFilter) || ""))
+        .then(() => alert("안내문을 복사했어요. 문자나 카톡에 붙여 넣어 쓰세요."));
+    });
+    bar.appendChild(copyMsg);
+
+    const copyNums = el("button", "btn btn-secondary btn-sm", "연락처 복사");
+    copyNums.title = "취소 제외 전원의 번호를 쉼표로 복사합니다";
+    copyNums.addEventListener("click", () => {
+      const nums = items.filter(i => i.status !== "cancelled" && i.phone).map(i => apPhone(i.phone));
+      if (!nums.length) return alert("복사할 연락처가 없어요.");
+      navigator.clipboard.writeText(nums.join(", "))
+        .then(() => alert(nums.length + "명의 연락처를 복사했어요."));
+    });
+    bar.appendChild(copyNums);
+  }
 
   /* --- 상태 칩 ---
      숫자만 보여 주는 게 아니라 누르면 그 상태만 걸러 줍니다.
@@ -2017,6 +2214,17 @@ async function renderApplications() {
       }
     });
     acts.appendChild(toggle);
+
+    if (it.phone) {
+      const sms = el("button", "btn btn-secondary btn-sm", "문자");
+      sms.title = "메시지 앱을 열어 신청 완료 문자를 보냅니다. 문구는 클립보드에도 복사돼요.";
+      sms.addEventListener("click", () => {
+        const body = apSmsBody(it, localStorage.getItem("crabit_zoom_" + it.event_id) || "");
+        try { navigator.clipboard.writeText(body); } catch (e) { /* 복사 실패해도 발송은 진행 */ }
+        window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(body);
+      });
+      acts.appendChild(sms);
+    }
 
     const memo = el("button", "btn btn-secondary btn-sm", "메모");
     memo.addEventListener("click", async () => {

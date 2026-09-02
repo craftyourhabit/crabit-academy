@@ -2054,6 +2054,9 @@ async function renderApplications() {
 
   document.querySelector("#listCnt").textContent = items.length ? "  " + items.length + "건" : "";
 
+  /* 무료 강의는 입금이라는 개념이 없어서 입금확인 버튼과 메모 칸을 걷어냅니다. */
+  const evFree = !!apFilter && (store.EVENTS_DB[apFilter] || {}).priceType !== "paid";
+
   /* --- 강의 필터와 CSV 내보내기 --- */
   const bar = el("div", "ap-bar");
   const back = el("button", "btn btn-secondary btn-sm", "← 강의 선택");
@@ -2128,12 +2131,17 @@ async function renderApplications() {
   }
 
   const sum = el("div", "ap-sum");
-  [
-    ["", "전체", totalCnt, "dot-all"],
-    ["pending", "입금 대기", cnt.pending, "dot-wait"],
-    ["paid", "입금 확인", cnt.paid, "dot-paid"],
-    ["cancelled", "취소", cnt.cancelled, "dot-cancel"]
-  ].forEach(([val, label, n, dot]) => {
+  (evFree
+    ? [
+        ["", "전체", totalCnt, "dot-all"],
+        ["cancelled", "취소", cnt.cancelled, "dot-cancel"]
+      ]
+    : [
+        ["", "전체", totalCnt, "dot-all"],
+        ["pending", "입금 대기", cnt.pending, "dot-wait"],
+        ["paid", "입금 확인", cnt.paid, "dot-paid"],
+        ["cancelled", "취소", cnt.cancelled, "dot-cancel"]
+      ]).forEach(([val, label, n, dot]) => {
     const c = el("button", "chip" + (apStatus === val ? " on" : ""));
     c.appendChild(el("span", "dot " + dot));
     c.appendChild(document.createTextNode(label));
@@ -2163,7 +2171,8 @@ async function renderApplications() {
   const tbl = el("table", "ap-tbl");
   const thead = document.createElement("thead");
   const hr = document.createElement("tr");
-  ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시", "메모", "관리"].forEach(h => {
+  ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시"]
+    .concat(evFree ? [] : ["메모"]).concat(["관리"]).forEach(h => {
     const th = document.createElement("th");
     th.textContent = h;
     hr.appendChild(th);
@@ -2187,7 +2196,9 @@ async function renderApplications() {
       return c;
     };
 
-    const st = AP_STATUS[it.status] || AP_STATUS.pending;
+    const st = (evFree && it.status !== "cancelled")
+      ? { cls: "paid", label: "신청 완료" }
+      : (AP_STATUS[it.status] || AP_STATUS.pending);
     td(el("span", "badge " + st.cls, st.label));
     td(it.name || "(이름 없음)", "ap-td-name");
     td(apPhone(it.phone), "ap-td-num");
@@ -2195,32 +2206,51 @@ async function renderApplications() {
     td(it.org);
     td(it.source);
     td(apDate(it.created_at), "ap-td-num");
-    /* 메모 칸은 좁게 자르고, 남긴 말까지 툴팁으로 보여 줍니다. */
-    const memoTd = td(it.memo || "", "ap-td-memo");
-    const tip = [it.message ? "남긴 말: " + it.message : "", it.memo ? "메모: " + it.memo : ""].filter(Boolean).join("\n");
-    if (tip) memoTd.title = tip;
+    if (!evFree) {
+      /* 메모 칸은 좁게 자르고, 남긴 말까지 툴팁으로 보여 줍니다. */
+      const memoTd = td(it.memo || "", "ap-td-memo");
+      const tip = [it.message ? "남긴 말: " + it.message : "", it.memo ? "메모: " + it.memo : ""].filter(Boolean).join("\n");
+      if (tip) memoTd.title = tip;
+    }
 
     const acts = el("div", "ap-acts");
     const isPaid = it.status === "paid";
     const isCancelled = it.status === "cancelled";
-    const toggle = el("button", "btn btn-sm " + (isPaid || isCancelled ? "btn-secondary" : "btn-primary"),
-      isCancelled ? "취소 되돌리기" : (isPaid ? "대기로" : "입금 확인"));
-    toggle.addEventListener("click", async () => {
-      toggle.disabled = true;
-      try {
-        const next = isCancelled ? "pending" : (isPaid ? "pending" : "paid");
-        await table("/academy_applications?id=eq." + it.id, {
-          method: "PATCH",
-          headers: { "Prefer": "return=minimal" },
-          body: { status: next, paid_at: next === "paid" ? new Date().toISOString() : null }
-        });
-        renderApplications();
-      } catch (e) {
-        alert("변경하지 못했어요. " + (e.message || ""));
-        toggle.disabled = false;
-      }
-    });
-    acts.appendChild(toggle);
+    if (!evFree) {
+      const toggle = el("button", "btn btn-sm " + (isPaid || isCancelled ? "btn-secondary" : "btn-primary"),
+        isCancelled ? "취소 되돌리기" : (isPaid ? "대기로" : "입금 확인"));
+      toggle.addEventListener("click", async () => {
+        toggle.disabled = true;
+        try {
+          const next = isCancelled ? "pending" : (isPaid ? "pending" : "paid");
+          await table("/academy_applications?id=eq." + it.id, {
+            method: "PATCH",
+            headers: { "Prefer": "return=minimal" },
+            body: { status: next, paid_at: next === "paid" ? new Date().toISOString() : null }
+          });
+          renderApplications();
+        } catch (e) {
+          alert("변경하지 못했어요. " + (e.message || ""));
+          toggle.disabled = false;
+        }
+      });
+      acts.appendChild(toggle);
+    } else if (isCancelled) {
+      const undo = el("button", "btn btn-secondary btn-sm", "취소 되돌리기");
+      undo.addEventListener("click", async () => {
+        try {
+          await table("/academy_applications?id=eq." + it.id, {
+            method: "PATCH",
+            headers: { "Prefer": "return=minimal" },
+            body: { status: "pending", paid_at: null }
+          });
+          renderApplications();
+        } catch (e) {
+          alert("변경하지 못했어요. " + (e.message || ""));
+        }
+      });
+      acts.appendChild(undo);
+    }
 
     if (it.phone) {
       const sms = el("button", "btn btn-secondary btn-sm", "문자");
@@ -2233,22 +2263,24 @@ async function renderApplications() {
       acts.appendChild(sms);
     }
 
-    const memo = el("button", "btn btn-secondary btn-sm", "메모");
-    memo.addEventListener("click", async () => {
-      const v = prompt("메모를 남겨 주세요. 비우면 지워집니다.", it.memo || "");
-      if (v === null) return;
-      try {
-        await table("/academy_applications?id=eq." + it.id, {
-          method: "PATCH",
-          headers: { "Prefer": "return=minimal" },
-          body: { memo: v.trim().slice(0, 500) || null }
-        });
-        renderApplications();
-      } catch (e) {
-        alert("저장하지 못했어요. " + (e.message || ""));
-      }
-    });
-    acts.appendChild(memo);
+    if (!evFree) {
+      const memo = el("button", "btn btn-secondary btn-sm", "메모");
+      memo.addEventListener("click", async () => {
+        const v = prompt("메모를 남겨 주세요. 비우면 지워집니다.", it.memo || "");
+        if (v === null) return;
+        try {
+          await table("/academy_applications?id=eq." + it.id, {
+            method: "PATCH",
+            headers: { "Prefer": "return=minimal" },
+            body: { memo: v.trim().slice(0, 500) || null }
+          });
+          renderApplications();
+        } catch (e) {
+          alert("저장하지 못했어요. " + (e.message || ""));
+        }
+      });
+      acts.appendChild(memo);
+    }
 
     if (it.status !== "cancelled") {
       const cancel = el("button", "btn btn-danger btn-sm", "취소");
@@ -2337,14 +2369,22 @@ function dashEventOver(ev) {
 const won = n => Number(n || 0).toLocaleString("ko-KR") + "원";
 const num = n => Number(n || 0).toLocaleString("ko-KR");
 
-/* 꺾은선 하나를 SVG 패스로 그립니다. 값이 모두 0이면 바닥에 붙습니다. */
+/* 값을 부드러운 곡선(캣멀롬 -> 베지어) 패스로 그립니다. 값이 모두 0이면 바닥에 붙습니다.
+   제어점 y는 위아래 여백 안으로 눌러서, 뾰족한 값에서 곡선이 바닥 아래로 파고들지 않게 합니다. */
 function linePath(vals, w, h, pad) {
   if (!vals.length) return { line: "", area: "" };
   const max = Math.max(1, ...vals);
   const dx = vals.length > 1 ? (w - pad * 2) / (vals.length - 1) : 0;
-  const pt = i => [pad + dx * i, h - pad - (vals[i] / max) * (h - pad * 2)];
-  const d = vals.map((_, i) => (i ? "L" : "M") + pt(i).map(n => n.toFixed(1)).join(" ")).join(" ");
-  const first = pt(0), last = pt(vals.length - 1);
+  const pts = vals.map((v, i) => [pad + dx * i, h - pad - (v / max) * (h - pad * 2)]);
+  const cy = v => Math.min(h - pad, Math.max(pad, v));
+  let d = "M" + pts[0].map(n => n.toFixed(1)).join(" ");
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, cy(p1[1] + (p2[1] - p0[1]) / 6)];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, cy(p2[1] - (p3[1] - p1[1]) / 6)];
+    d += " C" + [c1[0], c1[1], c2[0], c2[1], p2[0], p2[1]].map(n => n.toFixed(1)).join(" ");
+  }
+  const first = pts[0], last = pts[pts.length - 1];
   return {
     line: d,
     area: d + " L" + last[0].toFixed(1) + " " + (h - pad) + " L" + first[0].toFixed(1) + " " + (h - pad) + " Z",
@@ -2358,26 +2398,26 @@ function trendChart(rows) {
   if (!slice.length || vals.every(v => v === 0)) {
     return '<div class="chart-empty">아직 쌓인 데이터가 없어요.<br />방문과 신청이 들어오면 여기에 그려집니다.</div>';
   }
-  const W = 640, H = 210, P = 26;
+  /* SVG는 가로로 늘어나며 그려지므로(preserveAspectRatio none) 글자를 SVG 안에
+     넣으면 같이 늘어나 뭉개집니다. 라벨은 전부 HTML로 빼서 그립니다. */
+  const W = 640, H = 190, P = 14;
   const { line, area, max } = linePath(vals, W, H, P);
   const ticks = [0, Math.floor(slice.length / 2), slice.length - 1];
 
-  return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img">'
+  return '<div class="chart-wrap">'
+    + '<div class="chart-max">최대 ' + (dashMetric === "revenue" ? won(max) : num(max)) + '</div>'
+    + '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img">'
     + [0, 0.5, 1].map(f => {
         const y = P + (H - P * 2) * f;
-        return '<line class="grid-line" x1="' + P + '" y1="' + y + '" x2="' + (W - P) + '" y2="' + y + '" stroke-dasharray="3 4" />';
+        return '<line class="grid-line" x1="0" y1="' + y + '" x2="' + W + '" y2="' + y + '" stroke-dasharray="3 4" vector-effect="non-scaling-stroke" />';
       }).join("")
-    + '<path d="' + area + '" fill="#FB75BB" fill-opacity="0.12" />'
-    + '<path d="' + line + '" fill="none" stroke="#FB75BB" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />'
-    + ticks.map(i => {
-        const x = P + ((W - P * 2) / Math.max(1, slice.length - 1)) * i;
-        const anchor = i === 0 ? "start" : (i === slice.length - 1 ? "end" : "middle");
-        return '<text class="axis-t" x="' + x + '" y="' + (H - 6) + '" text-anchor="' + anchor + '">'
-          + String(slice[i].day).slice(5) + '</text>';
-      }).join("")
-    + '<text class="axis-t" x="' + P + '" y="' + (P - 8) + '">최대 '
-      + (dashMetric === "revenue" ? won(max) : num(max)) + '</text>'
-    + '</svg>';
+    + '<path d="' + area + '" fill="#FB75BB" fill-opacity="0.10" />'
+    + '<path d="' + line + '" fill="none" stroke="#FB75BB" stroke-width="1.4" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round" />'
+    + '</svg>'
+    + '<div class="chart-x">'
+    + ticks.map(i => '<span>' + String(slice[i].day).slice(5) + '</span>').join("")
+    + '</div>'
+    + '</div>';
 }
 
 async function renderDashboard() {

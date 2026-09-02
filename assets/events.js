@@ -433,18 +433,7 @@ const EVENTS_DB = {
     title: "AI 적성진로 교육전문가(AI ACE) 과정 온라인 웨비나",
     date: "2026.09.03 (목) 오후 10:30 | 온라인 웨비나(줌)",
     startDate: "2026-09-03",
-    thumb: "assets/events/ai-ace-webinar/hero.jpg?v=2",
-    /* 일러스트 위 글자는 AI가 그린 글자 대신 실제 프리텐다드로 얹는다. assets/events.js 주석 규칙 참고. */
-    coverOverlay: {
-      theme: "navy",
-      logo: "assets/events/ai-ace-webinar/aptimizer-logo.svg",
-      shift: true,
-      lines: [
-        { text: "AI-ACE", size: "title" },
-        { text: "적성진로", size: "title" },
-        { text: "교육 전문가 과정", size: "title" }
-      ]
-    },
+    thumb: "assets/events/ai-ace-webinar/hero.jpg?v=3",
     format: "online",
     priceType: "free",
     provision: "참가비 없이 온라인 줌으로 진행합니다. 별도의 접수 확인 메일은 없고, 행사 당일 오전에 줌 참여 링크를 신청하신 연락처로 보내드려요.",

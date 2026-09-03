@@ -28,7 +28,13 @@ h1 .pink{color:var(--ink)}
 .howto ol{margin:10px 0 0 20px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.6}
 .howto b{color:var(--pink)}
 .howto-t{font-size:16px;font-weight:700}
-.prompt-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:26px}
+.prompt-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:26px;scroll-margin-top:70px}
+/* 프롬프트 바로가기. 30선 페이지와 같은 세그먼트 탭 규격. */
+.tabs{display:flex;gap:4px;background:#F2F3F6;border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:30px}
+.tabs a{flex:1;text-align:center;border-radius:8px;padding:11px 12px;font-size:15px;font-weight:600;color:var(--ink55);text-decoration:none;white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
+.tabs a:hover{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(22,25,42,.08)}
+.tabs a .tn{color:var(--pink);font-weight:700;margin-right:6px}
+@media(max-width:560px){.tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}.tabs a{flex:none}}
 .pc-head{padding:22px 26px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border)}
 .pc-concept{font-size:13px;font-weight:700;color:var(--pink);letter-spacing:.04em;margin-bottom:6px}
 .pc-title{font-size:21px;font-weight:700}
@@ -84,14 +90,20 @@ footer{margin-top:44px;text-align:center;font-size:13.5px;color:var(--ink55);lin
 <section style="padding:52px 0 34px">
   <div class="eyebrow">CRABIT ACADEMY | 바이브코딩 실습 자료</div>
   <h1>바이브코딩으로 만드는<br><span class="pink">우리 학원 랜딩페이지 프롬프트 3종</span></h1>
-  <p class="lead">주제를 골라 <strong>복사하기</strong>를 누르고, 젠스파크에 붙여넣으세요.<br>분홍색으로 표시된 부분만 우리 학원 내용으로 바꾸면 됩니다.</p>
+  <p class="lead">주제를 골라 <strong>복사하기</strong>를 누르고, 바이브코딩 툴에 붙여넣으세요. 젠스파크든 다른 툴이든 상관없어요.<br>분홍색으로 표시된 부분만 우리 학원 내용으로 바꾸면 됩니다.</p>
 </section>
+
+<nav class="tabs" aria-label="프롬프트 바로가기">
+  <a href="#pc1"><span class="tn">1</span>설명회 모집</a>
+  <a href="#pc2"><span class="tn">2</span>오늘의 수업 퀴즈</a>
+  <a href="#pc3"><span class="tn">3</span>월간 학습리포트</a>
+</nav>
 <div class="howto" id="guide">
   <div class="howto-t">사용 순서</div>
   <ol>
     <li>주제를 하나 고릅니다.</li>
     <li><b>분홍색 표시 부분</b>을 화면에서 바로 클릭해 우리 학원 내용으로 고칩니다.</li>
-    <li>고친 상태 그대로 <b>복사하기</b>를 눌러 젠스파크에 붙여넣습니다.</li>
+    <li>고친 상태 그대로 <b>복사하기</b>를 눌러 바이브코딩 툴에 붙여넣습니다.</li>
     <li>실행하고, 완성되면 배포 버튼을 눌러 링크를 받습니다.</li>
   </ol>
 </div>

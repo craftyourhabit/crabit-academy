@@ -1,5 +1,13 @@
 project_id = "ttolvlzubashyhdctbqr"
 
+[functions.pay]
+# 결제 함수는 crabit-academy-payments 프로젝트(iwitqfnhlyseuxxndvny)에 배포합니다.
+# 이 레포의 기본 링크(크래빗 아카데미)가 아니라서 배포할 때 --project-ref 를 붙입니다:
+#   npx supabase functions deploy pay --project-ref iwitqfnhlyseuxxndvny
+# 결제 시작은 로그인 없이 누구나 할 수 있어야 하므로 JWT 검사를 끕니다.
+# 금액은 서버(products 표)에서만 읽으니 위조할 수 있는 것이 없습니다.
+verify_jwt = false
+
 [functions.github]
 # 플랫폼이 JWT를 대신 검사하게 두면 브라우저의 사전 요청(OPTIONS)까지 막혀서
 # CORS가 깨집니다. 그래서 여기서는 끄고, 함수 안에서 직접 검사합니다.

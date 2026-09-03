@@ -549,8 +549,9 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     + '</div></div>';
 
   /* 유료 강의 주문 확인과 결제.
-     카카오페이 가맹 승인 전이라 마지막 버튼은 안내만 띄웁니다.
-     승인 후 이 자리에 결제창 호출만 넣으면 됩니다. */
+     결제하기를 누르면 결제 함수(pay/ready)가 카카오페이 결제창 주소를
+     만들어 주고, 그 주소로 이동합니다. 인증을 마치면 pay/complete.html 로
+     돌아와 승인이 확정됩니다. */
   const orderHtml = name => '<div class="col order">'
     + stepBar(1)
     + '<h1 class="sec-h">주문 확인</h1>'
@@ -570,26 +571,52 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     + '<button class="submit" id="payBtn" type="button">결제하기</button>'
     + '</div>';
 
-  /* 결제하기 버튼 동작 */
+  /* 결제하기 버튼 동작. 결제 백엔드는 신청 테이블과 다른 Supabase 프로젝트
+     (crabit-academy-payments)에 있습니다. 돈이 오가는 일이라 따로 뗐습니다.
+     금액은 보내지 않습니다. 서버가 products 표에서 직접 읽기 때문에
+     브라우저에서 무엇을 보내든 금액을 바꿀 수 없습니다. */
+  const PAY_API = "https://iwitqfnhlyseuxxndvny.supabase.co/functions/v1/pay";
+  let submitted = null;
   function bindOrder() {
     const payBtn = document.getElementById("payBtn");
     const agree = document.getElementById("o-agree");
     const oMsg = document.getElementById("oMsg");
     if (!payBtn) return;
-    payBtn.addEventListener("click", () => {
-      if (!agree.checked) {
-        oMsg.textContent = "이용약관과 환불 규정에 동의해 주세요.";
-        oMsg.className = "o-msg err";
-        oMsg.hidden = false;
-        return;
-      }
-      /* 카카오페이 가맹 승인 후 여기서 결제창을 부릅니다. */
-      oMsg.innerHTML = "카카오페이 결제 연동을 준비하고 있어요.<br />"
-        + "지금은 담당자가 결제 방법을 따로 안내해 드립니다. 신청은 이미 접수되었어요.";
-      oMsg.className = "o-msg";
+    const say = (text, isError) => {
+      oMsg.textContent = text;
+      oMsg.className = "o-msg" + (isError ? " err" : "");
       oMsg.hidden = false;
+    };
+    payBtn.addEventListener("click", async () => {
+      if (!agree.checked) { say("이용약관과 환불 규정에 동의해 주세요.", true); return; }
       payBtn.disabled = true;
-      payBtn.textContent = "접수 완료";
+      say("카카오페이로 연결하는 중이에요…", false);
+      try {
+        const res = await fetch(PAY_API + "/ready", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event_id: id,
+            name: submitted.name,
+            phone: submitted.phone,
+            email: submitted.email,
+            org: submitted.org
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.redirect_pc) {
+          say((data && data.error) || "카카오페이 연결에 실패했어요. 잠시 후 다시 시도해 주세요.", true);
+          payBtn.disabled = false;
+          return;
+        }
+        /* 휴대폰은 카카오톡으로 바로 이어지는 모바일 주소로,
+           컴퓨터는 QR이 뜨는 PC 주소로 보냅니다. */
+        const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        location.href = mobile ? data.redirect_mobile : data.redirect_pc;
+      } catch {
+        say("네트워크 문제로 연결하지 못했어요. 잠시 후 다시 시도해 주세요.", true);
+        payBtn.disabled = false;
+      }
     });
   }
 
@@ -636,6 +663,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       message: val("message") || null,
       consent: true
     };
+    /* 결제 단계에서 쓸 신청자 정보. 폼이 화면에서 사라진 뒤에도 필요합니다. */
+    submitted = row;
 
     try {
       const res = await fetch(APPLY_API, {

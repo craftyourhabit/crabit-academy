@@ -2838,6 +2838,7 @@ async function renderApplications() {
   back.addEventListener("click", () => { apFilter = null; apStatus = ""; renderApplications(); });
   bar.appendChild(back);
   const sel = document.createElement("select");
+  sel.className = "ap-eventsel";   /* 강의명이 안 잘리게 더 넓게 (admin.html CSS) */
   sel.appendChild(new Option("전체 강의", ""));
   Object.keys(store.EVENTS_DB).forEach(id => {
     sel.appendChild(new Option(store.EVENTS_DB[id].title || id, id));
@@ -2851,7 +2852,12 @@ async function renderApplications() {
   csv.addEventListener("click", () => exportApplicationsCsv(items));
   bar.appendChild(csv);
 
-  const refresh = el("button", "btn btn-secondary btn-sm", "새로고침");
+  /* 새로고침은 아이콘 버튼으로. 글자 대신 회전 화살표만 둡니다. */
+  const refresh = el("button", "btn btn-secondary btn-sm ap-icon-btn");
+  refresh.type = "button";
+  refresh.title = "새로고침";
+  refresh.setAttribute("aria-label", "새로고침");
+  refresh.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v5h-5"/></svg>';
   refresh.addEventListener("click", () => renderApplications());
   bar.appendChild(refresh);
 
@@ -3089,23 +3095,8 @@ async function renderApplications() {
       acts.appendChild(memo);
     }
 
-    if (it.status !== "cancelled") {
-      const cancel = el("button", "btn btn-danger btn-sm", "취소");
-      cancel.addEventListener("click", async () => {
-        if (!confirm(it.name + " 님의 신청을 취소 처리할까요?")) return;
-        try {
-          await table("/academy_applications?id=eq." + it.id, {
-            method: "PATCH",
-            headers: { "Prefer": "return=minimal" },
-            body: { status: "cancelled", paid_at: null }
-          });
-          renderApplications();
-        } catch (e) {
-          alert("변경하지 못했어요. " + (e.message || ""));
-        }
-      });
-      acts.appendChild(cancel);
-    }
+    /* 신청 취소는 실수 방지를 위해 상세 화면에서만 하도록 두었어요.
+       (목록에서 바로 취소 버튼은 두지 않습니다) */
 
     td(acts, "ap-td-acts");
     tbody.appendChild(tr);

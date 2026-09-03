@@ -273,7 +273,12 @@
     padding: 9px 32px 9px 12px; font: inherit; font-size: 14px;
     border: 1px solid var(--line); border-radius: 9px; background-color: var(--bg); color: var(--ink);
   }
+  /* 강의 선택 드롭다운은 강의명이 안 잘리게 더 넓게 둡니다. */
+  .ap-bar select.ap-eventsel { min-width: 300px; max-width: 560px; }
   .ap-bar .spacer { flex: 1 1 auto; }
+  /* 아이콘만 있는 정사각 버튼 (새로고침 등) */
+  .ap-icon-btn { padding: 8px; width: 36px; height: 36px; }
+  .ap-icon-btn svg { display: block; }
 
   /* 상태 칩. 세기만 하는 게 아니라 누르면 그 상태만 걸러 준다. */
   .ap-sum { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -1374,6 +1379,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202609032300"></script>
+<script src="admin-forms.js?v=202609032330"></script>
 </body>
 </html>

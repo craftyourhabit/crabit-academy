@@ -2580,21 +2580,43 @@ function uiConfirm(opts) {
   });
 }
 
-/* 문자를 성공적으로 보낸 신청 건을 { 신청id → 마지막 발송시각 } 으로 돌려줍니다.
-   중복 발송을 피하고 목록에 "언제 보냈는지"를 표시하는 데 씁니다.
-   .has() 가 되므로 중복 체크에도 그대로 씁니다.
-   기록 테이블이 아직 없으면(설치 전) null 을 돌려줘 표시를 조용히 건너뜁니다. */
-async function fetchSentSet(eventId) {
+/* 문자를 실제로 받은 신청 건을 { 신청id → 발송시각 } 으로 돌려줍니다.
+   두 곳을 합칩니다.
+     1) 우리 발송 기록(academy_messages) - 어드민 버튼으로 보낸 것
+     2) 솔라피 실제 발송 내역 - 번호로 매칭 (폰으로 보낸 것/기록 전에 보낸 것까지 잡힘)
+   그래서 "발송/미발송" 표시와 중복 방지가 실제 발송과 맞아떨어집니다.
+   .has() 가 되므로 중복 체크에도 그대로 씁니다. */
+async function fetchSentSet(eventId, items) {
+  const D = s => String(s || "").replace(/[^0-9]/g, "");
+  const m = new Map();
+
+  /* 1) 우리 기록 */
   try {
     const rows = await table("/academy_messages?select=application_id,created_at&status=eq.ok"
       + (eventId ? "&event_id=eq." + encodeURIComponent(eventId) : "")
       + "&order=created_at.desc") || [];
-    const m = new Map();
     rows.forEach(r => { if (!m.has(r.application_id)) m.set(r.application_id, r.created_at); });
-    return m;
-  } catch (e) {
-    return null;
-  }
+  } catch (e) { /* 기록 테이블 미설치 등은 무시하고 솔라피로 채웁니다 */ }
+
+  /* 2) 솔라피 실제 내역 (번호 → 신청id 매칭) */
+  try {
+    const byPhone = new Map();
+    (items || []).forEach(i => { if (i.phone) byPhone.set(D(i.phone), i.id); });
+    if (byPhone.size) {
+      const res = await sbFetch(SB_URL + "/functions/v1/sms-history?limit=500");
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        (data.list || []).forEach(msg => {
+          const ok = String(msg.statusCode || "") === "4000" || /정상|성공|접수|수신/.test(msg.statusMessage || "");
+          if (!ok) return;
+          const id = byPhone.get(D(msg.to));
+          if (id && !m.has(id)) m.set(id, msg.dateReceived || msg.dateCreated);
+        });
+      }
+    }
+  } catch (e) { /* 솔라피 조회 실패는 무시하고 우리 기록만 씁니다 */ }
+
+  return m;
 }
 
 /* 발송 기록을 남깁니다. 실패해도 발송 자체는 이미 끝났으니 조용히 넘어갑니다. */
@@ -2743,11 +2765,12 @@ async function sendSmsBulk(list, btn) {
     if (!go) return;
   }
 
-  /* 중복 방지: 이미 보낸 사람은 뺍니다. 전원이 이미 받았으면 다시 보낼지 물어봅니다. */
-  const sent = await fetchSentSet(evId);
+  /* 중복 방지: 이미 받은 사람(솔라피 실제 내역 + 우리 기록)은 뺍니다.
+     전원이 이미 받았으면 다시 보낼지 물어봅니다. */
+  const sent = await fetchSentSet(evId, list);
   let target = list;
   let skipped = 0;
-  if (sent) {
+  if (sent && sent.size) {
     const fresh = list.filter(i => !sent.has(i.id));
     skipped = list.length - fresh.length;
     if (!fresh.length) {
@@ -2907,9 +2930,9 @@ async function renderApplications() {
     bulkBtn.textContent = n ? "문자 발송 (" + n + "명)" : "문자 발송";
   }
 
-  /* 이미 문자를 받은 신청 건을 표시해 중복 발송을 피합니다.
-     기록 테이블(academy_messages)이 아직 없으면 null 이라 표시만 생략합니다. */
-  const sentSet = canSms ? await fetchSentSet(apFilter) : null;
+  /* 실제로 문자를 받은 사람을 표시해 중복 발송을 피합니다.
+     우리 기록 + 솔라피 실제 내역을 합쳐 판단해요. */
+  const sentSet = canSms ? await fetchSentSet(apFilter, items) : null;
 
   /* --- 강의 필터와 CSV 내보내기 --- */
   const bar = el("div", "ap-bar");
@@ -3018,15 +3041,16 @@ async function renderApplications() {
   box.appendChild(bar);
   box.appendChild(sum);
 
-  /* 문자 발송 요약: 지금 화면 기준으로 몇 명이 받았는지 한 줄로. */
-  if (canSms && sentSet !== null) {
+  /* 문자 발송 요약: 지금 화면 기준으로 몇 명이 받았는지 한 줄로.
+     우리 기록 + 솔라피 실제 내역을 합친 값이라 실제 발송과 맞아요. */
+  if (canSms && sentSet) {
     const withPhone = items.filter(i => i.phone);
     const sentN = withPhone.filter(i => sentSet.has(i.id)).length;
     const note = el("div");
     note.style.cssText = "font-size:13px;color:var(--muted);margin:-4px 0 14px;padding:0 2px";
-    note.innerHTML = "문자 발송: <strong style='color:#1E7B41'>보냄 " + sentN + "명</strong>"
-      + " · 미발송 " + (withPhone.length - sentN) + "명"
-      + " <span style='color:var(--deco)'>(이 기록은 '문자 발송' 버튼으로 보낸 건만 집계돼요. 전체 확정은 솔라피 발송 내역)</span>";
+    note.innerHTML = "문자 발송: <strong style='color:#1E7B41'>발송 " + sentN + "명</strong>"
+      + " · 미발송 <strong>" + (withPhone.length - sentN) + "명</strong>"
+      + " <span style='color:var(--deco)'>(솔라피 실제 내역과 우리 기록을 합친 값이에요)</span>";
     box.appendChild(note);
   }
 
@@ -3190,13 +3214,9 @@ async function renderApplications() {
     if (canSms) {
       const smsTd = document.createElement("td");
       smsTd.className = "ap-td-num";
-      if (sentSet === null) {
-        smsTd.textContent = "-";
-        smsTd.style.color = "var(--deco)";
-        smsTd.title = "발송 기록 기능이 아직 켜지지 않았어요 (supabase-messages.sql 실행 필요)";
-      } else if (sentSet.has(it.id)) {
+      if (sentSet && sentSet.has(it.id)) {
         const when = apDate(sentSet.get(it.id));
-        const tag = el("span", null, "보냄");
+        const tag = el("span", null, "발송");
         tag.style.cssText = "font-size:11.5px;font-weight:700;color:#1E7B41;background:#E6F4EA;border-radius:6px;padding:2px 7px;white-space:nowrap";
         smsTd.appendChild(tag);
         const t = el("span", null, " " + (when.split(" ")[0] || ""));

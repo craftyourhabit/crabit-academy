@@ -2499,8 +2499,8 @@ function apSmsBody(it, link) {
   const place = fmtLabel[ev.format] || (link ? "온라인 웨비나(줌)" : "");
 
   const greet = link
-    ? who + ", “" + title + "” 신청 확인됐어요! 아래 줌 링크 보내드릴게요."
-    : who + ", “" + title + "” 신청 확인됐어요!";
+    ? who + ", “" + title + "” 신청이 확인되었어요! 아래 줌 링크 보내드려요."
+    : who + ", “" + title + "” 신청이 확인되었어요!";
 
   /* 이모지는 일반 문자에서 깨져서, 줄 앞에 "· " 를 붙여 불릿처럼 보이게 합니다. */
   const mid = [];
@@ -2876,16 +2876,6 @@ async function renderApplications() {
         .then(() => alert("안내문을 복사했어요. 문자나 카톡에 붙여 넣어 쓰세요."));
     });
     bar.appendChild(copyMsg);
-
-    const copyNums = el("button", "btn btn-secondary btn-sm", "연락처 복사");
-    copyNums.title = "취소 제외 전원의 번호를 쉼표로 복사합니다";
-    copyNums.addEventListener("click", () => {
-      const nums = items.filter(i => i.status !== "cancelled" && i.phone).map(i => apPhone(i.phone));
-      if (!nums.length) return alert("복사할 연락처가 없어요.");
-      navigator.clipboard.writeText(nums.join(", "))
-        .then(() => alert(nums.length + "명의 연락처를 복사했어요."));
-    });
-    bar.appendChild(copyNums);
 
     /* 체크한 신청자에게 한 번에 문자 발송. 툴바 오른쪽 끝의 강조 버튼. */
     bulkBtn = el("button", "btn btn-primary btn-sm", "문자 발송");

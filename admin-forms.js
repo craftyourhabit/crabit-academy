@@ -1663,6 +1663,35 @@ function pageImageTarget(path) {
   return { key: path.replace(/\.html$/, "").replace(/[^A-Za-z0-9-]+/g, "-"), prefix: "" };
 }
 
+/* 눈 아이콘이 달린 비밀번호 입력칸. 로그인 화면과 같은 모양입니다.
+   누르면 입력한 글자가 보여서 오타를 확인할 수 있어요. */
+function pwField(placeholder) {
+  const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a18.4 18.4 0 0 1-3.2 4.1"/><path d="M6.2 6.6A18.2 18.2 0 0 0 2 12s3.6 7 10 7a10.4 10.4 0 0 0 4.5-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="m3 3 18 18"/></svg>';
+  const wrap = el("div", "pw-wrap");
+  const inp = document.createElement("input");
+  inp.type = "password";
+  inp.autocomplete = "off";
+  if (placeholder) inp.placeholder = placeholder;
+  const btn = el("button", "pw-toggle");
+  btn.type = "button";
+  btn.innerHTML = EYE;
+  btn.setAttribute("aria-label", "비밀번호 보기");
+  btn.title = "비밀번호 보기";
+  btn.addEventListener("click", () => {
+    const show = inp.type === "password";
+    inp.type = show ? "text" : "password";
+    btn.innerHTML = show ? EYE_OFF : EYE;
+    const label = show ? "비밀번호 숨기기" : "비밀번호 보기";
+    btn.setAttribute("aria-label", label);
+    btn.title = label;
+    inp.focus();
+  });
+  wrap.appendChild(inp);
+  wrap.appendChild(btn);
+  return { wrap, input: inp };
+}
+
 /* 상세 화면에 붙는 본문 패널. 내용을 그대로 보여 주고, 그 자리에서 고칩니다. */
 function bodyPanel(path, refresh) {
   const p = panel("본문", null);
@@ -1761,10 +1790,12 @@ function protectedBodyPanel(id, priv) {
     "일부공개 자료의 주소는 비밀번호로 만들어져요. 안내하시는 비밀번호를 넣으면 본문이 열립니다.");
   const row = el("div");
   row.style.cssText = "display:flex;gap:8px;max-width:440px";
-  const pw = input("", "자료 비밀번호");
+  const pf = pwField("자료 비밀번호");
+  pf.wrap.style.flex = "1";
+  const pw = pf.input;
   const go = el("button", "btn btn-secondary", "본문 열기");
   go.type = "button";
-  row.appendChild(pw);
+  row.appendChild(pf.wrap);
   row.appendChild(go);
   p.appendChild(row);
   const err = el("div", "err", "");
@@ -1888,14 +1919,15 @@ function openResource(id, isPrivate) {
   p2.appendChild(hrefWrap);
 
   /* 일부공개일 때: 비밀번호 + 상세페이지 내용 */
-  const pwIn = input("", "신청자에게 안내할 비밀번호");
+  const pwF = pwField("신청자에게 안내할 비밀번호");
+  const pwIn = pwF.input;
   pwIn.addEventListener("input", async () => {
     state.password = pwIn.value.trim();
     pwPath.textContent = state.password
       ? "이 비밀번호를 넣으면 " + "p/" + (await sha256hex(state.password)).slice(0, 16) + "/ 로 들어갑니다."
       : "";
   });
-  const pwWrap = field("비밀번호", pwIn, {
+  const pwWrap = field("비밀번호", pwF.wrap, {
     hint: "비밀번호는 어디에도 저장되지 않아요. 이 글자로 자료 주소를 만들기 때문에, 잊으면 저도 찾아 드릴 수 없습니다."
   });
   const pwPath = el("div");

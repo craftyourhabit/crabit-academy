@@ -202,10 +202,12 @@
   }
 
 /* ---- 우측 고정 아웃라인 ---- */
-.side-toc{position:fixed;top:96px;right:26px;width:196px;display:none;z-index:40}
-@media(min-width:1180px){.side-toc{display:block}}
-.side-toc .toc-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:rgba(22,25,42,.3);margin-bottom:10px}
-.side-toc a{display:block;font-size:13px;line-height:1.5;color:rgba(22,25,42,.45);text-decoration:none;padding:5px 0 5px 12px;border-left:2px solid #EDEDEF;transition:color .15s,border-color .15s}
+/* 본문(.wrap 720px) 오른쪽에 바짝 붙입니다. 화면 오른쪽 끝이 아니라
+   본문 가장자리 기준이라 넓은 모니터에서도 멀어지지 않아요. */
+.side-toc{position:fixed;top:96px;left:calc(50% + 388px);width:212px;display:none;z-index:40}
+@media(min-width:1240px){.side-toc{display:block}}
+.side-toc .toc-label{font-size:12.5px;font-weight:700;letter-spacing:.1em;color:rgba(22,25,42,.34);margin-bottom:12px}
+.side-toc a{display:block;font-size:14.5px;line-height:1.55;color:rgba(22,25,42,.5);text-decoration:none;padding:6px 0 6px 14px;border-left:2px solid #EDEDEF;transition:color .15s,border-color .15s}
 .side-toc a:hover{color:#16192A}
 .side-toc a.on{color:#16192A;font-weight:700;border-left-color:#FB75BB}
 </style>

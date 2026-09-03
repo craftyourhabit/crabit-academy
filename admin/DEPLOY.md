@@ -112,6 +112,38 @@ npx supabase functions deploy github
 
 ---
 
+## 04-2. 문자 바로 보내기 (send-sms)
+
+신청자 목록의 **문자 보내기** 버튼은 폰 메시지 앱을 열지 않고 솔라피(Solapi)로
+바로 문자를 보냅니다. 쓰려면 아래 세 가지를 한 번만 준비하면 됩니다.
+
+**1) 발신번호 사전등록** (법으로 필수)
+솔라피 콘솔 > 발신번호 관리에서 학원(회사) 번호를 사업자 서류로 등록합니다.
+등록이 끝나야 그 번호로 문자가 나갑니다.
+
+**2) API 키 발급**
+솔라피 콘솔 > 개발/연동 > API Key 관리에서 키와 시크릿을 만듭니다.
+
+**3) 시크릿 4개 등록**
+`SENDER` 자리에 1)에서 등록한 발신번호(숫자만)를 넣으세요.
+
+```bash
+npx supabase secrets set SOLAPI_API_KEY=붙여넣기 SOLAPI_API_SECRET=붙여넣기 SOLAPI_SENDER=01012345678 ALLOWED_ORIGIN=https://craftyourhabit.github.io
+```
+
+```bash
+npx supabase functions deploy send-sms
+```
+
+> 이 함수도 로그인한 관리자만 부를 수 있고, 솔라피 키는 함수 시크릿에만 있어
+> public 레포에는 노출되지 않습니다.
+> 문자는 건당 요금이 부과됩니다. 이모지(📅🔗)는 일부 폰에서 깨질 수 있어,
+> 중요한 안내는 카카오 알림톡 연동(추후)까지 함께 쓰는 걸 권합니다.
+> 키가 아직 없으면 버튼을 눌러도 "발신번호가 설정되지 않았어요" 안내가 뜨고,
+> 폰 메시지 앱으로 여는 예전 방식으로 대신 보낼 수 있습니다.
+
+---
+
 ## 05. 확인
 
 1. https://craftyourhabit.github.io/crabit-academy/admin.html 접속

@@ -2461,6 +2461,47 @@ function apSmsBody(it, link) {
   return parts.join("\n");
 }
 
+/* 신청자에게 안내 문자를 폰 메시지 앱을 열지 않고 바로 보냅니다.
+   Edge Function 'send-sms' 가 솔라피로 실제 발송합니다.
+   요금이 부과되고 되돌릴 수 없어서 보내기 전에 한 번 확인합니다. */
+async function sendSmsDirect(it, btn) {
+  const link = localStorage.getItem("crabit_zoom_" + it.event_id) || "";
+  const body = apSmsBody(it, link);
+
+  /* 온라인 강의인데 줌 링크가 아직 없으면 먼저 알려 줍니다. */
+  const ev = store.EVENTS_DB[it.event_id] || {};
+  if (ev.format === "online" && !link) {
+    if (!confirm("이 강의의 줌 링크가 아직 설정되지 않았어요.\n"
+      + "줌 링크 없이 그대로 보낼까요? (위 \"줌링크 설정\"에서 먼저 넣는 걸 권해요)")) return;
+  }
+
+  const preview = body.length > 240 ? body.slice(0, 240) + "…" : body;
+  if (!confirm("아래 내용을 " + (it.name || "") + "님(" + it.phone + ")에게 문자로 보낼까요?\n"
+    + "건당 요금이 부과되고, 보낸 문자는 취소할 수 없어요.\n\n"
+    + "─────────\n" + preview)) return;
+
+  const orig = btn ? btn.textContent : "";
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 보내는 중'; }
+  try {
+    const res = await sbFetch(SB_URL + "/functions/v1/send-sms", {
+      method: "POST",
+      body: { to: it.phone, text: body, subject: "크래빗 아카데미" }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) { expired(data.error); return; }
+    if (!res.ok || !data.ok) throw new Error(data.error || ("발송 실패 (" + res.status + ")"));
+    if (btn) { btn.textContent = "보냈어요"; btn.classList.remove("btn-secondary"); btn.classList.add("btn-primary"); }
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = orig || "문자 보내기"; }
+    /* 발송이 안 되면 원인을 알리고, 급할 때를 위해 메시지 앱으로 여는 길도 남깁니다. */
+    if (confirm("문자를 보내지 못했어요.\n" + (e.message || "")
+      + "\n\n대신 폰 메시지 앱을 열어 직접 보낼까요? (문구는 자동으로 채워져요)")) {
+      try { navigator.clipboard.writeText(body); } catch (_e) { /* 복사 실패해도 진행 */ }
+      window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(body);
+    }
+  }
+}
+
 /* 신청자 탭 첫 화면. 강의별 신청 현황을 카드로 보여 주고, 고르면 목록으로 들어갑니다. */
 async function renderApplicationPicker(box) {
   box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
@@ -2744,13 +2785,9 @@ async function renderApplications() {
     }
 
     if (it.phone) {
-      const sms = el("button", "btn btn-secondary btn-sm", "문자");
-      sms.title = "메시지 앱을 열어 신청 완료 문자를 보냅니다. 문구는 클립보드에도 복사돼요.";
-      sms.addEventListener("click", () => {
-        const body = apSmsBody(it, localStorage.getItem("crabit_zoom_" + it.event_id) || "");
-        try { navigator.clipboard.writeText(body); } catch (e) { /* 복사 실패해도 발송은 진행 */ }
-        window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(body);
-      });
+      const sms = el("button", "btn btn-secondary btn-sm", "문자 보내기");
+      sms.title = "이 신청자에게 안내 문자를 바로 보냅니다. (건당 요금이 부과돼요)";
+      sms.addEventListener("click", () => sendSmsDirect(it, sms));
       acts.appendChild(sms);
     }
 

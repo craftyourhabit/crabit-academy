@@ -2430,13 +2430,35 @@ function apPhone(v) {
 }
 
 /* 신청 완료 안내 문자 본문. 줌 링크는 공개 레포에 올리지 않고
-   어드민 브라우저(localStorage)에만 저장해 씁니다. */
+   어드민 브라우저(localStorage)에만 저장해 씁니다.
+   온라인(줌 링크 있음)이면 줌 안내 톤으로, 아니면 링크 없이 담백하게 나갑니다. */
 function apSmsBody(it, link) {
   const ev = store.EVENTS_DB[it.event_id] || {};
-  return "[크래빗 아카데미] " + (it.name || "") + "님, \"" + (it.event_title || ev.title || "") + "\" 신청이 완료됐어요."
-    + (ev.date ? "\n일시: " + ev.date : "")
-    + (link ? "\n줌 참여 링크: " + link : "")
-    + "\n궁금한 점은 이 번호로 회신해 주세요.";
+  const name = it.name || "";
+  const title = it.event_title || ev.title || "";
+  const who = name ? name + " 원장님" : "원장님";
+
+  /* 일시 옆에 붙는 진행 방식 라벨. */
+  const fmtLabel = {
+    online: "온라인 웨비나(줌)",
+    hybrid: "온라인 + 오프라인",
+    offline: ev.place || "오프라인",
+    vod: "녹화본 제공"
+  };
+  const place = fmtLabel[ev.format] || (link ? "온라인 웨비나(줌)" : "");
+
+  const greet = link
+    ? who + ", “" + title + "” 신청이 확인됐어요. 아래 줌 링크 전달드립니다! "
+    : who + ", “" + title + "” 신청이 확인됐어요.";
+
+  const mid = [];
+  if (ev.date) mid.push("📅 일시: " + ev.date + (place ? " | " + place : ""));
+  if (link) mid.push("🔗 줌 참여 링크: " + link);
+
+  const parts = ["[크래빗 아카데미] ", "", greet];
+  if (mid.length) parts.push("", mid.join("\n"));
+  parts.push("", "궁금한 점은 이 번호로 회신해 주세요.");
+  return parts.join("\n");
 }
 
 /* 신청자 탭 첫 화면. 강의별 신청 현황을 카드로 보여 주고, 고르면 목록으로 들어갑니다. */

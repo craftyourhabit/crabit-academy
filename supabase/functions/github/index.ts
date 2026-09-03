@@ -30,6 +30,13 @@ const ALLOWED_PATHS = [
   /^assets\/thumbs\/[A-Za-z0-9._-]+$/,
   /^assets\/events\/[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/,
   /^p\/[a-f0-9]{16}\/[A-Za-z0-9._-]+$/,
+  /* 어드민에서 만드는 공개 아티클 페이지와 본문 사진 */
+  /^r\/[A-Za-z0-9._-]+\.html$/,
+  /^assets\/articles\/[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/,
+  /* 어드민 이전에 손으로 만든 콘텐츠 페이지. 본문 수정을 허용합니다.
+     index.html, admin.html 같은 사이트 뼈대는 계속 막아 둡니다. */
+  /^daegu-prompts\.html$/,
+  /^claude-code-windows\.html$/,
 ];
 
 function pathAllowed(path: unknown): path is string {

@@ -7,6 +7,7 @@
 <title>크래빗 아카데미 관리자</title>
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="assets/article.css" />
 <style>
   :root {
     --bg: #FFFFFF;
@@ -449,6 +450,33 @@
   .dv-list li::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 99px; background: var(--line); transform: translateY(7px); }
   .dv-sec { margin-top: 26px; }
   .dv-sec h3 { font-size: 15px; font-weight: 700; margin: 0 0 10px; }
+
+  /* ---------- 본문 리치 에디터 ----------
+     상세 화면에서 글 내용을 그대로 보고 고치는 편집기입니다.
+     보기 모드(.dv-body)와 편집 모드(.rt-area)가 같은 article.css 를 씁니다. */
+  .dv-body {
+    border: 1px solid var(--line); border-radius: 12px; background: #fff;
+    padding: 24px 26px; max-height: 620px; overflow: auto;
+  }
+  .rt-bar {
+    display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+    padding: 8px; background: var(--card);
+    border: 1px solid var(--line); border-bottom: 0; border-radius: 12px 12px 0 0;
+    position: sticky; top: 56px; z-index: 12;
+  }
+  .rt-bar button {
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--ink);
+    padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line);
+    background: #fff; cursor: pointer;
+  }
+  .rt-bar button:hover { background: #F8F8FA; }
+  .rt-bar .rt-gap { width: 6px; }
+  .rt-area {
+    border: 1px solid var(--line); border-radius: 0 0 12px 12px; background: #fff;
+    padding: 22px 24px; min-height: 240px; max-height: 68vh; overflow: auto; outline: none;
+  }
+  .rt-area:focus { border-color: var(--ink); }
+  .rt-hint { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -1346,6 +1374,6 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202608200320"></script>
+<script src="admin-forms.js?v=202609031300"></script>
 </body>
 </html>

@@ -789,17 +789,14 @@ function openResourceDetail(id, priv) {
   }
 
   /* href가 우리 사이트 안의 페이지면 글 내용을 그대로 보여 주고 고칠 수 있게 합니다.
-     외부 링크(노션 등)는 페이지를 품을 수 없어 링크만 안내합니다. */
+     일부공개는 비밀번호로 주소를 찾아 열고, 외부 링크(노션 등)는 링크만 안내합니다. */
   const contentPage = (d.href && !/^https?:/i.test(d.href))
     ? (d.href.indexOf(".") > -1 ? d.href : d.href + ".html")
     : null;
   if (contentPage) {
-    const pv = panel("실제 콘텐츠 페이지 미리보기", null);
-    const fr = el("iframe", "dv-frame");
-    fr.src = contentPage + "?_pv=" + Date.now();
-    fr.loading = "lazy";
-    pv.appendChild(fr);
-    view.appendChild(pv);
+    view.appendChild(bodyPanel(contentPage, () => openResourceDetail(id, priv)));
+  } else if (!priv && d.access === "protected") {
+    view.appendChild(protectedBodyPanel(id, priv));
   } else if (d.href) {
     const pv = panel("콘텐츠", null);
     const a = el("a", null, "외부 페이지에서 열기: " + d.href);
@@ -815,8 +812,6 @@ function openResourceDetail(id, priv) {
     x.type = "button"; x.addEventListener("click", fn); acts.appendChild(x);
   };
   mk("수정하기", "btn-primary", () => openResource(id, priv));
-  if (contentPage) mk("본문 수정 (HTML)", "btn-secondary",
-    () => openPageEditor(contentPage, () => openResourceDetail(id, priv)));
   mk("삭제", "btn-danger", () => confirmDelete(false, id, d.title, priv));
   view.appendChild(acts);
 }
@@ -1462,6 +1457,340 @@ async function uploadArticleImages(state, key) {
 }
 
 /* ---------------------------------------------------------------
+   본문 리치 에디터
+
+   콘텐츠 페이지의 <!-- @admin:body:start / end --> 사이(마커가 없으면
+   <main> 안쪽)를 그대로 보여 주고, 워드처럼 고칠 수 있게 합니다.
+   제목은 엘리스 디지털 배움체, 콜아웃과 사진, 링크를 지원합니다.
+   스타일은 assets/article.css 하나를 어드민과 실제 페이지가 함께 씁니다.
+   --------------------------------------------------------------- */
+const BODY_START = "<!-- @admin:body:start -->";
+const BODY_END = "<!-- @admin:body:end -->";
+
+function extractBody(html) {
+  const s = html.indexOf(BODY_START);
+  const e = html.indexOf(BODY_END);
+  if (s > -1 && e > s) {
+    const i = s + BODY_START.length;
+    return { before: html.slice(0, i), inner: html.slice(i, e), after: html.slice(e) };
+  }
+  const m = html.match(/<main\b[^>]*>/i);
+  const me = html.lastIndexOf("</main>");
+  if (m && me > -1) {
+    const i = html.indexOf(m[0]) + m[0].length;
+    if (i <= me) return { before: html.slice(0, i), inner: html.slice(i, me), after: html.slice(me) };
+  }
+  return null;
+}
+
+/* 본문에 넣는 사진. 썸네일과 달리 16:9로 만들지 않고 비율을 그대로 둡니다. */
+function prepareArticleImage(f) {
+  return new Promise((resolve, reject) => {
+    const isSvg = f.type === "image/svg+xml" || /\.svg$/i.test(f.name);
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("파일 읽기 실패"));
+    if (isSvg) {
+      reader.onload = () => resolve({ dataUrl: reader.result, ext: "svg" });
+      reader.readAsDataURL(f);
+      return;
+    }
+    reader.onload = () => {
+      const im = new Image();
+      im.onerror = () => reject(new Error("이미지 형식이 아니에요"));
+      im.onload = () => {
+        const MAX = 1280;
+        const sc = Math.min(1, MAX / im.width);
+        const c = document.createElement("canvas");
+        c.width = Math.round(im.width * sc);
+        c.height = Math.round(im.height * sc);
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+        resolve({ dataUrl: c.toDataURL("image/jpeg", 0.85), ext: "jpg" });
+      };
+      im.src = reader.result;
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+/* 편집 도구 막대 + 편집 영역. */
+function richEditor() {
+  const root = el("div");
+  const bar = el("div", "rt-bar");
+  const area = el("div", "rt-area article-body");
+  area.contentEditable = "true";
+  area.setAttribute("spellcheck", "false");
+
+  const btn = (label, title, fn) => {
+    const b = el("button", null, label);
+    b.type = "button";
+    b.title = title || label;
+    /* mousedown에서 처리해야 본문의 글자 선택이 풀리지 않습니다. */
+    b.addEventListener("mousedown", e => { e.preventDefault(); fn(); });
+    bar.appendChild(b);
+    return b;
+  };
+  const cmd = (c, v) => { area.focus(); document.execCommand(c, false, v || null); };
+
+  btn("제목", "큰 제목 (엘리스체)", () => cmd("formatBlock", "<h2>"));
+  btn("소제목", "작은 제목 (엘리스체)", () => cmd("formatBlock", "<h3>"));
+  btn("본문", "일반 문단으로 되돌리기", () => cmd("formatBlock", "<p>"));
+  bar.appendChild(el("span", "rt-gap"));
+  btn("굵게", "선택한 글자를 굵게", () => cmd("bold"));
+  btn("목록", "불릿 목록", () => cmd("insertUnorderedList"));
+  btn("콜아웃", "안내 상자로 감싸기 / 풀기", () => toggleCallout(area));
+
+  bar.appendChild(el("span", "rt-gap"));
+  btn("링크", "선택한 글자에 링크 걸기", () => {
+    area.focus();
+    const sel = window.getSelection();
+    const anchorEl = sel.anchorNode &&
+      (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement);
+    const a = anchorEl && anchorEl.closest && anchorEl.closest("a");
+    if (a && area.contains(a) && sel.isCollapsed) {
+      if (confirm("이 링크를 풀까요?\n" + a.href)) {
+        while (a.firstChild) a.parentNode.insertBefore(a.firstChild, a);
+        a.remove();
+      }
+      return;
+    }
+    if (sel.isCollapsed) { alert("링크를 걸 글자를 먼저 드래그해 주세요."); return; }
+    const url = prompt("연결할 주소를 넣어 주세요.", "https://");
+    if (!url || url === "https://") return;
+    document.execCommand("createLink", false, url.trim());
+    /* 새 창으로 열리게 표시해 둡니다. */
+    area.querySelectorAll("a:not([target])").forEach(x => {
+      x.target = "_blank";
+      x.rel = "noopener";
+    });
+  });
+
+  const file = document.createElement("input");
+  file.type = "file";
+  file.accept = "image/*";
+  file.style.display = "none";
+  btn("사진", "사진 넣기 (저장할 때 함께 올라갑니다)", () => file.click());
+  file.addEventListener("change", async () => {
+    const f = file.files && file.files[0];
+    file.value = "";
+    if (!f) return;
+    try {
+      const out = await prepareArticleImage(f);
+      const im = document.createElement("img");
+      im.src = out.dataUrl;
+      im.setAttribute("data-new", out.ext);
+      im.alt = "";
+      const sel = window.getSelection();
+      if (sel.rangeCount && area.contains(sel.anchorNode)) {
+        /* 커서가 든 최상위 블록 뒤에 넣습니다. 문단 한가운데가 갈라지지 않게요. */
+        let blk = sel.anchorNode;
+        while (blk && blk.parentNode !== area) blk = blk.parentNode;
+        if (blk && blk !== area) blk.after(im);
+        else area.appendChild(im);
+      } else {
+        area.appendChild(im);
+      }
+    } catch (e) {
+      alert("사진을 읽지 못했어요: " + e.message);
+    }
+  });
+
+  root.appendChild(bar);
+  root.appendChild(area);
+  root.appendChild(file);
+  return {
+    root,
+    area,
+    getHtml: () => area.innerHTML.trim(),
+    setHtml: h => { area.innerHTML = h; }
+  };
+}
+
+/* 커서가 든 블록을 콜아웃(안내 상자)으로 감싸거나 풀어 줍니다. */
+function toggleCallout(area) {
+  area.focus();
+  const sel = window.getSelection();
+  if (!sel.rangeCount || !area.contains(sel.anchorNode)) return;
+  const anchorEl = sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement;
+  const co = anchorEl && anchorEl.closest && anchorEl.closest(".callout");
+  if (co && area.contains(co)) {
+    while (co.firstChild) co.parentNode.insertBefore(co.firstChild, co);
+    co.remove();
+    return;
+  }
+  let blk = sel.anchorNode;
+  while (blk && blk.parentNode !== area) blk = blk.parentNode;
+  if (!blk || blk === area) return;
+  const box = document.createElement("div");
+  box.className = "callout";
+  area.insertBefore(box, blk);
+  box.appendChild(blk);
+}
+
+/* 에디터가 들고 있는 새 사진(data URL)을 깃허브에 올리고 주소를 바꿔 넣습니다.
+   prefix는 페이지 위치에 따른 상대 경로입니다. 루트 페이지는 "", p/해시/ 페이지는 "../../". */
+async function uploadEditorImages(area, key, prefix, setMsg) {
+  const imgs = Array.from(area.querySelectorAll("img[data-new]"));
+  for (let i = 0; i < imgs.length; i++) {
+    const im = imgs[i];
+    if (setMsg) setMsg("본문 사진을 올리는 중… (" + (i + 1) + "/" + imgs.length + ")");
+    const ext = im.getAttribute("data-new") || "jpg";
+    const b64 = String(im.src).split(",")[1];
+    if (!b64) { im.removeAttribute("data-new"); continue; }
+    const path = "assets/articles/" + key + "/img-" + Date.now().toString(36) + "-" + i + "." + ext;
+    await gh.writeBinary(path, b64, null, "어드민: 본문 사진 (" + key + ")");
+    im.src = (prefix || "") + path;
+    im.removeAttribute("data-new");
+  }
+}
+
+/* 에디터에 실제 내용이 있으면 HTML을, 비어 있으면 "" 를 돌려줍니다. */
+function editorBody(state) {
+  const ed = state.__editor;
+  if (!ed) return "";
+  const hasText = ed.area.textContent.trim().length > 0;
+  const hasMedia = !!ed.area.querySelector("img, iframe");
+  return (hasText || hasMedia) ? ed.getHtml() : "";
+}
+
+/* 페이지 경로에서 사진 폴더 이름과 상대 경로 prefix를 얻습니다.
+   사진은 assets/articles/<이름>/ 에 올라가는데, 페이지가 어느 깊이에 있느냐에
+   따라 그 폴더를 가리키는 상대 경로가 달라집니다. */
+function pageImageTarget(path) {
+  if (path.indexOf("p/") === 0) return { key: path.split("/")[1], prefix: "../../" };
+  if (path.indexOf("r/") === 0) {
+    return { key: path.slice(2).replace(/\.html$/, "").replace(/[^A-Za-z0-9-]+/g, "-"), prefix: "../" };
+  }
+  return { key: path.replace(/\.html$/, "").replace(/[^A-Za-z0-9-]+/g, "-"), prefix: "" };
+}
+
+/* 상세 화면에 붙는 본문 패널. 내용을 그대로 보여 주고, 그 자리에서 고칩니다. */
+function bodyPanel(path, refresh) {
+  const p = panel("본문", null);
+  const holder = el("div");
+  holder.textContent = "본문을 불러오는 중이에요…";
+  holder.style.cssText = "font-size:14px;color:var(--muted)";
+  p.appendChild(holder);
+
+  (async () => {
+    let f;
+    try {
+      f = await gh.read(path);
+    } catch (e) {
+      holder.textContent = "본문을 불러오지 못했어요. " + (e.message || "");
+      return;
+    }
+    if (!f.exists) { holder.textContent = "페이지 파일을 찾지 못했어요: " + path; return; }
+    const cut = extractBody(f.text);
+    if (!cut) {
+      holder.innerHTML = "";
+      holder.appendChild(el("div", "note",
+        "이 페이지는 본문 구획 표시가 없어 여기서 바로 고칠 수 없어요. HTML 편집으로 열어 주세요."));
+      const b = el("button", "btn btn-secondary btn-sm", "HTML로 수정");
+      b.type = "button";
+      b.addEventListener("click", () => openPageEditor(path, refresh));
+      holder.appendChild(b);
+      return;
+    }
+    renderView(f, cut);
+  })();
+
+  function renderView(f, cut) {
+    holder.innerHTML = "";
+    holder.style.cssText = "";
+    const view = el("div", "dv-body article-body");
+    view.innerHTML = cut.inner;
+    holder.appendChild(view);
+
+    const acts = el("div", "dv-acts");
+    const edit = el("button", "btn btn-primary btn-sm", "본문 수정하기");
+    edit.type = "button";
+    edit.addEventListener("click", () => renderEdit(f, cut));
+    const raw = el("button", "btn btn-ghost btn-sm", "HTML로 수정");
+    raw.type = "button";
+    raw.addEventListener("click", () => openPageEditor(path, refresh));
+    acts.appendChild(edit);
+    acts.appendChild(raw);
+    holder.appendChild(acts);
+  }
+
+  function renderEdit(f, cut) {
+    holder.innerHTML = "";
+    const ed = richEditor();
+    ed.setHtml(cut.inner);
+    holder.appendChild(ed.root);
+
+    const msg = el("div", "rt-hint",
+      "글자를 고치고 저장을 누르면 1~2분 안에 사이트에 반영돼요. 사진과 링크, 콜아웃은 위 도구로 넣습니다.");
+    const acts = el("div", "dv-acts");
+    const save = el("button", "btn btn-primary", "저장하고 배포");
+    const cancel = el("button", "btn btn-secondary", "취소");
+    save.type = "button";
+    cancel.type = "button";
+    cancel.addEventListener("click", () => renderView(f, cut));
+    save.addEventListener("click", async () => {
+      save.disabled = true; cancel.disabled = true;
+      save.innerHTML = '<span class="spin"></span> 저장 중';
+      try {
+        const t = pageImageTarget(path);
+        await uploadEditorImages(ed.area, t.key, t.prefix, m => { msg.textContent = m; });
+        const html = cut.before + "\n" + ed.getHtml() + "\n" + cut.after;
+        const r = await gh.writeText(path, html, f.sha, "어드민에서 본문 수정: " + path);
+        f.sha = r.sha;
+        f.text = html;
+        msg.textContent = "저장했어요. 1~2분 뒤 사이트에 반영됩니다.";
+        renderView(f, extractBody(html));
+      } catch (e) {
+        msg.textContent = "저장하지 못했어요. " + (e.message || "");
+        save.disabled = false; cancel.disabled = false;
+        save.textContent = "저장하고 배포";
+      }
+    });
+    acts.appendChild(save);
+    acts.appendChild(cancel);
+    holder.appendChild(acts);
+    holder.appendChild(msg);
+  }
+
+  return p;
+}
+
+/* 일부공개 자료의 본문 패널. 비밀번호는 어디에도 저장돼 있지 않아서
+   한 번 넣어야 페이지 주소를 찾을 수 있습니다. */
+function protectedBodyPanel(id, priv) {
+  const p = panel("본문",
+    "일부공개 자료의 주소는 비밀번호로 만들어져요. 안내하시는 비밀번호를 넣으면 본문이 열립니다.");
+  const row = el("div");
+  row.style.cssText = "display:flex;gap:8px;max-width:440px";
+  const pw = input("", "자료 비밀번호");
+  const go = el("button", "btn btn-secondary", "본문 열기");
+  go.type = "button";
+  row.appendChild(pw);
+  row.appendChild(go);
+  p.appendChild(row);
+  const err = el("div", "err", "");
+  p.appendChild(err);
+
+  const open = async () => {
+    const v = pw.value.trim();
+    if (!v) { err.textContent = "비밀번호를 입력해 주세요."; return; }
+    go.disabled = true; go.textContent = "확인 중…"; err.textContent = "";
+    try {
+      const hash = (await sha256hex(v)).slice(0, 16);
+      const path = "p/" + hash + "/index.html";
+      const f = await gh.read(path);
+      if (!f.exists) throw new Error("이 비밀번호로 만든 자료 페이지가 없어요. 다시 확인해 주세요.");
+      p.replaceWith(bodyPanel(path, () => openResourceDetail(id, priv)));
+    } catch (e) {
+      err.textContent = e.message || "열지 못했어요.";
+      go.disabled = false; go.textContent = "본문 열기";
+    }
+  };
+  go.addEventListener("click", open);
+  pw.addEventListener("keydown", e => { if (e.key === "Enter") open(); });
+  return p;
+}
+
+/* ---------------------------------------------------------------
    자료 / 인사이트 편집
    --------------------------------------------------------------- */
 function openResource(id, isPrivate) {
@@ -1469,7 +1798,7 @@ function openResource(id, isPrivate) {
   const list = isPrivate ? store.RESOURCES_PRIVATE : store.RESOURCES;
   const src = isNew ? {} : (list.find(r => r.id === id) || {});
 
-  const state = resume || {
+  const state = {
     id: id || "",
     category: src.category || CATEGORIES_RES[0],
     title: src.title || "",
@@ -1477,9 +1806,9 @@ function openResource(id, isPrivate) {
     thumb: src.thumb || "",
     access: isPrivate ? "private" : (src.access || "public"),
     href: src.href || "",
-    /* 일부공개 상세페이지용 */
+    /* 자료 페이지 내용 */
+    __editor: null,
     password: "",
-    intro: "",
     youtube: "",
     files: [],
     links: ""
@@ -1520,6 +1849,24 @@ function openResource(id, isPrivate) {
   }));
   view.appendChild(p1);
 
+  /* --- 본문 --- */
+  if (isNew) {
+    const pB = panel("본문 작성", "여기 쓴 내용으로 자료 페이지가 만들어져요. 제목 버튼을 누르면 엘리스체 제목이 됩니다.");
+    const ed = richEditor();
+    state.__editor = ed;
+    pB.appendChild(ed.root);
+    pB.appendChild(el("div", "rt-hint",
+      "공개 자료: 본문을 쓰면 페이지가 자동으로 만들어져요. 이미 만들어 둔 페이지에 연결하려면 본문은 비우고 아래 공개 설정에서 \"연결할 페이지\"만 적어 주세요. "
+      + "일부공개 자료: 본문과 함께 아래의 영상, 첨부 파일, 참고 링크가 비밀번호 페이지에 들어갑니다."));
+    view.appendChild(pB);
+  } else {
+    const pB = panel("본문", null);
+    const note = el("div", "note");
+    note.innerHTML = "글 내용은 목록에서 이 자료를 눌러 들어가는 <strong>상세 화면</strong>에서 그대로 보면서 고칠 수 있어요. 이 화면에서는 제목과 설명, 공개 범위만 다룹니다.";
+    pB.appendChild(note);
+    view.appendChild(pB);
+  }
+
   /* --- 공개 설정 --- */
   const p2 = panel("공개 설정", "누가 볼 수 있는지 정합니다.");
   p2.appendChild(segment([
@@ -1557,10 +1904,6 @@ function openResource(id, isPrivate) {
   p2.appendChild(pwPath);
 
   const contentBox = el("div");
-  const introIn = textarea("", "자료를 받는 분께 안내할 말을 적어 주세요. 엔터로 문단을 나눕니다.", 4);
-  introIn.addEventListener("input", () => state.intro = introIn.value);
-  contentBox.appendChild(field("안내 글", introIn));
-
   const ytIn = input("", "예: https://youtu.be/abc123", "url");
   ytIn.addEventListener("input", () => state.youtube = ytIn.value.trim());
   contentBox.appendChild(field("영상 링크", ytIn, { hint: "유튜브 주소를 넣으면 자료 페이지 안에서 바로 볼 수 있어요. 없으면 비워 두세요." }));
@@ -1620,7 +1963,8 @@ function openResource(id, isPrivate) {
       accessNote.innerHTML = "<strong>공개</strong> 누구나 목록에서 눌러 바로 볼 수 있어요.";
     } else if (a === "protected") {
       accessNote.innerHTML = "<strong>일부공개</strong> 비밀번호를 아는 분만 볼 수 있어요. "
-        + "저장하면 비밀번호로 만든 주소에 자료 페이지가 함께 만들어집니다.";
+        + "본문이나 파일 같은 새 내용을 넣고 저장하면 비밀번호로 만든 주소에 자료 페이지가 만들어집니다. "
+        + "제목이나 설명만 고칠 때는 비밀번호를 비워 두세요. 그러면 자료 페이지는 그대로 둡니다.";
     } else {
       accessNote.innerHTML = "<strong>비공개</strong> 사이트에 나타나지 않고 이 관리자 화면에만 보입니다. "
         + "준비가 끝나면 공개로 바꿔 주세요.";
@@ -1676,8 +2020,10 @@ function youtubeId(url) {
 
 /* 일부공개 자료 페이지 HTML */
 function buildProtectedPage(o) {
-  const paras = String(o.intro || "").split("\n").map(s => s.trim()).filter(Boolean)
-    .map(s => "      <p>" + escapeHtml(s) + "</p>").join("\n");
+  /* 마커는 article-body 안쪽에 둡니다. 어드민 편집기가 이 사이만 갈아 끼워요. */
+  const body = '      <div class="article-body">\n      ' + BODY_START + "\n"
+    + (o.bodyHtml ? o.bodyHtml + "\n" : "")
+    + "      " + BODY_END + "\n      </div>";
   const yt = o.youtubeId
     ? '      <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/' + o.youtubeId
       + '" title="영상" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>'
@@ -1699,6 +2045,7 @@ function buildProtectedPage(o) {
     + "<title>" + escapeHtml(o.title) + " - 크래빗 아카데미</title>\n"
     + '<link rel="icon" type="image/png" href="../../assets/favicon.png" />\n'
     + '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />\n'
+    + '<link rel="stylesheet" href="../../assets/article.css" />\n'
     + "<style>\n"
     + "  :root { --bg:#FFFFFF; --page:#F2F3F6; --card:#F9FAFC; --ink:#16192A; --muted:rgba(22,25,42,0.55); --line:#E8E8E8; --pink:#FB75BB; }\n"
     + "  * { box-sizing:border-box; }\n"
@@ -1733,7 +2080,7 @@ function buildProtectedPage(o) {
     + '<main class="wrap">\n  <div class="card">\n'
     + "    <h1>" + escapeHtml(o.title) + "</h1>\n"
     + '    <p class="lead">' + escapeHtml(o.sub || "") + "</p>\n"
-    + (paras ? paras + "\n" : "")
+    + body + "\n"
     + (yt ? yt + "\n" : "")
     + (files ? files + "\n" : "")
     + (links ? links + "\n" : "")
@@ -1745,6 +2092,50 @@ function escapeHtml(s) {
   return String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* 공개 자료의 아티클 페이지 HTML. r/이름.html 로 저장됩니다. */
+function buildArticlePage(o) {
+  return '<!DOCTYPE html>\n<html lang="ko">\n<head>\n'
+    + '<meta charset="utf-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1" />\n'
+    + "<title>" + escapeHtml(o.title) + " - 크래빗 아카데미</title>\n"
+    + '<meta name="description" content="' + escapeHtml(o.sub || "") + '" />\n'
+    + '<link rel="icon" type="image/png" href="../assets/favicon.png" />\n'
+    + '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />\n'
+    + '<link rel="stylesheet" href="../assets/article.css" />\n'
+    + "<style>\n"
+    + "  :root { --bg:#FFFFFF; --page:#F2F3F6; --card:#F9FAFC; --ink:#16192A; --muted:rgba(22,25,42,0.55); --line:#E8E8E8; --pink:#FB75BB; }\n"
+    + "  * { box-sizing:border-box; }\n"
+    + '  body { margin:0; background:var(--page); color:var(--ink); line-height:1.7; font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif; -webkit-font-smoothing:antialiased; }\n'
+    + "  .wrap { max-width:760px; margin:0 auto; padding:0 24px; }\n"
+    + "  header { background:var(--bg); border-bottom:1px solid var(--line); }\n"
+    + "  header .wrap { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; }\n"
+    + "  header img { height:24px; display:block; }\n"
+    + "  header a { font-size:15px; color:var(--muted); text-decoration:none; font-weight:500; }\n"
+    + "  header a:hover { color:var(--ink); }\n"
+    + "  main { padding:44px 0 72px; }\n"
+    + "  .card { background:var(--bg); border-radius:22px; padding:40px; box-shadow:0 1px 4px rgba(22,25,42,0.05); }\n"
+    + "  .eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:0.06em; color:var(--pink); margin-bottom:10px; }\n"
+    + "  h1 { font-size:26px; font-weight:700; letter-spacing:-0.02em; margin:0 0 10px; line-height:1.35; }\n"
+    + "  .lead { font-size:16px; color:var(--muted); margin:0 0 28px; }\n"
+    + "  footer { border-top:1px solid var(--line); padding:28px 0 40px; font-size:13.5px; color:var(--muted); }\n"
+    + "  a:focus-visible { outline:2px solid var(--pink); outline-offset:3px; border-radius:4px; }\n"
+    + "  @media (max-width:720px) { .card { padding:26px 22px; border-radius:18px; } h1 { font-size:22px; } }\n"
+    + "</style>\n</head>\n<body>\n\n"
+    + '<header><div class="wrap">\n'
+    + '  <a href="../"><img src="../assets/logo.png" alt="Crabit 아카데미" /></a>\n'
+    + '  <a href="../resources">자료 / 인사이트</a>\n'
+    + "</div></header>\n\n"
+    + '<main class="wrap">\n  <div class="card">\n'
+    + (o.category ? '    <span class="eyebrow">' + escapeHtml(o.category) + "</span>\n" : "")
+    + "    <h1>" + escapeHtml(o.title) + "</h1>\n"
+    + '    <p class="lead">' + escapeHtml(o.sub || "") + "</p>\n"
+    + '    <div class="article-body">\n    ' + BODY_START + "\n"
+    + (o.bodyHtml ? o.bodyHtml + "\n" : "")
+    + "    " + BODY_END + "\n    </div>\n"
+    + "  </div>\n</main>\n\n"
+    + '<footer><div class="wrap">(주)크래빗 | 크래빗 아카데미</div></footer>\n\n'
+    + "</body>\n</html>\n";
 }
 
 async function saveResource(state, wasId, isNew, wasPrivate, setMsg) {
@@ -1769,42 +2160,88 @@ async function saveResource(state, wasId, isNew, wasPrivate, setMsg) {
   /* 2. 일부공개면 비밀번호 경로에 자료 페이지를 만듭니다. */
   let href = state.href;
   if (state.access === "protected") {
-    if (!state.password) throw new Error("일부공개 자료는 비밀번호를 정해 주세요.");
-    if (state.password.length < 6) throw new Error("비밀번호는 6자 이상으로 정해 주세요.");
-    const hash = (await sha256hex(state.password)).slice(0, 16);
-    const dir = "p/" + hash + "/";
+    const bodyNew = editorBody(state);
+    const hasNewContent = !!bodyNew || state.files.length > 0
+      || !!String(state.links || "").trim() || !!String(state.youtube || "").trim();
 
-    /* 첨부파일 먼저 올립니다. */
-    const uploaded = [];
-    for (let i = 0; i < state.files.length; i++) {
-      const f = state.files[i];
-      setMsg("파일을 올리는 중… (" + (i + 1) + "/" + state.files.length + ")");
-      const fname = safeFileName(f.name, key, i);
-      await gh.writeBinary(dir + fname, f.base64, null, "어드민: " + state.title + " 첨부 " + fname);
-      uploaded.push({ path: fname, label: f.name });
+    if (!isNew && !hasNewContent && !state.password) {
+      /* 이름이나 설명만 고치는 저장. 자료 페이지는 건드리지 않으니
+         비밀번호도 필요 없습니다. */
+      href = "";
+    } else {
+      if (!state.password) {
+        throw new Error("일부공개 자료는 비밀번호를 정해 주세요."
+          + (isNew ? "" : " (내용을 바꾸지 않을 때는 새 내용을 비우면 비밀번호 없이 저장돼요.)"));
+      }
+      if (state.password.length < 6) throw new Error("비밀번호는 6자 이상으로 정해 주세요.");
+      const hash = (await sha256hex(state.password)).slice(0, 16);
+      const dir = "p/" + hash + "/";
+      const cur = await gh.read(dir + "index.html");
+
+      if (cur.exists && !hasNewContent) {
+        /* 페이지가 이미 있는데 새 내용이 없으면 그대로 둡니다. */
+        href = "";
+      } else {
+        /* 본문: 새로 썼으면 그걸 쓰고, 아니면 기존 페이지의 본문을 살립니다.
+           (파일만 추가할 때 글이 날아가지 않게요) */
+        let bodyHtml = "";
+        if (bodyNew) {
+          await uploadEditorImages(state.__editor.area, hash, "../../", setMsg);
+          bodyHtml = state.__editor.getHtml();
+        } else if (cur.exists) {
+          const cut = extractBody(cur.text);
+          if (cut) bodyHtml = cut.inner.trim();
+        }
+
+        /* 첨부파일을 올립니다. */
+        const uploaded = [];
+        for (let i = 0; i < state.files.length; i++) {
+          const f = state.files[i];
+          setMsg("파일을 올리는 중… (" + (i + 1) + "/" + state.files.length + ")");
+          const fname = safeFileName(f.name, key, i);
+          await gh.writeBinary(dir + fname, f.base64, null, "어드민: " + state.title + " 첨부 " + fname);
+          uploaded.push({ path: fname, label: f.name });
+        }
+
+        const links = String(state.links || "").split("\n").map(s => s.trim()).filter(Boolean).map(line => {
+          const bar = line.indexOf("|");
+          return bar === -1
+            ? { label: line, url: line }
+            : { label: line.slice(0, bar).trim(), url: line.slice(bar + 1).trim() };
+        });
+
+        setMsg("자료 페이지를 만드는 중…");
+        const html = buildProtectedPage({
+          title: state.title.trim(),
+          sub: state.sub.trim(),
+          bodyHtml,
+          youtubeId: youtubeId(state.youtube),
+          files: uploaded,
+          links
+        });
+        await gh.writeText(dir + "index.html", html, cur.exists ? cur.sha : null,
+          "어드민: " + state.title + " 자료 페이지");
+        href = "";   // 일부공개는 목록에서 비밀번호 모달을 띄웁니다.
+      }
     }
-
-    const links = String(state.links || "").split("\n").map(s => s.trim()).filter(Boolean).map(line => {
-      const bar = line.indexOf("|");
-      return bar === -1
-        ? { label: line, url: line }
-        : { label: line.slice(0, bar).trim(), url: line.slice(bar + 1).trim() };
-    });
-
-    setMsg("자료 페이지를 만드는 중…");
-    const html = buildProtectedPage({
-      title: state.title.trim(),
-      sub: state.sub.trim(),
-      intro: state.intro,
-      youtubeId: youtubeId(state.youtube),
-      files: uploaded,
-      links
-    });
-    /* 이미 있으면 덮어써야 하므로 sha를 먼저 확인합니다. */
-    const cur = await gh.read(dir + "index.html");
-    await gh.writeText(dir + "index.html", html, cur.exists ? cur.sha : null,
-      "어드민: " + state.title + " 자료 페이지");
-    href = "";   // 일부공개는 목록에서 비밀번호 모달을 띄웁니다.
+  } else {
+    /* 2-2. 공개·비공개 자료에 본문을 쓰면 아티클 페이지를 만들어 연결합니다. */
+    const bodyNew = editorBody(state);
+    if (bodyNew && !href) {
+      await uploadEditorImages(state.__editor.area, key, "../", setMsg);
+      setMsg("아티클 페이지를 만드는 중…");
+      const html = buildArticlePage({
+        title: state.title.trim(),
+        sub: state.sub.trim(),
+        category: state.category,
+        bodyHtml: state.__editor.getHtml()
+      });
+      const path = "r/" + key + ".html";
+      const cur = await gh.read(path);
+      await gh.writeText(path, html, cur.exists ? cur.sha : null,
+        "어드민: 아티클 페이지 - " + state.title);
+      href = "r/" + key;
+    }
   }
 
   /* 3. 항목 만들기 */

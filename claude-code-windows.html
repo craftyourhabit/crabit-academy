@@ -457,13 +457,6 @@
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-/* ---- 우측 고정 아웃라인 ---- */
-.side-toc{position:fixed;top:96px;right:26px;width:196px;display:none;z-index:40}
-@media(min-width:1180px){.side-toc{display:block}}
-.side-toc .toc-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:rgba(22,25,42,.3);margin-bottom:10px}
-.side-toc a{display:block;font-size:13px;line-height:1.5;color:rgba(22,25,42,.45);text-decoration:none;padding:5px 0 5px 12px;border-left:2px solid #EDEDEF;transition:color .15s,border-color .15s}
-.side-toc a:hover{color:#16192A}
-.side-toc a.on{color:#16192A;font-weight:700;border-left-color:#FB75BB}
 </style>
 </head>
 <body>
@@ -480,16 +473,6 @@
     </nav>
   </div>
 </header>
-<nav class="side-toc" id="sideToc" aria-label="목차">
-  <div class="toc-label">목차</div>
-    <a href="#cw1">시작 전 3가지</a>
-    <a href="#cw2">화면 그대로 따라하기</a>
-    <a href="#cw3">웹 vs 데스크탑 앱</a>
-    <a href="#cw4">활용 아이디어</a>
-    <a href="#cw5">자주 묻는 질문</a>
-</nav>
-
-
 <nav class="toc" aria-label="개요">
   <div class="toc-h">개요</div>
   <ul>
@@ -960,22 +943,5 @@
 
 <script src="assets/track.js?v=202608191626" defer></script>
 
-<script>
-(function(){
-  var toc=document.getElementById('sideToc'); if(!toc) return;
-  var links=[].slice.call(toc.querySelectorAll('a'));
-  var targets=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))}).filter(Boolean);
-  function spy(){
-    var cur=targets[0];
-    targets.forEach(function(t){ if(t.getBoundingClientRect().top<=150) cur=t; });
-    links.forEach(function(a){ a.classList.toggle('on', cur && a.getAttribute('href')==='#'+cur.id); });
-  }
-  window.addEventListener('scroll', spy, {passive:true}); spy();
-  links.forEach(function(a){ a.addEventListener('click', function(e){
-    var t=document.getElementById(a.getAttribute('href').slice(1));
-    if(t){ e.preventDefault(); window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-100, behavior:'smooth'}); }
-  });});
-})();
-</script>
 </body>
 </html>

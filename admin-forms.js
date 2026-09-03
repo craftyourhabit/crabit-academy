@@ -2452,7 +2452,12 @@ function apSmsBody(it, link) {
     : who + ", “" + title + "” 신청이 확인됐어요.";
 
   const mid = [];
-  if (ev.date) mid.push("📅 일시: " + ev.date + (place ? " | " + place : ""));
+  if (ev.date) {
+    /* 날짜 칸에 이미 진행 방식이 적혀 있으면(원장님이 직접 넣는 경우가 많아요)
+       중복으로 또 붙이지 않습니다. */
+    const dupe = place && ev.date.indexOf(place) !== -1;
+    mid.push("📅 일시: " + ev.date + (place && !dupe ? " | " + place : ""));
+  }
   if (link) mid.push("🔗 줌 참여 링크: " + link);
 
   const parts = ["[크래빗 아카데미] ", "", greet];
@@ -2461,24 +2466,79 @@ function apSmsBody(it, link) {
   return parts.join("\n");
 }
 
+/* 브라우저 기본 confirm 대신 사이트 톤의 모달로 물어봅니다.
+   문자 본문처럼 여러 줄 미리보기를 보여 줄 수 있고, Promise<boolean> 을 돌려줘
+   await 로 씁니다. admin.html 의 .back / .modal 스타일을 그대로 씁니다. */
+function uiConfirm(opts) {
+  opts = opts || {};
+  return new Promise(resolve => {
+    const back = el("div", "back show");
+    const modal = el("div", "modal");
+    modal.style.maxWidth = "480px";
+    modal.appendChild(el("h3", null, opts.title || "확인"));
+    if (opts.desc) modal.appendChild(el("p", null, opts.desc));
+    if (opts.preview) {
+      const pre = el("div");
+      pre.style.cssText = "white-space:pre-wrap;word-break:break-all;background:var(--card);"
+        + "border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:13.5px;"
+        + "line-height:1.65;max-height:46vh;overflow:auto;margin:0 0 20px";
+      pre.textContent = opts.preview;
+      modal.appendChild(pre);
+    }
+    const acts = el("div", "m-acts");
+    const no = el("button", "btn btn-secondary", opts.cancelText || "취소");
+    const yes = el("button", "btn " + (opts.danger ? "btn-danger" : "btn-primary"), opts.okText || "확인");
+
+    let done = false;
+    const close = v => {
+      if (done) return;
+      done = true;
+      document.removeEventListener("keydown", onKey);
+      back.remove();
+      resolve(v);
+    };
+    const onKey = e => { if (e.key === "Escape") close(false); };
+    no.addEventListener("click", () => close(false));
+    yes.addEventListener("click", () => close(true));
+    back.addEventListener("click", e => { if (e.target === back) close(false); });
+    document.addEventListener("keydown", onKey);
+
+    acts.appendChild(no);
+    acts.appendChild(yes);
+    modal.appendChild(acts);
+    back.appendChild(modal);
+    document.body.appendChild(back);
+    yes.focus();
+  });
+}
+
 /* 신청자에게 안내 문자를 폰 메시지 앱을 열지 않고 바로 보냅니다.
    Edge Function 'send-sms' 가 솔라피로 실제 발송합니다.
    요금이 부과되고 되돌릴 수 없어서 보내기 전에 한 번 확인합니다. */
 async function sendSmsDirect(it, btn) {
   const link = localStorage.getItem("crabit_zoom_" + it.event_id) || "";
   const body = apSmsBody(it, link);
+  const ev = store.EVENTS_DB[it.event_id] || {};
 
   /* 온라인 강의인데 줌 링크가 아직 없으면 먼저 알려 줍니다. */
-  const ev = store.EVENTS_DB[it.event_id] || {};
   if (ev.format === "online" && !link) {
-    if (!confirm("이 강의의 줌 링크가 아직 설정되지 않았어요.\n"
-      + "줌 링크 없이 그대로 보낼까요? (위 \"줌링크 설정\"에서 먼저 넣는 걸 권해요)")) return;
+    const go = await uiConfirm({
+      title: "줌 링크가 아직 없어요",
+      desc: "이 강의의 줌 참여 링크가 설정되지 않았어요. 줌 링크 없이 그대로 보낼까요? (위 “줌링크 설정”에서 먼저 넣는 걸 권해요)",
+      okText: "링크 없이 보내기",
+      cancelText: "멈추기"
+    });
+    if (!go) return;
   }
 
-  const preview = body.length > 240 ? body.slice(0, 240) + "…" : body;
-  if (!confirm("아래 내용을 " + (it.name || "") + "님(" + it.phone + ")에게 문자로 보낼까요?\n"
-    + "건당 요금이 부과되고, 보낸 문자는 취소할 수 없어요.\n\n"
-    + "─────────\n" + preview)) return;
+  const ok = await uiConfirm({
+    title: (it.name || "") + "님(" + it.phone + ")에게 문자를 보낼까요?",
+    desc: "건당 요금이 부과되고, 보낸 문자는 취소할 수 없어요.",
+    preview: body,
+    okText: "네, 보낼게요",
+    cancelText: "취소"
+  });
+  if (!ok) return;
 
   const orig = btn ? btn.textContent : "";
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 보내는 중'; }
@@ -2494,8 +2554,13 @@ async function sendSmsDirect(it, btn) {
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = orig || "문자 보내기"; }
     /* 발송이 안 되면 원인을 알리고, 급할 때를 위해 메시지 앱으로 여는 길도 남깁니다. */
-    if (confirm("문자를 보내지 못했어요.\n" + (e.message || "")
-      + "\n\n대신 폰 메시지 앱을 열어 직접 보낼까요? (문구는 자동으로 채워져요)")) {
+    const retry = await uiConfirm({
+      title: "문자를 보내지 못했어요",
+      desc: (e.message || "알 수 없는 오류예요.") + "\n\n대신 폰 메시지 앱을 열어 직접 보낼까요? 문구는 자동으로 채워져요.",
+      okText: "메시지 앱 열기",
+      cancelText: "닫기"
+    });
+    if (retry) {
       try { navigator.clipboard.writeText(body); } catch (_e) { /* 복사 실패해도 진행 */ }
       window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(body);
     }

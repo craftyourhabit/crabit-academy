@@ -2467,8 +2467,10 @@ function apSmsBody(it, link) {
 }
 
 /* 브라우저 기본 confirm 대신 사이트 톤의 모달로 물어봅니다.
-   문자 본문처럼 여러 줄 미리보기를 보여 줄 수 있고, Promise<boolean> 을 돌려줘
-   await 로 씁니다. admin.html 의 .back / .modal 스타일을 그대로 씁니다. */
+   admin.html 의 .back / .modal 스타일을 그대로 씁니다.
+   - 기본: 취소 false, 확인 true 를 돌려줍니다.
+   - opts.editable 이면 미리보기를 편집 가능한 입력창으로 띄우고,
+     확인 시 고친 내용(문자열)을, 취소 시 false 를 돌려줍니다. */
 function uiConfirm(opts) {
   opts = opts || {};
   return new Promise(resolve => {
@@ -2477,7 +2479,19 @@ function uiConfirm(opts) {
     modal.style.maxWidth = "480px";
     modal.appendChild(el("h3", null, opts.title || "확인"));
     if (opts.desc) modal.appendChild(el("p", null, opts.desc));
-    if (opts.preview) {
+
+    let ta = null;
+    if (opts.editable) {
+      ta = document.createElement("textarea");
+      ta.value = opts.preview || "";
+      ta.style.cssText = "width:100%;min-height:210px;max-height:46vh;font-family:inherit;"
+        + "font-size:13.5px;line-height:1.65;border:1px solid var(--line);border-radius:10px;"
+        + "padding:13px 15px;background:var(--bg);color:var(--ink);resize:vertical;box-sizing:border-box";
+      modal.appendChild(ta);
+      const hint = el("div", null, "보내기 전에 여기서 바로 고칠 수 있어요.");
+      hint.style.cssText = "font-size:12.5px;color:var(--muted);margin:7px 0 20px";
+      modal.appendChild(hint);
+    } else if (opts.preview) {
       const pre = el("div");
       pre.style.cssText = "white-space:pre-wrap;word-break:break-all;background:var(--card);"
         + "border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:13.5px;"
@@ -2485,6 +2499,7 @@ function uiConfirm(opts) {
       pre.textContent = opts.preview;
       modal.appendChild(pre);
     }
+
     const acts = el("div", "m-acts");
     const no = el("button", "btn btn-secondary", opts.cancelText || "취소");
     const yes = el("button", "btn " + (opts.danger ? "btn-danger" : "btn-primary"), opts.okText || "확인");
@@ -2497,9 +2512,10 @@ function uiConfirm(opts) {
       back.remove();
       resolve(v);
     };
-    const onKey = e => { if (e.key === "Escape") close(false); };
+    /* 입력창 안에서 Esc 는 편집 취소로 오해될 수 있어, 편집 모드에선 Esc 로 닫지 않습니다. */
+    const onKey = e => { if (e.key === "Escape" && !opts.editable) close(false); };
     no.addEventListener("click", () => close(false));
-    yes.addEventListener("click", () => close(true));
+    yes.addEventListener("click", () => close(ta ? ta.value : true));
     back.addEventListener("click", e => { if (e.target === back) close(false); });
     document.addEventListener("keydown", onKey);
 
@@ -2531,21 +2547,28 @@ async function sendSmsDirect(it, btn) {
     if (!go) return;
   }
 
-  const ok = await uiConfirm({
+  const edited = await uiConfirm({
     title: (it.name || "") + "님(" + it.phone + ")에게 문자를 보낼까요?",
     desc: "건당 요금이 부과되고, 보낸 문자는 취소할 수 없어요.",
     preview: body,
+    editable: true,
     okText: "네, 보낼게요",
     cancelText: "취소"
   });
-  if (!ok) return;
+  if (edited === false) return;   // 취소
+
+  const text = String(edited).trim();
+  if (!text) {
+    await uiConfirm({ title: "보낼 내용이 비어 있어요", desc: "문자 내용을 입력한 뒤 다시 보내 주세요.", okText: "확인", cancelText: "닫기" });
+    return;
+  }
 
   const orig = btn ? btn.textContent : "";
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 보내는 중'; }
   try {
     const res = await sbFetch(SB_URL + "/functions/v1/send-sms", {
       method: "POST",
-      body: { to: it.phone, text: body, subject: "크래빗 아카데미" }
+      body: { to: it.phone, text: text, subject: "크래빗 아카데미" }
     });
     const data = await res.json().catch(() => ({}));
     if (res.status === 401) { expired(data.error); return; }
@@ -2561,8 +2584,8 @@ async function sendSmsDirect(it, btn) {
       cancelText: "닫기"
     });
     if (retry) {
-      try { navigator.clipboard.writeText(body); } catch (_e) { /* 복사 실패해도 진행 */ }
-      window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(body);
+      try { navigator.clipboard.writeText(text); } catch (_e) { /* 복사 실패해도 진행 */ }
+      window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(text);
     }
   }
 }

@@ -100,26 +100,37 @@
   .flow li .f-sub { color: var(--muted); font-size: 14.5px; }
   .flow mark { background: var(--tint); border-bottom: 2px solid var(--pink); padding: 0 3px; border-radius: 3px; color: var(--ink); }
 
+  /* 1부~4부 섹션 바로가기. 낱개 알약이 아니라 회색 트랙 위에 얹힌
+     세그먼트 탭 모양으로 묶어, 한 덩어리로 읽히게 합니다. */
   .toc {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 4px;
+    background: var(--page);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 4px;
     margin-bottom: 36px;
   }
   .toc a {
-    display: inline-block;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 99px;
-    padding: 10px 18px;
+    flex: 1;
+    text-align: center;
+    background: transparent;
+    border-radius: 8px;
+    padding: 11px 12px;
     font-size: 15px;
     font-weight: 600;
-    color: var(--ink);
+    color: var(--muted);
     text-decoration: none;
-    transition: background 0.15s;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
   }
-  .toc a:hover { background: var(--fill-soft); }
+  .toc a:hover { background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgba(22, 25, 42, 0.08); }
   .toc a .toc-n { color: var(--pink); font-weight: 700; margin-right: 6px; }
+  /* 좁은 화면에서는 4칸을 억지로 나누지 않고 가로 스크롤로 넘깁니다. */
+  @media (max-width: 560px) {
+    .toc { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .toc a { flex: none; }
+  }
 
   .part { margin-bottom: 44px; scroll-margin-top: 20px; }
   .part-head { margin-bottom: 18px; }
@@ -242,8 +253,9 @@
     <span class="eyebrow">랜딩페이지 프롬프트집</span>
     <h1>학원에서 필요한 랜딩페이지 아이디어 30선<br />+ 프롬프트집</h1>
     <p>
-      대구학원연합회 강의(2026.09.01) 후속 자료입니다. 모집부터 상담, 수업, 학부모 관리까지
-      학원 운영 전 영역에서 바로 쓸 수 있는 랜딩페이지 프롬프트 30개를 담았어요.
+      모집부터 상담, 수업, 학부모 관리까지 학원 운영 전 영역에서 바로 쓸 수 있는
+      랜딩페이지 프롬프트 30개를 담았어요. 젠스파크 코드 기능에 맞춰 정리했지만,
+      어떤 바이브코딩 툴이든 상관없이 그대로 복사해 붙여넣으시면 됩니다.
     </p>
   </div>
 
@@ -251,7 +263,7 @@
     <h2 id="howto">사용법은 딱 3단계입니다</h2>
     <ol>
       <li><div><strong>마음에 드는 카드에서 "복사하기"를 누릅니다</strong><span class="f-sub">프롬프트 전체가 그대로 복사돼요</span></div></li>
-      <li><div><strong>젠스파크 채팅창에 붙여넣고 전송해요</strong><span class="f-sub">붙여넣기는 Ctrl+V 또는 Cmd+V</span></div></li>
+      <li><div><strong>바이브코딩 툴 채팅창에 붙여넣고 전송해요</strong><span class="f-sub">젠스파크든 다른 툴이든 상관없어요. 붙여넣기는 Ctrl+V 또는 Cmd+V</span></div></li>
       <li><div><strong><mark>분홍 표시</mark> 부분만 우리 학원 내용으로 바꿉니다</strong><span class="f-sub">나머지는 그대로 둬도 잘 작동해요</span></div></li>
     </ol>
   </div>

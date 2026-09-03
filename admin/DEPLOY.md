@@ -34,9 +34,13 @@
 이미 하셨다면 넘어가세요.
 
 1. Supabase 대시보드 → **SQL Editor**
-2. `admin/supabase-schema.sql` 내용을 붙여넣고 **Run**
+2. `admin/supabase-schema.sql` 내용을 붙여넣고 **Run** (신청자 표)
+3. `admin/supabase-messages.sql` 내용도 붙여넣고 **Run** (문자·알림톡 발송 기록 표)
 
 두 번 실행해도 안전합니다.
+`supabase-messages.sql` 을 실행해야 "누구에게 언제 어떤 문자를 보냈는지"가
+상세 화면에 남고, 목록에서 이미 보낸 사람을 "문자 보냄"으로 표시해
+중복 발송을 피할 수 있어요. 실행 전에도 문자 발송 자체는 됩니다.
 
 이 스키마는 anon(비로그인)에게 **INSERT 권한만, 그것도 지정한 칼럼에만** 줍니다.
 `status`, `paid_at`, `memo` 는 아예 못 건드립니다. 조회는 RLS와 권한 양쪽에서 막힙니다.

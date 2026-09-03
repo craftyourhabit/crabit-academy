@@ -596,6 +596,57 @@ function openApplicantDetail(it) {
     view.appendChild(pn);
   }
 
+  /* 이 신청자에게 나간 안내(문자·알림톡) 기록. 중복 안내를 피하는 데도 씁니다. */
+  const pmLog = panel("보낸 안내", "이 신청자에게 나간 문자와 알림톡 기록이에요.");
+  const logBox = el("div");
+  logBox.style.cssText = "font-size:14px;color:var(--muted)";
+  logBox.textContent = "불러오는 중이에요…";
+  pmLog.appendChild(logBox);
+  view.appendChild(pmLog);
+  (async () => {
+    let rows;
+    try {
+      rows = await table("/academy_messages?select=*&application_id=eq."
+        + encodeURIComponent(it.id) + "&order=created_at.desc");
+    } catch (e) {
+      logBox.textContent = "기록 기능이 아직 켜지지 않았어요. (admin/supabase-messages.sql 을 한 번 실행해 주세요)";
+      return;
+    }
+    if (!rows || !rows.length) {
+      logBox.textContent = "아직 보낸 안내가 없어요.";
+      return;
+    }
+    logBox.textContent = "";
+    logBox.style.color = "var(--ink)";
+    rows.forEach(r => {
+      const row = el("div");
+      row.style.cssText = "border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px;background:#fff";
+      const top = el("div");
+      top.style.cssText = "display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px";
+      const ch = el("span", null, r.channel === "alimtalk" ? "알림톡" : "문자");
+      ch.style.cssText = "font-size:12px;font-weight:700;color:var(--pink);background:var(--tint);border-radius:6px;padding:2px 8px";
+      top.appendChild(ch);
+      const okFail = el("span", null, r.status === "ok" ? "발송 성공" : "실패");
+      okFail.style.cssText = "font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px;"
+        + (r.status === "ok" ? "color:#1E7B41;background:#E6F4EA" : "color:#C2255C;background:#FFF0F5");
+      top.appendChild(okFail);
+      const when = el("span", null, apDate(r.created_at));
+      when.style.cssText = "font-size:12.5px;color:var(--muted)";
+      top.appendChild(when);
+      row.appendChild(top);
+      const body = el("div");
+      body.style.cssText = "font-size:13.5px;line-height:1.65;white-space:pre-wrap;word-break:break-all;color:var(--ink)";
+      body.textContent = r.text || "";
+      row.appendChild(body);
+      if (r.status !== "ok" && r.error) {
+        const er = el("div", null, "사유: " + r.error);
+        er.style.cssText = "font-size:12.5px;color:#C2255C;margin-top:6px";
+        row.appendChild(er);
+      }
+      logBox.appendChild(row);
+    });
+  })();
+
   const acts = el("div", "dv-acts");
   const isPaid = it.status === "paid";
   const isCancelled = it.status === "cancelled";
@@ -2528,13 +2579,78 @@ function uiConfirm(opts) {
   });
 }
 
-/* 신청자에게 안내 문자를 폰 메시지 앱을 열지 않고 바로 보냅니다.
-   Edge Function 'send-sms' 가 솔라피로 실제 발송합니다.
-   요금이 부과되고 되돌릴 수 없어서 보내기 전에 한 번 확인합니다. */
-async function sendSmsDirect(it, btn) {
-  const link = localStorage.getItem("crabit_zoom_" + it.event_id) || "";
-  const body = apSmsBody(it, link);
-  const ev = store.EVENTS_DB[it.event_id] || {};
+/* 이미 문자를 보낸 신청 id 모음. 중복 발송을 피하고 목록에 표시하는 데 씁니다.
+   기록 테이블이 아직 없으면(설치 전) null 을 돌려줘 기능을 조용히 건너뜁니다. */
+async function fetchSentSet(eventId) {
+  try {
+    const rows = await table("/academy_messages?select=application_id&status=eq.ok"
+      + (eventId ? "&event_id=eq." + encodeURIComponent(eventId) : "")) || [];
+    return new Set(rows.map(r => r.application_id));
+  } catch (e) {
+    return null;
+  }
+}
+
+/* 발송 기록을 남깁니다. 실패해도 발송 자체는 이미 끝났으니 조용히 넘어갑니다. */
+async function logMessage(it, text, ok, err) {
+  try {
+    await table("/academy_messages", {
+      method: "POST",
+      headers: { "Prefer": "return=minimal" },
+      body: {
+        application_id: it.id,
+        event_id: it.event_id || null,
+        phone: String(it.phone || "").replace(/[^0-9]/g, ""),
+        channel: "sms",
+        text: text,
+        status: ok ? "ok" : "fail",
+        error: err || null
+      }
+    });
+  } catch (e) { /* 기록 실패는 무시 (테이블 미설치 등) */ }
+}
+
+/* 한 명에게 실제로 보내고 기록까지 남깁니다. { ok, error } 를 돌려줍니다.
+   401(로그인 만료)이면 위로 던져 전체를 멈춥니다. */
+async function postSms(it, text) {
+  const res = await sbFetch(SB_URL + "/functions/v1/send-sms", {
+    method: "POST",
+    body: { to: it.phone, text: text, subject: "크래빗 아카데미" }
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) { expired(data.error); throw new Error("세션 만료"); }
+  const ok = res.ok && data.ok;
+  const error = ok ? null : (data.error || ("발송 실패 (" + res.status + ")"));
+  await logMessage(it, text, ok, error);
+  return { ok, error };
+}
+
+/* 버튼 없이 상태만 보여 주는 간단한 진행 모달. */
+function progressModal(title) {
+  const back = el("div", "back show");
+  const modal = el("div", "modal");
+  modal.style.maxWidth = "380px";
+  modal.appendChild(el("h3", null, title));
+  const status = el("p", null, "준비 중이에요…");
+  status.style.margin = "0";
+  modal.appendChild(status);
+  back.appendChild(modal);
+  document.body.appendChild(back);
+  return { set: t => { status.textContent = t; }, close: () => back.remove() };
+}
+
+/* 체크한 신청자들에게 안내 문자를 한 번에 보냅니다.
+   이미 받은 사람은 기본적으로 빼서 중복 안내를 막습니다. */
+async function sendSmsBulk(list, btn) {
+  list = (list || []).filter(i => i.phone);
+  if (!list.length) {
+    await uiConfirm({ title: "보낼 대상이 없어요", desc: "문자를 보낼 신청자를 왼쪽에서 먼저 체크해 주세요.", okText: "확인", cancelText: "닫기" });
+    return;
+  }
+
+  const evId = list[0].event_id;
+  const link = localStorage.getItem("crabit_zoom_" + evId) || "";
+  const ev = store.EVENTS_DB[evId] || {};
 
   /* 온라인 강의인데 줌 링크가 아직 없으면 먼저 알려 줍니다. */
   if (ev.format === "online" && !link) {
@@ -2547,47 +2663,69 @@ async function sendSmsDirect(it, btn) {
     if (!go) return;
   }
 
-  const edited = await uiConfirm({
-    title: (it.name || "") + "님(" + it.phone + ")에게 문자를 보낼까요?",
-    desc: "건당 요금이 부과되고, 보낸 문자는 취소할 수 없어요.",
-    preview: body,
-    editable: true,
-    okText: "네, 보낼게요",
-    cancelText: "취소"
-  });
-  if (edited === false) return;   // 취소
-
-  const text = String(edited).trim();
-  if (!text) {
-    await uiConfirm({ title: "보낼 내용이 비어 있어요", desc: "문자 내용을 입력한 뒤 다시 보내 주세요.", okText: "확인", cancelText: "닫기" });
-    return;
-  }
-
-  const orig = btn ? btn.textContent : "";
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> 보내는 중'; }
-  try {
-    const res = await sbFetch(SB_URL + "/functions/v1/send-sms", {
-      method: "POST",
-      body: { to: it.phone, text: text, subject: "크래빗 아카데미" }
-    });
-    const data = await res.json().catch(() => ({}));
-    if (res.status === 401) { expired(data.error); return; }
-    if (!res.ok || !data.ok) throw new Error(data.error || ("발송 실패 (" + res.status + ")"));
-    if (btn) { btn.textContent = "보냈어요"; btn.classList.remove("btn-secondary"); btn.classList.add("btn-primary"); }
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.textContent = orig || "문자 보내기"; }
-    /* 발송이 안 되면 원인을 알리고, 급할 때를 위해 메시지 앱으로 여는 길도 남깁니다. */
-    const retry = await uiConfirm({
-      title: "문자를 보내지 못했어요",
-      desc: (e.message || "알 수 없는 오류예요.") + "\n\n대신 폰 메시지 앱을 열어 직접 보낼까요? 문구는 자동으로 채워져요.",
-      okText: "메시지 앱 열기",
-      cancelText: "닫기"
-    });
-    if (retry) {
-      try { navigator.clipboard.writeText(text); } catch (_e) { /* 복사 실패해도 진행 */ }
-      window.location.href = "sms:" + String(it.phone) + "&body=" + encodeURIComponent(text);
+  /* 중복 방지: 이미 보낸 사람은 뺍니다. 전원이 이미 받았으면 다시 보낼지 물어봅니다. */
+  const sent = await fetchSentSet(evId);
+  let target = list;
+  let skipped = 0;
+  if (sent) {
+    const fresh = list.filter(i => !sent.has(i.id));
+    skipped = list.length - fresh.length;
+    if (!fresh.length) {
+      const again = await uiConfirm({
+        title: "모두 이미 문자를 받았어요",
+        desc: "선택한 " + list.length + "명 모두 이전에 안내 문자를 받았어요. 그래도 다시 보낼까요?",
+        okText: "다시 보내기",
+        cancelText: "취소"
+      });
+      if (!again) return;
+      target = list;
+    } else {
+      target = fresh;
     }
   }
+
+  const example = apSmsBody(target[0], link);
+  const ok = await uiConfirm({
+    title: "선택한 " + target.length + "명에게 문자를 보낼까요?",
+    desc: "각자 성함으로 발송돼요. 건당 요금이 부과되고 취소할 수 없어요."
+      + (skipped ? " 이미 받은 " + skipped + "명은 자동으로 뺐어요." : "")
+      + " 아래는 " + (target[0].name || "") + "님께 갈 예시예요.",
+    preview: example,
+    okText: target.length + "명에게 보내기",
+    cancelText: "취소"
+  });
+  if (!ok) return;
+
+  if (btn) btn.disabled = true;
+  const prog = progressModal("문자 보내는 중");
+  let done = 0, fail = 0;
+  const fails = [];
+  try {
+    for (let i = 0; i < target.length; i++) {
+      const it = target[i];
+      prog.set(target.length + "명 중 " + (i + 1) + "명째 보내는 중…");
+      const text = apSmsBody(it, localStorage.getItem("crabit_zoom_" + it.event_id) || "");
+      try {
+        const r = await postSms(it, text);
+        if (r.ok) done++; else { fail++; fails.push((it.name || it.phone) + ": " + r.error); }
+      } catch (e) {
+        /* 401 등으로 postSms 가 던지면 전체 중단 */
+        prog.close();
+        return;
+      }
+    }
+  } finally {
+    prog.close();
+  }
+
+  await uiConfirm({
+    title: "발송을 마쳤어요",
+    desc: target.length + "명 중 " + done + "명에게 보냈어요."
+      + (fail ? "\n\n" + fail + "명은 실패했어요:\n" + fails.slice(0, 6).join("\n") : ""),
+    okText: "확인",
+    cancelText: "닫기"
+  });
+  renderApplications();
 }
 
 /* 신청자 탭 첫 화면. 강의별 신청 현황을 카드로 보여 주고, 고르면 목록으로 들어갑니다. */
@@ -2677,6 +2815,22 @@ async function renderApplications() {
   /* 무료 강의는 입금이라는 개념이 없어서 입금확인 버튼과 메모 칸을 걷어냅니다. */
   const evFree = !!apFilter && (store.EVENTS_DB[apFilter] || {}).priceType !== "paid";
 
+  /* 문자 일괄 발송: 특정 강의를 보고 있을 때만. 행마다 체크해서 한 번에 보냅니다.
+     선택은 이 화면이 다시 그려지기 전까지만 유지됩니다. */
+  const canSms = !!apFilter;
+  const selected = new Set();
+  let bulkBtn = null;
+  function updateBulk() {
+    if (!bulkBtn) return;
+    const n = selected.size;
+    bulkBtn.disabled = n === 0;
+    bulkBtn.textContent = n ? "문자 발송 (" + n + "명)" : "문자 발송";
+  }
+
+  /* 이미 문자를 받은 신청 건을 표시해 중복 발송을 피합니다.
+     기록 테이블(academy_messages)이 아직 없으면 null 이라 표시만 생략합니다. */
+  const sentSet = canSms ? await fetchSentSet(apFilter) : null;
+
   /* --- 강의 필터와 CSV 내보내기 --- */
   const bar = el("div", "ap-bar");
   const back = el("button", "btn btn-secondary btn-sm", "← 강의 선택");
@@ -2731,6 +2885,13 @@ async function renderApplications() {
         .then(() => alert(nums.length + "명의 연락처를 복사했어요."));
     });
     bar.appendChild(copyNums);
+
+    /* 체크한 신청자에게 한 번에 문자 발송. 툴바 오른쪽 끝의 강조 버튼. */
+    bulkBtn = el("button", "btn btn-primary btn-sm", "문자 발송");
+    bulkBtn.disabled = true;
+    bulkBtn.title = "왼쪽에서 체크한 신청자에게 안내 문자를 한 번에 보냅니다";
+    bulkBtn.addEventListener("click", () => sendSmsBulk(items.filter(i => selected.has(i.id)), bulkBtn));
+    bar.appendChild(bulkBtn);
   }
 
   /* --- 상태 칩 ---
@@ -2791,6 +2952,23 @@ async function renderApplications() {
   const tbl = el("table", "ap-tbl");
   const thead = document.createElement("thead");
   const hr = document.createElement("tr");
+  const tbody = document.createElement("tbody");
+  /* 맨 왼쪽 체크박스 열: 전체 선택 겸용. */
+  if (canSms) {
+    const th = document.createElement("th");
+    th.style.width = "34px";
+    const allCb = document.createElement("input");
+    allCb.type = "checkbox";
+    allCb.title = "전체 선택";
+    allCb.style.cursor = "pointer";
+    allCb.addEventListener("change", () => {
+      tbody.querySelectorAll("input.ap-cb").forEach(cb => {
+        if (cb.checked !== allCb.checked) { cb.checked = allCb.checked; cb.dispatchEvent(new Event("change")); }
+      });
+    });
+    th.appendChild(allCb);
+    hr.appendChild(th);
+  }
   ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시"]
     .concat(evFree ? [] : ["메모"]).concat(["관리"]).forEach(h => {
     const th = document.createElement("th");
@@ -2799,7 +2977,6 @@ async function renderApplications() {
   });
   thead.appendChild(hr);
   tbl.appendChild(thead);
-  const tbody = document.createElement("tbody");
 
   items.forEach(it => {
     const tr = document.createElement("tr");
@@ -2816,10 +2993,40 @@ async function renderApplications() {
       return c;
     };
 
+    /* 체크박스 열: 번호가 있는 신청자만 고를 수 있어요. */
+    if (canSms) {
+      const cbTd = document.createElement("td");
+      if (it.phone) {
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.className = "ap-cb";
+        cb.checked = selected.has(it.id);
+        cb.style.cursor = "pointer";
+        cb.addEventListener("click", e => e.stopPropagation());
+        cb.addEventListener("change", () => {
+          if (cb.checked) selected.add(it.id); else selected.delete(it.id);
+          updateBulk();
+        });
+        cbTd.appendChild(cb);
+      }
+      tr.appendChild(cbTd);
+    }
+
     const st = (evFree && it.status !== "cancelled")
       ? { cls: "paid", label: "신청 완료" }
       : (AP_STATUS[it.status] || AP_STATUS.pending);
-    td(el("span", "badge " + st.cls, st.label));
+    const stCell = el("span", "badge " + st.cls, st.label);
+    const stWrap = el("div");
+    stWrap.style.cssText = "display:flex;align-items:center;gap:6px;flex-wrap:wrap";
+    stWrap.appendChild(stCell);
+    /* 이미 문자를 보낸 신청자는 표시해 중복을 피합니다. */
+    if (sentSet && sentSet.has(it.id)) {
+      const sent = el("span", null, "문자 보냄");
+      sent.style.cssText = "font-size:11.5px;font-weight:600;color:#2FA968;background:#E8F8EF;border-radius:6px;padding:2px 7px;white-space:nowrap";
+      sent.title = "이 신청자에게 이미 안내 문자가 나갔어요";
+      stWrap.appendChild(sent);
+    }
+    td(stWrap);
     td(it.name || "(이름 없음)", "ap-td-name");
     td(apPhone(it.phone), "ap-td-num");
     td(it.email);
@@ -2870,13 +3077,6 @@ async function renderApplications() {
         }
       });
       acts.appendChild(undo);
-    }
-
-    if (it.phone) {
-      const sms = el("button", "btn btn-secondary btn-sm", "문자 보내기");
-      sms.title = "이 신청자에게 안내 문자를 바로 보냅니다. (건당 요금이 부과돼요)";
-      sms.addEventListener("click", () => sendSmsDirect(it, sms));
-      acts.appendChild(sms);
     }
 
     if (!evFree) {

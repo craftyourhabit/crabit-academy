@@ -71,15 +71,23 @@ function db(path: string, init: RequestInit = {}) {
   });
 }
 
-function kakao(path: string, body: Record<string, unknown>) {
-  return fetch(KAKAO_BASE + path, {
+/* 카카오페이 서버는 HTTP/1.1 전용인데, 엣지 런타임에서 압축 응답을 읽다가
+   "error reading a body from connection"으로 끊기는 일이 있었습니다.
+   압축을 끄고(identity), 본문 읽기까지 마친 결과를 돌려줍니다. */
+async function kakao(path: string, body: Record<string, unknown>) {
+  const res = await fetch(KAKAO_BASE + path, {
     method: "POST",
     headers: {
-      "Authorization": "SECRET_KEY " + Deno.env.get("KAKAOPAY_SECRET_KEY"),
+      "Authorization": "SECRET_KEY " + (Deno.env.get("KAKAOPAY_SECRET_KEY") || "").trim(),
       "Content-Type": "application/json",
+      "Accept-Encoding": "identity",
     },
     body: JSON.stringify(body),
   });
+  const raw = await res.text();
+  let data: Record<string, unknown> = {};
+  try { data = JSON.parse(raw); } catch { /* 원문은 부른 쪽에서 로그로 남깁니다 */ }
+  return { ok: res.ok, status: res.status, raw, data };
 }
 
 /* 시크릿이 비어 있으면 결제를 시작하기 전에 알 수 있게 로그를 남깁니다.
@@ -132,7 +140,7 @@ async function handleReady(body: Record<string, unknown>) {
   const order = (await orderRes.json())[0];
 
   const site = Deno.env.get("SITE_BASE") || "";
-  const kakaoRes = await kakao("/online/v1/payment/ready", {
+  const readyBody = {
     cid,
     partner_order_id: order.id,
     partner_user_id: order.id,
@@ -143,10 +151,18 @@ async function handleReady(body: Record<string, unknown>) {
     approval_url: site + "/pay/complete.html?oid=" + order.id,
     cancel_url: site + "/pay/cancel.html?oid=" + order.id,
     fail_url: site + "/pay/fail.html?oid=" + order.id,
-  });
-  const kakaoData = await kakaoRes.json().catch(() => ({}));
+  };
+  /* 본문 읽기에서 끊기면 한 번 다시 시도합니다. ready는 결제창 주소를
+     만드는 단계라 다시 불러도 돈과 무관합니다. */
+  let kakaoRes;
+  try {
+    kakaoRes = await kakao("/online/v1/payment/ready", readyBody);
+  } catch {
+    kakaoRes = await kakao("/online/v1/payment/ready", readyBody);
+  }
+  const kakaoData = kakaoRes.data;
   if (!kakaoRes.ok || !kakaoData.tid) {
-    console.error("카카오페이 ready 실패", kakaoRes.status, JSON.stringify(kakaoData));
+    console.error("카카오페이 ready 실패", kakaoRes.status, kakaoRes.raw.slice(0, 500));
     await db("orders?id=eq." + order.id, {
       method: "PATCH",
       body: JSON.stringify({ status: "failed", memo: "ready 실패 " + kakaoRes.status }),
@@ -201,17 +217,31 @@ async function handleApprove(body: Record<string, unknown>) {
   }
   if (!pgToken) return json({ error: "결제 인증 정보가 없어요. 처음부터 다시 시도해 주세요." }, 400);
 
-  const kakaoRes = await kakao("/online/v1/payment/approve", {
-    cid: order.cid,
-    tid: order.tid,
-    partner_order_id: order.id,
-    partner_user_id: order.id,
-    pg_token: pgToken,
-  });
-  const kakaoData = await kakaoRes.json().catch(() => ({}));
-  if (!kakaoRes.ok) {
-    console.error("카카오페이 approve 실패", kakaoRes.status, JSON.stringify(kakaoData));
-    return json({ error: "결제 승인에 실패했어요. 결제가 완료되지 않았으니 다시 시도해 주세요." }, 502);
+  let kakaoRes;
+  try {
+    kakaoRes = await kakao("/online/v1/payment/approve", {
+      cid: order.cid,
+      tid: order.tid,
+      partner_order_id: order.id,
+      partner_user_id: order.id,
+      pg_token: pgToken,
+    });
+  } catch {
+    /* 승인 요청 후 응답을 못 읽으면 승인이 됐는지 알 수 없습니다.
+       같은 요청을 무턱대고 다시 보내는 대신 조회 API로 실제 상태를 봅니다. */
+    kakaoRes = null;
+  }
+  let kakaoData = kakaoRes ? kakaoRes.data : {};
+  if (!kakaoRes || !kakaoRes.ok) {
+    const lookup = await kakao("/online/v1/payment/order", { cid: order.cid, tid: order.tid })
+      .catch(() => null);
+    if (lookup && lookup.ok && lookup.data.status === "SUCCESS_PAYMENT") {
+      kakaoData = lookup.data;
+    } else {
+      if (kakaoRes) console.error("카카오페이 approve 실패", kakaoRes.status, kakaoRes.raw.slice(0, 500));
+      else console.error("카카오페이 approve 응답 읽기 실패, 조회로도 승인 확인 안 됨");
+      return json({ error: "결제 승인에 실패했어요. 결제가 완료되지 않았으니 다시 시도해 주세요." }, 502);
+    }
   }
 
   const approvedAt = kakaoData.approved_at || new Date().toISOString();

@@ -2580,13 +2580,18 @@ function uiConfirm(opts) {
   });
 }
 
-/* 이미 문자를 보낸 신청 id 모음. 중복 발송을 피하고 목록에 표시하는 데 씁니다.
-   기록 테이블이 아직 없으면(설치 전) null 을 돌려줘 기능을 조용히 건너뜁니다. */
+/* 문자를 성공적으로 보낸 신청 건을 { 신청id → 마지막 발송시각 } 으로 돌려줍니다.
+   중복 발송을 피하고 목록에 "언제 보냈는지"를 표시하는 데 씁니다.
+   .has() 가 되므로 중복 체크에도 그대로 씁니다.
+   기록 테이블이 아직 없으면(설치 전) null 을 돌려줘 표시를 조용히 건너뜁니다. */
 async function fetchSentSet(eventId) {
   try {
-    const rows = await table("/academy_messages?select=application_id&status=eq.ok"
-      + (eventId ? "&event_id=eq." + encodeURIComponent(eventId) : "")) || [];
-    return new Set(rows.map(r => r.application_id));
+    const rows = await table("/academy_messages?select=application_id,created_at&status=eq.ok"
+      + (eventId ? "&event_id=eq." + encodeURIComponent(eventId) : "")
+      + "&order=created_at.desc") || [];
+    const m = new Map();
+    rows.forEach(r => { if (!m.has(r.application_id)) m.set(r.application_id, r.created_at); });
+    return m;
   } catch (e) {
     return null;
   }
@@ -2934,6 +2939,18 @@ async function renderApplications() {
   box.appendChild(bar);
   box.appendChild(sum);
 
+  /* 문자 발송 요약: 지금 화면 기준으로 몇 명이 받았는지 한 줄로. */
+  if (canSms && sentSet !== null) {
+    const withPhone = items.filter(i => i.phone);
+    const sentN = withPhone.filter(i => sentSet.has(i.id)).length;
+    const note = el("div");
+    note.style.cssText = "font-size:13px;color:var(--muted);margin:-4px 0 14px;padding:0 2px";
+    note.innerHTML = "문자 발송: <strong style='color:#1E7B41'>보냄 " + sentN + "명</strong>"
+      + " · 미발송 " + (withPhone.length - sentN) + "명"
+      + " <span style='color:var(--deco)'>(이 기록은 '문자 발송' 버튼으로 보낸 건만 집계돼요. 전체 확정은 솔라피 발송 내역)</span>";
+    box.appendChild(note);
+  }
+
   /* 목록만 카드 한 장으로 감쌉니다. */
   const card = el("div", "list");
   box.appendChild(card);
@@ -2966,8 +2983,11 @@ async function renderApplications() {
     th.appendChild(allCb);
     hr.appendChild(th);
   }
-  ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시"]
-    .concat(evFree ? [] : ["메모"]).concat(["관리"]).forEach(h => {
+  const heads = ["상태", "이름", "연락처", "이메일", "학원명과 직책", "유입 경로", "신청 일시"];
+  if (!evFree) heads.push("메모");
+  if (canSms) heads.push("문자");
+  heads.push("관리");
+  heads.forEach(h => {
     const th = document.createElement("th");
     th.textContent = h;
     hr.appendChild(th);
@@ -3012,18 +3032,7 @@ async function renderApplications() {
     const st = (evFree && it.status !== "cancelled")
       ? { cls: "paid", label: "신청 완료" }
       : (AP_STATUS[it.status] || AP_STATUS.pending);
-    const stCell = el("span", "badge " + st.cls, st.label);
-    const stWrap = el("div");
-    stWrap.style.cssText = "display:flex;align-items:center;gap:6px;flex-wrap:wrap";
-    stWrap.appendChild(stCell);
-    /* 이미 문자를 보낸 신청자는 표시해 중복을 피합니다. */
-    if (sentSet && sentSet.has(it.id)) {
-      const sent = el("span", null, "문자 보냄");
-      sent.style.cssText = "font-size:11.5px;font-weight:600;color:#2FA968;background:#E8F8EF;border-radius:6px;padding:2px 7px;white-space:nowrap";
-      sent.title = "이 신청자에게 이미 안내 문자가 나갔어요";
-      stWrap.appendChild(sent);
-    }
-    td(stWrap);
+    td(el("span", "badge " + st.cls, st.label));
     td(it.name || "(이름 없음)", "ap-td-name");
     td(apPhone(it.phone), "ap-td-num");
     td(it.email);
@@ -3097,6 +3106,30 @@ async function renderApplications() {
 
     /* 신청 취소는 실수 방지를 위해 상세 화면에서만 하도록 두었어요.
        (목록에서 바로 취소 버튼은 두지 않습니다) */
+
+    /* 문자 발송 여부 열: 언제 보냈는지까지 보여 줍니다. */
+    if (canSms) {
+      const smsTd = document.createElement("td");
+      smsTd.className = "ap-td-num";
+      if (sentSet === null) {
+        smsTd.textContent = "-";
+        smsTd.style.color = "var(--deco)";
+        smsTd.title = "발송 기록 기능이 아직 켜지지 않았어요 (supabase-messages.sql 실행 필요)";
+      } else if (sentSet.has(it.id)) {
+        const when = apDate(sentSet.get(it.id));
+        const tag = el("span", null, "보냄");
+        tag.style.cssText = "font-size:11.5px;font-weight:700;color:#1E7B41;background:#E6F4EA;border-radius:6px;padding:2px 7px;white-space:nowrap";
+        smsTd.appendChild(tag);
+        const t = el("span", null, " " + (when.split(" ")[0] || ""));
+        t.style.cssText = "color:var(--muted);font-size:12.5px";
+        t.title = when;
+        smsTd.appendChild(t);
+      } else {
+        smsTd.textContent = "미발송";
+        smsTd.style.color = "var(--muted)";
+      }
+      tr.appendChild(smsTd);
+    }
 
     td(acts, "ap-td-acts");
     tbody.appendChild(tr);

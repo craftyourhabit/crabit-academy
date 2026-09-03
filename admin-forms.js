@@ -2499,21 +2499,22 @@ function apSmsBody(it, link) {
   const place = fmtLabel[ev.format] || (link ? "온라인 웨비나(줌)" : "");
 
   const greet = link
-    ? who + ", “" + title + "” 신청이 확인됐어요. 아래 줌 링크 전달드립니다! "
-    : who + ", “" + title + "” 신청이 확인됐어요.";
+    ? who + ", “" + title + "” 신청 확인됐어요! 아래 줌 링크 보내드릴게요."
+    : who + ", “" + title + "” 신청 확인됐어요!";
 
+  /* 이모지는 일반 문자에서 깨져서, 줄 앞에 "· " 를 붙여 불릿처럼 보이게 합니다. */
   const mid = [];
   if (ev.date) {
     /* 날짜 칸에 이미 진행 방식이 적혀 있으면(원장님이 직접 넣는 경우가 많아요)
        중복으로 또 붙이지 않습니다. */
     const dupe = place && ev.date.indexOf(place) !== -1;
-    mid.push("📅 일시: " + ev.date + (place && !dupe ? " | " + place : ""));
+    mid.push("· 일시: " + ev.date + (place && !dupe ? " | " + place : ""));
   }
-  if (link) mid.push("🔗 줌 참여 링크: " + link);
+  if (link) mid.push("· 줌 참여 링크: " + link);
 
-  const parts = ["[크래빗 아카데미] ", "", greet];
+  const parts = [greet];
   if (mid.length) parts.push("", mid.join("\n"));
-  parts.push("", "궁금한 점은 이 번호로 회신해 주세요.");
+  parts.push("", "궁금한 점 있으시면 편하게 연락 주세요!");
   return parts.join("\n");
 }
 

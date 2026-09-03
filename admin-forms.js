@@ -2645,6 +2645,80 @@ function progressModal(title) {
   return { set: t => { status.textContent = t; }, close: () => back.remove() };
 }
 
+/* 솔라피로 실제 나간 문자 내역을 모달로 보여 줍니다.
+   신청자 번호와 대조해 이름까지 붙여 "누구한테 갔는지"를 확정해 줍니다. */
+async function showSolapiHistory(items) {
+  const digits = s => String(s || "").replace(/[^0-9]/g, "");
+  const nameByPhone = new Map();
+  (items || []).forEach(i => { if (i.phone) nameByPhone.set(digits(i.phone), i.name || ""); });
+
+  const back = el("div", "back show");
+  const modal = el("div", "modal");
+  modal.style.cssText = "max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column";
+  modal.appendChild(el("h3", null, "솔라피 발송 내역"));
+  const sub = el("p", null, "솔라피로 실제 나간 문자예요. 신청자 번호와 맞는 건 이름을 붙였어요.");
+  modal.appendChild(sub);
+  const listBox = el("div");
+  listBox.style.cssText = "flex:1;overflow:auto;margin:0 0 18px";
+  listBox.textContent = "불러오는 중이에요…";
+  listBox.style.color = "var(--muted)";
+  modal.appendChild(listBox);
+  const acts = el("div", "m-acts");
+  const closeBtn = el("button", "btn btn-secondary", "닫기");
+  closeBtn.addEventListener("click", () => back.remove());
+  acts.appendChild(closeBtn);
+  modal.appendChild(acts);
+  back.appendChild(modal);
+  back.addEventListener("click", e => { if (e.target === back) back.remove(); });
+  document.body.appendChild(back);
+
+  let data;
+  try {
+    const res = await sbFetch(SB_URL + "/functions/v1/sms-history?limit=300");
+    data = await res.json().catch(() => ({}));
+    if (res.status === 401) { back.remove(); expired(data.error); return; }
+    if (!res.ok || !data.ok) throw new Error(data.error || ("조회 실패 (" + res.status + ")"));
+  } catch (e) {
+    listBox.textContent = "발송 내역을 불러오지 못했어요. " + (e.message || "");
+    return;
+  }
+
+  const rows = data.list || [];
+  if (!rows.length) {
+    listBox.textContent = "솔라피에 남은 발송 내역이 없어요.";
+    return;
+  }
+  listBox.innerHTML = "";
+  listBox.style.color = "var(--ink)";
+  rows.forEach(m => {
+    /* 솔라피 성공 상태코드는 4000(정상 접수). 문구로도 한 번 더 봐줍니다. */
+    const ok = String(m.statusCode || "") === "4000" || /정상|성공|접수|수신/.test(m.statusMessage || "");
+    const row = el("div");
+    row.style.cssText = "border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;background:#fff";
+    const top = el("div");
+    top.style.cssText = "display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px";
+    const nm = nameByPhone.get(digits(m.to));
+    const who = el("span", null, apPhone(m.to) + (nm ? " · " + nm : ""));
+    who.style.cssText = "font-weight:700;font-size:14px";
+    top.appendChild(who);
+    const badge = el("span", null, m.statusMessage || (ok ? "성공" : "실패"));
+    badge.style.cssText = "font-size:11.5px;font-weight:600;border-radius:6px;padding:2px 8px;"
+      + (ok ? "color:#1E7B41;background:#E6F4EA" : "color:#C2255C;background:#FFF0F5");
+    top.appendChild(badge);
+    const when = el("span", null, String(m.dateReceived || m.dateCreated || "").replace("T", " ").slice(0, 16));
+    when.style.cssText = "font-size:12.5px;color:var(--muted);margin-left:auto";
+    top.appendChild(when);
+    row.appendChild(top);
+    if (m.text) {
+      const t = el("div", null, m.text.length > 90 ? m.text.slice(0, 90) + "…" : m.text);
+      t.style.cssText = "font-size:12.5px;color:var(--muted);white-space:pre-wrap;word-break:break-all;line-height:1.5";
+      row.appendChild(t);
+    }
+    listBox.appendChild(row);
+  });
+  sub.textContent = "최근 " + rows.length + "건이에요. 신청자 번호와 맞는 건 이름을 붙였어요.";
+}
+
 /* 체크한 신청자들에게 안내 문자를 한 번에 보냅니다.
    이미 받은 사람은 기본적으로 빼서 중복 안내를 막습니다. */
 async function sendSmsBulk(list, btn) {
@@ -2879,6 +2953,11 @@ async function renderApplications() {
       if (v.trim()) localStorage.setItem(KEY, v.trim()); else localStorage.removeItem(KEY);
     });
     bar.appendChild(zl);
+
+    const hist = el("button", "btn btn-secondary btn-sm", "솔라피 발송 내역");
+    hist.title = "솔라피로 실제 나간 문자 내역을 확인해요 (누구한테 갔는지 확정본)";
+    hist.addEventListener("click", () => showSolapiHistory(items));
+    bar.appendChild(hist);
 
     const copyMsg = el("button", "btn btn-secondary btn-sm", "안내문 복사");
     copyMsg.addEventListener("click", () => {

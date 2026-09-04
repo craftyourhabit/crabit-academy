@@ -2870,26 +2870,62 @@ async function renderApplicationPicker(box) {
   bar.appendChild(allBtn);
   box.appendChild(bar);
 
-  const grid = el("div", "ap-pick");
+  /* 강의별 신청 현황을 표로 보여 줍니다. 줄을 누르면 그 강의 신청자로 들어가요. */
+  const card = el("div", "list");
+  const wrap = el("div", "ap-tbl-wrap");
+  const tbl = el("table", "ap-tbl");
+  const thead = document.createElement("thead");
+  const hr = document.createElement("tr");
+  ["강의", "일정", "신청", "대기", "확인", "취소"].forEach((h, i) => {
+    const th = document.createElement("th");
+    th.textContent = h;
+    if (i >= 2) th.style.textAlign = "right";
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+  const tbody = document.createElement("tbody");
+
   ids.forEach(id => {
     const d = store.EVENTS_DB[id] || {};
     const c = byEv[id] || { total: 0, pending: 0, paid: 0, cancelled: 0 };
-    const card = el("button", "pk");
-    card.type = "button";
-    card.appendChild(el("div", "pk-t", d.title || c.title || id));
-    if (d.date) card.appendChild(el("div", "pk-n", d.date));
-    const n = el("div", "pk-n");
-    if (c.total) {
-      n.appendChild(el("strong", null, "신청 " + c.total + "건"));
-      n.appendChild(document.createTextNode("  |  대기 " + c.pending + "  |  확인 " + c.paid + "  |  취소 " + c.cancelled));
-    } else {
-      n.textContent = "아직 신청자가 없어요";
-    }
-    card.appendChild(n);
-    card.addEventListener("click", () => { apFilter = id; apStatus = ""; renderApplications(); });
-    grid.appendChild(card);
+    const tr = document.createElement("tr");
+    tr.className = "is-click";
+    tr.addEventListener("click", () => { apFilter = id; apStatus = ""; renderApplications(); });
+
+    const tdTitle = document.createElement("td");
+    tdTitle.className = "ap-td-name";
+    tdTitle.textContent = d.title || c.title || id;
+    tr.appendChild(tdTitle);
+
+    const tdDate = document.createElement("td");
+    tdDate.className = "ap-td-num";
+    tdDate.style.color = "var(--muted)";
+    tdDate.textContent = d.date || "-";
+    tr.appendChild(tdDate);
+
+    /* 신청/대기/확인/취소 숫자. 0은 흐리게. */
+    [
+      [c.total, c.total ? "" : "dim"],
+      [c.pending, c.pending ? "" : "dim"],
+      [c.paid, c.paid ? "" : "dim"],
+      [c.cancelled, c.cancelled ? "" : "dim"]
+    ].forEach(([v, dim]) => {
+      const td = document.createElement("td");
+      td.className = "ap-td-num";
+      td.style.textAlign = "right";
+      td.textContent = c.total || v ? String(v) : "-";
+      if (dim || !c.total) td.style.color = "var(--deco)";
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
   });
-  box.appendChild(grid);
+
+  tbl.appendChild(tbody);
+  wrap.appendChild(tbl);
+  card.appendChild(wrap);
+  box.appendChild(card);
   document.querySelector("#listCnt").textContent = rows.length ? "  전체 " + rows.length + "건" : "";
 }
 

@@ -548,7 +548,8 @@ function openApplicantDetail(it) {
   head.appendChild(back);
   view.appendChild(head);
 
-  const st = AP_STATUS[it.status] || AP_STATUS.pending;
+  const evFree = apEvFree(it);
+  const st = apStatusView(it, evFree);
   const p = panel(null, null);
 
   const hb = el("div", "dv-h");
@@ -665,9 +666,11 @@ function openApplicantDetail(it) {
     });
     acts.appendChild(x);
   };
-  /* 취소된 건은 곧바로 '입금 확인'으로 넘기지 않습니다.
-     되돌리는 건 '대기'로 돌아오는 것이지 돈이 들어온 게 아니니까요. */
+  /* 무료 강의는 입금 개념이 없어 '신청 취소'만 둡니다.
+     유료 강의는 입금 확인/대기 전환을 함께 둡니다.
+     취소된 건은 곧바로 '입금 확인'으로 넘기지 않고 '대기'로만 되돌립니다. */
   if (isCancelled) mk("취소 되돌리기", "btn-secondary", "pending");
+  else if (evFree) mk("신청 취소", "btn-danger", "cancelled");
   else if (isPaid) mk("대기로 되돌리기", "btn-secondary", "pending");
   else { mk("입금 확인", "btn-primary", "paid"); mk("신청 취소", "btn-danger", "cancelled"); }
   view.appendChild(acts);
@@ -2464,6 +2467,19 @@ const AP_STATUS = {
   cancelled: { cls: "cancel", label: "취소" }
 };
 
+/* 화면에 보여 줄 상태. 무료 강의는 입금 개념이 없어서
+   신청만 하면 바로 "확인 완료"로 보여 줍니다. */
+function apStatusView(it, evFree) {
+  if (it.status === "cancelled") return { cls: "cancel", label: "취소" };
+  if (evFree) return { cls: "paid", label: "확인 완료" };
+  return AP_STATUS[it.status] || AP_STATUS.pending;
+}
+
+/* 이 신청 건의 강의가 무료인지. EVENTS_DB 에 없거나 priceType 이 paid 가 아니면 무료로 봅니다. */
+function apEvFree(it) {
+  return (store.EVENTS_DB[it.event_id] || {}).priceType !== "paid";
+}
+
 function apDate(iso) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -2904,11 +2920,15 @@ async function renderApplicationPicker(box) {
     tdDate.textContent = d.date || "-";
     tr.appendChild(tdDate);
 
-    /* 신청/대기/확인/취소 숫자. 0은 흐리게. */
+    /* 신청/대기/확인/취소 숫자. 0은 흐리게.
+       무료 강의는 입금 개념이 없어 대기 없이 전부 '확인'으로 셉니다. */
+    const evFreeRow = (d.priceType || (store.EVENTS_DB[id] || {}).priceType) !== "paid";
+    const pendingN = evFreeRow ? 0 : c.pending;
+    const paidN = evFreeRow ? (c.pending + c.paid) : c.paid;
     [
       [c.total, c.total ? "" : "dim"],
-      [c.pending, c.pending ? "" : "dim"],
-      [c.paid, c.paid ? "" : "dim"],
+      [pendingN, pendingN ? "" : "dim"],
+      [paidN, paidN ? "" : "dim"],
       [c.cancelled, c.cancelled ? "" : "dim"]
     ].forEach(([v, dim]) => {
       const td = document.createElement("td");
@@ -3168,9 +3188,7 @@ async function renderApplications() {
       tr.appendChild(cbTd);
     }
 
-    const st = (evFree && it.status !== "cancelled")
-      ? { cls: "paid", label: "신청 완료" }
-      : (AP_STATUS[it.status] || AP_STATUS.pending);
+    const st = apStatusView(it, evFree);
     td(el("span", "badge " + st.cls, st.label));
     td(it.name || "(이름 없음)", "ap-td-name");
     td(apPhone(it.phone), "ap-td-num");

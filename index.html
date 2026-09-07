@@ -313,6 +313,13 @@
     padding: 4px 10px; border-radius: 99px; letter-spacing: 0.02em;
     color: var(--ink); box-shadow: inset 0 0 0 1px var(--line);
   }
+  /* 교육/설명회 구분 태그. 테두리 없이 채운 톤으로, 교육은 노랑 설명회는 하늘색. */
+  .replay .kind-tag {
+    display: inline-block; font-size: 12px; font-weight: 700;
+    padding: 4px 10px; border-radius: 99px; letter-spacing: 0.02em;
+  }
+  .replay .kind-tag.edu  { background: #FFF1CC; color: #8A6A12; }
+  .replay .kind-tag.info { background: #DEEEFF; color: #2C67AE; }
   /* 자료/인사이트 카드도 같은 카드 언어를 씁니다. */
   /* 일부공개 태그. 자물쇠와 같은 노랑 계열을 아주 옅게 쓴다. */
   .replay .fmt-tag.locked-tag { background: #FEF3D8; color: #B07D1E; box-shadow: none; }
@@ -713,13 +720,21 @@ const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" ar
       + '<span class="chip ' + tag.cls + '"></span>'
       + '</div>'
       + '<div class="body">'
-      + '<div class="meta-row"><span class="fmt-tag"></span><span class="cat"></span></div>'
+      + '<div class="meta-row"><span class="kind-tag"></span><span class="fmt-tag"></span><span class="cat"></span></div>'
       + '<strong></strong>'
       + '<div class="foot"><span class="date"></span><span class="price"></span></div>'
       + '</div>';
     a.querySelector(".chip").textContent = tag.text;
     const ov = coverOverlayEl(ev.coverOverlay);
     if (ov) a.querySelector(".thumb-wrap").appendChild(ov);
+    /* 교육/설명회 태그. 값이 있을 때만 색을 입혀 보여 준다. */
+    const kindEl = a.querySelector(".kind-tag");
+    if (ev.kind) {
+      kindEl.textContent = ev.kind;
+      kindEl.classList.add(ev.kind === "설명회" ? "info" : "edu");
+    } else {
+      kindEl.remove();
+    }
     a.querySelector(".fmt-tag").textContent = eventFormat(ev).label;
     a.querySelector("strong").textContent = ev.title;
     /* 분류와 주최를 한 줄로. 어느 쪽이 없어도 구분자가 남지 않게 조립한다. */

@@ -120,6 +120,9 @@
   /* 마감은 채운 회색 태그로. 카드는 흐리게 하지 않고 태그 색만으로 구분합니다. */
   .pill.closed { background: #54586A; color: #fff; }
   .pill.today { background: var(--pink); color: #fff; }
+  /* 교육/설명회 구분. 교육은 노랑, 설명회는 하늘색. */
+  .pill.kind-edu  { background: #FFF1CC; color: #8A6A12; }
+  .pill.kind-info { background: #DEEEFF; color: #2C67AE; }
   .row h2 {
     margin: 0 0 12px;
     font-size: 22px;
@@ -304,7 +307,8 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   function badges(ev) {
     const t = eventStatusTag(ev);
     const cls = t.cls === "today" ? "pill today" : (t.cls === "upcoming" ? "pill" : "pill closed");
-    return (ev.kind ? '<span class="pill line">' + ev.kind + "</span>" : "")
+    const kindCls = ev.kind === "설명회" ? "pill kind-info" : "pill kind-edu";
+    return (ev.kind ? '<span class="' + kindCls + '">' + ev.kind + "</span>" : "")
       + '<span class="' + cls + '">' + t.text + "</span>"
       + '<span class="pill line">' + eventFormat(ev).label + "</span>";
   }

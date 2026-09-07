@@ -99,11 +99,8 @@
     cursor: pointer;
   }
   .row.static { cursor: default; }
-  /* 마감된 강의. 홈 화면과 같은 규칙입니다.
-     썸네일만 눌러 두고 글자는 그대로 둡니다. 안 읽히면 목록에 있을 이유가 없어요. */
-  .row.is-closed .thumb { filter: grayscale(0.55); opacity: 0.62; transition: filter 0.18s, opacity 0.18s; }
-  .row.is-closed:hover .thumb { filter: none; opacity: 1; }
-  .row.is-closed h2 { color: rgba(22, 25, 42, 0.68); }
+  /* 마감된 강의도 예정 강의와 똑같이 또렷하게 보여 줍니다.
+     흐리게 덮지 않고, '마감' 태그 색(.pill.closed)으로만 상태를 구분합니다. */
   .row .info { flex: 1; min-width: 0; }
   .badges { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   /* 상세페이지와 같은 배지 말투를 씁니다.
@@ -120,6 +117,8 @@
   }
   .pill.line { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
   .pill.gray { background: var(--fill); color: var(--muted); }
+  /* 마감은 채운 회색 태그로. 카드는 흐리게 하지 않고 태그 색만으로 구분합니다. */
+  .pill.closed { background: #54586A; color: #fff; }
   .pill.today { background: var(--pink); color: #fff; }
   .row h2 {
     margin: 0 0 12px;
@@ -304,7 +303,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
 
   function badges(ev) {
     const t = eventStatusTag(ev);
-    const cls = t.cls === "today" ? "pill today" : (t.cls === "upcoming" ? "pill" : "pill gray");
+    const cls = t.cls === "today" ? "pill today" : (t.cls === "upcoming" ? "pill" : "pill closed");
     return (ev.kind ? '<span class="pill line">' + ev.kind + "</span>" : "")
       + '<span class="' + cls + '">' + t.text + "</span>"
       + '<span class="pill line">' + eventFormat(ev).label + "</span>";

@@ -254,15 +254,9 @@
   .replay:hover { border-color: rgba(22, 25, 42, 0.1); box-shadow: 0 16px 34px rgba(22, 25, 42, 0.12); transform: translateY(-4px); }
   .replay .thumb-wrap { border-radius: 18px; overflow: hidden; }
 
-  /* 마감된 강의.
-     같은 자리에 두되 한 걸음 물러나 보이게 합니다. 지난 강의도 어떤 걸
-     해왔는지 보여 주는 값이 있어서 감추지는 않습니다.
-     글자는 흐리게 하지 않습니다. 읽히지 않으면 목록에 있는 뜻이 없어요.
-     마우스를 올리면 원래대로 돌아옵니다. */
-  .replay.is-closed .thumb-wrap { filter: grayscale(0.55); opacity: 0.62; transition: filter 0.18s, opacity 0.18s; }
-  .replay.is-closed:hover .thumb-wrap { filter: none; opacity: 1; }
-  .replay.is-closed .body strong { color: rgba(22, 25, 42, 0.68); }
-  .replay.is-closed .price { color: var(--muted); font-weight: 600; }
+  /* 마감된 강의도 예정 강의와 똑같이 또렷하게 보여 줍니다.
+     지난 강의를 흐리게 덮으면 대부분이 마감처럼 보여서, 대신 '마감' 태그
+     색으로만 상태를 구분합니다. (아래 .chip.closed) */
   .replay:hover strong { text-decoration: underline; text-underline-offset: 3px; }
   /* 썸네일 위에 상태 칩을 얹는다. 카드 아래 정보는 제목과 분류만 남겨
      한 줄씩 눈으로 훑을 수 있게 한다. */
@@ -310,7 +304,8 @@
   }
   /* 당일은 하루만 붙는 배지라 브랜드 핑크를 꽉 채워 가장 강하게 */
   .replay .chip.today { background: var(--pink); color: #fff; }
-  .replay .chip.closed { color: var(--muted); }
+  /* 마감은 채운 회색 태그로. 흐림 없이 태그 색만으로 상태를 알립니다. */
+  .replay .chip.closed { background: #54586A; color: #fff; }
   /* 진행 형태는 사진 위가 아니라 본문에 둡니다.
      사진 위에 어두운 딱지가 둘이면 정작 포스터가 안 보입니다. */
   .replay .fmt-tag {

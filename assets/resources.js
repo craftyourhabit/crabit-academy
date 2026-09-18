@@ -63,7 +63,7 @@ const RESOURCES = [
     sub: "설명회 모집, 오늘의 수업 퀴즈, 학생 학습리포트. 복사해서 붙여넣으면 완성되는 실전 프롬프트",
     thumb: "assets/thumbs/daegu-prompts3.svg",
     access: "public",
-    href: "daegu-prompts"
+    href: "landingpageprompts"
   }
 ];
 /* @admin:RESOURCES:end */

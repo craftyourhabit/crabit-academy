@@ -528,6 +528,33 @@ const EVENTS_DB = {
     provision: "참가비 없이 진행합니다. 신청서를 내시면 확정 안내를 보내드리고, 교육 당일 현장에서 실습 자료를 함께 드립니다.",
     status: "upcoming",
     replayUrl: ""
+  },
+  "olkeoni-blackfriday-0918": {
+    type: "Lecture",
+    category: "AI·자동화",
+    host: "올커니 × 크래빗",
+    kind: "교육",
+    title: "올커니 BLACK FRIDAY 열정페이특강 | 우리 학원 랜딩페이지 직접 만들기",
+    date: "2026.09.18 (금) 밤 10:30 | 온라인",
+    startDate: "2026-09-18",
+    thumb: "assets/events/olkeoni-blackfriday-0918/hero.jpg",
+    format: "online",
+    priceType: "free",
+    desc: "가장 쉽고 명쾌하게 알려주는 크래빗 김현지 대표의 랜딩페이지 제작 실습입니다. 프롬프트를 한 개씩 따라 하며 중간고사 시험지 분석 페이지, 설명회 신청 랜딩페이지, 추석 특강 안내 페이지까지, 평범한 안내문을 넘어 고급스럽고 설득력 있는 페이지를 직접 만들어봅니다. 올커니 조경이 대표의 'AI로 만화 콘텐츠 만드는 법' 깨알 실습도 함께 준비되어 있습니다.",
+    points: [
+      "중간고사 시험지 분석 페이지 직접 만들기",
+      "설명회 신청 랜딩페이지 직접 만들기",
+      "추석 특강 안내 페이지 직접 만들기",
+      "학원 홍보에 바로 활용하는 실전 랜딩페이지 제작"
+    ],
+    speaker: "김현지",
+    speakerRole: "크래빗 장학카드 대표",
+    audience: "학원 원장님",
+    provision: "참가비 없이 온라인으로 진행합니다. 신청서를 제출하시면 올커니 쪽에서 참여 링크를 안내해 드려요.",
+    status: "upcoming",
+    /* 올커니 블랙프라이데이 특강으로 공동 진행, 신청은 올커니 쪽 구글폼으로 받는다. */
+    applyUrl: "https://forms.gle/HXAzqicsswek3Vuo6",
+    replayUrl: ""
   }
 };
 /* @admin:EVENTS_DB:end */
@@ -632,6 +659,7 @@ const SCHEDULE = [
   { date: "2026-07-09", time: "10:00", id: "daegu-lecture" },
   { date: "2026-07-18", time: "10:00", id: "homepage-blog-master" },
   { date: "2026-09-03", time: "22:30", id: "ai-ace-webinar" },
-  { date: "2026-09-01", time: "10:00", id: "daegu-landing-lecture" }
+  { date: "2026-09-01", time: "10:00", id: "daegu-landing-lecture" },
+  { date: "2026-09-18", time: "22:30", id: "olkeoni-blackfriday-0918" }
 ];
 /* @admin:SCHEDULE:end */

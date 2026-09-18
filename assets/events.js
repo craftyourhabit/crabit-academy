@@ -537,7 +537,7 @@ const EVENTS_DB = {
     title: "우리 학원 랜딩페이지 2탄! | 올커니 BLACK FRIDAY",
     date: "2026.09.18 (금) 밤 10:30 | 온라인",
     startDate: "2026-09-18",
-    thumb: "assets/events/olkeoni-blackfriday-0918/hero.jpg?v=4",
+    thumb: "assets/events/olkeoni-blackfriday-0918/hero.jpg?v=5",
     format: "online",
     priceType: "free",
     desc: "가장 쉽고 명쾌하게 알려주는 크래빗 김현지 대표의 랜딩페이지 제작 실습입니다. 프롬프트를 한 개씩 따라 하며 중간고사 시험지 분석 페이지, 설명회 신청 랜딩페이지, 추석 특강 안내 페이지까지, 평범한 안내문을 넘어 고급스럽고 설득력 있는 페이지를 직접 만들어봅니다. 올커니 조경이 대표의 'AI로 만화 콘텐츠 만드는 법' 깨알 실습도 함께 준비되어 있습니다.",

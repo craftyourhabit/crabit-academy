@@ -492,6 +492,7 @@
     <div class="brand"><img src="assets/logo.png" alt="Crabit 아카데미" /></div>
     <nav class="nav-links">
       <a href="courses">교육 / 설명회</a>
+      <a href="vod">VOD 강의</a>
       <a href="resources">자료 / 인사이트</a>
     </nav>
   </div>
@@ -519,7 +520,7 @@
       <div class="section-top">
         <div class="section-head">
           <h2>교육 / 설명회</h2>
-          <p>크래빗과 올커니가 진행하는 교육과 설명회입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
+          <p>크래빗과 올커니가 온라인, 오프라인으로 진행하는 실시간 교육과 설명회입니다. 카드를 누르면 자세한 내용을 볼 수 있어요.</p>
         </div>
         <a class="link-all" href="courses">전체보기 &#8250;</a>
       </div>
@@ -527,7 +528,21 @@
     </div>
   </section>
 
-  <!-- 02. 자료 / 인사이트 -->
+  <!-- 02. VOD 강의 -->
+  <section id="vod">
+    <div class="wrap">
+      <div class="section-top">
+        <div class="section-head">
+          <h2>VOD 강의</h2>
+          <p>구매하면 원하는 시간에 바로 시청할 수 있는 녹화 강의예요. 강의자료도 현장 참가자와 똑같이 드립니다.</p>
+        </div>
+        <a class="link-all" href="vod">전체보기 &#8250;</a>
+      </div>
+      <div class="replay-grid" id="vodGrid"></div>
+    </div>
+  </section>
+
+  <!-- 03. 자료 / 인사이트 -->
   <section id="resources">
     <div class="wrap">
       <div class="section-top">
@@ -664,10 +679,10 @@ const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" ar
    SHOW_IDS에 나열한 교육만 노출합니다.
    진행 전(status "upcoming")은 '예정', 그 외(마감·다시보기 등)는 '마감' 태그를 답니다. */
 (function () {
-  const SHOW_IDS = ["olkeoni-blackfriday-0918", "daegu-landing-lecture", "ai-ace-webinar", "math-academy-top1", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
+  const SHOW_IDS = ["olkeoni-blackfriday-0918", "daegu-landing-lecture", "ai-ace-webinar", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
   const grid = document.getElementById("upcomingGrid");
   const entries = Object.entries(EVENTS_DB)
-    .filter(([id]) => SHOW_IDS.includes(id))
+    .filter(([id, ev]) => SHOW_IDS.includes(id) && ev.format !== "vod")
     /* 예정을 먼저, 그 안에서는 가까운 날짜순. 지난 일정은 최근에 열린 것부터. (courses.html과 같은 규칙) */
     .sort((a, b) => {
       const oa = isEventOver(a[1]), ob = isEventOver(b[1]);
@@ -678,7 +693,6 @@ const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" ar
     });
   if (entries.length === 0) {
     grid.innerHTML = '<p style="color: var(--muted); font-size: 16px;">교육과 설명회 일정을 준비 중이에요. 곧 새로운 일정으로 찾아뵐게요.</p>';
-    return;
   }
   /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 ev.coverOverlay 데이터를 쓴다.
      AI로 만든 일러스트 위의 글자는 프리텐다드가 아니라서 쓰지 않고, 이 자리에 진짜 글자를 그린다. */
@@ -708,6 +722,8 @@ const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" ar
     return wrap;
   };
 
+  /* 교육 / 설명회와 VOD 강의가 같은 카드 모양을 씁니다. */
+  function paint(grid, entries) {
   entries.forEach(([id, ev]) => {
     const tag = eventStatusTag(ev);
     const price = eventPriceInfo(ev);
@@ -747,7 +763,19 @@ const LOCK_SVG = '<svg width="30" height="34" viewBox="0 0 48 54" fill="none" ar
     a.querySelector(".price").textContent = price.incomplete ? "" : price.text;
     grid.appendChild(a);
   });
+  }
+  paint(grid, entries);
 
+  /* VOD 강의: format 이 "vod" 인 항목을 최신순으로 (vod.html 과 같은 규칙). 없으면 섹션째 숨긴다. */
+  const vods = Object.entries(EVENTS_DB)
+    .filter(([, ev]) => ev.format === "vod" && !ev.hidden)
+    .sort((a, b) => {
+      const da = a[1].releaseDate || "", db = b[1].releaseDate || "";
+      if (!da || !db) return !da && !db ? 0 : (da ? 1 : -1);
+      return db.localeCompare(da);
+    });
+  if (vods.length) paint(document.getElementById("vodGrid"), vods.slice(0, 6));
+  else document.getElementById("vod").style.display = "none";
 })();
 
 /* ---------- 비밀번호 자료 접근 ----------

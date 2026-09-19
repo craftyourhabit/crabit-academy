@@ -290,6 +290,14 @@
   .f-info p { margin: 0; }
   .f-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
 </style>
+<style>
+/* 헤더 메뉴가 3개(교육 / 설명회, VOD 강의, 자료 / 인사이트)라 좁은 화면에서는 로고 아래 줄로 내립니다. */
+@media (max-width: 640px) {
+  header > div { flex-wrap: wrap; row-gap: 6px; }
+  header nav { width: 100%; gap: 18px !important; font-size: 14px !important; }
+  header nav a { white-space: nowrap; }
+}
+</style>
 </head>
 <body>
 
@@ -301,6 +309,7 @@
     </div>
     <nav style="display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600">
       <a href="courses" style="color:rgba(22,25,42,.55);text-decoration:none">교육 / 설명회</a>
+      <a href="vod" style="color:rgba(22,25,42,.55);text-decoration:none">VOD 강의</a>
       <a href="resources" style="color:rgba(22,25,42,.55);text-decoration:none">자료 / 인사이트</a>
     </nav>
   </div>
@@ -352,7 +361,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
    =============================================== */
 (function () {
   const id = new URLSearchParams(location.search).get("id");
-  const ev = id && EVENTS_DB[id];
+  const ev = id && EVENTS_DB[id] && !EVENTS_DB[id].hidden ? EVENTS_DB[id] : null;
   const main = document.getElementById("main");
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -368,6 +377,11 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
 
   /* 지난 교육은 접수하지 않습니다. 상세 페이지에서도 막고 있지만,
      주소를 직접 치고 들어오는 경우가 있어서 여기서 한 번 더 봅니다. */
+  /* 공개 예정 VOD 는 결제를 받지 않는다. 주소를 직접 치고 들어와도 여기서 막는다. */
+  if (ev.comingSoon) {
+    notFound("곧 업로드될 예정이에요", "영상 준비가 끝나면 바로 구매하실 수 있도록 열어 드릴게요.");
+    return;
+  }
   if (ev.status === "replay" || ev.status === "replay-soon" || isEventOver(ev)) {
     notFound("접수가 끝난 교육이에요", "크래빗 아카데미에서 준비 중인 다른 교육을 둘러보세요.");
     return;

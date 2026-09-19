@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>교육 / 설명회 - 크래빗 아카데미</title>
-<meta name="description" content="크래빗과 올커니가 진행하는 교육과 설명회 전체 목록." />
+<title>VOD 강의 - 크래빗 아카데미</title>
+<meta name="description" content="구매하면 언제든 시청할 수 있는 크래빗 아카데미 녹화 강의 목록." />
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
@@ -229,8 +229,8 @@
 
 <main class="wrap">
   <div class="page-head">
-    <h1>교육 / 설명회</h1>
-    <p>크래빗과 올커니가 온라인, 오프라인으로 진행하는 실시간 교육과 설명회예요. 녹화본을 사서 보는 강의는 <a href="vod" style="color:var(--ink);font-weight:600">VOD 강의</a>에 있어요.</p>
+    <h1>VOD 강의</h1>
+    <p>구매하면 원하는 시간에 바로 시청할 수 있는 녹화 강의예요. 강의자료도 현장 참가자와 똑같이 드립니다.</p>
   </div>
   <div class="panel">
     <div class="tabs" id="tabs" role="tablist"></div>
@@ -270,42 +270,30 @@
 document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() / 300000) + '"></scr' + 'ipt>');
 </script>
 <script>
-/* ---------- 교육 / 설명회 전체 목록 ----------
-   SHOW_IDS에 나열한 실제 교육과 설명회만 보여줍니다.
-   구매해서 보는 녹화본(format "vod")은 VOD 강의 메뉴(vod.html)로 분리했습니다.
-   교육 / 설명회는 실시간으로 참여하는 행사만 둡니다(녹화본을 곁들여 주더라도).
-   (웨비나 다시보기와 커뮤니티 모임 등은 각 전용 페이지에서 다룹니다.)
-   진행 예정이 위, 지난 일정이 아래. 상태 판단은 events.js의 공통 기준을 씁니다. */
+/* ---------- VOD 강의 전체 목록 ----------
+   events.js 에서 format 이 "vod" 인 항목을 전부 보여줍니다. SHOW_IDS 가 따로 없어서
+   어드민에서 진행 방식을 VOD로 저장하면 여기에 바로 뜹니다. 숨기려면 hidden: true.
+   정렬은 releaseDate 최신순. 날짜가 없는 항목은 방금 올린 것으로 보고 맨 위에 둡니다. */
 (function () {
-  const SHOW_IDS = ["olkeoni-blackfriday-0918", "daegu-landing-lecture", "ai-ace-webinar", "holic-time-0821", "homepage-blog-master", "daegu-lecture"];
-  const CATEGORIES = ["전체", "교육", "설명회"];
-  const EMPTY_MSG = {
-    "전체": "일정을 준비하고 있어요.",
-    "교육": "교육을 준비하고 있어요.",
-    "설명회": "설명회를 준비하고 있어요."
-  };
-  let active = "전체";
+  const ALL = "전체";
+  let active = ALL;
 
   const tabsEl = document.getElementById("tabs");
   const rowsEl = document.getElementById("rows");
 
-  function subLine(ev) {
-    return ev.place ? ev.date + "  |  " + ev.place : ev.date;
-  }
+  const VODS = Object.entries(EVENTS_DB)
+    .filter(([, ev]) => ev.format === "vod" && !ev.hidden)
+    .sort((a, b) => {
+      const da = a[1].releaseDate || "", db = b[1].releaseDate || "";
+      if (!da || !db) return !da && !db ? 0 : (da ? 1 : -1);
+      return db.localeCompare(da);
+    });
+  const CATEGORIES = [ALL].concat(Array.from(new Set(VODS.map(([, ev]) => ev.category).filter(Boolean))));
 
-  /* 썸네일 위 실제 글자 오버레이. event.html의 같은 장치와 동일한 ev.coverOverlay 데이터를 쓴다.
-     AI로 만든 일러스트 위의 글자는 프리텐다드가 아니라서 쓰지 않고, 이 자리에 진짜 글자를 그린다. */
   function coverOverlayEl(ov) {
     if (!ov) return null;
     const wrap = document.createElement("div");
     wrap.className = "cov-ov t-" + (ov.theme || "navy") + (ov.shift ? " shift" : "");
-    if (ov.logo) {
-      const lg = document.createElement("img");
-      lg.className = "ov-logo";
-      lg.src = ov.logo;
-      lg.alt = "";
-      wrap.appendChild(lg);
-    }
     if (ov.eyebrow) {
       const eb = document.createElement("span");
       eb.className = "ov-eyebrow";
@@ -321,28 +309,17 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     return wrap;
   }
 
+  /* 판매 상태와 가격만 답니다. 진행 방식은 전부 VOD라 따로 표시하지 않아요. */
   function badges(ev) {
     const t = eventStatusTag(ev);
-    const cls = t.cls === "today" ? "pill today" : (t.cls === "upcoming" ? "pill" : "pill closed");
-    const kindCls = ev.kind === "설명회" ? "pill kind-info" : "pill kind-edu";
-    return (ev.kind ? '<span class="' + kindCls + '">' + ev.kind + "</span>" : "")
-      + '<span class="' + cls + '">' + t.text + "</span>"
-      + '<span class="pill line">' + eventFormat(ev).label + "</span>";
-  }
-
-  /* 예정을 먼저, 그 안에서는 가까운 날짜순. 지난 일정은 최근에 열린 것부터. */
-  function sortEntries(entries) {
-    return entries.sort((a, b) => {
-      const oa = isEventOver(a[1]), ob = isEventOver(b[1]);
-      if (oa !== ob) return oa ? 1 : -1;
-      const da = a[1].startDate || "", db = b[1].startDate || "";
-      if (!da || !db) return !da && !db ? 0 : (da ? -1 : 1);  // 날짜 미정은 뒤로
-      return oa ? db.localeCompare(da) : da.localeCompare(db);
-    });
+    const price = eventPriceInfo(ev);
+    return '<span class="pill ' + (t.cls === "closed" ? "closed" : "") + '">' + t.text + "</span>"
+      + (price.text ? '<span class="pill gray">' + price.text + "</span>" : "");
   }
 
   function renderTabs() {
     tabsEl.innerHTML = "";
+    if (CATEGORIES.length <= 2) { tabsEl.style.display = "none"; return; }
     CATEGORIES.forEach(c => {
       const b = document.createElement("button");
       b.type = "button";
@@ -356,13 +333,10 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   }
 
   function renderRows() {
-    const entries = sortEntries(
-      Object.entries(EVENTS_DB).filter(([id, ev]) =>
-        SHOW_IDS.includes(id) && ev.format !== "vod" && (active === "전체" || ev.kind === active))
-    );
+    const entries = VODS.filter(([, ev]) => active === ALL || ev.category === active);
     rowsEl.innerHTML = "";
     if (entries.length === 0) {
-      rowsEl.innerHTML = '<div class="empty">' + EMPTY_MSG[active] + "</div>";
+      rowsEl.innerHTML = '<div class="empty">VOD 강의를 준비하고 있어요.</div>';
       return;
     }
     entries.forEach(([id, ev]) => {
@@ -377,7 +351,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
         + "</div>"
         + '<div class="thumb-wrap"><img class="thumb" src="' + ev.thumb + '" alt="" loading="lazy" /></div>';
       a.querySelector("h2").textContent = ev.title;
-      a.querySelector(".sub").textContent = subLine(ev);
+      a.querySelector(".sub").textContent = (ev.speaker ? ev.speaker + "  |  " : "") + (ev.date || "");
       const ov = coverOverlayEl(ev.coverOverlay);
       if (ov) a.querySelector(".thumb-wrap").appendChild(ov);
       rowsEl.appendChild(a);

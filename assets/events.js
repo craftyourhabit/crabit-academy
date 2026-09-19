@@ -16,6 +16,12 @@
    - prep / audience: '이런 내용을 다뤄요' 콜아웃 안에 함께 들어갑니다.
    - format: "offline"(오프라인) | "online"(온라인) | "vod"(녹화본) | "hybrid"(동시 진행).
      생략하면 place 유무로 추정합니다.
+     ★ "vod"는 사이트에서 'VOD 강의' 메뉴에 따로 모입니다. 구매해서 언제든 보는 녹화본 상품만
+       vod로 두세요. 실시간 교육에 녹화본을 곁들여 주는 경우는 online이나 offline입니다.
+       VOD 강의 목록은 SHOW_IDS 없이 format만 보고 자동으로 뜹니다. 숨기려면 hidden: true.
+   - releaseDate: "YYYY-MM-DD" - VOD를 올린 날. VOD 강의 목록에서 최신순 정렬에 씁니다.
+   - comingSoon: true - VOD를 목록과 상세에는 보여 주되 결제는 막습니다. '공개 예정' 태그와
+     "곧 업로드될 예정이에요" 버튼이 뜹니다. 결제 상품 등록을 마치면 지우세요.
    - onlineUrl: 줌 등 참여 링크. format이 online 또는 hybrid일 때만 씁니다.
      ★ 이 값은 공개 페이지에 절대 노출하지 않습니다. 링크를 아는 사람은
        누구나 들어올 수 있기 때문입니다. 신청하고 결제까지 마친 분에게만
@@ -114,9 +120,12 @@ const EVENTS_DB = {
     category: "학원 운영",
     host: "올커니",
     kind: "교육",
+    /* 영상을 아직 받지 못해 사이트에서 내려 둔 상태. 영상과 시청 페이지가 준비되면 이 줄을 지운다. */
+    hidden: true,
     title: "지역 1등 수학학원 만들기 프로젝트 (녹화본)",
     date: "온라인 강의 3회차 녹화본, 신청 후 바로 시청",
-    thumb: "assets/events/math-academy-top1/hero.jpg",
+    releaseDate: "2026-09-01",
+    thumb: "assets/thumbs/vod/math-academy-top1.png",
     format: "vod",
     priceType: "paid",
     price: 90000,
@@ -225,6 +234,40 @@ const EVENTS_DB = {
         ],
         gifts: ["강의자료", "학부모가 반응하는 유튜브 채널 주제 키워드 50개", "상담 스크립트"]
       }
+    ]
+  },
+  "olkeoni-landing-vod": {
+    type: "Course",
+    category: "AI·자동화",
+    host: "크래빗",
+    kind: "교육",
+    title: "원장님이 직접 만드는 우리 학원 랜딩페이지 2탄 (녹화본)",
+    date: "온라인 특강 녹화본 1시간 43분, 결제 후 바로 시청",
+    releaseDate: "2026-09-20",
+    comingSoon: true,
+    thumb: "assets/thumbs/vod/olkeoni-landing-vod.png",
+    format: "vod",
+    priceType: "paid",
+    price: 30000,
+    feeNote: "강의 슬라이드와 실습 프롬프트, 랜딩페이지 아이디어 30선 프롬프트집까지 현장 참가자와 똑같이 드려요.",
+    provision: "결제를 마치시면 시청 페이지 주소와 비밀번호를 바로 보내드립니다. 결제하신 날부터 7일 동안 사이트에서 영상을 시청하실 수 있고, 강의 슬라이드와 프롬프트 자료도 같은 페이지에서 받아 보실 수 있어요.",
+    refundNote: "시청용 비밀번호를 받기 전까지는 전액 환불해 드립니다. 비밀번호를 받으신 뒤에는 영상 전체를 이미 보실 수 있는 상태라 환불이 어렵습니다.",
+    desc: "9월 18일 올커니 BLACK FRIDAY 특강에서 진행한 크래빗 김현지 대표의 랜딩페이지 제작 실습을 녹화본으로 만나보세요. 바이브코딩 기초 용어부터 차근차근 짚은 뒤, 젠스파크에 프롬프트를 하나씩 붙여넣으며 학부모 설명회 모집 페이지, 오늘의 수업 퀴즈 페이지, 학생 월간 학습리포트를 직접 만들어 봅니다. 올커니 조경이 대표님의 AI 만화 콘텐츠 실습도 함께 담겨 있어요.",
+    points: [
+      "바이브코딩 기초 용어와 젠스파크 사용법",
+      "학부모 설명회 모집 페이지 만들기",
+      "오늘의 수업 + 랜덤 퀴즈 페이지 만들기",
+      "학생 월간 학습리포트 페이지 만들기"
+    ],
+    speaker: "김현지",
+    speakerRole: "크래빗 장학카드 대표",
+    audience: "학원 원장님",
+    status: "upcoming",
+    materials: [
+      { name: "특강 녹화영상 (1시간 43분)", note: "결제 후 7일간 시청" },
+      { name: "강의 슬라이드" },
+      { name: "실습 프롬프트 3종", note: "퀴즈 프롬프트는 문제 출제까지 2단계로 보강" },
+      { name: "랜딩페이지 아이디어 30선 + 프롬프트집", note: "보너스: 중간고사 기출 풀이 + 분석 사이트 프롬프트" }
     ]
   },
   "parents-webinar": {
@@ -606,6 +649,12 @@ function cardDesc(text, max) {
 
 /* 카드와 상세가 공통으로 쓰는 상태 라벨. { text, cls } 반환. */
 function eventStatusTag(ev) {
+  /* VOD 는 날짜가 없는 상시 판매 상품이라 '예정'이 아니라 '판매 중'으로 부른다. */
+  if (ev.format === "vod") {
+    if (isEventOver(ev)) return { text: "판매 종료", cls: "closed" };
+    /* comingSoon: 상세페이지는 열어 두고 결제만 막는 상태. 결제 상품 등록을 마치면 이 값을 지운다. */
+    return ev.comingSoon ? { text: "공개 예정", cls: "upcoming" } : { text: "판매 중", cls: "upcoming" };
+  }
   if (isEventOver(ev)) return { text: "마감", cls: "closed" };
   return isEventToday(ev) ? { text: "오늘", cls: "today" } : { text: "예정", cls: "upcoming" };
 }

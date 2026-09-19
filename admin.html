@@ -535,7 +535,7 @@
       </button>
 
       <div class="side-group">운영</div>
-      <button class="nav" data-tab="events"><span class="ic" style="color:#7C5CFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4.6h6a2.4 2.4 0 0 1 2 1.1V20a2.4 2.4 0 0 0-2-1.1H4z" fill="currentColor"/><path d="M20 4.6h-6a2.4 2.4 0 0 0-2 1.1V20a2.4 2.4 0 0 1 2-1.1h6z" fill="currentColor" fill-opacity=".55"/></svg></span>교육 / 설명회</button>
+      <button class="nav" data-tab="events"><span class="ic" style="color:#7C5CFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4.6h6a2.4 2.4 0 0 1 2 1.1V20a2.4 2.4 0 0 0-2-1.1H4z" fill="currentColor"/><path d="M20 4.6h-6a2.4 2.4 0 0 0-2 1.1V20a2.4 2.4 0 0 1 2-1.1h6z" fill="currentColor" fill-opacity=".55"/></svg></span>교육 / 설명회 / VOD</button>
       <button class="nav" data-tab="applications"><span class="ic" style="color:#F59E0B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.6" fill="currentColor"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0 1.2 1.2 0 0 1-1.2 1.2H5.8a1.2 1.2 0 0 1-1.2-1.2z" fill="currentColor" fill-opacity=".55"/></svg></span>신청자</button>
 
       <div class="side-group">관리</div>
@@ -549,7 +549,7 @@
     <!-- 목록 -->
     <div id="listView">
       <div class="head-row">
-        <h2 id="listTitle">교육 / 설명회<span class="cnt" id="listCnt"></span></h2>
+        <h2 id="listTitle">교육 / 설명회 / VOD<span class="cnt" id="listCnt"></span></h2>
         <button class="btn btn-primary" id="newBtn">새로 추가</button>
       </div>
       <div class="list" id="list"></div>
@@ -1009,7 +1009,7 @@ function renderList() {
   $("#newBtn").style.display = "";
 
   const isEv = currentTab === "events";
-  $("#listTitle").firstChild.textContent = isEv ? "교육 / 설명회" : "자료 / 인사이트";
+  $("#listTitle").firstChild.textContent = isEv ? "교육 / 설명회 / VOD" : "자료 / 인사이트";
   const box = $("#list");
   box.innerHTML = "";
 

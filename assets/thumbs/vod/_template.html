@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<!--
+  VOD 강의 썸네일 표준 템플릿 (1600x900, PNG로 렌더링해서 씁니다)
+
+  규칙
+  - 검정(#16192A) 배경 하나. 그라데이션이나 사진은 넣지 않습니다.
+  - 핑크(#FB75BB)는 제목의 강조 구절과 재생 버튼에만 씁니다.
+  - 제목은 큼직하게 2~3줄. 날짜와 시간은 절대 넣지 않습니다(언제든 보는 상품이라서요).
+  - 굵기는 700까지만 씁니다.
+
+  새 VOD 썸네일 만드는 법
+  1. 아래 VODS 배열에 항목을 하나 추가합니다(id는 events.js 키와 같게).
+  2. 터미널에서 이 폴더로 가서 render.sh <id> 를 실행하면 <id>.png 가 생깁니다.
+  3. events.js 의 thumb 를 "assets/thumbs/vod/<id>.png" 로 바꿉니다.
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 900px; overflow: hidden; }
+  body {
+    background: #16192A;
+    color: #FFFFFF;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame { position: relative; width: 1600px; height: 900px; padding: 112px 128px; }
+  .label {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 30px; font-weight: 600; letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .label::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: #FB75BB; }
+  h1 {
+    margin-top: 72px;
+    font-size: 116px; font-weight: 700; line-height: 1.2; letter-spacing: -0.035em;
+    white-space: pre-line;
+  }
+  h1 em { font-style: normal; color: #FB75BB; }
+  .foot {
+    position: absolute; left: 128px; bottom: 104px;
+    display: flex; align-items: center; gap: 22px;
+    font-size: 34px; font-weight: 500; color: rgba(255, 255, 255, 0.55);
+  }
+  .foot b { color: #FFFFFF; font-weight: 600; }
+  .foot .bar { color: rgba(255, 255, 255, 0.3); }
+  .play {
+    position: absolute; right: 128px; bottom: 96px;
+    width: 176px; height: 176px; border-radius: 50%; background: #FB75BB;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .play svg { width: 70px; height: 70px; margin-left: 10px; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="label">CRABIT ACADEMY VOD</div>
+  <h1 id="title"></h1>
+  <div class="foot" id="foot"></div>
+  <div class="play"><svg viewBox="0 0 24 24" fill="#16192A"><path d="M6 3.5v17l14-8.5z"/></svg></div>
+</div>
+<script>
+/* title: 줄바꿈은 \n, 핑크 강조는 [대괄호]로 감쌉니다. */
+const VODS = {
+  "olkeoni-landing-vod": {
+    title: "원장님이 직접 만드는\n우리 학원\n[랜딩페이지 2탄]",
+    speaker: "김현지", role: "크래빗 장학카드 대표", meta: "1시간 43분"
+  },
+  "math-academy-top1": {
+    title: "[지역 1등]\n수학학원 만들기\n프로젝트",
+    speaker: "여호원", role: "올마이티캠퍼스 대표", meta: "3회차"
+  }
+};
+const id = new URLSearchParams(location.search).get("id") || Object.keys(VODS)[0];
+const v = VODS[id];
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+document.getElementById("title").innerHTML = esc(v.title).replace(/\[(.+?)\]/g, "<em>$1</em>");
+document.getElementById("foot").innerHTML =
+  "<b>" + esc(v.speaker) + "</b><span>" + esc(v.role) + "</span>"
+  + (v.meta ? '<span class="bar">|</span><span>' + esc(v.meta) + "</span>" : "");
+</script>
+</body>
+</html>

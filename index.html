@@ -63,7 +63,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 0;
+    /* 좌우 여백은 .wrap 이 준다. padding 한 줄로 쓰면 좌우가 0으로 덮여 로고가 화면 끝에 붙는다. */
+    padding-top: 18px;
+    padding-bottom: 18px;
   }
   .brand {
     font-weight: 700;
@@ -835,5 +837,6 @@ async function tryUnlock() {
 
 
 <script src="assets/track.js?v=202608191626" defer></script>
+<script src="assets/site-menu.js?v=1" defer></script>
 </body>
 </html>

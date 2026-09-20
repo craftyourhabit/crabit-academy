@@ -138,7 +138,7 @@ function smsBody(order: any, access: any): string {
   if (access && access.access_url) {
     lines.push("- 시청 페이지: " + access.access_url);
     if (access.access_password) lines.push("- 비밀번호: " + access.access_password);
-    lines.push("", "시청 기간 제한은 없어요. 링크와 비밀번호는 원장님 전용이라 공유는 삼가 주세요.");
+    lines.push("", "결제하신 날부터 3개월 동안 보실 수 있어요. 링크와 비밀번호는 원장님 전용이라 공유는 삼가 주세요.");
   } else {
     lines.push("시청 안내는 곧 메일로 보내드릴게요.");
   }

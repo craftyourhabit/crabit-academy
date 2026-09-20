@@ -3,12 +3,16 @@
 
   쓰는 법
   1. 아래 표시된 곳만 바꿔요.
-     {{원장님성함}}  {{강의명}}  {{썸네일주소}}  {{상세페이지주소}}  {{시청주소}}  {{시청비밀번호}}
+     {{원장님성함}}  {{강의명}}  {{썸네일주소}}  {{상세페이지주소}}  {{VOD목록주소}}  {{시청주소}}  {{시청비밀번호}}
+     {{VOD목록주소}} 는 https://craftyourhabit.github.io/crabit-academy/vod 입니다.
+     주소에 물음표(쿼리)가 붙으면 지메일이 "리디렉션 알림" 화면을 한 번 띄우므로, 본문 링크는 되도록 물음표 없는 주소를 씁니다.
   2. 이 파일을 크롬으로 열고 전체 선택(Cmd+A) 후 복사해서 지메일 본문에 붙여넣으면 서식 그대로 들어가요.
   3. 제목: [크래빗 아카데미] {{강의명}} 결제 완료 안내
 
   메일 클라이언트마다 CSS 지원이 달라서 표(table)와 인라인 스타일로만 짰어요. 바깥 스타일시트를 쓰면 깨집니다.
-  썸네일은 사이트에 올라가 있는 주소를 그대로 쓰면 됩니다.
+  썸네일은 사이트 주소를 그대로 쓰면 되지만, 지메일은 외부 이미지를 처음에 가립니다("이미지 표시"를 눌러야 보임).
+  가려지지 않게 하려면 이미지를 메일에 직접 첨부해 본문에 넣으세요.
+  썸네일 주소는 사이트에 올라가 있는 것을 씁니다.
   예: https://craftyourhabit.github.io/crabit-academy/assets/thumbs/vod/olkeoni-landing-vod.png
 -->
 <div style="margin:0;padding:0;background:#F2F3F6">
@@ -46,10 +50,15 @@
               <tr>
                 <td style="padding:24px">
                   <!-- 버튼은 폭을 꽉 채워 하나만 둡니다. 비밀번호를 버튼처럼 만들면 눌러야 하는 줄 알고 헷갈려요. -->
+                  <!-- 버튼 색은 남색이 아니라 브랜드 핑크를 씁니다.
+                       휴대폰 메일 앱의 다크모드는 어두운 색과 흰 글씨를 뒤집어 버려서, 남색 버튼은
+                       검은 배경에 회색 글씨로 묻혀 보이지 않습니다. 채도가 높은 핑크는 뒤집히지 않아요.
+                       글자는 남색으로 둬서 혹시 색이 뒤집혀도 핑크 위에서 읽힙니다.
+                       지메일이 td 의 style 배경을 지우는 경우가 있어 bgcolor 속성도 함께 씁니다. -->
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
-                      <td align="center" style="background:#16192A;border-radius:12px">
-                        <a href="{{시청주소}}" style="display:block;color:#FFFFFF;text-decoration:none;font-size:16px;font-weight:700;padding:16px 20px">
+                      <td align="center" bgcolor="#FB75BB" style="background-color:#FB75BB;border-radius:12px">
+                        <a href="{{시청주소}}" style="display:block;background-color:#FB75BB;color:#16192A;text-decoration:none;font-size:17px;font-weight:700;padding:17px 20px;border-radius:12px">
                           시청 페이지 열기
                         </a>
                       </td>
@@ -91,7 +100,7 @@
           <td style="padding:26px 40px 0">
             <p style="margin:0 0 10px;font-size:16.5px;font-weight:700">💡 이 메일을 잃어버리셨다면</p>
             <p style="margin:0;font-size:15px;line-height:1.85;color:#4A4D5C">
-              <a href="{{상세페이지주소}}" style="color:#16192A;font-weight:600">강의 페이지</a>에서
+              <a href="{{VOD목록주소}}" style="color:#16192A;font-weight:600">VOD 강의 페이지</a>에서 해당 강의를 열고,
               "이미 구매하셨나요? 시청 페이지 열기"를 누르고 위 비밀번호를 입력하시면 언제든 다시 들어오실 수 있어요.
             </p>
           </td>

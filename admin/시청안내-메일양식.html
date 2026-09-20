@@ -3,16 +3,20 @@
 
   쓰는 법
   1. 아래 표시된 곳만 바꿔요.
-     {{원장님성함}}  {{강의명}}  {{썸네일주소}}  {{상세페이지주소}}  {{VOD목록주소}}  {{시청주소}}  {{시청비밀번호}}
+     {{원장님성함}}  {{강의명}}  {{썸네일파일명}}  {{상세페이지주소}}  {{VOD목록주소}}  {{시청주소}}  {{시청비밀번호}}
      {{VOD목록주소}} 는 https://craftyourhabit.github.io/crabit-academy/vod 입니다.
      주소에 물음표(쿼리)가 붙으면 지메일이 "리디렉션 알림" 화면을 한 번 띄우므로, 본문 링크는 되도록 물음표 없는 주소를 씁니다.
   2. 이 파일을 크롬으로 열고 전체 선택(Cmd+A) 후 복사해서 지메일 본문에 붙여넣으면 서식 그대로 들어가요.
   3. 제목: [크래빗 아카데미] {{강의명}} 결제 완료 안내
 
   메일 클라이언트마다 CSS 지원이 달라서 표(table)와 인라인 스타일로만 짰어요. 바깥 스타일시트를 쓰면 깨집니다.
-  썸네일은 사이트 주소를 그대로 쓰면 되지만, 지메일은 외부 이미지를 처음에 가립니다("이미지 표시"를 눌러야 보임).
-  가려지지 않게 하려면 이미지를 메일에 직접 첨부해 본문에 넣으세요.
-  썸네일 주소는 사이트에 올라가 있는 것을 씁니다.
+  썸네일은 이 폴더 옆의 메일-썸네일/ 안에 있는 파일을 씁니다. 사이트 주소로 걸면 지메일이 가려 버려서 안 보여요.
+  이 파일을 크롬으로 열고 전체 복사해 지메일에 붙여넣으면, 지메일이 그 이미지를 메일에 첨부로 넣어 줍니다.
+  그래서 받는 분은 "이미지 표시"를 누르지 않아도 썸네일이 바로 보입니다.
+
+  강의별 썸네일 만들기: admin/메일-썸네일/만들기.sh <event_id>
+  (assets/thumbs/vod/<event_id>.png 를 360px JPEG 으로 줄여 10KB 안쪽으로 저장합니다.
+   파일이 크면 메일이 무거워지고 첨부가 깨지기 쉬워서 작게 둡니다.)
   예: https://craftyourhabit.github.io/crabit-academy/assets/thumbs/vod/olkeoni-landing-vod.png
 -->
 <div style="margin:0;padding:0;background:#F2F3F6">
@@ -25,7 +29,7 @@
         <tr>
           <td style="padding:0">
             <a href="{{상세페이지주소}}" style="text-decoration:none">
-              <img src="{{썸네일주소}}" alt="{{강의명}}" width="600" style="width:100%;max-width:600px;display:block;border:0" />
+              <img src="메일-썸네일/{{썸네일파일명}}" alt="{{강의명}}" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0" />
             </a>
           </td>
         </tr>
@@ -64,9 +68,6 @@
                       </td>
                     </tr>
                   </table>
-                  <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#7F808A;word-break:break-all;text-align:center">
-                    {{시청주소}}
-                  </p>
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:18px;border-top:1px solid #E8E8E8">
                     <tr>
                       <td style="padding:18px 2px 0">

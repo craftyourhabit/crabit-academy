@@ -151,6 +151,92 @@ function smsBody(order: any, access: any): string {
   return lines.join("\n");
 }
 
+/* =====================================================================
+   결제 완료 메일 (Resend HTTP API)
+
+   문자와 같은 임시 통로입니다. 알림톡 승인 후에는 이 블록과 approve 안의 호출을 지웁니다.
+   문구를 고치면 admin/시청안내-메일양식.html 도 같이 맞춰 주세요(손으로 보낼 때 쓰는 사본).
+
+   필요한 시크릿 (없으면 메일만 조용히 건너뜁니다. 결제는 그대로 성공합니다.)
+     RESEND_API_KEY   resend.com 에서 발급
+     MAIL_FROM        예: 크래빗 아카데미 <academy@crabit.co.kr> (도메인 인증을 마친 주소)
+   ===================================================================== */
+function mailHtml(order: any, access: any): string {
+  const esc = (v: unknown) =>
+    String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const who = order.buyer_name ? esc(order.buyer_name) + " 원장님" : "원장님";
+  const site = (Deno.env.get("SITE_BASE") || "").replace(/\/$/, "");
+  const url = access && access.access_url ? esc(access.access_url) : "";
+  const pw = access && access.access_password ? esc(access.access_password) : "";
+  const note = access && access.access_note
+    ? esc(access.access_note)
+    : "링크와 비밀번호는 원장님 전용이라 외부에 공유하지 말아 주세요.";
+
+  /* 버튼은 브랜드 핑크. 휴대폰 다크모드가 어두운 색과 흰 글씨를 뒤집어 버려서 남색 버튼은 묻힙니다. */
+  const box = url
+    ? '<tr><td style="padding:26px 40px 0">'
+      + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F9FAFC;border-radius:16px"><tr><td style="padding:24px">'
+      + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
+      + '<td align="center" bgcolor="#FB75BB" style="background-color:#FB75BB;border-radius:12px">'
+      + '<a href="' + url + '" style="display:block;background-color:#FB75BB;color:#16192A;text-decoration:none;font-size:17px;font-weight:700;padding:17px 20px;border-radius:12px">시청 페이지 열기</a>'
+      + "</td></tr></table>"
+      + (pw
+          ? '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:18px;border-top:1px solid #E8E8E8"><tr><td style="padding:18px 2px 0">'
+            + '<p style="margin:0;font-size:14px;line-height:1.6;color:#7F808A">🔑 시청 비밀번호</p>'
+            + '<p style="margin:6px 0 0;font-size:24px;font-weight:700;letter-spacing:0.08em;color:#16192A">' + pw + "</p>"
+            + '<p style="margin:10px 0 0;font-size:13.5px;line-height:1.7;color:#7F808A">' + note + "</p>"
+            + "</td></tr></table>"
+          : "")
+      + "</td></tr></table></td></tr>"
+    : "";
+
+  return '<div style="margin:0;padding:0;background:#F2F3F6">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F2F3F6;padding:28px 12px"><tr><td align="center">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:100%;background:#FFFFFF;border-radius:20px;overflow:hidden;font-family:\'Apple SD Gothic Neo\',\'Malgun Gothic\',Arial,sans-serif;color:#16192A">'
+    + '<tr><td style="padding:36px 40px 0">'
+    + '<p style="margin:0 0 14px;font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.4;color:#16192A">안녕하세요, ' + who + "! 크래빗팀이에요.</p>"
+    + '<p style="margin:0;font-size:15.5px;line-height:1.75;color:#4A4D5C"><b style="color:#16192A">' + esc(order.title) + "</b> 결제가 완료되어 아래 시청링크와 비밀번호 안내를 전달드립니다. 😊<br /><br />"
+    + "아래 버튼을 누르고 비밀번호를 입력하시면 바로 보실 수 있습니다!</p></td></tr>"
+    + box
+    + '<tr><td style="padding:30px 40px 0">'
+    + '<p style="margin:0 0 12px;font-size:16.5px;font-weight:700;color:#16192A">📎 함께 드리는 자료</p>'
+    + '<p style="margin:0;font-size:15px;line-height:1.85;color:#4A4D5C">강의 슬라이드와 실습 자료를 모두 시청 페이지 안에 모아 뒀어요. 영상 아래에서 바로 열어 보실 수 있습니다.</p></td></tr>'
+    + '<tr><td style="padding:26px 40px 0">'
+    + '<p style="margin:0 0 10px;font-size:16.5px;font-weight:700;color:#16192A">💡 나중에 강의를 들으실 때 이렇게 하세요!</p>'
+    + '<p style="margin:0 0 10px;font-size:15px;line-height:1.85;color:#4A4D5C">방법 1) <a href="' + site + '/vod" style="color:#16192A;font-weight:600">VOD 강의 페이지</a>에서 해당 강의를 열고, "이미 구매하셨나요? 시청 페이지 열기"를 누르고 위 비밀번호를 입력하시면 언제든 다시 들어오실 수 있어요.</p>'
+    + '<p style="margin:0;font-size:15px;line-height:1.85;color:#4A4D5C">방법 2) 이 이메일 또는 함께 발송된 문자를 찾아 링크 클릭 및 비밀번호 입력을 하여 언제든 다시 들으실 수 있어요.</p></td></tr>'
+    + '<tr><td style="padding:28px 40px 34px">'
+    + '<p style="margin:0;font-size:15px;line-height:1.85;color:#4A4D5C">크래빗과 함께 배우신 내용이 실제 원장님의 일상 속에 작고 큰 변화를 가져다줄 수 있기를 진심으로 바라는 마음입니다 :) 좋은 하루 보내세요, 원장님!</p>'
+    + '<p style="margin:18px 0 0;font-size:15px;line-height:1.8;color:#16192A">감사합니다.<br />크래빗팀 드림</p></td></tr>'
+    + '<tr><td style="padding:22px 40px 30px;border-top:1px solid #E8E8E8">'
+    + '<p style="margin:0;font-size:12.5px;line-height:1.8;color:#7F808A">(주)크래빗 | 대표 김현지<br />사업자등록번호 747-86-03279 | 통신판매업신고 제 2025-서울구로-2011<br />서울시 구로구 디지털로 288, 2003-1호 | 문의 010-5957-2483<br />'
+    + '<a href="' + site + '/policy.html" style="color:#7F808A">이용약관과 환불 규정</a></p></td></tr>'
+    + "</table></td></tr></table></div>";
+}
+
+async function sendMail(order: any, access: any): Promise<void> {
+  const key = Deno.env.get("RESEND_API_KEY");
+  const from = Deno.env.get("MAIL_FROM");
+  const to = String(order.buyer_email || "").trim();
+  if (!key || !from || !to) return;   /* 설정 전이거나 메일 주소를 안 남겼으면 건너뛴다 */
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: "[크래빗 아카데미] " + order.title + " 결제 완료 안내",
+        html: mailHtml(order, access),
+      }),
+    });
+    if (!res.ok) console.error("메일 발송 실패", res.status, (await res.text()).slice(0, 300));
+  } catch (e) {
+    /* 메일이 실패해도 결제는 이미 끝났다. 결제 응답을 막지 않는다. */
+    console.error("메일 발송 예외", String(e).slice(0, 200));
+  }
+}
+
 async function sendSms(order: any, access: any): Promise<void> {
   const to = String(order.buyer_phone || "").replace(/[^0-9]/g, "");
   const from = String(Deno.env.get("SOLAPI_SENDER") || "").replace(/[^0-9]/g, "");
@@ -328,6 +414,7 @@ async function handleApprove(body: Record<string, unknown>) {
   const acc = await access();
   /* 알림톡 승인 전까지 쓰는 임시 안내. 실패해도 결제 결과에는 영향을 주지 않는다. */
   await sendSms({ ...order, title: order.title }, acc);
+  await sendMail(order, acc);
 
   return json({
     ok: true, event_id: order.event_id, title: order.title, amount: order.amount,
@@ -361,6 +448,7 @@ Deno.serve(async (req) => {
         + "&select=access_url,access_password,access_note");
       const prows = p.ok ? await p.json() : [];
       await sendSms(o, prows[0] || {});
+      await sendMail(o, prows[0] || {});
       return json({ ok: true, to: String(o.buyer_phone || "").slice(-4) });
     }
   } catch (e) {

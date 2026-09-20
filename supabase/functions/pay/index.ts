@@ -97,6 +97,81 @@ for (const name of ["KAKAOPAY_SECRET_KEY", "KAKAOPAY_CID", "SITE_BASE"]) {
 }
 
 /* 결제창 주소 만들기. 주문을 먼저 만들고 카카오페이 ready를 부릅니다. */
+/* =====================================================================
+   결제 완료 문자(LMS) 안내
+
+   카카오 알림톡 승인 전까지 쓰는 임시 통로입니다. 승인이 나면 이 블록과
+   approve 안의 호출 한 줄만 지우면 됩니다.
+
+   필요한 시크릿 (없으면 문자만 조용히 건너뜁니다. 결제는 그대로 성공합니다.)
+     SOLAPI_API_KEY / SOLAPI_API_SECRET  솔라피 콘솔 > 개발/연동
+     SOLAPI_SENDER                       사전 등록한 발신번호 (숫자만)
+     NOTIFY_TOKEN                        /pay/resend 를 부를 때 쓰는 임의의 암호
+   ===================================================================== */
+async function solapiAuth(): Promise<string | null> {
+  const key = Deno.env.get("SOLAPI_API_KEY");
+  const secret = Deno.env.get("SOLAPI_API_SECRET");
+  if (!key || !secret) return null;
+  const date = new Date().toISOString();
+  const saltBytes = new Uint8Array(32);
+  crypto.getRandomValues(saltBytes);
+  const salt = Array.from(saltBytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const sigBuf = await crypto.subtle.sign("HMAC", cryptoKey, enc.encode(date + salt));
+  const signature = Array.from(new Uint8Array(sigBuf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `HMAC-SHA256 apiKey=${key}, date=${date}, salt=${salt}, signature=${signature}`;
+}
+
+/* 문자(LMS) 본문. 사용자가 확정한 문구입니다. 이모지는 일반 문자에서 깨져서 쓰지 않고,
+   목록은 하이픈으로 답니다. 알림톡 승인 후에는 이 블록째 지웁니다. */
+function smsBody(order: any, access: any): string {
+  const who = order.buyer_name ? order.buyer_name + " 원장님" : "원장님";
+  const lines = [
+    "안녕하세요, " + who + "! 크래빗팀이에요.",
+    "",
+    '"' + order.title + '" 결제가 완료되었어요.',
+    "",
+  ];
+  if (access && access.access_url) {
+    lines.push("- 시청 페이지: " + access.access_url);
+    if (access.access_password) lines.push("- 비밀번호: " + access.access_password);
+    lines.push("", "시청 기간 제한은 없어요. 링크와 비밀번호는 원장님 전용이라 공유는 삼가 주세요.");
+  } else {
+    lines.push("시청 안내는 곧 메일로 보내드릴게요.");
+  }
+  lines.push(
+    "",
+    "크래빗과 함께 배우신 내용이 실제 원장님의 일상 속에 작고 큰 변화를 가져다줄 수 있기를 진심으로 바라는 마음입니다 :)",
+    "",
+    "감사합니다!",
+  );
+  return lines.join("\n");
+}
+
+async function sendSms(order: any, access: any): Promise<void> {
+  const to = String(order.buyer_phone || "").replace(/[^0-9]/g, "");
+  const from = String(Deno.env.get("SOLAPI_SENDER") || "").replace(/[^0-9]/g, "");
+  const auth = await solapiAuth();
+  if (!to || !from || !auth) return;   /* 설정 전이면 조용히 건너뛴다 */
+  try {
+    const res = await fetch("https://api.solapi.com/messages/v4/send", {
+      method: "POST",
+      headers: { "Authorization": auth, "Content-Type": "application/json" },
+      body: JSON.stringify({ message: { to, from, subject: "크래빗 아카데미", text: smsBody(order, access) } }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || (data && data.errorCode)) {
+      console.error("문자 발송 실패", res.status, JSON.stringify(data).slice(0, 300));
+    }
+  } catch (e) {
+    /* 문자가 실패해도 결제는 이미 끝났다. 절대 결제 응답을 막지 않는다. */
+    console.error("문자 발송 예외", String(e).slice(0, 200));
+  }
+}
+
 async function handleReady(body: Record<string, unknown>) {
   const eventId = String(body.event_id || "");
   const name = String(body.name || "").trim();
@@ -250,9 +325,13 @@ async function handleApprove(body: Record<string, unknown>) {
     body: JSON.stringify({ status: "approved", approved_at: approvedAt, pg_payload: kakaoData }),
   });
 
+  const acc = await access();
+  /* 알림톡 승인 전까지 쓰는 임시 안내. 실패해도 결제 결과에는 영향을 주지 않는다. */
+  await sendSms({ ...order, title: order.title }, acc);
+
   return json({
     ok: true, event_id: order.event_id, title: order.title, amount: order.amount,
-    approved_at: approvedAt, access: await access(),
+    approved_at: approvedAt, access: acc,
   });
 }
 
@@ -269,6 +348,21 @@ Deno.serve(async (req) => {
   try {
     if (path.endsWith("/ready")) return await handleReady(body);
     if (path.endsWith("/approve")) return await handleApprove(body);
+    /* 안내 문자를 다시 보내는 통로. 아무나 부르면 구매자 폰으로 문자가 쏟아지니
+       NOTIFY_TOKEN 시크릿을 아는 사람만 부를 수 있게 막는다. */
+    if (path.endsWith("/resend")) {
+      const token = Deno.env.get("NOTIFY_TOKEN") || "";
+      if (!token || String(body?.token || "") !== token) return json({ error: "권한이 없어요." }, 401);
+      const r = await db("orders?id=eq." + encodeURIComponent(String(body?.order_id || "")) + "&select=*");
+      const rows = r.ok ? await r.json() : [];
+      const o = rows[0];
+      if (!o) return json({ error: "주문을 찾을 수 없어요." }, 404);
+      const p = await db("products?event_id=eq." + encodeURIComponent(o.event_id)
+        + "&select=access_url,access_password,access_note");
+      const prows = p.ok ? await p.json() : [];
+      await sendSms(o, prows[0] || {});
+      return json({ ok: true, to: String(o.buyer_phone || "").slice(-4) });
+    }
   } catch (e) {
     console.error("처리 중 오류", e);
     return json({ error: "일시적인 오류가 났어요. 잠시 후 다시 시도해 주세요." }, 500);

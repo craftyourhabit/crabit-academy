@@ -244,7 +244,6 @@ const EVENTS_DB = {
     title: "원장님이 직접 만드는 우리 학원 랜딩페이지 2탄 (녹화본)",
     date: "온라인 특강 녹화본 1시간 43분, 결제 후 바로 시청",
     releaseDate: "2026-09-20",
-    comingSoon: true,
     thumb: "assets/thumbs/vod/olkeoni-landing-vod.png",
     format: "vod",
     priceType: "paid",

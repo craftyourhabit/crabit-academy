@@ -421,6 +421,23 @@
   .buy .b-note { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
   .buy .btn { margin-top: 24px; width: 100%; text-align: center; display: block; padding: 16px; font-size: 16.5px; }
   .buy .b-foot { margin: 14px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); text-align: center; }
+  /* 이미 구매한 분이 시청 페이지로 다시 들어오는 길. 비밀번호를 넣으면 열린다. */
+  .buy .b-owned { margin: 12px 0 0; text-align: center; }
+  .b-owned button { border: 0; background: none; padding: 4px; font-family: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .b-owned button:hover { color: var(--pink); }
+  .vodpw-backdrop { position: fixed; inset: 0; background: rgba(22,25,42,.55); display: none;
+    align-items: center; justify-content: center; z-index: 60; padding: 24px; }
+  .vodpw-backdrop.show { display: flex; }
+  .vodpw { background: #fff; border-radius: 20px; padding: 32px; width: 100%; max-width: 400px;
+    box-shadow: 0 24px 60px rgba(22,25,42,.25); }
+  .vodpw h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+  .vodpw p.m-sub { margin: 0 0 20px; font-size: 15px; color: var(--muted); line-height: 1.6; }
+  .vodpw input { width: 100%; padding: 12px 14px; border: 0; border-radius: 10px; font-size: 16px;
+    font-family: inherit; background: var(--fill); color: var(--ink); }
+  .vodpw input:focus { outline: 2px solid var(--pink); outline-offset: 0; }
+  .vodpw .m-error { min-height: 20px; margin: 8px 0 12px; font-size: 14px; color: var(--pink); font-weight: 500; }
+  .vodpw .m-actions { display: flex; gap: 10px; justify-content: flex-end; }
   .buy .b-foot a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
   .btn {
@@ -911,6 +928,7 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
       + '<p class="b-amount">' + esc(price.text) + '</p>'
       + (price.note ? '<p class="b-note">' + esc(price.note) + '</p>' : '')
       + cta
+      + (fmt.kind === "vod" ? '<p class="b-owned"><button type="button" id="ownedBtn">이미 구매하셨나요? 시청 페이지 열기</button></p>' : '')
       + '<p class="b-foot">' + (contactHtml || (price.paid
           ? '결제를 마치면 바로 안내를 보내드려요.'
           : (fmt.isOnline
@@ -977,6 +995,52 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   window.addEventListener("load", syncHeaderHeight);
 
   /* 모바일 하단 고정 바. 좁은 화면에는 우측 카드가 없어서 금액을 여기에 함께 둔다. */
+  /* 이미 구매한 분의 시청 페이지 재진입.
+     시청 페이지 주소는 비밀번호의 SHA-256 앞 16자리라, 비밀번호를 받으면 주소를 되살릴 수 있다.
+     비밀번호는 어디에도 저장하지 않는다. (자료 페이지의 잠금 자료와 같은 방식) */
+  const ownedBtn = document.getElementById("ownedBtn");
+  if (ownedBtn) {
+    const back = document.createElement("div");
+    back.className = "vodpw-backdrop";
+    back.innerHTML =
+      '<div class="vodpw" role="dialog" aria-modal="true" aria-labelledby="vodpwTitle">'
+      + '<h3 id="vodpwTitle">시청 페이지 열기</h3>'
+      + '<p class="m-sub">결제하실 때 안내받으신 시청 비밀번호를 입력해 주세요. 안내 메일에 함께 적혀 있어요.</p>'
+      + '<input type="password" id="vodpwInput" autocomplete="off" placeholder="시청 비밀번호" />'
+      + '<p class="m-error" id="vodpwError"></p>'
+      + '<div class="m-actions"><button class="btn btn-ghost" type="button" id="vodpwCancel">닫기</button>'
+      + '<button class="btn btn-primary" type="button" id="vodpwSubmit">열기</button></div>'
+      + '</div>';
+    document.body.appendChild(back);
+    const input = back.querySelector("#vodpwInput");
+    const err = back.querySelector("#vodpwError");
+    const close = () => back.classList.remove("show");
+    ownedBtn.addEventListener("click", () => {
+      err.textContent = ""; input.value = "";
+      back.classList.add("show"); input.focus();
+    });
+    back.querySelector("#vodpwCancel").addEventListener("click", close);
+    back.addEventListener("click", e => { if (e.target === back) close(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+    input.addEventListener("keydown", e => { if (e.key === "Enter") open(); });
+    back.querySelector("#vodpwSubmit").addEventListener("click", () => open());
+    async function open() {
+      const pw = input.value.trim();
+      if (!pw) { err.textContent = "비밀번호를 입력해 주세요."; return; }
+      err.textContent = "확인하는 중...";
+      try {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
+        const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+        const path = "p/" + hash + "/";
+        const res = await fetch(path, { method: "HEAD" });
+        if (res.ok) { location.href = path; return; }
+        err.textContent = "비밀번호가 올바르지 않아요.";
+      } catch (e) {
+        err.textContent = "확인 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.";
+      }
+    }
+  }
+
   if (ctaAction) {
     const bar = document.createElement("div");
     bar.className = "apply-bar";

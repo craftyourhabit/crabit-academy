@@ -7,6 +7,7 @@
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/png" href="../assets/favicon.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<script src="../assets/pay-steps.js?v=1"></script>
 <style>
   :root {
     --bg: #FFFFFF; --fill-soft: #F9FAFC; --ink: #16192A;
@@ -53,6 +54,7 @@
 </head>
 <body>
 <div class="wrap" id="main">
+  <div data-pay-steps="2"></div>
   <div class="mark"><div class="spin"></div></div>
   <h1>결제를 확인하고 있어요</h1>
   <p class="sub">잠시만 기다려 주세요. 창을 닫지 마세요.</p>
@@ -84,7 +86,8 @@
   var CROSS = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
   function fail(msgHtml) {
-    main.innerHTML = '<div class="mark">' + CROSS + '</div>'
+    main.innerHTML = payStepBar(2)
+      + '<div class="mark">' + CROSS + '</div>'
       + '<h1>결제를 확인하지 못했어요</h1>'
       + '<p class="sub err">' + msgHtml + '</p>'
       + '<div class="btns">'
@@ -127,7 +130,9 @@
           + '한 시간 안에 안내를 받지 못하시면 문의해 주세요.</p></div>';
       }
       var detailHref = d.event_id ? "../event.html?id=" + encodeURIComponent(d.event_id) : "../courses.html";
-      main.innerHTML = '<div class="mark">' + CHECK + '</div>'
+      /* 결제까지 끝났으니 세 단계 모두 완료로 그린다. */
+      main.innerHTML = payStepBar(3)
+        + '<div class="mark">' + CHECK + '</div>'
         + '<h1>결제가 완료되었습니다</h1>'
         + '<p class="sub">신청해 주셔서 감사합니다. 아래 내용으로 결제되었어요.</p>'
         + '<div class="box">'

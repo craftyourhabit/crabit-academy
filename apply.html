@@ -75,9 +75,12 @@
     font-size: 12.5px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
   }
-  .steps .st.on { color: var(--ink); }
-  .steps .st.on .n { background: var(--ink); color: #fff; }
-  .steps .st.done .n { background: var(--pink); color: #fff; }
+  /* 지금 하고 있는 단계만 핑크. 지나온 단계는 회색 동그라미에 핑크 체크.
+     결제 결과 페이지(pay/*.html)의 assets/pay-steps.js 와 같은 규칙입니다. 한쪽만 고치지 마세요. */
+  .steps .st.on { color: var(--pink); }
+  .steps .st.on .n { background: var(--pink); color: #fff; }
+  .steps .st.done { color: var(--muted); }
+  .steps .st.done .n { background: var(--fill); color: var(--pink); }
   .steps .arw { color: var(--faint); font-size: 13px; }
 
   /* ---------- 본문과 주문 요약 ---------- */

@@ -152,14 +152,19 @@ function smsBody(order: any, access: any): string {
 }
 
 /* =====================================================================
-   결제 완료 메일 (Resend HTTP API)
+   결제 완료 메일 (지메일 API)
+
+   새 발송 업체를 쓰지 않고, 회사 지메일 계정(hyunji@crabit.co.kr)으로 그대로 보냅니다.
+   구글 OAuth 리프레시 토큰을 시크릿에 두고, 보낼 때마다 액세스 토큰으로 바꿔 씁니다.
 
    문자와 같은 임시 통로입니다. 알림톡 승인 후에는 이 블록과 approve 안의 호출을 지웁니다.
    문구를 고치면 admin/시청안내-메일양식.html 도 같이 맞춰 주세요(손으로 보낼 때 쓰는 사본).
 
    필요한 시크릿 (없으면 메일만 조용히 건너뜁니다. 결제는 그대로 성공합니다.)
-     RESEND_API_KEY   resend.com 에서 발급
-     MAIL_FROM        예: 크래빗 아카데미 <academy@crabit.co.kr> (도메인 인증을 마친 주소)
+     GOOGLE_CLIENT_ID       구글 클라우드 콘솔에서 만든 OAuth 클라이언트 ID
+     GOOGLE_CLIENT_SECRET   같은 화면의 시크릿
+     GMAIL_REFRESH_TOKEN    gmail.send 권한으로 받은 리프레시 토큰
+     MAIL_FROM              예: 크래빗 아카데미 <hyunji@crabit.co.kr>
    ===================================================================== */
 function mailHtml(order: any, access: any): string {
   const esc = (v: unknown) =>
@@ -214,21 +219,65 @@ function mailHtml(order: any, access: any): string {
     + "</table></td></tr></table></div>";
 }
 
+
+/* 리프레시 토큰으로 액세스 토큰을 받아 옵니다. 액세스 토큰은 한 시간짜리라 그때그때 새로 받습니다. */
+async function googleAccessToken(): Promise<string | null> {
+  const id = Deno.env.get("GOOGLE_CLIENT_ID");
+  const secret = Deno.env.get("GOOGLE_CLIENT_SECRET");
+  const refresh = Deno.env.get("GMAIL_REFRESH_TOKEN");
+  if (!id || !secret || !refresh) return null;
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: id,
+      client_secret: secret,
+      refresh_token: refresh,
+      grant_type: "refresh_token",
+    }),
+  });
+  if (!res.ok) {
+    console.error("구글 토큰 갱신 실패", res.status, (await res.text()).slice(0, 300));
+    return null;
+  }
+  const data = await res.json().catch(() => ({}));
+  return data.access_token || null;
+}
+
+function b64(bytes: Uint8Array): string {
+  let bin = "";
+  const CH = 0x8000;
+  for (let i = 0; i < bytes.length; i += CH) {
+    bin += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + CH)) as unknown as number[]);
+  }
+  return btoa(bin);
+}
+
 async function sendMail(order: any, access: any): Promise<void> {
-  const key = Deno.env.get("RESEND_API_KEY");
   const from = Deno.env.get("MAIL_FROM");
   const to = String(order.buyer_email || "").trim();
-  if (!key || !from || !to) return;   /* 설정 전이거나 메일 주소를 안 남겼으면 건너뛴다 */
+  if (!from || !to) return;   /* 메일 주소를 안 남겼거나 설정 전이면 건너뛴다 */
+  const token = await googleAccessToken();
+  if (!token) return;
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    const enc = new TextEncoder();
+    /* 한글 제목은 그대로 쓰면 깨져서 RFC 2047 규칙으로 감싼다. */
+    const subject = "=?UTF-8?B?" + b64(enc.encode("[크래빗 아카데미] " + order.title + " 결제 완료 안내")) + "?=";
+    const mime = [
+      "From: " + from,
+      "To: " + to,
+      "Subject: " + subject,
+      "MIME-Version: 1.0",
+      'Content-Type: text/html; charset="UTF-8"',
+      "Content-Transfer-Encoding: base64",
+      "",
+      b64(enc.encode(mailHtml(order, access))).replace(/(.{76})/g, "$1\r\n"),
+    ].join("\r\n");
+    const raw = b64(enc.encode(mime)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
       method: "POST",
-      headers: { "Authorization": "Bearer " + key, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: "[크래빗 아카데미] " + order.title + " 결제 완료 안내",
-        html: mailHtml(order, access),
-      }),
+      headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+      body: JSON.stringify({ raw }),
     });
     if (!res.ok) console.error("메일 발송 실패", res.status, (await res.text()).slice(0, 300));
   } catch (e) {

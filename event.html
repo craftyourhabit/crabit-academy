@@ -1005,8 +1005,13 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     back.innerHTML =
       '<div class="vodpw" role="dialog" aria-modal="true" aria-labelledby="vodpwTitle">'
       + '<h3 id="vodpwTitle">시청 페이지 열기</h3>'
-      + '<p class="m-sub">결제하실 때 안내받으신 시청 비밀번호를 입력해 주세요. 안내 메일에 함께 적혀 있어요.</p>'
-      + '<input type="password" id="vodpwInput" autocomplete="off" placeholder="시청 비밀번호" />'
+      + '<p class="m-sub">결제하실 때 안내받으신 시청 비밀번호를 입력해 주세요. 안내 문자에 함께 적혀 있어요.</p>'
+      + '<div style="position:relative">'
+      + '<input type="password" id="vodpwInput" autocomplete="off" placeholder="시청 비밀번호" style="padding-right:48px" />'
+      + '<button type="button" id="vodpwToggle" aria-label="비밀번호 표시" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center">'
+      + '<svg id="vodpwEyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg><svg id="vodpwEyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M2.5 12S6 5.5 12 5.5c1.8 0 3.4.6 4.8 1.4M21.5 12S18 18.5 12 18.5c-1.8 0-3.4-.6-4.8-1.4M4 20 20 4"/></svg>'
+      + '</button>'
+      + '</div>'
       + '<p class="m-error" id="vodpwError"></p>'
       + '<div class="m-actions"><button class="btn btn-ghost" type="button" id="vodpwCancel">닫기</button>'
       + '<button class="btn btn-primary" type="button" id="vodpwSubmit">열기</button></div>'
@@ -1018,6 +1023,16 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     ownedBtn.addEventListener("click", () => {
       err.textContent = ""; input.value = "";
       back.classList.add("show"); input.focus();
+    });
+    /* 비밀번호가 길어 잘못 친 건지 확인하기 어려워서, 눈 아이콘으로 잠깐 보이게 한다. */
+    const toggle = back.querySelector("#vodpwToggle");
+    toggle.addEventListener("click", () => {
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      back.querySelector("#vodpwEyeOpen").style.display = show ? "none" : "block";
+      back.querySelector("#vodpwEyeClosed").style.display = show ? "block" : "none";
+      toggle.setAttribute("aria-label", show ? "비밀번호 숨기기" : "비밀번호 표시");
+      input.focus();
     });
     back.querySelector("#vodpwCancel").addEventListener("click", close);
     back.addEventListener("click", e => { if (e.target === back) close(); });

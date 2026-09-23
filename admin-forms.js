@@ -3675,3 +3675,118 @@ async function sendAlimtalk(eventId, eventTitle, kind) {
     + "연결이 끝나면 이 버튼으로 '" + kind.label + "' 알림톡을 보낼 수 있습니다.\n"
     + "(" + kind.desc + ")");
 }
+
+/* ---------------------------------------------------------------
+   결제 내역 (누가 언제 무엇을 결제했는지)
+
+   결제는 신청폼과 다른 Supabase 프로젝트에 있습니다. 브라우저가 그 DB 를
+   직접 읽을 권한이 없어서, 결제 함수의 /orders 에 로그인 토큰을 넘겨 받아 옵니다.
+   --------------------------------------------------------------- */
+async function renderPayments() {
+  const box = document.getElementById("list");
+  document.querySelector("#listTitle").firstChild.textContent = "결제 내역";
+  document.querySelector("#listCnt").textContent = "";
+  box.innerHTML = '<div class="empty">불러오는 중이에요…</div>';
+
+  let orders = [];
+  try {
+    const res = await sbFetch(PAY_FN_URL + "/orders", { method: "POST", body: {} });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || "불러오지 못했어요.");
+    orders = data.orders || [];
+  } catch (e) {
+    box.innerHTML = "";
+    box.appendChild(el("div", "empty", "결제 내역을 불러오지 못했어요. " + (e.message || "")));
+    return;
+  }
+
+  /* 승인된 건만 매출로 봅니다. ready 는 결제창까지만 간 것, failed 는 실패한 것이에요. */
+  const paid = orders.filter(o => o.status === "approved");
+  const today = new Date().toISOString().slice(0, 10);
+  const todayPaid = paid.filter(o => String(o.approved_at || o.created_at).slice(0, 10) === today);
+  const sum = list => list.reduce((a, o) => a + Number(o.amount || 0), 0);
+
+  document.querySelector("#listCnt").textContent = paid.length ? "  결제완료 " + paid.length + "건" : "";
+
+  const kpis = el("div", "kpis");
+  [
+    ["오늘 결제", todayPaid.length + "건", won(sum(todayPaid))],
+    ["전체 결제", paid.length + "건", won(sum(paid))],
+    ["결제 진행 중", orders.filter(o => o.status === "ready").length + "건", "결제창까지 간 건"],
+    ["실패", orders.filter(o => o.status === "failed").length + "건", "돈은 빠지지 않았어요"],
+  ].forEach(([lab, num, sub]) => {
+    const k = el("div", "kpi");
+    k.appendChild(el("div", "k-lab", lab));
+    k.appendChild(el("div", "k-num", num));
+    k.appendChild(el("div", "k-sub", sub));
+    kpis.appendChild(k);
+  });
+
+  box.innerHTML = "";
+  box.appendChild(kpis);
+
+  const card = el("div", "list");
+  if (!orders.length) {
+    card.appendChild(el("div", "empty", "아직 결제가 없어요."));
+    box.appendChild(card);
+    return;
+  }
+
+  const BADGE = {
+    approved: ["결제완료", "badge paid"],
+    ready: ["결제 진행 중", "badge wait"],
+    failed: ["실패", "badge cancel"],
+    canceled: ["취소", "badge cancel"],
+  };
+
+  orders.forEach(o => {
+    const row = el("div", "ap-row");
+    const main = el("div", "ap-main");
+
+    const name = el("div", "ap-name");
+    name.appendChild(el("span", null, (o.buyer_name || "이름 없음") + " 원장님"));
+    const b = BADGE[o.status] || ["확인 필요", "badge cancel"];
+    name.appendChild(el("span", b[1], b[0]));
+    main.appendChild(name);
+
+    /* 언제 무엇을 얼마에 샀는지 한 줄, 연락처가 다음 줄. 문의 전화가 오면 이 두 줄만 보면 됩니다. */
+    const when = String(o.approved_at || o.created_at || "").replace("T", " ").slice(0, 16);
+    main.appendChild(el("div", "ap-meta", when + "  |  " + (o.title || o.event_id) + "  |  " + won(o.amount)));
+    const contact = [o.buyer_phone, o.buyer_email, o.buyer_org].filter(Boolean).join("  |  ");
+    if (contact) main.appendChild(el("div", "ap-meta", contact));
+    if (o.memo) main.appendChild(el("div", "ap-msg", o.memo));
+
+    row.appendChild(main);
+
+    /* 안내를 못 받았다는 문의가 오면 여기서 문자와 메일을 다시 보냅니다. */
+    if (o.status === "approved") {
+      const acts = el("div", "ap-acts");
+      const btn = el("button", "btn btn-ghost btn-sm", "안내 재발송");
+      btn.addEventListener("click", async () => {
+        const ok = await uiConfirm({
+          title: "안내를 다시 보낼까요?",
+          desc: (o.buyer_name || "구매자") + " 님께 시청 주소와 비밀번호를 문자와 메일로 다시 보냅니다.",
+          okText: "보내기",
+        });
+        if (!ok) return;
+        btn.disabled = true;
+        btn.textContent = "보내는 중…";
+        try {
+          const res = await sbFetch(PAY_FN_URL + "/resend", { method: "POST", body: { order_id: o.id } });
+          const d = await res.json().catch(() => ({}));
+          if (!res.ok || !d.ok) throw new Error(d.error || "보내지 못했어요.");
+          btn.textContent = "보냈어요";
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = "안내 재발송";
+          alert(e.message || "보내지 못했어요.");
+        }
+      });
+      acts.appendChild(btn);
+      row.appendChild(acts);
+    }
+
+    card.appendChild(row);
+  });
+  box.appendChild(card);
+}

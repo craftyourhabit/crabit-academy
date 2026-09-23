@@ -307,6 +307,18 @@ async function sendSms(order: any, access: any): Promise<void> {
   }
 }
 
+/* 어드민(아카데미 프로젝트 로그인)인지 확인한다. 결제 DB 는 이 확인을 통과해야만 보여 준다. */
+async function isAdmin(req: Request): Promise<boolean> {
+  const authz = req.headers.get("Authorization") || "";
+  const academy = (Deno.env.get("ACADEMY_URL") || "").replace(/\/$/, "");
+  const anon = Deno.env.get("ACADEMY_ANON_KEY") || "";
+  if (!authz.startsWith("Bearer ") || !academy || !anon) return false;
+  const who = await fetch(academy + "/auth/v1/user", { headers: { Authorization: authz, apikey: anon } });
+  if (!who.ok) return false;
+  const user = await who.json().catch(() => null);
+  return !!(user && user.id && user.aud === "authenticated");
+}
+
 async function handleReady(body: Record<string, unknown>) {
   const eventId = String(body.event_id || "");
   const name = String(body.name || "").trim();
@@ -486,9 +498,21 @@ Deno.serve(async (req) => {
     if (path.endsWith("/approve")) return await handleApprove(body);
     /* 안내 문자를 다시 보내는 통로. 아무나 부르면 구매자 폰으로 문자가 쏟아지니
        NOTIFY_TOKEN 시크릿을 아는 사람만 부를 수 있게 막는다. */
+    /* 어드민 결제 내역. 신청폼 프로젝트(아카데미)의 로그인 토큰을 그대로 받아
+       그 쪽 Auth 에 물어보고, 맞으면 주문 목록을 돌려준다.
+       결제 DB 는 anon 권한이 없어서 브라우저가 직접 읽을 수 없기 때문이다. */
+    if (path.endsWith("/orders")) {
+      if (!(await isAdmin(req))) return json({ error: "로그인이 필요해요." }, 401);
+
+      const cols = "id,created_at,approved_at,event_id,title,amount,status,buyer_name,buyer_phone,buyer_email,buyer_org,memo";
+      const r = await db("orders?select=" + cols + "&order=created_at.desc&limit=200");
+      if (!r.ok) return json({ error: "결제 내역을 불러오지 못했어요." }, 502);
+      return json({ ok: true, orders: await r.json() });
+    }
     if (path.endsWith("/resend")) {
       const token = Deno.env.get("NOTIFY_TOKEN") || "";
-      if (!token || String(body?.token || "") !== token) return json({ error: "권한이 없어요." }, 401);
+      const byToken = !!token && String(body?.token || "") === token;
+      if (!byToken && !(await isAdmin(req))) return json({ error: "권한이 없어요." }, 401);
       const r = await db("orders?id=eq." + encodeURIComponent(String(body?.order_id || "")) + "&select=*");
       const rows = r.ok ? await r.json() : [];
       const o = rows[0];

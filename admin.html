@@ -537,6 +537,7 @@
       <div class="side-group">운영</div>
       <button class="nav" data-tab="events"><span class="ic" style="color:#7C5CFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4.6h6a2.4 2.4 0 0 1 2 1.1V20a2.4 2.4 0 0 0-2-1.1H4z" fill="currentColor"/><path d="M20 4.6h-6a2.4 2.4 0 0 0-2 1.1V20a2.4 2.4 0 0 1 2-1.1h6z" fill="currentColor" fill-opacity=".55"/></svg></span>교육 / 설명회 / VOD</button>
       <button class="nav" data-tab="applications"><span class="ic" style="color:#F59E0B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.6" fill="currentColor"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0 1.2 1.2 0 0 1-1.2 1.2H5.8a1.2 1.2 0 0 1-1.2-1.2z" fill="currentColor" fill-opacity=".55"/></svg></span>신청자</button>
+      <button class="nav" data-tab="payments"><span class="ic" style="color:#E0457B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="2.8" y="5.2" width="18.4" height="13.6" rx="2.6" fill="currentColor" fill-opacity=".55"/><path d="M2.8 9.4h18.4v2.2H2.8z" fill="currentColor"/><rect x="5.6" y="14" width="5.2" height="1.9" rx=".95" fill="currentColor"/></svg></span>결제 내역</button>
 
       <div class="side-group">관리</div>
       <button class="nav" data-tab="resources"><span class="ic" style="color:#2FA968" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.4 6.6a2 2 0 0 1 2-2h3.3l2 2.2h7.9a2 2 0 0 1 2 2v1.4H3.4z" fill="currentColor" fill-opacity=".55"/><path d="M3.4 10.2h17.2v8a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2z" fill="currentColor"/></svg></span>자료 / 인사이트</button>
@@ -696,6 +697,9 @@ function evalNames(text, names) {
    --------------------------------------------------------------- */
 const FN_URL = SB_URL + "/functions/v1/github";
 const REST_URL = SB_URL + "/rest/v1";
+/* 결제는 신청폼과 다른 Supabase 프로젝트에 있습니다(돈이 오가는 일이라 분리했어요).
+   어드민은 이 함수에 로그인 토큰을 그대로 넘겨 결제 내역만 읽어 옵니다. */
+const PAY_FN_URL = "https://iwitqfnhlyseuxxndvny.supabase.co/functions/v1/pay";
 const AUTH_URL = SB_URL + "/auth/v1";
 
 const auth = {
@@ -990,7 +994,7 @@ function renderList() {
   /* 대시보드와 신청자는 카드 여러 장을 직접 배치하느라 .list 래퍼를 벗깁니다.
      교육·자료 탭만 목록 카드 하나로 감쌉니다. */
   $("#list").className =
-    (currentTab === "dashboard" || currentTab === "applications") ? "" : "list";
+    (currentTab === "dashboard" || currentTab === "applications" || currentTab === "payments") ? "" : "list";
 
   /* 대시보드는 목록이 아니라 요약 화면이라 따로 그립니다. (admin-forms.js) */
   if (currentTab === "dashboard") {
@@ -1004,6 +1008,13 @@ function renderList() {
   if (currentTab === "applications") {
     $("#newBtn").style.display = "none";
     renderApplications();
+    return;
+  }
+
+  /* 결제 내역도 깃허브가 아니라 결제 프로젝트에서 읽어 옵니다. (admin-forms.js) */
+  if (currentTab === "payments") {
+    $("#newBtn").style.display = "none";
+    renderPayments();
     return;
   }
   $("#newBtn").style.display = "";

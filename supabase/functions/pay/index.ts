@@ -139,12 +139,12 @@ function smsBody(order: any, access: any): string {
     lines.push("- 시청 페이지: " + access.access_url);
     if (access.access_password) lines.push("- 비밀번호: " + access.access_password);
     lines.push("", "결제하신 날부터 3개월 동안 보실 수 있어요. 링크와 비밀번호는 원장님 전용이라 공유는 삼가 주세요.");
-    /* 이 문자를 지워도 다시 들어올 수 있는 길을 한 줄로 남긴다. 메일 안내와 같은 내용이다. */
+    /* 문자를 잃어버려도 다시 들어올 수 있는 길. 메일 안내의 방법 1 과 같은 내용이다. */
     const base = (Deno.env.get("SITE_BASE") || "").replace(/\/$/, "");
     if (base) {
       lines.push(
         "",
-        "문자를 지우셨다면 " + base + "/vod 에서 강의를 열고 \"이미 구매하셨나요? 시청 페이지 열기\"를 누른 뒤 위 비밀번호를 입력하시면 언제든 다시 보실 수 있어요.",
+        base + "/vod 에서 \"이미 구매하셨나요? 시청 페이지 열기\"를 누른 뒤 위 비밀번호를 입력하시면 언제든 다시 보실 수 있어요.",
       );
     }
   } else {

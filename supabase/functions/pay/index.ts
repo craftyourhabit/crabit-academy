@@ -261,12 +261,12 @@ function b64(bytes: Uint8Array): string {
   return btoa(bin);
 }
 
-async function sendMail(order: any, access: any): Promise<void> {
+async function sendMail(order: any, access: any): Promise<boolean> {
   const from = Deno.env.get("MAIL_FROM");
   const to = String(order.buyer_email || "").trim();
-  if (!from || !to) return;   /* 메일 주소를 안 남겼거나 설정 전이면 건너뛴다 */
+  if (!from || !to) return false;   /* 메일 주소를 안 남겼거나 설정 전이면 건너뛴다 */
   const token = await googleAccessToken();
-  if (!token) return;
+  if (!token) return false;
   try {
     const enc = new TextEncoder();
     /* 한글 제목은 그대로 쓰면 깨져서 RFC 2047 규칙으로 감싼다. */
@@ -287,18 +287,23 @@ async function sendMail(order: any, access: any): Promise<void> {
       headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
       body: JSON.stringify({ raw }),
     });
-    if (!res.ok) console.error("메일 발송 실패", res.status, (await res.text()).slice(0, 300));
+    if (!res.ok) {
+      console.error("메일 발송 실패", res.status, (await res.text()).slice(0, 300));
+      return false;
+    }
+    return true;
   } catch (e) {
     /* 메일이 실패해도 결제는 이미 끝났다. 결제 응답을 막지 않는다. */
     console.error("메일 발송 예외", String(e).slice(0, 200));
+    return false;
   }
 }
 
-async function sendSms(order: any, access: any): Promise<void> {
+async function sendSms(order: any, access: any): Promise<boolean> {
   const to = String(order.buyer_phone || "").replace(/[^0-9]/g, "");
   const from = String(Deno.env.get("SOLAPI_SENDER") || "").replace(/[^0-9]/g, "");
   const auth = await solapiAuth();
-  if (!to || !from || !auth) return;   /* 설정 전이면 조용히 건너뛴다 */
+  if (!to || !from || !auth) return false;   /* 설정 전이면 조용히 건너뛴다 */
   try {
     const res = await fetch("https://api.solapi.com/messages/v4/send", {
       method: "POST",
@@ -308,10 +313,13 @@ async function sendSms(order: any, access: any): Promise<void> {
     const data = await res.json().catch(() => ({}));
     if (!res.ok || (data && data.errorCode)) {
       console.error("문자 발송 실패", res.status, JSON.stringify(data).slice(0, 300));
+      return false;
     }
+    return true;
   } catch (e) {
     /* 문자가 실패해도 결제는 이미 끝났다. 절대 결제 응답을 막지 않는다. */
     console.error("문자 발송 예외", String(e).slice(0, 200));
+    return false;
   }
 }
 
@@ -481,13 +489,20 @@ async function handleApprove(body: Record<string, unknown>) {
   });
 
   const acc = await access();
-  /* 알림톡 승인 전까지 쓰는 임시 안내. 실패해도 결제 결과에는 영향을 주지 않는다. */
-  await sendSms({ ...order, title: order.title }, acc);
-  await sendMail(order, acc);
+  /* 알림톡 승인 전까지 쓰는 임시 안내. 실패해도 결제 결과에는 영향을 주지 않는다.
+     발송 여부를 완료 화면에 그대로 알려 줘서, 문자가 안 갔는데 갔다고 안내하는 일이 없게 한다. */
+  const smsOk = await sendSms({ ...order, title: order.title }, acc);
+  const mailOk = await sendMail(order, acc);
 
   return json({
     ok: true, event_id: order.event_id, title: order.title, amount: order.amount,
     approved_at: approvedAt, access: acc,
+    notify: {
+      sms: smsOk,
+      email: mailOk,
+      phone_tail: String(order.buyer_phone || "").slice(-4),
+      email_addr: String(order.buyer_email || ""),
+    },
   });
 }
 

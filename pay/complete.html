@@ -50,6 +50,21 @@
     border-radius: 50%; animation: sp 0.8s linear infinite;
   }
   @keyframes sp { to { transform: rotate(360deg); } }
+  /* 결제 직후 "문자 보냈어요" 알림. 화면 아래 안내와 같은 내용이지만,
+     결제하고 나서 가장 먼저 궁금한 것이 이거라 한 번 더 띄웁니다. */
+  .nt-back { position: fixed; inset: 0; background: rgba(22,25,42,.55); display: none;
+    align-items: center; justify-content: center; z-index: 60; padding: 24px; }
+  .nt-back.show { display: flex; }
+  .nt { background: #fff; border-radius: 20px; padding: 30px 28px; width: 100%; max-width: 380px;
+    box-shadow: 0 24px 60px rgba(22,25,42,.25); text-align: center; }
+  .nt .ic { width: 52px; height: 52px; border-radius: 50%; background: #FEE9F4; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .nt h3 { font-size: 19px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .nt p { font-size: 14.5px; line-height: 1.7; color: var(--muted); margin: 0 0 22px; word-break: keep-all; }
+  .nt p b { color: var(--ink); font-weight: 600; }
+  .nt button { width: 100%; border: 0; border-radius: 12px; padding: 14px; font-size: 15.5px;
+    font-weight: 700; font-family: inherit; background: var(--ink); color: #fff; cursor: pointer; }
+  .nt button:hover { background: #333; }
 </style>
 </head>
 <body>
@@ -101,6 +116,26 @@
     return;
   }
 
+    /* 발송 결과를 그대로 읽어 문구를 만든다. 문자만 갔으면 문자만, 둘 다 갔으면 둘 다 적는다. */
+    function showNotice(n) {
+      if (!n || (!n.sms && !n.email)) return;
+      var sent = [];
+      if (n.sms) sent.push(n.phone_tail ? "문자(뒷자리 " + esc(n.phone_tail) + ")" : "문자");
+      if (n.email) sent.push(n.email_addr ? "메일(" + esc(n.email_addr) + ")" : "메일");
+      var back = document.createElement("div");
+      back.className = "nt-back show";
+      back.innerHTML = '<div class="nt" role="dialog" aria-modal="true">'
+        + '<div class="ic">📩</div>'
+        + "<h3>안내를 보내드렸어요</h3>"
+        + "<p><b>" + sent.join("</b>와 <b>") + "</b>로<br />시청 페이지 주소와 비밀번호를 보내드렸어요.<br />"
+        + "아래에서도 바로 확인하실 수 있습니다.</p>"
+        + "<button type=\"button\">확인</button></div>";
+      document.body.appendChild(back);
+      var close = function () { back.remove(); };
+      back.querySelector("button").addEventListener("click", close);
+      back.addEventListener("click", function (e) { if (e.target === back) close(); });
+    }
+
   fetch(PAY_API + "/approve", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -145,6 +180,9 @@
         + '<a class="btn primary" href="' + detailHref + '">강의 상세로 가기</a>'
         + '<a class="btn" href="../index.html">홈으로</a>'
         + '</div>';
+
+      /* 안내가 실제로 나갔을 때만 띄웁니다. 안 갔는데 갔다고 하면 더 큰 혼란이 됩니다. */
+      showNotice(d.notify);
     })
     .catch(function () {
       fail("네트워크 문제로 확인하지 못했어요. 새로고침하면 다시 확인합니다.<br />결제가 완료되지 않았다면 돈은 빠져나가지 않았어요.");

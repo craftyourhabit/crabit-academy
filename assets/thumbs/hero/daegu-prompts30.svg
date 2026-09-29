@@ -1,26 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
-  <rect width="800" height="450" fill="#F9FAFC"/>
-  <!-- 여러 장 쌓인 프롬프트 카드 + 30선 배지 -->
-  <g transform="translate(400 225) rotate(9) translate(-115 -145)">
-    <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
-  </g>
-  <g transform="translate(400 225) rotate(2) translate(-115 -145)">
-    <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
-  </g>
-  <g transform="translate(400 225) rotate(-6) translate(-115 -145)">
-    <g>
-      <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/>
-      <rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
-      <rect x="26" y="30" width="84" height="26" rx="13" fill="#FEE9F4"/>
-      <rect x="26" y="82" width="168" height="11" rx="5.5" fill="#16192A"/>
-      <rect x="26" y="108" width="136" height="11" rx="5.5" fill="#DCDDDF"/>
-      <rect x="26" y="134" width="156" height="11" rx="5.5" fill="#DCDDDF"/>
-      <rect x="26" y="160" width="106" height="11" rx="5.5" fill="#FB75BB"/>
-      <rect x="26" y="208" width="168" height="42" rx="12" fill="#16192A"/>
-      <rect x="66" y="224" width="88" height="10" rx="5" fill="#FFFFFF"/>
-    </g>
-  </g>
-  <circle cx="538" cy="96" r="38" fill="#16192A"/>
-  <text x="538" y="107" font-size="30" font-weight="700" fill="#FFFFFF" text-anchor="middle">30</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', sans-serif"><!-- 아카데미 썸네일(토스 톤): 연회색 배경, 테두리와 그림자 없는 2D 면 일러스트, 핑크 단계색, 장식 요소 없음. 인물은 GPT 생성 PNG 누끼 -->
+<rect width="800" height="450" fill="#F2F3F6"/><g transform="translate(430 228) rotate(12) translate(-110 -145)"><rect width="220" height="290" rx="22" fill="#FB9FCD"/></g>
+<g transform="translate(412 224) rotate(4) translate(-110 -145)"><rect width="220" height="290" rx="22" fill="#FDC4E0"/></g>
+<g transform="translate(392 222) rotate(-6) translate(-110 -145)"><rect width="220" height="290" rx="22" fill="#FFE3F0"/>
+<rect x="24" y="28" width="80" height="24" rx="12" fill="#FDC4E0"/>
+<rect x="24" y="78" width="172" height="14" rx="7" fill="#16192A"/>
+<rect x="24" y="106" width="140" height="14" rx="7" fill="#FFFFFF"/>
+<rect x="24" y="134" width="160" height="14" rx="7" fill="#FFFFFF"/>
+<rect x="24" y="162" width="110" height="14" rx="7" fill="#FB9FCD"/>
+<rect x="24" y="218" width="172" height="46" rx="14" fill="#FB75BB"/>
+<rect x="72" y="236" width="76" height="10" rx="5" fill="#FFFFFF"/></g>
+<circle cx="250" cy="116" r="40" fill="#16192A"/><text x="250" y="128" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">30</text>
 </svg>

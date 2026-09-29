@@ -1,30 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
-  <rect width="800" height="450" fill="#F9FAFC"/>
-  <g transform="translate(-26 8)">
-  <!-- 원생 5구간 계단 + 꼭대기 깃발 -->
-  <g fill="#16192A">
-    <rect x="237" y="317" width="66" height="60" rx="10"/>
-    <rect x="305" y="272" width="66" height="105" rx="10"/>
-    <rect x="373" y="227" width="66" height="150" rx="10"/>
-    <rect x="441" y="182" width="66" height="195" rx="10"/>
-    <rect x="509" y="137" width="66" height="240" rx="10"/>
-  </g>
-  <g fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2">
-    <rect x="230" y="310" width="66" height="60" rx="10"/>
-    <rect x="298" y="265" width="66" height="105" rx="10"/>
-    <rect x="366" y="220" width="66" height="150" rx="10"/>
-    <rect x="434" y="175" width="66" height="195" rx="10"/>
-    <rect x="502" y="130" width="66" height="240" rx="10" fill="#FB75BB"/>
-  </g>
-  <g font-size="24" font-weight="700" text-anchor="middle" fill="#16192A">
-    <text x="263" y="344">1</text><text x="331" y="299">2</text><text x="399" y="254">3</text><text x="467" y="209">4</text>
-    <text x="535" y="164" fill="#FFFFFF">5</text>
-  </g>
-  <rect x="532" y="52" width="7" height="80" rx="3.5" fill="#16192A"/>
-  <path d="M539 55 L588 74 L539 93 Z" fill="#FB75BB" stroke="#FB75BB" stroke-width="4" stroke-linejoin="round"/>
-  <g stroke="#16192A" stroke-width="4" stroke-linecap="round">
-    <line x1="604" y1="46" x2="614" y2="34"/><line x1="612" y1="66" x2="628" y2="62"/><line x1="592" y1="32" x2="594" y2="18"/>
-  </g>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', sans-serif"><!-- 아카데미 썸네일(토스 톤): 연회색 배경, 테두리와 그림자 없는 2D 면 일러스트, 핑크 단계색, 장식 요소 없음. 인물은 GPT 생성 PNG 누끼 -->
+<rect width="800" height="450" fill="#F2F3F6"/><g transform="translate(20 0)">
+<rect x="228" y="310" width="64" height="70" rx="12" fill="#FFE3F0"/><rect x="298" y="262" width="64" height="118" rx="12" fill="#FDC4E0"/>
+<rect x="368" y="214" width="64" height="166" rx="12" fill="#FB9FCD"/><rect x="438" y="166" width="64" height="214" rx="12" fill="#FA89C4"/>
+<rect x="508" y="118" width="64" height="262" rx="12" fill="#FB75BB"/>
+<g font-size="26" font-weight="700" text-anchor="middle" fill="#FFFFFF"><text x="260" y="346" fill="#FB75BB">1</text><text x="330" y="298">2</text><text x="400" y="250">3</text><text x="470" y="202">4</text><text x="540" y="154">5</text></g>
+<rect x="536" y="44" width="8" height="76" rx="4" fill="#16192A"/>
+<path d="M544 48 C564 42 578 58 604 50 L604 88 C578 96 564 80 544 86 Z" fill="#16192A"/>
+</g></svg>

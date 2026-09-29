@@ -3343,10 +3343,8 @@ let dashMetric = "applications";
    events.js 의 isEventOver 를 고치면 여기도 같이 맞춰 주세요. */
 function dashEventOver(ev) {
   if (!ev || ev.status !== "upcoming") return true;
-  const d = new Date();
-  const today = d.getFullYear() + "-"
-    + String(d.getMonth() + 1).padStart(2, "0") + "-"
-    + String(d.getDate()).padStart(2, "0");
+  /* 사이트와 같이 한국 시간 날짜로 본다. */
+  const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
   return !!ev.startDate && ev.startDate < today;
 }
 

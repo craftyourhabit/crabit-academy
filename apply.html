@@ -247,7 +247,10 @@
 
   .notfound { text-align: center; padding: 90px 0 110px; }
   .notfound h1 { margin: 0 0 12px; font-size: 26px; }
-  .notfound p { color: var(--muted); margin: 0 0 28px; }
+  .notfound p { color: var(--muted); margin: 0 0 28px; line-height: 1.7; word-break: keep-all; }
+  .notfound .nf-back { margin: 18px 0 0; }
+  .notfound .nf-back a { display: inline; padding: 0; background: none; color: var(--muted); font-weight: 600;
+    text-decoration: underline; text-underline-offset: 3px; }
   .notfound a {
     display: inline-block; padding: 14px 26px; font-size: 15px; font-weight: 700;
     color: #fff; background: var(--ink); border-radius: 12px; text-decoration: none;
@@ -360,9 +363,10 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
   const main = document.getElementById("main");
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-  const notFound = (title, msg) => {
+  /* links 를 넘기면 기본 '교육 일정 보러 가기' 대신 그 버튼들을 쓴다. */
+  const notFound = (title, msg, links) => {
     main.innerHTML = '<div class="notfound"><h1>' + title + '</h1><p>' + msg + '</p>'
-      + '<a href="courses.html">교육 일정 보러 가기</a></div>';
+      + (links || '<a href="courses.html">교육 일정 보러 가기</a>') + '</div>';
   };
 
   if (!ev) {
@@ -377,8 +381,17 @@ document.write('<scr' + 'ipt src="assets/events.js?v=' + Math.floor(Date.now() /
     notFound("곧 업로드될 예정이에요", "영상 준비가 끝나면 바로 구매하실 수 있도록 열어 드릴게요.");
     return;
   }
-  if (ev.status === "replay" || ev.status === "replay-soon" || isEventOver(ev)) {
-    notFound("접수가 끝난 교육이에요", "크래빗 아카데미에서 준비 중인 다른 교육을 둘러보세요.");
+  /* 종료, 마감, 판매 종료. 판단 기준과 문구는 상세페이지와 같은 eventClosedInfo 를 쓴다.
+     폼을 아예 그리지 않으므로 이 주소로는 접수가 들어올 수 없다. */
+  const closed = eventClosedInfo(ev);
+  if (closed) {
+    const vod = eventVod(ev);
+    notFound(esc(closed.title),
+      esc(closed.lead) + '<br />'
+        + (vod ? "대신 녹화본으로 강의 내용을 다시 보실 수 있어요." : esc(closed.more)),
+      (vod ? '<a href="event.html?id=' + encodeURIComponent(vod.id) + '">녹화본 보러 가기</a>'
+           : '<a href="courses.html">다른 교육 일정 보기</a>')
+      + '<p class="nf-back"><a href="event.html?id=' + encodeURIComponent(id) + '">강의 소개 다시 보기</a></p>');
     return;
   }
 

@@ -7,6 +7,12 @@
      경로만 바꾸면 됩니다. (jpg/png 가능)
    - status: "upcoming"(예정) | "closed"(마감) | "replay-soon"(다시보기 준비 중) | "replay"(다시보기 가능)
    - replayUrl: status가 "replay"일 때 영상 링크
+   - vodId: 이 강의의 녹화본을 VOD 강의로 팔고 있으면 그 VOD의 키 (예: "olkeoni-landing-vod").
+     강의가 끝나 신청을 막을 때 '녹화본 보러 가기' 버튼을 함께 보여 줍니다. 선택 사항입니다.
+     어드민 폼에는 없지만 저장할 때 그대로 보존됩니다.
+   - 신청 마감은 따로 적지 않아도 됩니다. startDate가 지나면(한국 시간 기준) 자동으로 '종료'가 되고
+     상세페이지와 신청 페이지 모두 신청을 막습니다. 날짜 전에 먼저 닫으려면 status를 "closed"로 두세요.
+     그러면 '마감'으로 표시됩니다.
    - kind: "교육" | "설명회" - 카드와 상세에서 상태 태그 왼쪽에 붙는 분류
    - category: 주제 분류. 학원 운영 | AI·자동화 | 마케팅·브랜딩 | 세무·노무
      이 네 가지 중 하나만 씁니다. 새 주제가 필요하면 여기 목록부터 늘리세요.
@@ -596,21 +602,21 @@ const EVENTS_DB = {
     status: "upcoming",
     /* 올커니 블랙프라이데이 특강으로 공동 진행, 신청은 올커니 쪽 구글폼으로 받는다. */
     applyUrl: "https://forms.gle/HXAzqicsswek3Vuo6",
-    replayUrl: ""
+    replayUrl: "",
+    vodId: "olkeoni-landing-vod"
   }
 };
 /* @admin:EVENTS_DB:end */
 
 /* ===============================================
-   상태 태그 (예정 / 오늘 / 마감)
-   - 접속한 사람의 현지 날짜를 기준으로 판단합니다.
+   상태 태그 (예정 / 오늘 / 종료 / 마감)
+   - 한국 시간 날짜를 기준으로 판단합니다. 해외에서 접속해도 같은 답이 나와야
+     마감된 강의에 신청이 들어오지 않습니다.
    - startDate가 없는 일정은 '오늘'이 될 수 없습니다.
    =============================================== */
 function todayStr() {
-  const n = new Date();
-  return n.getFullYear() + "-"
-    + String(n.getMonth() + 1).padStart(2, "0") + "-"
-    + String(n.getDate()).padStart(2, "0");
+  /* UTC에 9시간을 더한 뒤 날짜만 떼면 한국 날짜가 된다. */
+  return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 }
 
 function isEventToday(ev) {
@@ -623,6 +629,34 @@ function isEventToday(ev) {
 function isEventOver(ev) {
   if (ev.status !== "upcoming") return true;
   return !!ev.startDate && ev.startDate < todayStr();
+}
+
+/* 신청을 막아야 하는 이유와 화면 문구를 한 곳에서 정한다. 신청을 받는 중이면 null.
+   - ended: 강의 날짜가 지났거나 다시보기 단계로 넘어간 강의 → '종료'
+   - deadline: 강의 날짜는 남았는데 어드민에서 '마감'으로 먼저 닫은 강의 → '마감'
+   - soldout: 판매를 멈춘 VOD → '판매 종료'
+   상세페이지(event.html)와 신청 페이지(apply.html), 목록 태그가 모두 이 값을 쓴다. */
+function eventClosedInfo(ev) {
+  if (!isEventOver(ev)) return null;
+  const more = "다음 강의 소식은 크래빗 아카데미에서 확인해 주세요.";
+  const pack = (reason, tag, button, title, lead) =>
+    ({ reason, tag, button, title, lead, more, message: lead + " " + more });
+  if (ev.format === "vod") {
+    return pack("soldout", "판매 종료", "판매가 종료됐어요", "판매가 종료된 강의예요",
+      "이 강의는 판매가 종료되어 더 이상 구매할 수 없어요.");
+  }
+  if (ev.status === "closed" && ev.startDate && ev.startDate >= todayStr()) {
+    return pack("deadline", "마감", "신청이 마감됐어요", "신청이 마감된 강의예요",
+      "이 강의는 신청이 마감되어 더 이상 신청할 수 없어요.");
+  }
+  return pack("ended", "종료", "종료된 강의예요", "종료된 강의예요",
+    "이 강의는 종료되어 더 이상 신청할 수 없어요.");
+}
+
+/* 끝난 강의의 녹화본 VOD. vodId가 가리키는 VOD가 있고 숨김이 아닐 때만 돌려준다. */
+function eventVod(ev) {
+  const v = ev && ev.vodId && EVENTS_DB[ev.vodId];
+  return v && !v.hidden && v.format === "vod" ? { id: ev.vodId, ev: v } : null;
 }
 
 /* 카드에 들어가는 소개 문구를 짧게 줄인다.
@@ -649,12 +683,13 @@ function cardDesc(text, max) {
 /* 카드와 상세가 공통으로 쓰는 상태 라벨. { text, cls } 반환. */
 function eventStatusTag(ev) {
   /* VOD 는 날짜가 없는 상시 판매 상품이라 '예정'이 아니라 '판매 중'으로 부른다. */
+  const closed = eventClosedInfo(ev);
   if (ev.format === "vod") {
-    if (isEventOver(ev)) return { text: "판매 종료", cls: "closed" };
+    if (closed) return { text: closed.tag, cls: "closed" };
     /* comingSoon: 상세페이지는 열어 두고 결제만 막는 상태. 결제 상품 등록을 마치면 이 값을 지운다. */
     return ev.comingSoon ? { text: "공개 예정", cls: "upcoming" } : { text: "판매 중", cls: "upcoming" };
   }
-  if (isEventOver(ev)) return { text: "마감", cls: "closed" };
+  if (closed) return { text: closed.tag, cls: "closed" };
   return isEventToday(ev) ? { text: "오늘", cls: "today" } : { text: "예정", cls: "upcoming" };
 }
 

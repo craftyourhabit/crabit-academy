@@ -1,0 +1,54 @@
+/* =====================================================================
+   크래빗 아카데미 - 기존 자료 페이지를 흰 배경 표준 레이아웃(insight.css)에 맞추는 덮어쓰기
+
+   각 페이지 안의 <style> 뒤에 불러와서 모양만 통일합니다. 페이지 고유 기능(복사 버튼,
+   프롬프트 모달, 영상, 파일 목록)은 그대로 두고 아래만 바꿔요.
+     1) 배경: 회색 페이지 배경 -> 흰색, 상단 헤더도 흰색
+     2) 카드: 흰 카드 + 그림자 -> 연회색(#F9FAFC) 면, 그림자 없음 (콜아웃과 같은 톤)
+     3) 머리말: 썸네일, 핑크 분류 라벨, 제목(엘리스체), 날짜
+     4) 오른쪽 목차: insight-toc.js 가 만든 .ins-toc 로 통일 (각 페이지의 옛 목차는 숨김)
+   ===================================================================== */
+@font-face {
+  font-family: "Elice Digital Baeum";
+  src: url("fonts/EliceDigitalBaeum-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+:root { --page: #FFFFFF; --fill: #F9FAFC; --card: #FFFFFF; }
+html, body { background: #FFFFFF !important; }
+
+/* 상단 헤더(각 페이지 인라인 스타일) */
+body > header[style*="sticky"] { background: rgba(255, 255, 255, 0.94) !important; border-bottom-color: #F0F0F2 !important; }
+
+/* 카드: 흰 면 + 그림자 대신 연회색 면 */
+main, .wrap { --bg: #F9FAFC; }
+main *:not(img):not(video):not(iframe):not(.shot):not(.fx-shot):not(.pdf-preview):not(.modal-backdrop *):not(.prompt-modal):not(button):not(.btn),
+.wrap *:not(img):not(video):not(iframe):not(.shot):not(.fx-shot):not(.pdf-preview):not(.modal-backdrop *):not(.prompt-modal):not(button):not(.btn) {
+  box-shadow: none !important;
+}
+.shot, .fx-shot { box-shadow: 0 0 0 1px #EEEEF1 !important; }
+/* 모달은 흰 바탕 그대로 */
+.modal-backdrop, .prompt-modal { --bg: #FFFFFF; }
+
+/* 머리말 */
+.ins-thumb { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 16px; background: #F9FAFC; margin: 0 0 32px; box-shadow: none !important; }
+main h1, .wrap h1 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, sans-serif !important; font-weight: 700 !important; letter-spacing: -0.02em; line-height: 1.3; }
+main h2, .wrap h2 { font-family: "Elice Digital Baeum", "Pretendard Variable", Pretendard, sans-serif; }
+.ins-eyebrow { display: inline-block; font-size: 14px !important; font-weight: 700; letter-spacing: 0.02em; color: #FB75BB; margin: 0 0 10px; }
+.ins-date { margin: -4px 0 18px !important; font-size: 14px !important; color: rgba(22, 25, 42, 0.55) !important; font-variant-numeric: tabular-nums; }
+.thumb { box-shadow: none !important; border-radius: 16px !important; }
+
+/* 옛 오른쪽 목차는 숨기고 공용 목차로 */
+body > nav.toc[aria-label="개요"], #sideToc { display: none !important; }
+.ins-toc { position: fixed; top: 110px; z-index: 15; display: none; max-width: 210px; }
+@media (min-width: 1220px) { .ins-toc.ready { display: block; } }
+.ins-toc .toc-h { font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; color: rgba(22, 25, 42, 0.4); margin: 0 0 14px 17px; }
+.ins-toc ul { list-style: none; margin: 0; padding: 0 0 0 17px; display: flex; flex-direction: column; gap: 13px; border-left: 1.5px solid #E8E8E8; }
+.ins-toc a { font-size: 14.5px; line-height: 1.4; font-weight: 500; color: rgba(22, 25, 42, 0.45); text-decoration: none; display: block; position: relative; transition: color 0.15s; }
+.ins-toc a:hover { color: rgba(22, 25, 42, 0.62); }
+.ins-toc a.active { color: #FB75BB; font-weight: 700; }
+.ins-toc a.active::before { content: ""; position: absolute; left: -18px; top: 3px; width: 2px; height: 16px; background: #FB75BB; }
+
+/* 태그는 테두리 없이 면으로(크래빗 디자인 규칙) */
+.chip { border-color: transparent !important; background: #F2F3F6 !important; }
+.chip.p { background: #FEE9F4 !important; border-color: transparent !important; }

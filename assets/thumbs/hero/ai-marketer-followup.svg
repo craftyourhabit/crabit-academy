@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <!-- 확성기 + AI 배지 -->
+  <g transform="translate(392 232) rotate(-8)">
+    <g transform="translate(7 7)" fill="#16192A">
+      <rect x="-160" y="-32" width="66" height="64" rx="16"/>
+      <path d="M-104 -44 L62 -116 L62 116 L-104 44 Z"/>
+      <rect x="50" y="-130" width="36" height="260" rx="18"/>
+      <rect x="-86" y="36" width="34" height="84" rx="17"/>
+    </g>
+    <rect x="-86" y="36" width="34" height="84" rx="17" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
+    <rect x="-160" y="-32" width="66" height="64" rx="16" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
+    <path d="M-104 -44 L62 -116 L62 116 L-104 44 Z" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="50" y="-130" width="36" height="260" rx="18" fill="#FB75BB"/>
+    <g stroke="#16192A" stroke-width="9" stroke-linecap="round" fill="none">
+      <path d="M118 -46 q34 46 0 92"/>
+      <path d="M152 -84 q58 84 0 168"/>
+    </g>
+  </g>
+  <circle cx="566" cy="104" r="36" fill="#16192A"/>
+  <text x="566" y="114" font-size="28" font-weight="700" fill="#FFFFFF" text-anchor="middle">AI</text>
+</svg>

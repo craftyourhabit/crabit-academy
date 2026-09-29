@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <!-- 블로그 화면 + 연필 -->
+  <rect x="228" y="108" width="340" height="240" rx="18" fill="#16192A"/>
+  <rect x="220" y="100" width="340" height="240" rx="18" fill="#FFFFFF"/>
+  <path d="M238 100 H542 A18 18 0 0 1 560 118 V136 H220 V118 A18 18 0 0 1 238 100 Z" fill="#F2F3F6"/>
+  <circle cx="244" cy="118" r="6.5" fill="#FB75BB"/><circle cx="264" cy="118" r="6.5" fill="#DCDDDF"/><circle cx="284" cy="118" r="6.5" fill="#DCDDDF"/>
+  <rect x="246" y="158" width="288" height="76" rx="12" fill="#FEE9F4"/>
+  <circle cx="284" cy="186" r="12" fill="#FB75BB"/>
+  <path d="M262 226 L302 196 L334 218 L366 190 L410 226 Z" fill="#FB75BB" opacity="0.55"/>
+  <rect x="246" y="254" width="200" height="12" rx="6" fill="#16192A"/>
+  <rect x="246" y="280" width="250" height="10" rx="5" fill="#DCDDDF"/>
+  <rect x="246" y="302" width="170" height="10" rx="5" fill="#DCDDDF"/>
+  <rect x="220" y="100" width="340" height="240" rx="18" fill="none" stroke="#E6E7EC" stroke-width="2"/>
+  <g transform="translate(618 292) rotate(32)">
+    <g transform="translate(7 7)" fill="#16192A"><rect x="-19" y="-150" width="38" height="150" rx="8"/><path d="M-19 -2 L19 -2 L0 36 Z"/></g>
+    <rect x="-19" y="-150" width="38" height="150" rx="8" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
+    <rect x="-19" y="-150" width="38" height="34" rx="8" fill="#FB75BB"/>
+    <path d="M-19 -2 L19 -2 L0 36 Z" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M-7 22 L7 22 L0 36 Z" fill="#16192A"/>
+  </g>
+</svg>

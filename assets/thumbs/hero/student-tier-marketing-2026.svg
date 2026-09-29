@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 남색 그림자. 제목 글자는 넣지 않는다 -->
+  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
   <rect width="800" height="450" fill="#F9FAFC"/>
   <g transform="translate(-26 8)">
   <!-- 원생 5구간 계단 + 꼭대기 깃발 -->
   <g fill="#16192A">
-    <rect x="240" y="320" width="66" height="60" rx="10"/>
-    <rect x="308" y="275" width="66" height="105" rx="10"/>
-    <rect x="376" y="230" width="66" height="150" rx="10"/>
-    <rect x="444" y="185" width="66" height="195" rx="10"/>
-    <rect x="512" y="140" width="66" height="240" rx="10"/>
+    <rect x="237" y="317" width="66" height="60" rx="10"/>
+    <rect x="305" y="272" width="66" height="105" rx="10"/>
+    <rect x="373" y="227" width="66" height="150" rx="10"/>
+    <rect x="441" y="182" width="66" height="195" rx="10"/>
+    <rect x="509" y="137" width="66" height="240" rx="10"/>
   </g>
-  <g fill="#FFFFFF">
+  <g fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2">
     <rect x="230" y="310" width="66" height="60" rx="10"/>
     <rect x="298" y="265" width="66" height="105" rx="10"/>
     <rect x="366" y="220" width="66" height="150" rx="10"/>
@@ -22,8 +22,8 @@
     <text x="535" y="164" fill="#FFFFFF">5</text>
   </g>
   <rect x="532" y="52" width="7" height="80" rx="3.5" fill="#16192A"/>
-  <path d="M539 55 L588 74 L539 93 Z" fill="#FFFFFF" stroke="#16192A" stroke-width="5" stroke-linejoin="round"/>
-  <g stroke="#16192A" stroke-width="5" stroke-linecap="round">
+  <path d="M539 55 L588 74 L539 93 Z" fill="#FB75BB" stroke="#FB75BB" stroke-width="4" stroke-linejoin="round"/>
+  <g stroke="#16192A" stroke-width="4" stroke-linecap="round">
     <line x1="604" y1="46" x2="614" y2="34"/><line x1="612" y1="66" x2="628" y2="62"/><line x1="592" y1="32" x2="594" y2="18"/>
   </g>
   </g>

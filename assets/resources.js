@@ -25,7 +25,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "학원 홈페이지형 블로그 마스터 과정 후속 자료",
     sub: "강의 실습 프롬프트, 템플릿, 워크북, 가이드북 등 전체 자료를 전달",
-    thumb: "assets/thumbs/blog-master-followup.svg",
+    thumb: "assets/thumbs/hero/blog-master-followup.svg",
     access: "protected",
     href: "blog-followup"
   },
@@ -34,7 +34,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "[대구학원연합회] 우리 학원만의 AI 마케터 고용하기 후속 자료",
     sub: "강의 자료, 프롬프트 모음집, 핵심 자료 파일 전부 전달",
-    thumb: "assets/thumbs/ai-marketer-followup.svg",
+    thumb: "assets/thumbs/hero/ai-marketer-followup.svg",
     access: "protected",
     href: "daegu-followup"
   },
@@ -43,7 +43,7 @@ const RESOURCES = [
     category: "인사이트",
     title: "원장님을 위한 클로드 코워크 시작하기 - 설치 가이드",
     sub: "가장 강력한 AI 도구 클로드 코워크, 맥과 윈도우 설치가 막막하셨다면 화면 그대로 한 단계씩",
-    thumb: "assets/thumbs/claude-cowork-windows.svg",
+    thumb: "assets/thumbs/hero/claude-cowork-windows.svg",
     access: "public",
     href: "claude-code-windows"
   },
@@ -52,7 +52,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "학원에서 필요한 랜딩페이지 아이디어 30선 + 프롬프트집",
     sub: "모집, 상담, 수업, 관리까지 학원 운영 전 영역의 랜딩페이지 프롬프트 30개",
-    thumb: "assets/thumbs/daegu-prompts30.svg",
+    thumb: "assets/thumbs/hero/daegu-prompts30.svg",
     access: "protected",
     href: ""
   },
@@ -61,7 +61,7 @@ const RESOURCES = [
     category: "강의자료",
     title: "바이브코딩으로 우리 학원 랜딩페이지 제작 프롬프트 3종",
     sub: "설명회 모집, 오늘의 수업 퀴즈, 학생 학습리포트. 복사해서 붙여넣으면 완성되는 실전 프롬프트",
-    thumb: "assets/thumbs/daegu-prompts3.svg",
+    thumb: "assets/thumbs/hero/daegu-prompts3.svg",
     access: "public",
     href: "landingpageprompts"
   },
@@ -70,7 +70,7 @@ const RESOURCES = [
     category: "인사이트",
     title: "원생 구간별 마케팅 전략 2026",
     sub: "원생 10명부터 1,000명까지, 구간마다 원장님이 이번 달 해볼 마케팅을 정리했어요",
-    thumb: "assets/thumbs/student-tier-marketing-2026.svg",
+    thumb: "assets/thumbs/hero/student-tier-marketing-2026.svg",
     access: "public",
     href: "r/student-tier-marketing-2026"
   }

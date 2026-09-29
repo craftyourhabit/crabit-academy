@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 남색 그림자. 제목 글자는 넣지 않는다 -->
+  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
   <rect width="800" height="450" fill="#F9FAFC"/>
   <!-- 컴퓨터 창 안에서 AI와 대화하는 장면 + AI 배지 -->
-  <rect x="232" y="117" width="360" height="240" rx="18" fill="#16192A"/>
+  <rect x="228" y="113" width="360" height="240" rx="18" fill="#16192A"/>
   <rect x="220" y="105" width="360" height="240" rx="18" fill="#FFFFFF"/>
   <path d="M238 105 H562 A18 18 0 0 1 580 123 V141 H220 V123 A18 18 0 0 1 238 105 Z" fill="#F2F3F6"/>
   <circle cx="244" cy="123" r="6.5" fill="#FB75BB"/><circle cx="264" cy="123" r="6.5" fill="#DCDDDF"/><circle cx="284" cy="123" r="6.5" fill="#DCDDDF"/>
@@ -12,6 +12,7 @@
   <rect x="392" y="232" width="130" height="8" rx="4" fill="#FFFFFF"/>
   <rect x="246" y="270" width="140" height="36" rx="18" fill="#F2F3F6"/>
   <rect x="264" y="284" width="84" height="8" rx="4" fill="#B9BABF"/>
+  <rect x="220" y="105" width="360" height="240" rx="18" fill="none" stroke="#E6E7EC" stroke-width="2"/>
   <circle cx="578" cy="108" r="36" fill="#16192A"/>
   <text x="578" y="118" font-size="28" font-weight="700" fill="#FFFFFF" text-anchor="middle">AI</text>
 </svg>

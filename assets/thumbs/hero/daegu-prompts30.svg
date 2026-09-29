@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
-  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 남색 그림자. 제목 글자는 넣지 않는다 -->
+  <!-- 아티클 본문 상단용 썸네일(그리팅 가이드 톤 참고): 연회색(#F9FAFC) 배경 + 가운데 일러스트 하나 + 흰 오브젝트에 옅은 회색 선과 남색 그림자. 제목 글자는 넣지 않는다 -->
   <rect width="800" height="450" fill="#F9FAFC"/>
   <!-- 여러 장 쌓인 프롬프트 카드 + 30선 배지 -->
   <g transform="translate(400 225) rotate(9) translate(-115 -145)">
-    <rect x="10" y="10" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF"/>
+    <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
   </g>
   <g transform="translate(400 225) rotate(2) translate(-115 -145)">
-    <rect x="10" y="10" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF"/>
+    <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/><rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
   </g>
   <g transform="translate(400 225) rotate(-6) translate(-115 -145)">
     <g>
-      <rect x="10" y="10" width="220" height="280" rx="20" fill="#16192A"/>
-      <rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF"/>
+      <rect x="7" y="7" width="220" height="280" rx="20" fill="#16192A"/>
+      <rect x="0" y="0" width="220" height="280" rx="20" fill="#FFFFFF" stroke="#E6E7EC" stroke-width="2"/>
       <rect x="26" y="30" width="84" height="26" rx="13" fill="#FEE9F4"/>
       <rect x="26" y="82" width="168" height="11" rx="5.5" fill="#16192A"/>
       <rect x="26" y="108" width="136" height="11" rx="5.5" fill="#DCDDDF"/>

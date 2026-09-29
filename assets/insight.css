@@ -128,15 +128,15 @@ header.a-top { position: sticky; top: 0; z-index: 60; background: rgba(255, 255,
 .a-table .nowrap { white-space: nowrap; }
 
 /* ---------- 오른쪽 목차 ---------- */
-/* 본문(700px) 오른쪽 가장자리에서 40px 띄워 붙인다 */
-.toc { position: fixed; top: 96px; left: calc(50% + 390px); z-index: 15; display: none; max-width: 190px; }
-@media (min-width: 1160px) { .toc { display: block; } }
-.toc .toc-h { font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; color: rgba(22, 25, 42, 0.28); margin: 0 0 12px 15px; }
-.toc ul { list-style: none; margin: 0; padding: 0 0 0 15px; display: flex; flex-direction: column; gap: 11px; border-left: 1.5px solid var(--line); }
-.toc a { font-size: 12.5px; line-height: 1.35; font-weight: 500; color: rgba(22, 25, 42, 0.36); text-decoration: none; display: block; position: relative; transition: color 0.15s; }
+/* 본문 글 오른쪽 끝(50% + 328px)에서 약 32px 띄워 붙인다 */
+.toc { position: fixed; top: 110px; left: calc(50% + 360px); z-index: 15; display: none; max-width: 210px; }
+@media (min-width: 1180px) { .toc { display: block; } }
+.toc .toc-h { font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; color: rgba(22, 25, 42, 0.4); margin: 0 0 14px 17px; }
+.toc ul { list-style: none; margin: 0; padding: 0 0 0 17px; display: flex; flex-direction: column; gap: 13px; border-left: 1.5px solid var(--line); }
+.toc a { font-size: 14.5px; line-height: 1.4; font-weight: 500; color: rgba(22, 25, 42, 0.45); text-decoration: none; display: block; position: relative; transition: color 0.15s; }
 .toc a:hover { color: rgba(22, 25, 42, 0.62); }
 .toc a.active { color: var(--pink); font-weight: 700; }
-.toc a.active::before { content: ""; position: absolute; left: -16px; top: 3px; width: 1.5px; height: 13px; background: var(--pink); }
+.toc a.active::before { content: ""; position: absolute; left: -18px; top: 3px; width: 2px; height: 16px; background: var(--pink); }
 
 /* ---------- 푸터 ---------- */
 footer.a-foot { border-top: 1px solid var(--line); margin-top: 72px; padding: 30px 0 44px; font-size: 13.5px; color: var(--muted); }

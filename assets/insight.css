@@ -150,7 +150,7 @@ footer.a-foot a { color: inherit; }
 @media (max-width: 640px) {
   .a-hero { padding-top: 22px; }
   .a-thumb { border-radius: 12px; margin-bottom: 24px; }
-  .a-lead { font-size: 16px; }
+  .a-lead { font-size: 16px; text-wrap: wrap; }
   .a-sec { padding-top: 34px; }
   .a-sec + .a-sec { margin-top: 34px; }
   .a-sec h2 { font-size: 22px; }
@@ -159,7 +159,22 @@ footer.a-foot a { color: inherit; }
   .a-toggle .a-body { padding-left: 34px; }
   .a-toggle .a-body p, .a-callout p, .a-check li { font-size: 15px !important; }
   .a-callout { padding: 16px 18px; }
-  .a-table { font-size: 14px; }
-  .a-table th, .a-table td { padding: 10px 8px; }
+  /* 표는 좁은 화면에서 칸이 찌그러지니, 한 행을 두 줄 묶음으로 바꾼다
+     (1줄: 번호, 원생 수, 전국 위치 / 2줄: 숙제 한 줄) */
+  .a-table-wrap { overflow: visible; }
+  .a-table, .a-table tbody { display: block; }
+  .a-table thead { display: none; }
+  .a-table tbody { border-top: 1.5px solid var(--ink); }
+  .a-table tr { display: grid; grid-template-columns: 22px auto 1fr; column-gap: 10px; row-gap: 3px; padding: 14px 2px; border-bottom: 1px solid var(--line); }
+  .a-table th, .a-table td { padding: 0; border: 0; }
+  .a-table td.num { grid-row: 1 / 3; width: auto; font-size: 15.5px; }
+  .a-table td:nth-child(2) { font-size: 15px; font-weight: 700; }
+  .a-table td:nth-child(3) { font-size: 13.5px; color: var(--muted); align-self: center; }
+  .a-table td:nth-child(4) { grid-column: 2 / 4; font-size: 15px; line-height: 1.55; }
 }
+/* 제목과 토글 제목의 마지막 단어가 혼자 떨어지지 않게 */
+.a-sec h2, .a-sec h3 { text-wrap: balance; }
+.a-toggle > summary .t { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+/* 구간 표: 구간 설명(회색 한 줄) 아래 숙제 */
+.a-table .t-desc { display: block; font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 3px; }

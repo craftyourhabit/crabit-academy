@@ -2180,12 +2180,29 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
+/* 링크 미리보기(카카오톡 등) 태그. 카카오는 SVG 를 못 읽어서 PNG, JPG 썸네일일 때만 그 이미지를 쓰고,
+   아니면 사이트 공용 이미지(assets/og/site.jpg)를 씁니다. */
+const OG_BASE = "https://craftyourhabit.github.io/crabit-academy/";
+function ogTags(o) {
+  const raster = /\.(png|jpe?g|webp)$/i.test(o.thumb || "");
+  const img = OG_BASE + (raster ? String(o.thumb).replace(/^(\.\.\/)+/, "") : "assets/og/site.jpg");
+  return "<!-- 링크 미리보기(카카오톡 등) -->\n"
+    + '<meta property="og:type" content="article" />\n'
+    + '<meta property="og:site_name" content="크래빗 아카데미" />\n'
+    + '<meta property="og:title" content="' + escapeHtml(o.title) + '" />\n'
+    + '<meta property="og:description" content="' + escapeHtml(o.sub || "") + '" />\n'
+    + (o.path ? '<meta property="og:url" content="' + OG_BASE + o.path + '" />\n' : "")
+    + '<meta property="og:image" content="' + img + '" />\n'
+    + '<meta name="twitter:card" content="summary_large_image" />\n';
+}
+
 /* 공개 자료의 아티클 페이지 HTML. r/이름.html 로 저장됩니다. */
 function buildArticlePage(o) {
   return '<!DOCTYPE html>\n<html lang="ko">\n<head>\n'
     + '<meta charset="utf-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1" />\n'
     + "<title>" + escapeHtml(o.title) + " - 크래빗 아카데미</title>\n"
     + '<meta name="description" content="' + escapeHtml(o.sub || "") + '" />\n'
+    + ogTags(o)
     + '<link rel="icon" type="image/png" href="../assets/favicon.png" />\n'
     + '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />\n'
     + '<link rel="stylesheet" href="../assets/article.css" />\n'
@@ -2320,6 +2337,8 @@ async function saveResource(state, wasId, isNew, wasPrivate, setMsg) {
         title: state.title.trim(),
         sub: state.sub.trim(),
         category: state.category,
+        thumb: state.thumb,
+        path: "r/" + key,
         bodyHtml: state.__editor.getHtml()
       });
       const path = "r/" + key + ".html";

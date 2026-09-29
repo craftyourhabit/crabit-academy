@@ -64,6 +64,15 @@ const RESOURCES = [
     thumb: "assets/thumbs/daegu-prompts3.svg",
     access: "public",
     href: "landingpageprompts"
+  },
+  {
+    id: "student-tier-marketing-2026",
+    category: "인사이트",
+    title: "원생 구간별 마케팅 전략 2026",
+    sub: "원생 10명부터 1,000명까지, 구간마다 원장님이 이번 달 해볼 마케팅을 정리했어요",
+    thumb: "assets/thumbs/student-tier-marketing-2026.svg",
+    access: "public",
+    href: "r/student-tier-marketing-2026"
   }
 ];
 /* @admin:RESOURCES:end */

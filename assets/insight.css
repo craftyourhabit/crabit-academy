@@ -128,9 +128,9 @@ header.a-top { position: sticky; top: 0; z-index: 60; background: rgba(255, 255,
 .a-table .nowrap { white-space: nowrap; }
 
 /* ---------- 오른쪽 목차 ---------- */
-/* 본문 글 오른쪽 끝(50% + 328px)에서 약 32px 띄워 붙인다 */
-.toc { position: fixed; top: 110px; left: calc(50% + 360px); z-index: 15; display: none; max-width: 210px; }
-@media (min-width: 1180px) { .toc { display: block; } }
+/* 본문 글 오른쪽 끝(50% + 328px)에서 약 60px 띄운다 */
+.toc { position: fixed; top: 110px; left: calc(50% + 390px); z-index: 15; display: none; max-width: 210px; }
+@media (min-width: 1220px) { .toc { display: block; } }
 .toc .toc-h { font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; color: rgba(22, 25, 42, 0.4); margin: 0 0 14px 17px; }
 .toc ul { list-style: none; margin: 0; padding: 0 0 0 17px; display: flex; flex-direction: column; gap: 13px; border-left: 1.5px solid var(--line); }
 .toc a { font-size: 14.5px; line-height: 1.4; font-weight: 500; color: rgba(22, 25, 42, 0.45); text-decoration: none; display: block; position: relative; transition: color 0.15s; }

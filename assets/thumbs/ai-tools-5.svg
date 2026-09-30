@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- 카톡 링크 미리보기(og) 원본. 옛 글자형 템플릿: 연회색 배경 + 좌측 라벨과 타이틀 + 우측 일러스트. 캡션 금지 -->
+  <rect width="800" height="450" fill="#F9FAFC"/>
+  <g transform="translate(470 70) scale(0.62)">
+    <circle cx="300" cy="120" r="78" fill="#FDC4E0"/><circle cx="300" cy="120" r="62" fill="#FFE3F0"/>
+    <path d="M300 120 V70" stroke="#16192A" stroke-width="9" stroke-linecap="round"/><path d="M300 120 L319 153" stroke="#16192A" stroke-width="10" stroke-linecap="round"/><circle cx="300" cy="120" r="9" fill="#FB75BB"/>
+    <path d="M40 420 L56 352 Q58 344 66 344 H254 Q262 344 264 352 L280 420 Z" fill="#FB75BB"/>
+    <path d="M76 408 L86 362 H234 L244 408 Z" fill="#FB9FCD"/>
+    <rect x="2" y="418" width="316" height="26" rx="13" fill="#16192A"/>
+  </g>
+  <text x="64" y="132" font-size="20" letter-spacing="5" fill="#7F808A" font-weight="600">AI TOOLS</text>
+  <text x="64" y="232" font-size="52" fill="#16192A" font-weight="700">퇴근을 앞당기는</text>
+  <text x="64" y="300" font-size="52" fill="#16192A" font-weight="700"><tspan fill="#FB75BB">AI 툴 5가지</tspan></text>
+</svg>

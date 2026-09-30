@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="Pretendard, 'Apple SD Gothic Neo', sans-serif"><!-- 아카데미 썸네일(토스 톤): 연회색 배경, 테두리와 그림자 없는 2D 면 일러스트, 핑크 단계색, 장식 요소 없음. 인물 없이 사물: 퇴근 시각 시계, 덮이는 노트북, 끝낸 일 5개 -->
+<rect width="800" height="450" fill="#F2F3F6"/>
+<circle cx="560" cy="138" r="78" fill="#FDC4E0"/><circle cx="560" cy="138" r="62" fill="#FFE3F0"/>
+<path d="M560 138 V88" stroke="#16192A" stroke-width="9" stroke-linecap="round"/><path d="M560 138 L579 171" stroke="#16192A" stroke-width="10" stroke-linecap="round"/><circle cx="560" cy="138" r="9" fill="#FB75BB"/>
+<path d="M300 330 L316 262 Q318 254 326 254 H514 Q522 254 524 262 L540 330 Z" fill="#FB75BB"/>
+<path d="M336 318 L346 272 H494 L504 318 Z" fill="#FB9FCD"/>
+<rect x="262" y="328" width="316" height="26" rx="13" fill="#16192A"/>
+<rect x="392" y="328" width="56" height="8" rx="4" fill="#454755"/>
+<g><rect x="148" y="224" width="96" height="22" rx="11" fill="#FFE3F0"/><rect x="148" y="250" width="96" height="22" rx="11" fill="#FDC4E0"/><rect x="148" y="276" width="96" height="22" rx="11" fill="#FB9FCD"/><rect x="148" y="302" width="96" height="22" rx="11" fill="#FA89C4"/><rect x="148" y="328" width="96" height="26" rx="13" fill="#FB75BB"/></g>
+<path d="M176 190 L190 204 L218 174" fill="none" stroke="#16192A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>원장님 퇴근을 앞당기는 AI 툴 5가지 - 크래빗 아카데미</title>
+<meta name="description" content="보강표, 리포트카드, 수업 PPT, 홍보물, 수업일지. 원장님 하루에서 가장 귀찮은 순간 5개를 AI 툴 하나씩으로 풀어 봤어요" />
+<!-- 링크 미리보기(카카오톡 등) -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="크래빗 아카데미" />
+<meta property="og:title" content="원장님 퇴근을 앞당기는 AI 툴 5가지" />
+<meta property="og:description" content="보강표, 리포트카드, 수업 PPT, 홍보물, 수업일지. 원장님 하루에서 가장 귀찮은 순간 5개를 AI 툴 하나씩으로 풀어 봤어요" />
+<meta property="og:url" content="https://craftyourhabit.github.io/crabit-academy/r/ai-tools-5" />
+<meta property="og:image" content="https://craftyourhabit.github.io/crabit-academy/assets/og/ai-tools-5.png?v=20260930" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="675" />
+<meta property="og:locale" content="ko_KR" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="apple-touch-icon" href="../assets/favicon.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="../assets/insight.css" />
+<link rel="stylesheet" href="../assets/article.css" />
+<style>
+  /* 이 페이지 전용(.ait 스코프). 다른 아티클에는 영향이 없습니다.
+     본문 요소는 article.css 기본 모양만으로도 읽히게 두고, 여기서 살만 붙여요. */
+  .ait { font-size: 16.5px; }
+  .ait h2 { font-size: 25px; margin: 0 0 12px; }
+  .ait h3 { font-size: 17.5px; margin: 30px 0 10px; }
+  .ait-sec { padding-top: 44px; scroll-margin-top: 84px; }
+  .ait-sec + .ait-sec { border-top: 1px solid #F0F0F2; margin-top: 44px; }
+  .ait-label { display: block; font-size: 13.5px; font-weight: 700; color: #FB75BB; margin: 0 0 6px !important; }
+  .ait-hook { font-size: 18px; line-height: 1.65; font-weight: 600; margin-bottom: 18px !important; }
+  .ait-cap { font-size: 13.5px; color: rgba(22, 25, 42, 0.55); text-align: center; margin: -8px 0 18px !important; }
+  .ait .ait-media, .ait img.ait-shot { width: 100%; aspect-ratio: 27 / 16; object-fit: cover; border-radius: 14px; background: #F2F3F6; display: block; margin: 18px 0 16px; }
+
+  /* 콜아웃: 테두리 없이 면으로만(크래빗 디자인 규칙) */
+  .ait .callout { border-color: transparent; background: #F9FAFC; border-radius: 14px; padding: 18px 22px; }
+  .ait .callout.ait-try { background: #FEF1F8; }
+  .ait-try-h { font-size: 15px; font-weight: 700; margin-bottom: 6px !important; }
+  .ait-try-h::before { content: "5분"; display: inline-block; font-size: 12.5px; font-weight: 700; color: #FFFFFF; background: #FB75BB; border-radius: 999px; padding: 1px 9px; margin-right: 8px; vertical-align: 1px; }
+  .ait-prompt { position: relative; background: #FFFFFF; border-radius: 12px; padding: 14px 16px; margin: 12px 0 0; font-size: 15px; line-height: 1.7; white-space: pre-wrap; }
+  .ait-sec > .ait-prompt, .ait .a-body .ait-prompt { background: #F9FAFC; }
+  .ait-copy { position: absolute; top: 10px; right: 10px; font: inherit; font-size: 12.5px; font-weight: 600; color: #16192A; background: #F2F3F6; border: 0; border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+  .ait-copy:hover { background: #E8E9ED; }
+  .ait-sec > .ait-prompt .ait-copy, .ait .a-body .ait-prompt .ait-copy { background: #FFFFFF; }
+  .ait-prompt.has-copy { padding-top: 40px; }
+  .ait-ph { font-size: 14px !important; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin: 20px 0 0 !important; }
+  .ait-ph b { color: #16192A; }
+
+  /* 버튼 이름 표시: 테두리 없이 옅은 면 */
+  .ait .ui { display: inline-block; background: #EEF0F4; color: #16192A; border-radius: 6px; padding: 0 7px; font-size: 0.92em; font-weight: 600; line-height: 1.6; white-space: nowrap; }
+
+  /* 상단 바로가기 */
+  .ait-jump-h { font-size: 13.5px !important; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin: 0 0 10px !important; }
+  .ait-jump-note { margin: 12px 0 40px !important; }
+  .ait ul.ait-jump { list-style: none; padding: 0; margin: 0 0 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .ait-jump li { margin: 0; }
+  .ait-jump a { display: block; height: 100%; background: #F9FAFC; border-radius: 14px; padding: 13px 15px; text-decoration: none; color: #16192A; font-weight: 500; transition: background .15s; }
+  .ait-jump a:hover { background: #F0F1F5; color: #16192A; }
+  .ait-jump .j-n { display: block; font-size: 12.5px; font-weight: 700; color: #FB75BB; }
+  .ait-jump .j-t { display: block; font-size: 15px; font-weight: 700; line-height: 1.45; }
+  .ait-jump .j-m { display: block; font-size: 13.5px; color: rgba(22, 25, 42, 0.55); line-height: 1.5; margin-top: 2px; }
+
+  /* 귀찮은 순간 5개 */
+  .ait-moments { list-style: none; padding: 0 !important; margin: 18px 0 8px !important; display: grid; gap: 10px; }
+  .ait-moments li { background: #F9FAFC; border-radius: 14px; padding: 16px 18px; margin: 0; }
+  .ait-moments li a { display: block; text-decoration: none; color: #16192A; font-weight: 500; }
+  .ait-moments .m-when { display: block; font-size: 13px; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin-bottom: 2px; }
+  .ait-moments .m-tool { display: inline-block; margin-top: 8px; font-size: 13.5px; font-weight: 700; color: #FB75BB; }
+  .ait-moments li a:hover .m-tool { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* 숫자 타일 */
+  .ait-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0 6px; }
+  .ait-stats > div { background: #F9FAFC; border-radius: 14px; padding: 16px 14px; text-align: center; }
+  .ait-stats b { display: block; font-size: 28px; font-weight: 700; line-height: 1.2; color: #16192A; }
+  .ait-stats b em { font-style: normal; color: #FB75BB; }
+  .ait-stats span { display: block; font-size: 13.5px; color: rgba(22, 25, 42, 0.55); margin-top: 4px; }
+
+  /* 한 장 요약(캐러셀 문구 그대로) */
+  .ait-sum { background: #F9FAFC; border-radius: 14px; padding: 16px 20px; margin: 0 0 8px; }
+  .ait-sum .s-h { display: block; font-size: 12.5px; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin-bottom: 4px; }
+  .ait-sum p { margin: 0 !important; font-size: 16px; line-height: 1.7; }
+
+  /* 준비물 3칸 */
+  .ait-prep { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 8px; }
+  .ait-prep > div { background: #F9FAFC; border-radius: 14px; padding: 14px 16px; }
+  .ait-prep .p-h { display: block; font-size: 12.5px; font-weight: 700; color: #FB75BB; margin-bottom: 4px; }
+  .ait-prep p { margin: 0 0 6px !important; font-size: 14.5px; line-height: 1.6; }
+  .ait-prep p:last-child { margin-bottom: 0 !important; }
+  .ait-prep .p-sub { color: rgba(22, 25, 42, 0.55); font-size: 13.5px; }
+
+  /* 접기 펼치기: insight.css 의 .a-toggle 을 그대로 쓰고 간격만 조정 */
+  .ait .a-toggles { margin: 26px 0 0; }
+  .ait .a-toggle > summary { font-family: inherit; }
+  .ait .a-toggle > summary .c { flex: none; font-size: 13.5px; font-weight: 600; color: rgba(22, 25, 42, 0.5); margin-top: 2px; }
+  .ait .a-toggle .a-body { padding: 0 4px 20px 4px; }
+  .ait .a-toggle .a-body > *:first-child { margin-top: 0; }
+  .ait .a-body .ait-note { margin-top: 6px; }
+  .ait .a-body ul { margin-bottom: 8px; }
+
+  /* 자주 막히는 곳 */
+  .ait dl.ait-qa { margin: 0; }
+  .ait-qa dt { font-weight: 700; font-size: 16px; margin: 0 0 4px; }
+  .ait-qa dt::before { content: "Q"; color: #FB75BB; margin-right: 8px; }
+  .ait-qa dd { margin: 0 0 16px; padding-left: 22px; font-size: 15.5px; }
+  .ait-qa dd:last-child { margin-bottom: 0; }
+
+  /* 이렇게도 써 보세요: 카드 그리드(테두리 없이 면으로) */
+  .ait-uses { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 6px 0 4px; }
+  .ait-uses .use { background: #F9FAFC; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; }
+  .ait-uses .u-when { display: block; font-size: 12.5px; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin-bottom: 2px; }
+  .ait-uses .u-title { display: block; font-size: 16px; font-weight: 700; line-height: 1.45; margin-bottom: 6px; }
+  .ait-uses .use > p { font-size: 15px; line-height: 1.65; margin: 0 0 4px !important; }
+  .ait-uses .ait-prompt { font-size: 14px; line-height: 1.65; margin-top: auto; }
+  .ait-uses .use > p + .ait-prompt { margin-top: 10px; }
+  .ait-tag { display: inline-block; font-size: 11.5px; font-weight: 700; color: rgba(22, 25, 42, 0.6); background: #ECEDF1; border-radius: 999px; padding: 0 8px; margin-left: 6px; vertical-align: 1px; }
+
+  /* 티로 흐름 */
+  .ait ol.ait-flow { list-style: none; padding: 0; margin: 12px 0 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .ait-flow li { margin: 0; background: #F9FAFC; border-radius: 999px; padding: 5px 13px; font-size: 14.5px; font-weight: 600; }
+  .ait-flow li.opt { color: rgba(22, 25, 42, 0.55); }
+  .ait-flow li + li::before { content: "\2192"; color: #FB75BB; font-weight: 700; margin-right: 8px; }
+
+  /* 따라 하기: 번호 원 */
+  .ait ol.ait-steps { list-style: none; padding: 0; counter-reset: st; margin: 4px 0 16px; }
+  .ait ol.ait-steps > li { counter-increment: st; position: relative; padding-left: 40px; margin-bottom: 12px; min-height: 28px; }
+  .ait ol.ait-steps > li::before {
+    content: counter(st); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%;
+    background: #FB75BB; color: #FFFFFF; font-size: 13.5px; font-weight: 700; text-align: center; line-height: 26px;
+  }
+  .ait ol.ait-steps > li.stage { counter-increment: none; padding-left: 0; min-height: 0; margin: 18px 0 8px; font-size: 14px; font-weight: 700; color: rgba(22, 25, 42, 0.55); }
+  .ait ol.ait-steps > li.stage:first-child { margin-top: 0; }
+  .ait ol.ait-steps > li.stage::before { display: none; }
+  .ait-note { font-size: 15px; color: rgba(22, 25, 42, 0.62); }
+  .ait-end { font-size: 16px; }
+  .ait-basis { font-size: 13.5px !important; color: rgba(22, 25, 42, 0.55); margin-top: 24px !important; }
+
+  /* 모션: 스크립트가 html 에 ait-motion 을 붙였을 때만 켜집니다.
+     어드민 미리보기, 스크립트 없는 환경, 모션 줄이기 설정에서는 전부 그대로 보여요. */
+  .ait-motion .ait .rv { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; transition-delay: var(--d, 0s); }
+  .ait-motion .ait .rv.in { opacity: 1; transform: none; }
+  .ait-motion .ait ol.ait-steps > li::before { background: #E8E9ED; color: rgba(22, 25, 42, 0.45); transition: background .35s ease, color .35s ease; transition-delay: calc(var(--i, 0) * 0.2s + 0.15s); }
+  .ait-motion .ait ol.ait-steps.in > li::before { background: #FB75BB; color: #FFFFFF; }
+
+  @media (max-width: 640px) {
+    .ait h2 { font-size: 22px; }
+    .ait-hook { font-size: 16.5px; }
+    .ait-stats b { font-size: 23px; }
+    .ait-stats span { font-size: 12.5px; }
+    .ait .callout { padding: 16px 18px; }
+    .ait ul.ait-jump { grid-template-columns: repeat(2, 1fr); }
+    .ait-jump a { padding: 12px 13px; }
+    .ait-jump .j-t { font-size: 14.5px; }
+    .ait-jump .j-m { font-size: 12.5px; }
+    .ait-prep, .ait-uses { grid-template-columns: 1fr; }
+    .ait-qa dd { padding-left: 0; font-size: 15px; }
+    .ait-prompt { font-size: 14.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ait-motion .ait .rv { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+<header class="a-top">
+  <div style="max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 24px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <a href="javascript:history.back()" aria-label="뒤로가기" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #E8E8E8;color:#16192A;font-size:16px;text-decoration:none">&#8249;</a>
+      <a href="../"><img src="../assets/logo.png" alt="Crabit 아카데미" style="height:24px;display:block"></a>
+    </div>
+    <nav style="display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600">
+      <a href="../courses" style="color:rgba(22,25,42,.55);text-decoration:none">교육 / 설명회</a>
+      <a href="../vod" style="color:rgba(22,25,42,.55);text-decoration:none">VOD 강의</a>
+      <a href="../resources" style="color:rgba(22,25,42,.55);text-decoration:none">자료 / 인사이트</a>
+    </nav>
+  </div>
+</header>
+<nav class="toc" aria-label="목차">
+  <div class="toc-h">목차</div>
+  <ul>
+    <li><a href="#moments">귀찮은 순간 5개</a></li>
+    <li><a href="#t1">1. 챗GPT 워크</a></li>
+    <li><a href="#t2">2. 클로드 코워크</a></li>
+    <li><a href="#t3">3. 젠스파크 AI 슬라이드</a></li>
+    <li><a href="#t4">4. 미리캔버스 템플릿</a></li>
+    <li><a href="#t5">5. 티로 수업 녹음</a></li>
+    <li><a href="#common">시작하기 전에</a></li>
+  </ul>
+</nav>
+<main class="a-wrap">
+  <div class="a-hero">
+    <img class="a-thumb" src="../assets/thumbs/hero/ai-tools-5.svg" alt="원장님 퇴근을 앞당기는 AI 툴 5가지" />
+    <span class="a-eyebrow">인사이트</span>
+    <h1>원장님 퇴근을 앞당기는 AI 툴 5가지</h1>
+    <p class="a-date"><time datetime="2026-09-30">2026.09.30</time></p>
+    <p class="a-lead">수업은 끝났는데 퇴근은 아직인 밤, 원장님 책상 위에는 늘 비슷한 일이 남아 있어요. <strong>매번 같은 형식을 처음부터 다시 만드는 일</strong>입니다.</p>
+    <p class="a-lead">판단은 원장님 몫이지만, 옮겨 적고 합치고 다시 쓰는 일은 이제 AI에게 넘길 수 있어요.</p>
+  </div>
+  <div class="article-body ait">
+<!-- @admin:body:start -->
+
+<section class="ait-sec" id="moments">
+<p class="ait-jump-h">툴 5개 바로가기</p>
+<ul class="ait-jump">
+<li><a href="#t1"><span class="j-n">01</span><span class="j-t">챗GPT 워크</span><span class="j-m">보강표와 안내문 파일</span></a></li>
+<li><a href="#t2"><span class="j-n">02</span><span class="j-t">클로드 코워크</span><span class="j-m">내 컴퓨터 속 비서, 리포트카드</span></a></li>
+<li><a href="#t3"><span class="j-n">03</span><span class="j-t">젠스파크 AI 슬라이드</span><span class="j-m">수업 PPT</span></a></li>
+<li><a href="#t4"><span class="j-n">04</span><span class="j-t">미리캔버스 템플릿</span><span class="j-m">카드뉴스와 포스터, 미리클</span></a></li>
+<li><a href="#t5"><span class="j-n">05</span><span class="j-t">티로 수업 녹음</span><span class="j-m">녹음에서 위클리 리포트까지</span></a></li>
+<li><a href="#common"><span class="j-n">공통</span><span class="j-t">시작하기 전에</span><span class="j-m">개인정보와 요금</span></a></li>
+</ul>
+<p class="ait-note ait-jump-note">툴마다 준비물, 버튼 이름까지 적은 따라 하기, 복사해서 쓰는 프롬프트, "이렇게도 써 보세요" 예시, 자주 막히는 곳을 정리했어요. 긴 설명은 접어 두었으니 필요한 칸만 눌러 펼쳐 보세요. 버튼 이름과 위치는 2026년 9월 말 화면 기준이라, 앱 업데이트에 따라 조금 다를 수 있습니다.</p>
+<p class="ait-label">먼저 짚어 볼게요</p>
+<h2>원장님 하루 중 가장 귀찮은 순간 5개</h2>
+<p>아래 다섯 장면 중 "어, 이거 딱 나야" 싶은 게 하나라도 있다면, 그 장면에 붙은 툴 하나만 먼저 써 보세요. 다섯 개를 다 쓰실 필요는 없습니다.</p>
+<ol class="ait-moments">
+<li><a href="#t1"><span class="m-when">시험 3주 전 밤</span>학교마다 다른 시험일정 공지를 캡처해 놓고, 보강표와 안내 문자를 학교별로 따로 짜는 순간<span class="m-tool">챗GPT 워크로 &#8594;</span></a></li>
+<li><a href="#t2"><span class="m-when">월말 마감 날</span>출결 엑셀과 성적 엑셀을 번갈아 열며 학생마다 리포트카드를 채우는 순간<span class="m-tool">클로드 코워크로 &#8594;</span></a></li>
+<li><a href="#t3"><span class="m-when">새 단원 들어가기 전날</span>슬라이드로 보여 주면 좋겠는데, PPT 만들 시간이 없어 판서와 프린트로 버티는 순간<span class="m-tool">젠스파크 AI 슬라이드로 &#8594;</span></a></li>
+<li><a href="#t4"><span class="m-when">특강 모집 시즌</span>챗GPT로 만든 홍보 이미지가 어딘가 "AI 느낌"이라 올리기 망설여지는 순간<span class="m-tool">미리캔버스 템플릿으로 &#8594;</span></a></li>
+<li><a href="#t5"><span class="m-when">금요일 퇴근 직전</span>이번 주 수업을 기억에 기대어 주간 리포트로 다시 쓰는 순간<span class="m-tool">티로 수업 녹음으로 &#8594;</span></a></li>
+</ol>
+<div class="ait-stats">
+<div><b><em>5</em>개</b><span>귀찮은 순간</span></div>
+<div><b><em>5</em>분</b><span>툴마다 첫 시도</span></div>
+<div><b><em>1</em>개</b><span>이번 주에 고를 툴</span></div>
+</div>
+
+</section>
+
+<section class="ait-sec" id="t1">
+<p class="ait-label">01 | 챗GPT 워크</p>
+<h2>Chat 말고 Work로 바꿔 보세요</h2>
+<p class="ait-hook">시험 기간마다 학교별 시험일정 공지를 하나씩 보면서 보강표를 짜고, 그 표를 보며 안내 문구를 또 쓰셨죠. 이제 캡처와 명단만 올리면 보강표 파일과 안내문까지 한 번에 받아 볼 수 있어요.</p>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/01-chatgpt-work.webp" alt="챗GPT Work에서 학교별 직전보강 안내 표와 파일이 만들어지는 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 실제 화면 구성은 조금 다를 수 있어요.</p>
+<div class="ait-sum"><span class="s-h">한 장으로 보면</span><p>위쪽 버튼을 Chat에서 Work로 누르면<br />대답 대신 완성 파일을 만들어 줘요<br />보강표 엑셀, 안내문까지 한 번에요</p></div>
+<h3>왜 이 툴부터일까요</h3>
+<p>챗GPT를 쓰는 원장님은 많지만, 대부분 "문장 하나 써 줘"에서 멈춰요. 답을 받아 엑셀에 옮기고 표로 다시 만드는 건 여전히 원장님 몫이었죠. 2026년 7월에 나온 <strong>ChatGPT Work</strong>는 한 걸음 더 나갑니다. 화면 위쪽 버튼을 Chat에서 Work로 바꾸면, 챗GPT가 여러 단계를 거쳐 <strong>표, 문서, 슬라이드 같은 완성 파일</strong>까지 만들어 줘요.</p>
+<h3>준비물</h3>
+<div class="ait-prep">
+<div><span class="p-h">요금제</span><p>Plus(월 $20) 이상을 추천합니다.</p><p class="p-sub">무료, Go 요금제에서 어디까지 되는지는 안내가 엇갈려요. 원화 결제 금액도 공식 요금 페이지에서 확인해 주세요.</p></div>
+<div><span class="p-h">설치할 앱</span><p>없어도 됩니다. chatgpt.com에서 바로 써요.</p><p class="p-sub">챗GPT 데스크톱 앱이 있으면 전환 버튼이 더 잘 보여요.</p></div>
+<div><span class="p-h">필요한 파일</span><p>학교별 시험일정 공지 캡처, 학생 번호와 학교만 남긴 명단 엑셀</p><p class="p-sub">이름과 연락처 열은 지운 복사본으로요.</p></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">9단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li>chatgpt.com 또는 챗GPT 앱에 로그인합니다.</li>
+<li>화면 위쪽의 전환 버튼에서 <span class="ui">Chat</span> 대신 <span class="ui">Work</span>를 누릅니다. 데스크톱 앱은 위쪽 가운데 버튼, 모바일 앱은 위쪽 드롭다운에서 고르는 방식이에요.</li>
+<li>명단 엑셀의 복사본을 만들고 이름, 연락처 열을 지웁니다. 학생 번호, 학교, 학년, 반만 남기면 충분합니다.</li>
+<li>입력창 왼쪽의 <span class="ui">+</span> 버튼을 눌러 시험일정 공지 캡처와 명단 엑셀을 올립니다. 캡처는 학교별로 한 장씩 나눠 올리면 더 정확하게 읽어요.</li>
+<li>아래 <b>기본 프롬프트</b>를 붙여 넣고 보냅니다.</li>
+<li>Work가 작업 계획과 진행 상황을 화면에 보여 줍니다. "두 학교 보강 시간이 겹치는데 어떻게 할까요?"처럼 되물으면 답해 주세요.</li>
+<li>완성된 파일이 대화창에 파일로 나오면 눌러서 내려받습니다. 엑셀(xlsx)로 바로 받아지는지는 처음 한 번 확인해 두세요.</li>
+<li>보강표의 시험일을 원본 공지와 한 번 대조합니다. "확인 필요"로 표시된 칸은 직접 채워요.</li>
+<li>안내 문구의 {이름} 자리를 채워, 쓰시던 문자나 알림톡 프로그램으로 보냅니다.</li>
+</ol>
+</div>
+</details>
+</div>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>보강표까지 가지 않아도 괜찮아요. 이번 달 휴원일과 보강 일정을 적어 주고 학부모님 안내문 한 장만 Work로 만들어 보세요.</p>
+<div class="ait-prompt">이번 달 휴원일은 10월 9일(목), 보강은 10월 11일(토) 오후 2시야. 학부모님께 보낼 휴원 및 보강 안내문을 A4 한 장 문서로 만들어 줘. 인사, 휴원 날짜, 보강 일정, 문의 방법 순서로, 존댓말로 짧게 써 줘.</div>
+</div>
+<h3>복붙 프롬프트</h3>
+<p class="ait-ph"><b>기본</b> 중간고사 직전보강 안내 세트</p>
+<div class="ait-prompt">첨부한 시험일정 공지와 수강생 명단으로 중간고사 직전보강 안내 자료를 만들어 줘.
+1) 엑셀 시트1 '보강표': 학교별 시험일, 주말보강(시험 전 토요일 14:00-17:00), 직전보강(시험 전날 18:00-21:00)
+2) 엑셀 시트2 '안내문구': 명단의 학생 번호마다 한 줄씩, 그 학생 학교의 보강 날짜가 들어간 90자 안쪽 문자 문구. 이름 자리는 {이름}으로 비워 둘 것
+3) 문서 '학교별 안내문': 학교별로 따로 보낼 300자 안쪽 안내문
+준비물: 학교 프린트, 교과서, 오답노트. 결석 시 하루 전 연락 부탁 문구 포함.
+시험일을 읽기 어려운 학교는 추측하지 말고 '확인 필요'로 표시해 줘.</div>
+<p class="ait-ph"><b>응용</b> 월초 반별 시간표와 학부모 안내문</p>
+<div class="ait-prompt">첨부한 10월 수업 일정표 엑셀로 반별 월간 시간표를 엑셀 파일로 만들어 줘.
+휴원일(10월 3일, 10월 9일)은 회색으로 칠하고, 그날 수업은 보강 날짜 후보 2개를 옆 칸에 적어 줘.
+시간표와 별도로 학부모님께 보낼 10월 안내문을 A4 한 장 문서로 만들어 줘. 휴원일, 보강 일정, 문의 방법 순서로.</div>
+<h3>이렇게도 써 보세요</h3>
+<div class="ait-uses">
+<div class="use"><span class="u-when">시험 기간</span><span class="u-title">학교별 직전보강 안내</span><p>학교마다 시험일이 달라 보강표를 따로 짜는 일이에요. 위 기본 프롬프트 그대로 쓰시면 됩니다.</p><div class="ait-prompt">학교별 시험일로 주말보강, 직전보강 표와 학생 번호별 안내 문구를 엑셀로 만들어 줘.</div></div>
+<div class="use"><span class="u-when">월초</span><span class="u-title">휴원일 반영한 반별 시간표</span><p>일정표 엑셀 하나로 시간표 파일과 안내문을 같이 받아요.</p><div class="ait-prompt">휴원일 반영해서 반별 월간 시간표 엑셀과 학부모 안내문 만들어 줘.</div></div>
+<div class="use"><span class="u-when">설명회 준비</span><span class="u-title">작년 자료를 올해 일정으로</span><p>작년 설명회 안내문이나 자료를 올리고 날짜와 장소만 새로 알려 주세요.</p><div class="ait-prompt">첨부한 작년 설명회 안내문을 올해 일정(11월 15일 토 오전 10시, 본원 3층)으로 바꾼 안내문 한 장으로 만들어 줘.</div></div>
+<div class="use"><span class="u-when">시험 끝난 뒤</span><span class="u-title">반 전체 오답 정리표<span class="ait-tag">제안</span></span><p>학생 번호만 남긴 채점 엑셀로 문항별 정답률을 보고, 학부모님께 드릴 반 전체 안내를 만들어요.</p><div class="ait-prompt">채점 엑셀로 문항별 정답률 표를 만들고, 정답률 낮은 문항 3개로 다음 주 보완 수업 안내문을 써 줘.</div></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>위쪽에 Work 버튼이 안 보여요</dt>
+<dd>요금제부터 확인해 주세요. Plus 이상에서 쓰는 걸 기준으로 안내드렸어요. 앱을 최신 버전으로 업데이트하고, 휴대폰이라면 위쪽 드롭다운을 눌러 Work가 있는지 봅니다.</dd>
+<dt>캡처 속 시험일을 잘못 읽었어요</dt>
+<dd>캡처를 학교별로 한 장씩 나눠 올리고, 프롬프트에 "읽기 어려우면 추측하지 말고 확인 필요로 표시"를 꼭 넣어 주세요. 공지 글을 복사할 수 있다면 캡처 대신 글을 붙여 넣는 게 가장 정확합니다.</dd>
+<dt>파일이 아니라 대화창에 표로만 답해요</dt>
+<dd>위쪽 버튼이 Work로 바뀌어 있는지 먼저 봅니다. 그다음 "엑셀 파일로 만들어서 내려받을 수 있게 해 줘"라고 한 줄 더 보내 보세요.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span><span class="c">개인정보, 발송</span></summary>
+<div class="a-body">
+<ul>
+<li>Work는 <strong>문자를 대신 보내 주지 않아요.</strong> 발송은 쓰시던 문자, 알림톡 프로그램으로 직접 하세요.</li>
+<li>명단에는 학생 번호, 학교, 학년, 반만 남기고 이름과 연락처는 지운 뒤 올립니다.</li>
+<li>보강 날짜와 시간은 보내기 전에 원장님이 한 번 더 확인해 주세요. AI가 만든 표는 초안입니다.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t2">
+<p class="ait-label">02 | 클로드 코워크</p>
+<h2>내 컴퓨터에 들어오는 나만의 비서</h2>
+<p class="ait-hook">월말마다 출결 엑셀과 성적 엑셀 수십 개를 번갈아 열면서 리포트카드 만드느라 밤 11시를 넘기셨죠. 퇴근 전에 폴더째 맡겨 두고, 다음 날 아침엔 확인만 하는 흐름으로 바꿀 수 있어요.</p>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/02-claude-cowork.webp" alt="클로드 코워크가 리포트카드 파일을 폴더에 만들어 둔 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 결과 파일 형식은 요청과 환경에 따라 달라질 수 있어요.</p>
+<div class="ait-sum"><span class="s-h">한 장으로 보면</span><p>컴퓨터 속 출결, 성적 파일을<br />퇴근 전에 맡겨 두고 퇴근하시면<br />아침엔 공유할 리포트카드가 완성돼요</p></div>
+<h3>왜 이 툴부터일까요</h3>
+<p>AI에게 엑셀을 맡기려면 보통 파일을 하나씩 올리고, 결과를 내려받고, 다시 폴더에 정리해야 해요. 클로드의 <strong>코워크(Cowork)</strong>는 반대로 AI가 <strong>내 컴퓨터 폴더에 직접 들어와</strong> 일합니다. 원장님이 허락한 폴더 안에서 출결, 성적 파일을 열어 보고, 결과 파일을 그 폴더에 저장해 둬요.</p>
+<h3>준비물</h3>
+<div class="ait-prep">
+<div><span class="p-h">요금제</span><p>유료 요금제에서만 됩니다. Pro 월 $20(연 결제 시 월 $17)부터예요.</p><p class="p-sub">무료 요금제에서는 쓸 수 없어요. 원화 결제 금액은 결제 화면에서 확인해 주세요.</p></div>
+<div><span class="p-h">설치할 앱</span><p>클로드 데스크톱 앱(맥, 윈도우)</p><p class="p-sub">claude.com/download 에서 받습니다.</p></div>
+<div><span class="p-h">필요한 파일</span><p>출결, 성적, 과제 엑셀의 복사본을 모은 폴더 하나</p><p class="p-sub">학생 이름은 번호로 바꾸고, 연락처와 상담 메모는 빼 둡니다.</p></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">10단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li>claude.com/download 에서 맥 또는 윈도우용 데스크톱 앱을 설치하고, 유료 요금제 계정으로 로그인합니다.</li>
+<li>바탕화면에 <span class="ui">리포트카드_작업</span> 폴더를 새로 만들고, 출결, 성적, 과제 엑셀의 <strong>복사본</strong>을 넣습니다. 원본 폴더는 연결하지 않아요.</li>
+<li>복사본 엑셀에서 학생 이름 열을 번호로 바꾸고, 연락처와 상담 메모 열은 지웁니다. 파일마다 학생 번호 열 이름을 똑같이 맞춰 두면 합칠 때 실수가 줄어요.</li>
+<li>앱 화면에서 <span class="ui">Cowork</span>를 고릅니다. 앱 버전에 따라 위쪽 탭이나 왼쪽 메뉴에 있어요.</li>
+<li>입력창 근처의 폴더 선택 버튼을 눌러 <span class="ui">리포트카드_작업</span> 폴더를 연결합니다. 폴더 접근을 허락할지 묻는 창이 뜨면 허락해 주세요.</li>
+<li>퇴근 전에 아래 <b>기본 프롬프트</b>를 붙여 넣고 보냅니다. 처음 몇 번은 코워크가 보여 주는 작업 계획을 읽어 보고 승인하는 방식으로 써 보세요.</li>
+<li>컴퓨터가 잠자기로 들어가지 않게 전원 설정을 확인합니다. 맥은 시스템 설정의 배터리 또는 에너지 메뉴, 윈도우는 설정 &gt; 시스템 &gt; 전원에서 바꿀 수 있어요.</li>
+<li><strong>학원 컴퓨터와 클로드 앱은 켜 둔 채로</strong> 퇴근합니다. 코워크는 앱이 열려 있을 때만 폴더에서 일해요.</li>
+<li>다음 날 아침 <span class="ui">리포트카드_10월</span> 폴더를 열고, 학생 2~3명만 원본 엑셀과 숫자를 대조합니다.</li>
+<li>선생님 코멘트 칸을 채운 뒤, 쓰시던 문자나 알림톡 프로그램으로 학부모님께 공유합니다.</li>
+</ol>
+</div>
+</details>
+</div>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>리포트카드 전에, "최종", "최종2", "진짜최종"이 쌓인 자료 폴더 하나를 정리시켜 보세요. 코워크가 내 폴더 안에서 어떻게 일하는지 가장 빨리 감이 옵니다.</p>
+<div class="ait-prompt">이 폴더 안 파일을 학년과 과목별 하위 폴더로 나눠 정리해 줘. 옮기기 전에 어떻게 나눌지 목록부터 보여 주고, 내가 좋다고 하면 그때 옮겨 줘. 파일은 하나도 지우지 마.</div>
+</div>
+<h3>복붙 프롬프트</h3>
+<p class="ait-ph"><b>기본</b> 월말 학생별 리포트카드</p>
+<div class="ait-prompt">연결한 폴더의 출결_10월.xlsx, 성적_중간고사.xlsx, 과제기록.xlsx로
+학생 번호마다 10월 리포트카드를 한 장씩 만들어서 '리포트카드_10월' 폴더에 저장해 줘.
+한 장에 넣을 것: 출석률, 과목별 성적 막대그래프, 과제 제출률, 선생님 코멘트 칸(비워 둘 것)
+학생 이름 자리는 {이름}으로 비워 두고, 엑셀에 없는 숫자나 평가는 지어내지 마.
+파일을 옮기거나 지우기 전에는 먼저 물어봐 줘.
+끝나면 만든 파일 목록과 숫자가 비어 있는 학생 번호를 알려 줘.</div>
+<p class="ait-ph"><b>응용</b> 상담 대상 학생 추리기</p>
+<div class="ait-prompt">연결한 폴더의 출결, 과제 엑셀을 학생 번호 기준으로 합쳐 줘.
+출석률 80% 미만이거나 과제 제출률 70% 미만인 학생 번호를 표로 뽑아 '상담대상_10월.xlsx'로 저장해 줘.
+표에는 학생 번호, 출석률, 과제 제출률, 지난달 대비 변화를 넣고, 원본 파일은 고치지 마.</div>
+<h3>이렇게도 써 보세요</h3>
+<div class="ait-uses">
+<div class="use"><span class="u-when">월말</span><span class="u-title">학생별 리포트카드</span><p>위 기본 프롬프트 그대로예요. 퇴근 전에 맡기고 아침엔 확인만 하세요.</p><div class="ait-prompt">학생 번호마다 10월 리포트카드를 만들어 '리포트카드_10월' 폴더에 저장해 줘.</div></div>
+<div class="use"><span class="u-when">상담 주간 전</span><span class="u-title">상담 대상 추리기</span><p>출석률과 과제 제출률로 먼저 챙길 학생을 뽑아 둡니다.</p><div class="ait-prompt">출석률 80% 미만이거나 과제 제출률 70% 미만인 학생 번호를 표로 뽑아 '상담대상' 파일로 저장해 줘.</div></div>
+<div class="use"><span class="u-when">학기 초</span><span class="u-title">쌓인 자료 폴더 정리</span><p>"최종", "최종2"가 쌓인 폴더를 학년, 과목, 학교 순서로 나눠요.</p><div class="ait-prompt">'학원자료_복사본' 폴더를 학년 &gt; 과목 &gt; 학교 순서로 정리해 줘. 옮기기 전에 계획부터 보여 줘.</div></div>
+<div class="use"><span class="u-when">시험 기간 이벤트</span><span class="u-title">자습실 출석 기록으로 추첨 명단</span><p>시험 기간에 자습실을 열고, 출석한 학생 중에서 추첨해 장학금을 주는 학원들이 있어요. 출석 기록 엑셀로 대상 명단을 뽑아 둡니다.</p><div class="ait-prompt">자습실 출석 기록 엑셀에서 시험 기간 5회 이상 출석한 학생 번호만 추첨 대상 명단으로 저장해 줘.</div></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>Cowork 메뉴가 안 보여요</dt>
+<dd>무료 요금제에서는 나오지 않아요. 유료 요금제로 로그인했는지, 데스크톱 앱이 최신 버전인지 확인해 주세요. 내 컴퓨터 폴더를 쓰는 작업은 데스크톱 앱에서 하셔야 합니다.</dd>
+<dt>아침에 보니 작업이 중간에 멈춰 있어요</dt>
+<dd>세 가지 중 하나일 때가 많아요. 컴퓨터가 잠자기로 들어갔거나, 앱이 닫혔거나, 코워크가 승인 질문을 띄워 놓고 기다리는 경우입니다. 전원 설정을 바꾸고, 프롬프트 끝에 "중간에 멈추지 말고 끝까지 하고, 애매한 건 마지막에 목록으로 알려 줘"를 붙여 보세요. 파일을 옮기거나 지우는 작업만은 계속 먼저 묻게 두는 게 안전합니다.</dd>
+<dt>리포트카드 숫자가 원본과 달라요</dt>
+<dd>파일마다 학생 번호 열 이름이 다르면 잘못 합쳐질 수 있어요. 열 이름을 통일하고, 프롬프트에 "학생 번호 열을 기준으로 합쳐 줘"라고 적어 주세요. 첫 달은 꼭 2~3명을 원본과 대조합니다.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span><span class="c">폴더 범위, 파일 형식</span></summary>
+<div class="a-body">
+<ul>
+<li>폴더를 연결하면 그 안의 파일은 전부 클로드가 볼 수 있어요. 학생 연락처, 상담 메모가 든 파일은 <strong>폴더에서 빼고</strong> 연결하세요.</li>
+<li>리포트카드를 PDF로 받을지 엑셀로 받을지는 첫 달에 한 장만 먼저 만들어 보고 정하시는 걸 권해 드려요.</li>
+<li>처음에는 작업마다 승인하는 방식으로 쓰고, 익숙해진 뒤에 맡기는 범위를 넓힙니다.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t3">
+<p class="ait-label">03 | 젠스파크 AI 슬라이드</p>
+<h2>새 AI로 수업 PPT 제작</h2>
+<p class="ait-hook">슬라이드로 보여 주면 아이들이 더 잘 따라올 것 같은데, 단원마다 PPT를 만들 시간이 없어 판서와 프린트로 버티고 계셨다면요. 교재 해당 쪽과 수업 흐름만 알려 주면 수업용 슬라이드 초안이 바로 나와요.</p>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/03-genspark-slides.webp" alt="젠스파크 AI 슬라이드가 슬라이드 구성안을 만든 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 슬라이드 구성은 요청한 수업 흐름에 따라 달라집니다.</p>
+<div class="ait-sum"><span class="s-h">한 장으로 보면</span><p>커리큘럼, 수업 내용, 문제집 PDF만<br />올리면 수업용 슬라이드가 바로 나와요<br />더 생동감 있고 체계적인 수업이 돼요</p></div>
+<h3>왜 이 툴부터일까요</h3>
+<p>젠스파크 <strong>AI 슬라이드</strong>는 커리큘럼, 수업 내용, 문제집 내용을 올리면 <strong>수업용 슬라이드를 바로</strong> 만들어 줍니다. 9월에는 슬라이드 전용으로 새로 학습한 AI 모델(Gen-1 Slides)이 기본으로 들어갔어요. 슬라이드 수업은 학원마다 맞는 정도가 달라서, 여기 적은 활용법은 한 반에서 먼저 시험해 보시라는 <strong>제안</strong>으로 읽어 주세요.</p>
+<h3>준비물</h3>
+<div class="ait-prep">
+<div><span class="p-h">요금제</span><p>무료로 시작할 수 있어요. 하루 100 크레딧 안에서 만들고, 브라우저 발표와 링크 공유까지 됩니다.</p><p class="p-sub">PPTX, PDF 내려받기는 유료 요금제예요. 가격과 한 벌에 드는 크레딧은 가입 후 확인해 주세요.</p></div>
+<div><span class="p-h">설치할 앱</span><p>없어요. genspark.ai 에서 브라우저로 씁니다.</p></div>
+<div><span class="p-h">필요한 파일</span><p>커리큘럼, 교재 해당 쪽 PDF</p><p class="p-sub">한글(hwp) 파일은 PDF로 저장하고, 문제집은 해당 쪽만 스캔한 PDF가 가장 확실해요.</p></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">8단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li>genspark.ai 에 가입하고 로그인합니다.</li>
+<li>첫 화면의 기능 목록에서 <span class="ui">AI 슬라이드</span>를 누릅니다. 모드는 기본값 그대로 둬요.</li>
+<li>한글(hwp) 커리큘럼은 한글 프로그램의 PDF 저장으로 바꿔 둡니다. 문제집은 수업할 쪽만 스캔해 PDF 하나로 묶어 주세요.</li>
+<li>입력창의 첨부(클립 모양) 버튼을 누르거나 파일을 입력창에 끌어다 놓습니다. PDF, 워드, 엑셀, 파워포인트 파일을 올릴 수 있어요.</li>
+<li>아래 <b>기본 프롬프트</b>를 붙여 넣고 보냅니다. 복습, 개념, 예제, 확인 문제, 정리처럼 수업 흐름을 적을수록 결과가 안정적입니다.</li>
+<li>슬라이드가 채워지면 글자를 클릭해 바로 고치거나, 입력창에 "3번 장 예제 하나 더"처럼 말로 수정을 요청합니다.</li>
+<li>예제와 확인 문제의 정답은 수업 전에 선생님이 직접 한 번 풀어 확인해 주세요.</li>
+<li>수업 때는 발표(프레젠테이션) 버튼으로 브라우저에서 바로 띄웁니다. 유료 요금제라면 내려받기 메뉴에서 PPTX나 PDF로 받을 수 있어요.</li>
+</ol>
+</div>
+</details>
+</div>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>다음 수업 한 차시만 골라 교재 해당 쪽 PDF를 올리고 아래처럼 요청해 보세요. 쓸지 말지는 결과를 보고 정하셔도 됩니다.</p>
+<div class="ait-prompt">첨부한 교재 쪽으로 중2 수학 50분 수업용 슬라이드 10장을 만들어 줘. 순서는 지난 시간 복습, 오늘 개념, 예제 2개, 확인 문제 3개, 정리야. 한 장에 글은 3줄 이내로, 예제 풀이는 단계별로 나눠 보여 줘.</div>
+</div>
+<h3>복붙 프롬프트</h3>
+<p class="ait-ph"><b>기본</b> 수업용 슬라이드 10장</p>
+<div class="ait-prompt">첨부한 커리큘럼과 교재 쪽수로 중학교 2학년 수학 50분 수업용 슬라이드 10장을 만들어 줘.
+단원: 일차함수 그래프의 기울기
+순서: 지난 시간 복습 1장, 오늘의 목표 1장, 개념 설명 3장(그림, 그래프 중심), 예제 풀이 2장, 확인 문제 2장, 오늘 정리와 숙제 1장
+글자는 크게, 한 장에 핵심 문장 1개, 확인 문제는 정답을 다음 장에 따로 둬.
+교재에 없는 내용은 지어내지 말고 [직접 입력]으로 비워 둬.</div>
+<p class="ait-ph"><b>응용</b> 많이 틀린 문제 풀이 슬라이드</p>
+<div class="ait-prompt">첨부한 문제집 스캔 PDF의 12번, 15번, 18번 문제로 풀이 수업 슬라이드를 만들어 줘.
+문제 하나당 2장씩: 첫 장은 문제와 "어디서부터 막히나" 질문, 둘째 장은 단계별 풀이와 자주 하는 실수 1개.
+교재 풀이와 다른 방법은 쓰지 말고, 풀이가 확실하지 않은 부분은 [확인 필요]로 표시해 줘.</div>
+<h3>이렇게도 써 보세요</h3>
+<div class="ait-uses">
+<div class="use"><span class="u-when">새 단원 첫 수업</span><span class="u-title">개념 도입 슬라이드<span class="ait-tag">제안</span></span><p>커리큘럼 한 장만 올려도 개념 도입 흐름이 나와요.</p><div class="ait-prompt">첨부한 커리큘럼의 이번 주 단원으로 개념 도입 슬라이드 6장을 만들어 줘. 그림 중심으로.</div></div>
+<div class="use"><span class="u-when">시험 전 오답 수업</span><span class="u-title">문제별 풀이 슬라이드<span class="ait-tag">제안</span></span><p>반에서 많이 틀린 문제 쪽을 스캔해 올립니다.</p><div class="ait-prompt">첨부한 문제들로 문제별 풀이 슬라이드를 한 문제당 2장씩 만들어 줘.</div></div>
+<div class="use"><span class="u-when">보강, 대체 강사 수업</span><span class="u-title">수업 흐름 넘겨 드리기<span class="ait-tag">제안</span></span><p>담당 선생님이 없어도 같은 흐름으로 수업할 수 있게 슬라이드로 남겨 둡니다.</p><div class="ait-prompt">이 슬라이드 순서대로 선생님이 말할 설명을 장마다 3줄씩 정리해 줘.</div></div>
+<div class="use"><span class="u-when">학부모 설명회</span><span class="u-title">작년 설명회 자료 새로 정리</span><p>작년 설명회 PPT를 올리고 올해 바뀐 점만 알려 주세요.</p><div class="ait-prompt">첨부한 작년 설명회 자료를 올해 커리큘럼과 일정으로 바꾼 설명회 슬라이드 12장으로 다시 만들어 줘.</div></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>한글(hwp) 파일이 안 올라가요</dt>
+<dd>한글 프로그램에서 PDF로 저장한 뒤 올려 주세요. 올릴 수 있는 파일은 PDF, 워드, 엑셀, 파워포인트입니다.</dd>
+<dt>내려받으려고 하니 결제 화면이 나와요</dt>
+<dd>무료 요금제는 브라우저 발표와 링크 공유까지만 돼요. 수업 때 브라우저로 바로 띄우면 무료로도 쓸 수 있고, 파일로 보관하고 싶을 때만 유료로 올리시면 됩니다.</dd>
+<dt>풀이나 수식이 틀리게 나와요</dt>
+<dd>AI가 풀이 과정을 틀리게 쓸 수 있어요. "교재 풀이대로만 써 줘"를 프롬프트에 넣고, 틀린 장은 "5번 장 풀이를 교재 풀이대로 고쳐 줘"처럼 장 번호를 짚어 고칩니다. 수업 전에 선생님이 한 번 풀어 보는 단계는 빼지 마세요.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span><span class="c">저작권, 정확도</span></summary>
+<div class="a-body">
+<ul>
+<li>문제집 내용을 슬라이드로 옮겨 <strong>원내 수업에 쓰는 것</strong>과, 그 슬라이드를 외부에 공개하거나 배포하는 건 다릅니다. 출판사 저작권이 있으니 공유 링크는 학원 밖으로 돌리지 마세요.</li>
+<li>문제집 사진(이미지)만 올려서 슬라이드가 잘 되는지는 아직 확인하지 못했어요. 지금은 PDF(스캔본)로 올리시는 걸 권해 드려요.</li>
+<li>수식과 도형 표현 품질은 과목마다 다를 수 있으니, 첫 수업은 한 반에서만 써 보세요.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t4">
+<p class="ait-label">04 | 미리캔버스 템플릿</p>
+<h2>GPT 느낌 싫다면 템플릿으로</h2>
+<p class="ait-hook">특강 모집 공지를 챗GPT 이미지로 만들었는데, 한눈에 "AI가 만든 것 같다"는 느낌이 들어 올리기 망설여지셨죠. 디자이너가 만든 템플릿에 글자만 바꾸면, 학부모님께 보여도 믿음 가는 홍보물이 금방 나와요.</p>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/04-miricanvas.webp" alt="미리캔버스에서 특강 안내 템플릿을 편집하고 PDF로 내려받는 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 실제 템플릿과 메뉴 위치는 다를 수 있어요.</p>
+<div class="ait-sum"><span class="s-h">한 장으로 보면</span><p>학원 홍보 카드뉴스와 포스터는<br />템플릿을 골라 빠르게 만들어요<br />문구 손질은 AI 미리클에 맡겨요</p></div>
+<h3>왜 이 툴부터일까요</h3>
+<p>학부모님께 보이는 홍보물은 신뢰가 중요하죠. <strong>미리캔버스</strong>는 디자이너가 만든 한국형 템플릿이 많아서, 템플릿을 고르고 글자만 바꾸면 AI 티가 덜 나는 카드뉴스와 포스터를 빠르게 만들 수 있습니다.</p>
+<p><strong>미리클은 뭔가요?</strong> 미리캔버스가 2025년 4월에 내놓은 AI 기능 묶음 이름이에요. 편집 화면 안에서 <strong>AI 라이팅</strong>으로 문구를 쓰고 다듬고, <strong>AI 이미지 편집</strong>으로 배경을 지우거나 화질을 높일 수 있습니다. 채팅하듯 디자인 전체를 고쳐 주는지까지는 확인하지 못해서, 이 글에서는 디자인은 템플릿으로 잡고 문구와 이미지 손질만 미리클에게 맡기는 조합으로 안내해요.</p>
+<h3>준비물</h3>
+<div class="ait-prep">
+<div><span class="p-h">요금제</span><p>무료로 시작합니다. 왕관 표시 없는 템플릿과 요소는 무료예요.</p><p class="p-sub">미리클 AI는 무료에서 사용 횟수 제한이 있고, Pro에서는 제한 없이 씁니다. 현재 Pro 가격은 요금제 페이지에서 확인해 주세요.</p></div>
+<div><span class="p-h">설치할 앱</span><p>없어요. miricanvas.com 에서 브라우저로 씁니다.</p></div>
+<div><span class="p-h">필요한 파일</span><p>학원 로고, 학원이나 수업 사진, 특강 이름과 일정, 대상, 상담 방법 문구</p><p class="p-sub">학생 얼굴 사진은 학부모님 동의를 받은 것만요.</p></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">9단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li>miricanvas.com 에 학원 업무용 이메일로 가입합니다.</li>
+<li>첫 화면 검색창에 "학원 홍보", "학원 모집", "특강 모집", "카드뉴스"처럼 용도를 검색합니다.</li>
+<li>크기를 먼저 고릅니다. 인스타 카드뉴스는 정사각형이나 세로형, 원내 포스터는 A4나 A3가 맞아요.</li>
+<li>썸네일에 <strong>왕관 표시가 없는</strong> 템플릿을 고르면 무료로 끝까지 쓸 수 있습니다.</li>
+<li>편집 화면에서 학원 이름, 전화번호, 일정 글자를 더블클릭해 바꿉니다.</li>
+<li>왼쪽 메뉴의 <span class="ui">업로드</span>에서 학원 로고와 사진을 올리고, 템플릿의 사진 자리에 끌어다 놓습니다.</li>
+<li>문구 칸을 선택하고 미리클 <span class="ui">AI 라이팅</span>을 엽니다. 글자 도구 막대나 왼쪽 AI 메뉴에 있는데, 위치는 버전에 따라 다를 수 있어요. 아래 <b>기본 요청</b>을 넣어 제목을 다듬습니다.</li>
+<li>카드뉴스라면 페이지를 복제해 같은 디자인으로 2장, 3장을 이어서 만듭니다.</li>
+<li>오른쪽 위 <span class="ui">다운로드</span>를 눌러 카드뉴스는 PNG, 포스터는 PDF로 받습니다. 인쇄할 포스터는 인쇄용 PDF 옵션이 보이면 그걸 고르세요.</li>
+</ol>
+</div>
+</details>
+</div>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>템플릿 하나만 열고, 제목 칸에서 AI 라이팅에 아래 문장을 넣어 보세요. 마음에 드는 제목 하나만 건져도 이번 주 홍보물은 절반 끝난 셈이에요.</p>
+<div class="ait-prompt">중등 수학 겨울방학 특강 모집 카드뉴스 제목을 15자 안쪽으로 3개 써 줘. 과장 표현 없이, 학부모님이 믿을 수 있는 차분한 말투로.</div>
+</div>
+<h3>복붙 요청(미리클 AI 라이팅)</h3>
+<p class="ait-ph"><b>기본</b> 포스터 제목 다시 쓰기</p>
+<div class="ait-prompt">학원 홍보 포스터 제목이야. 학부모님이 한눈에 읽게 15자 안쪽으로 3개 다시 써 줘.
+과장 광고 표현, 합격률 같은 숫자는 빼 줘.
+원래 문구: 겨울방학 특강 모집합니다 예비 고1 수학</div>
+<p class="ait-ph"><b>응용</b> 카드뉴스 본문 줄이기</p>
+<div class="ait-prompt">이 카드뉴스 본문을 두 줄로 줄이고 부드러운 존댓말로 바꿔 줘.
+원래 문구: 저희 학원은 소수정예로 학생 한 명 한 명을 꼼꼼하게 관리하며 개념부터 심화까지 체계적으로 지도합니다</div>
+<h3>이렇게도 써 보세요</h3>
+<div class="ait-uses">
+<div class="use"><span class="u-when">특강 모집</span><span class="u-title">인스타 홍보 카드뉴스 4장</span><p>표지(특강 이름), 이런 학생에게 필요해요, 일정과 대상, 상담 신청 방법 순서로 한 템플릿에서 이어 만들어요.</p><div class="ait-prompt">겨울방학 특강 카드뉴스 4장 문구를 표지, 필요한 학생, 일정과 대상, 상담 방법 순서로 써 줘.</div></div>
+<div class="use"><span class="u-when">원내, 건물 게시판</span><span class="u-title">신규 반 개설 포스터</span><p>A4, A3 포스터 템플릿에서 반 이름과 시간표만 바꿉니다.</p><div class="ait-prompt">예비 중1 신규 반 개설 포스터 부제목을 20자 안쪽으로 3개 써 줘. 차분한 말투로.</div></div>
+<div class="use"><span class="u-when">온라인 노출</span><span class="u-title">네이버 플레이스, 블로그 대표 이미지</span><p>만들어 둔 카드뉴스 표지를 복제해 크기만 바꿔 한 번 더 씁니다. 크기 조정 메뉴는 요금제에 따라 다를 수 있어요.</p><div class="ait-prompt">이 제목을 블로그 대표 이미지용으로 12자 안쪽 한 줄로 줄여 줘.</div></div>
+<div class="use"><span class="u-when">시험 기간</span><span class="u-title">간식 DAY, 자습실 개방 안내</span><p>시험 기간 간식 이벤트나 자습실 개방 안내를 원내 포스터와 카드뉴스로 같이 만들어요.</p><div class="ait-prompt">시험 기간 자습실 개방과 간식 DAY 안내 포스터 제목을 15자 안쪽으로 3개 써 줘. 밝은 말투로.</div></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>다운로드하려니 결제하라고 나와요</dt>
+<dd>왕관 표시가 있는 요소나 템플릿이 들어간 경우예요. 그 요소를 찾아 빼거나 무료 요소로 바꾸면 내려받을 수 있고, 계속 쓰실 거라면 Pro가 필요합니다.</dd>
+<dt>AI 라이팅 버튼을 못 찾겠어요</dt>
+<dd>먼저 글자 상자를 한 번 클릭해 선택해 주세요. 글자 도구 막대나 왼쪽 AI 메뉴에서 찾을 수 있어요. 무료 요금제는 사용 횟수가 정해져 있어서, 횟수를 다 쓰면 버튼이 막힐 수 있습니다.</dd>
+<dt>포스터를 인쇄하니 흐리게 나와요</dt>
+<dd>화면용 PNG 대신 PDF로 받아 주세요. 인쇄용 옵션이 보이면 그걸 고르고, 올린 사진이 너무 작지 않은지도 확인합니다. 대량 인쇄는 같은 회사의 비즈하우스로 주문할 수 있어요.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span><span class="c">저작권, 사진, 수강료</span></summary>
+<div class="a-body">
+<ul>
+<li>미리캔버스 템플릿과 요소로 만든 디자인은 홍보물로 게시하고 인쇄해도 됩니다. 다만 요소를 <strong>다른 툴로 가져가 편집하면</strong> 저작권 문제가 생길 수 있으니 미리캔버스 편집기 안에서 편집하세요.</li>
+<li>학생 얼굴 사진은 학부모님 동의를 먼저 받으세요.</li>
+<li>수강료를 적는다면 교육청에 신고한 금액과 같은지 확인하세요.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t5">
+<p class="ait-label">05 | 티로 수업 녹음</p>
+<h2>학원 데이터화는 수업 녹음부터</h2>
+<p class="ait-hook">금요일 퇴근 직전, 이번 주에 무엇을 가르쳤고 아이들이 어디서 막혔는지 떠올리며 주간 리포트를 다시 쓰고 계셨다면요. 수업을 녹음해 두기만 하면 수업일지, 주간 리포트, 상담 자료가 모두 같은 기록 하나에서 나와요.</p>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/05-tiro.webp" alt="티로로 수업을 녹음해 데일리 수업일지와 학부모 안내 문구가 만들어지는 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 알림톡 발송은 별도 설정이 필요합니다.</p>
+<div class="ait-sum"><span class="s-h">한 장으로 보면</span><p>회의 녹음처럼 수업을 받아 적는 앱이에요<br />노션, 클로드와 이으면 위클리 리포트까지<br />수업일지 알림톡 자동 발송도 만들 수 있어요</p></div>
+<h3>왜 이 툴부터일까요</h3>
+<p>티로는 회의를 녹음하면 실시간으로 받아 적고 회의록까지 만들어 주는 AI 녹음 앱이에요. 이걸 수업에 쓰면 이야기가 달라집니다.</p>
+<p>학원 데이터화라고 하면 출결과 성적부터 떠올리지만, 정작 <strong>수업에서 무엇을 가르쳤고 아이들이 어디서 막혔는지</strong>는 선생님 머릿속에만 남아요. 이 기록이 없으면 수업일지도, 주간 리포트도, 학부모님 상담도 매번 기억에 기대어 새로 써야 합니다. 학원 데이터화의 시작이 결국 수업 녹음인 이유예요.</p>
+<ol class="ait-flow">
+<li>수업 녹음(티로)</li>
+<li>노션 수업일지</li>
+<li>클로드</li>
+<li>위클리 리포트</li>
+<li class="opt">솔라피 알림톡(선택)</li>
+</ol>
+<h3>준비물</h3>
+<div class="ait-prep">
+<div><span class="p-h">요금제</span><p>티로는 가입 후 3주 무료 체험(최대 300분, 노트당 50분)이고, 이후 Lite 월 8,900원부터예요.</p><p class="p-sub">나만의 템플릿은 Lite부터. 노션은 개인 무료로 시작하고, 클로드 노션 커넥터가 무료에서 되는지는 연결 화면에서 확인해 주세요.</p></div>
+<div><span class="p-h">설치할 앱</span><p>티로 휴대폰 앱(녹음), 티로 웹이나 데스크톱 앱(노션 보내기), 노션, 클로드</p></div>
+<div><span class="p-h">필요한 것</span><p>수업 녹음 안내 공지, 노션 "수업일지" 데이터베이스</p><p class="p-sub">알림톡까지 가려면 학원 카카오톡 채널(비즈니스 인증)과 솔라피 계정이 필요해요.</p></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">10단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li class="stage">녹음과 데일리 수업일지(티로)</li>
+<li>tiro.ooo 에 가입하고 휴대폰에 티로 앱을 설치합니다. 교실에 노트북이 없으면 휴대폰 앱이 편해요.</li>
+<li>나만의 템플릿에 <b>데일리 수업일지</b> 양식을 만들어 둡니다(아래 기본 프롬프트). 나만의 템플릿은 Lite 요금제부터 쓸 수 있어요.</li>
+<li>수업을 시작할 때 녹음 버튼을 누르고, 끝나면 기록을 종료합니다. 요약과 함께 수업일지 문서가 만들어집니다.</li>
+<li class="stage">수업일지를 노션으로 보내기</li>
+<li>노션에 <span class="ui">수업일지</span> 데이터베이스를 하나 만듭니다. 속성은 날짜, 반, 선생님 정도면 충분해요.</li>
+<li>티로 <strong>웹이나 데스크톱 앱</strong>에서 노트를 열고 <span class="ui">공유하기</span> &#8594; <span class="ui">Notion</span>을 누릅니다. 처음 한 번은 노션 계정으로 로그인해 연동해요. 설정 &gt; 연동 관리에서 미리 해 둘 수도 있습니다.</li>
+<li>보낼 곳으로 수업일지 데이터베이스를 고르면 새 항목으로 들어갑니다. 보낼 내용에서 요약과 수업일지 문서를 체크해 주세요.</li>
+<li class="stage">노션과 클로드로 위클리 리포트</li>
+<li>claude.ai 또는 클로드 앱에서 설정 &gt; <span class="ui">커넥터</span>로 들어가 <span class="ui">Notion</span>을 연결하고, 수업일지 데이터베이스가 있는 페이지에 접근을 허락합니다.</li>
+<li>새 대화의 입력창 <span class="ui">+</span> &gt; 커넥터에서 Notion이 켜져 있는지 확인합니다.</li>
+<li>금요일 수업이 끝나면 아래 <b>응용 프롬프트</b>(위클리 리포트)를 붙여 넣습니다.</li>
+<li>노션에 저장된 위클리 리포트를 읽어 보고, 비어 있는 요일이 없는지 확인한 뒤 학부모님께 공유합니다.</li>
+</ol>
+<p class="ait-note">티로에서 노션으로 기록이 끝날 때마다 자동으로 보내는 설정은 2026년 9월 말 티로 안내 기준으로 새로 만들 수 없어요(자동 전송은 Slack만). 그래서 공유하기 한 번은 직접 눌러 주셔야 합니다. 휴대폰 앱에서는 노션 보내기가 안 되니 웹이나 데스크톱 앱에서 해 주세요.</p>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">지름길: 클로드가 티로 노트를 바로 읽게</span><span class="c">참고</span></summary>
+<div class="a-body">
+<p>노션을 거치지 않고 클로드가 티로 노트를 바로 읽게 연결할 수도 있어요. 클로드 커넥터 화면에서 <span class="ui">Add custom connector</span>를 누르고 이름은 Tiro, 주소는 https://mcp.tiro.ooo/mcp 를 넣은 뒤 티로 계정으로 로그인하면 됩니다.</p>
+<p>그러면 "티로에서 이번 주 중2A 수업 노트로 위클리 리포트 써 줘"라고 바로 요청할 수 있어요. 다만 선생님들과 기록을 함께 쌓고 보기에는 노션이 편합니다.</p>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">솔라피 알림톡 연결</span><span class="c">선택, 설정 필요</span></summary>
+<div class="a-body">
+<p>수업이 끝나면 오늘 진도와 숙제를 학부모님께 알림톡으로 보내는 학원이 많죠. 이 발송을 솔라피(Solapi)로 자동화할 수 있어요. 다만 준비 단계가 있고 설정이 필요해서, 개발을 도와줄 분이 있거나 AI 코딩 도구에 익숙하실 때 권해 드립니다.</p>
+<ol class="ait-steps">
+<li>학원 카카오톡 채널을 비즈니스 인증하고 공개 상태로 둡니다.</li>
+<li>solapi.com 에 가입하고 카카오톡 채널을 연동합니다. 연동 요금은 무료이고, 가입하면 체험 포인트를 줘요.</li>
+<li>알림톡 템플릿을 등록하고 카카오 검수를 받습니다. 알림톡은 미리 승인받은 템플릿으로만 보낼 수 있고, 수업일지 내용은 바뀌는 칸(변수)으로 넣어요.</li>
+<li>처음 한 달은 <b>반자동</b>으로 운영합니다. 클로드가 오늘 수업일지로 변수 표를 만들면, 원장님이 확인하고 솔라피에서 그 템플릿으로 보냅니다.</li>
+</ol>
+<p class="ait-ph"><b>템플릿 예시</b></p>
+<div class="ait-prompt">안녕하세요, #{학원명}입니다.
+#{날짜} #{반} 수업 안내드립니다.
+
+오늘 진도: #{진도}
+숙제: #{숙제}
+다음 수업: #{다음수업}
+
+궁금하신 점은 학원으로 연락 주세요.</div>
+<p class="ait-ph"><b>반자동 프롬프트</b> 클로드에게</p>
+<div class="ait-prompt">노션 '수업일지' 데이터베이스에서 오늘 날짜 항목을 모두 읽어 줘.
+반마다 한 줄씩 알림톡 변수 표를 만들어 줘.
+열: 반, 날짜, 진도(40자 안쪽), 숙제(40자 안쪽), 다음수업(30자 안쪽)
+학생 이름과 개인 평가는 넣지 말고, 수업일지에 없는 내용은 비워 둬.</div>
+<p class="ait-note">이런 수업 안내가 알림톡 검수를 통과하는지, 변수 길이 제한이 얼마인지는 템플릿 등록 화면에서 먼저 받아 보셔야 해요. 완전 자동 발송은 솔라피 API로 "노션에 새 수업일지가 생기면 발송"하는 연결을 따로 만들어야 하고, 노션과 솔라피를 코딩 없이 바로 잇는 기본 기능은 아직 확인하지 못했습니다.</p>
+</div>
+</details>
+</div>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>노션도 클로드도 아직 필요 없어요. 오늘 수업 하나만 녹음하고, 티로 템플릿 칸에 아래 문장을 넣어 수업일지가 어떻게 나오는지 보세요.</p>
+<div class="ait-prompt">이 녹음을 수업일지로 정리해 줘. 항목은 진도, 핵심 개념, 학생들이 자주 틀린 부분, 숙제, 다음 수업 순서로 쓰고, 학생 이름은 빼 줘.</div>
+</div>
+<h3>복붙 프롬프트</h3>
+<p class="ait-ph"><b>기본</b> 티로 나만의 템플릿: 데일리 수업일지</p>
+<div class="ait-prompt">아래 형식으로 정리해 줘.
+반: / 날짜: / 교재와 단원: / 쪽수:
+1. 오늘 진도
+2. 핵심 개념 3줄
+3. 학생들이 자주 틀리거나 질문한 부분
+4. 숙제: 범위와 제출일
+5. 다음 수업 예고
+6. 학부모 안내용 3줄 요약(반 전체 기준, 학생 개인 이름과 평가는 빼고)
+녹음에 없는 내용은 지어내지 말고 비워 둬.</div>
+<p class="ait-ph"><b>응용</b> 클로드에게: 위클리 리포트</p>
+<div class="ait-prompt">노션 '수업일지' 데이터베이스에서 이번 주(월요일부터 금요일까지) 중2A 항목을 모두 읽어 줘.
+그걸로 학부모님께 공유할 '중2A 위클리 리포트'를 써서 노션 '위클리 리포트' 페이지 아래에 새 페이지로 저장해 줘.
+구성:
+1. 이번 주 배운 내용(요일별 한 줄)
+2. 이번 주 핵심 개념 3가지
+3. 반 전체가 어려워한 부분과 다음 주 보완 계획
+4. 숙제 제출 일정
+5. 다음 주 진도 예고
+규칙: 수업일지에 없는 내용은 지어내지 말 것, 학생 개인 이름과 평가는 넣지 말 것, 부드러운 존댓말.
+끝나면 비어 있는 요일이 있었는지 알려 줘.</div>
+<h3>이렇게도 써 보세요</h3>
+<div class="ait-uses">
+<div class="use"><span class="u-when">매일</span><span class="u-title">수업 녹음에서 수업일지까지</span><p>녹음, 수업일지, 노션 보내기까지가 하루 루틴이에요. 노션 보내기는 클릭 한 번입니다.</p><div class="ait-prompt">티로 노트 &gt; 공유하기 &gt; Notion &gt; 수업일지 데이터베이스</div></div>
+<div class="use"><span class="u-when">매주 금요일</span><span class="u-title">반별 위클리 리포트</span><p>일주일 치 수업일지를 클로드가 한 번에 정리합니다.</p><div class="ait-prompt">노션 수업일지에서 이번 주 중2A 항목으로 위클리 리포트를 써서 노션에 저장해 줘.</div></div>
+<div class="use"><span class="u-when">상담 전</span><span class="u-title">이 반이 어려워한 단원 모으기</span><p>기억 대신 기록으로 상담 자료를 준비해요.</p><div class="ait-prompt">노션 수업일지에서 최근 4주 중2A가 어려워한 단원만 모아 줘.</div></div>
+<div class="use"><span class="u-when">선생님 교체, 대강</span><span class="u-title">인수인계를 수업일지로</span><p>지난 수업일지를 그대로 넘겨 드리면 진도와 막힌 부분이 한 번에 전달됩니다.</p><div class="ait-prompt">노션 수업일지에서 중2A 최근 한 달 진도와 숙제를 인수인계 문서 한 장으로 정리해 줘.</div></div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>공유하기를 눌러도 Notion이 안 보여요</dt>
+<dd>휴대폰 앱에서는 노션 보내기가 안 돼요. 티로 웹이나 데스크톱 앱에서 노트를 열어 주세요. 그래도 안 보이면 설정 &gt; 연동 관리에서 노션 연동부터 해 둡니다.</dd>
+<dt>90분 수업이 중간에 끊겼어요</dt>
+<dd>무료 체험은 노트당 50분까지만 기록돼요. 쉬는 시간을 기준으로 두 번 나눠 녹음하거나, 유료 요금제로 올리면 됩니다.</dd>
+<dt>클로드가 노션 수업일지를 못 찾아요</dt>
+<dd>노션을 연결할 때 수업일지 데이터베이스가 있는 페이지에 접근을 허락했는지 확인해 주세요. 입력창 + &gt; 커넥터에서 Notion이 켜져 있는지, 프롬프트 속 데이터베이스 이름이 노션과 똑같은지도 봅니다.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span><span class="c">녹음 안내, 학생 이름, 발송</span></summary>
+<div class="a-body">
+<ul>
+<li>녹음 전에 <strong>녹음한다는 사실을 먼저 알리세요.</strong> 수업 녹음은 학원 공지로 학생과 학부모님께 안내하는 게 안전합니다.</li>
+<li>수업 중 학생 이름이 그대로 기록돼요. 노션과 알림톡으로 넘기기 전에 다른 학생 이름이 섞이지 않았는지 확인하세요.</li>
+<li>알림톡은 잘못 보내면 되돌릴 수 없어요. 처음 한 달은 사람이 한 번 보고 보내는 반자동으로 운영해 보세요.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="common">
+<p class="ait-label">시작하기 전에</p>
+<h2>다섯 툴 모두 공통으로 지킬 것</h2>
+<ul>
+<li>학생 실명, 연락처, 주민번호, 주소, 성적, 상담 내용은 AI에 그대로 넣지 않습니다. 이름은 번호로 바꿔도 결과는 같아요.</li>
+<li>각 서비스 설정의 데이터 메뉴에서 내 대화가 AI 학습에 쓰이는지 확인하고, 원치 않으면 꺼 두세요.</li>
+<li>소개한 기능은 대부분 유료 요금제부터예요. 무료로 2주쯤 써 보고, 매일 여는 툴 하나만 유료로 올리세요.</li>
+<li>클로드 코워크는 학원 컴퓨터와 클로드 앱을 켜 둔 상태에서만 작업합니다. 맡겨 두고 퇴근하실 때 컴퓨터를 끄지 마세요.</li>
+<li>AI가 만든 문장과 숫자는 초안입니다. 날짜, 금액, 학교 이름은 보내기 전에 한 번 더 확인해 주세요.</li>
+</ul>
+<p class="ait-end">다섯 개 중 하나만 이번 주에 써 보셔도 충분합니다. 제일 귀찮았던 일이 하나 줄어들면, 그다음 툴은 훨씬 쉽게 붙어요.</p>
+<div class="callout">
+<p>원장님의 칼퇴도우미는 인스타그램 <a href="https://www.instagram.com/hyunji.crabit/" target="_blank" rel="noopener">@hyunji.crabit</a>에서 매주 수요일에 이어집니다.</p>
+</div>
+<p class="ait-basis">이 글의 기능과 요금은 2026년 9월 30일 각 서비스 공식 자료 기준이에요. 버튼 이름과 위치, 요금제는 자주 바뀌니 결제 전에 공식 페이지를 한 번 더 확인해 주세요.</p>
+</section>
+
+<!-- @admin:body:end -->
+  </div>
+</main>
+
+<footer class="a-foot">
+  <div class="a-wrap">
+    <div class="f-top">
+      <img src="../assets/logo.png" alt="Crabit 아카데미" />
+    </div>
+    <p>(주)크래빗 | 대표 김현지 | 사업자등록번호 747-86-03279 | 통신판매업신고 제 2025-서울구로-2011</p>
+    <p>서울시 구로구 디지털로 288, 2003-1호 | 문의 010-5957-2483</p>
+    <p>&copy; 2026 CRABIT. All rights reserved. | <a href="../policy.html">이용약관과 환불 규정</a></p>
+  </div>
+</footer>
+
+<script>
+  /* 이 페이지 전용 모션과 편의 기능. 본문 마커 밖에 있어서 어드민에서 본문을 저장해도 그대로 남아요.
+     본문에는 평범한 img, ol, div 만 두고, 여기서 영상과 모션을 덧붙입니다. */
+  (function () {
+    var root = document.querySelector('.ait');
+    if (!root) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canIO = 'IntersectionObserver' in window;
+
+    // 1) 프롬프트 복사 버튼
+    root.querySelectorAll('.ait-prompt').forEach(function (box) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'ait-copy'; btn.textContent = '복사';
+      btn.addEventListener('click', function () {
+        var text = box.firstChild && box.firstChild.nodeType === 3 ? box.firstChild.nodeValue : box.textContent.replace(/복사(됐어요)?$/, '');
+        var done = function () { btn.textContent = '복사됐어요'; setTimeout(function () { btn.textContent = '복사'; }, 1600); };
+        if (navigator.clipboard) navigator.clipboard.writeText(text.trim()).then(done, function () {});
+      });
+      box.classList.add('has-copy');
+      box.appendChild(btn);
+    });
+
+    // 2) 예시 화면: 같은 이름의 mp4 가 있으면 짧은 루프 영상으로 바꿉니다(모션 줄이기면 정지 이미지 그대로)
+    if (!reduce) {
+      root.querySelectorAll('img.ait-shot').forEach(function (img) {
+        var src = img.getAttribute('src') || '';
+        if (!/\/assets\/articles\/ai-tools-5\/[^/]+\.webp$/.test(src)) return;
+        var v = document.createElement('video');
+        v.className = 'ait-media';
+        v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = !canIO;
+        v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('preload', 'metadata');
+        v.setAttribute('poster', src);
+        v.setAttribute('aria-label', img.getAttribute('alt') || '');
+        v.src = src.replace(/\.webp$/, '.mp4');
+        v.addEventListener('error', function () { if (v.parentNode) v.parentNode.replaceChild(img, v); });
+        img.parentNode.replaceChild(v, img);
+      });
+      if (canIO) {
+        var vio = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (e.isIntersecting) { var p = e.target.play(); if (p && p.catch) p.catch(function () {}); }
+            else e.target.pause();
+          });
+        }, { threshold: 0.25 });
+        root.querySelectorAll('video.ait-media').forEach(function (v) { vio.observe(v); });
+      }
+    }
+
+    // 3) 스크롤 등장 모션
+    if (reduce || !canIO) return;
+    document.documentElement.classList.add('ait-motion');
+    var targets = [];
+    root.querySelectorAll('.ait-sec > h2, .ait-hook, .ait-media, img.ait-shot, .callout, .ait-moments > li, .ait-stats > div, .ait-jump > li, .ait-sum, .ait-prep > div, .ait-uses > .use, .ait-flow > li').forEach(function (el) {
+      el.classList.add('rv'); targets.push(el);
+    });
+    root.querySelectorAll('.ait-moments > li, .ait-stats > div, .ait-jump > li, .ait-prep > div, .ait-uses > .use, .ait-flow > li').forEach(function (el) {
+      var i = Array.prototype.indexOf.call(el.parentNode.children, el);
+      el.style.setProperty('--d', (i * 0.08) + 's');
+    });
+    root.querySelectorAll('ol.ait-steps').forEach(function (ol) {
+      Array.prototype.forEach.call(ol.children, function (li, i) { li.style.setProperty('--i', i); });
+      targets.push(ol);
+    });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+    targets.forEach(function (t) { io.observe(t); });
+  })();
+
+  // 오른쪽 목차: 지금 읽는 섹션 표시
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    var map = {}; links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var visible = {};
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestR = 0;
+      Object.keys(visible).forEach(function (id) { if (visible[id] > bestR) { bestR = visible[id]; best = id; } });
+      links.forEach(function (a) { a.classList.remove('active'); });
+      if (best && map[best]) map[best].classList.add('active');
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, 0.2, 0.5, 1] });
+    Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) obs.observe(el); });
+  })();
+  // 조회수 기록은 실제 사이트에서만(로컬 확인 시 서버에 기록되지 않게)
+  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+    var s = document.createElement('script'); s.src = '../assets/track.js?v=202608191626'; s.defer = true; document.body.appendChild(s);
+  }
+</script>
+<script src="../assets/site-menu.js?v=1" defer></script>
+</body>
+</html>

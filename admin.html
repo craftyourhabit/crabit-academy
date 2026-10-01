@@ -534,6 +534,10 @@
         <span class="ic" style="color:#4C6FFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.6 10.4 12 3.8l8.4 6.6v8.3a1.7 1.7 0 0 1-1.7 1.7H5.3a1.7 1.7 0 0 1-1.7-1.7z" fill="currentColor"/><path d="M9.6 20.4v-5.6h4.8v5.6z" fill="#fff" fill-opacity=".85"/></svg></span>대시보드
       </button>
 
+      <div class="side-group">마케팅</div>
+      <button class="nav" data-tab="analytics"><span class="ic" style="color:#FB75BB" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3.6" y="12.4" width="4.2" height="8" rx="1.3" fill="currentColor" fill-opacity=".55"/><rect x="9.9" y="8" width="4.2" height="12.4" rx="1.3" fill="currentColor" fill-opacity=".8"/><rect x="16.2" y="3.6" width="4.2" height="16.8" rx="1.3" fill="currentColor"/></svg></span>성과</button>
+      <button class="nav" data-tab="utm"><span class="ic" style="color:#0EA5A4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M10.2 13.8a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M13.8 10.2a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="currentColor" stroke-opacity=".55" stroke-width="2.2" stroke-linecap="round"/></svg></span>UTM 링크</button>
+
       <div class="side-group">운영</div>
       <button class="nav" data-tab="events"><span class="ic" style="color:#7C5CFF" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4.6h6a2.4 2.4 0 0 1 2 1.1V20a2.4 2.4 0 0 0-2-1.1H4z" fill="currentColor"/><path d="M20 4.6h-6a2.4 2.4 0 0 0-2 1.1V20a2.4 2.4 0 0 1 2-1.1h6z" fill="currentColor" fill-opacity=".55"/></svg></span>교육 / 설명회 / VOD</button>
       <button class="nav" data-tab="applications"><span class="ic" style="color:#F59E0B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="3.6" fill="currentColor"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0 1.2 1.2 0 0 1-1.2 1.2H5.8a1.2 1.2 0 0 1-1.2-1.2z" fill="currentColor" fill-opacity=".55"/></svg></span>신청자</button>
@@ -994,7 +998,15 @@ function renderList() {
   /* 대시보드와 신청자는 카드 여러 장을 직접 배치하느라 .list 래퍼를 벗깁니다.
      교육·자료 탭만 목록 카드 하나로 감쌉니다. */
   $("#list").className =
-    (currentTab === "dashboard" || currentTab === "applications" || currentTab === "payments") ? "" : "list";
+    (currentTab === "dashboard" || currentTab === "applications" || currentTab === "payments"
+      || currentTab === "analytics" || currentTab === "utm") ? "" : "list";
+
+  /* 성과와 UTM 링크는 Supabase 측정 데이터로 그립니다. (admin-analytics.js) */
+  if (currentTab === "analytics" || currentTab === "utm") {
+    $("#newBtn").style.display = "none";
+    currentTab === "analytics" ? renderAnalytics() : renderUtm();
+    return;
+  }
 
   /* 대시보드는 목록이 아니라 요약 화면이라 따로 그립니다. (admin-forms.js) */
   if (currentTab === "dashboard") {
@@ -1390,6 +1402,7 @@ function saveBar(onSave, onCancel) {
   return bar;
 }
 </script>
-<script src="admin-forms.js?v=202609041530"></script>
+<script src="admin-forms.js?v=202610011800"></script>
+<script src="admin-analytics.js?v=202610011800"></script>
 </body>
 </html>

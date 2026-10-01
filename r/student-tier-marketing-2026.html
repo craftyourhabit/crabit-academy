@@ -307,11 +307,9 @@
     }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, 0.2, 0.5, 1] });
     Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) obs.observe(el); });
   })();
-  // 조회수 기록은 실제 사이트에서만(로컬 확인 시 서버에 기록되지 않게)
-  if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
-    var s = document.createElement('script'); s.src = '../assets/track.js?v=202608191626'; s.defer = true; document.body.appendChild(s);
-  }
 </script>
+<!-- 방문 기록. localhost 에서는 보내지 않고 콘솔에만 찍습니다(assets/track.js) -->
+<script src="../assets/track.js?v=202610011800" defer></script>
 <script src="../assets/site-menu.js?v=1" defer></script>
 </body>
 </html>

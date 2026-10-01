@@ -14,3 +14,9 @@ verify_jwt = false
 # index.ts 의 verifyUser() 가 Supabase Auth에 물어봐서 진짜 로그인한
 # 관리자인지 확인합니다. publishable 키만 들고 오면 거기서 걸립니다.
 verify_jwt = false
+
+[functions.track]
+# 방문 기록(assets/track.js)은 로그인하지 않은 방문자가 보냅니다. 그래서 JWT 검사를 끕니다.
+# 대신 함수 안에서 허용 사이트(ALLOWED_ORIGIN), 봇, 도배(1분 120건)를 걸러요.
+# 표(academy_events)에는 service role 로만 넣고 anon 은 권한이 없습니다.
+verify_jwt = false

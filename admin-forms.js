@@ -2238,6 +2238,8 @@ function buildArticlePage(o) {
     + "    " + BODY_END + "\n    </div>\n"
     + "  </div>\n</main>\n\n"
     + '<footer><div class="wrap">(주)크래빗 | 크래빗 아카데미</div></footer>\n\n'
+    /* 방문 기록(조회수, UTM 유입, data-track 버튼 클릭). localhost 에서는 콘솔에만 찍어요. */
+    + '<script src="../assets/track.js?v=202610011800" defer></script>\n'
     + "</body>\n</html>\n";
 }
 

@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>원장님 퇴근을 앞당기는 AI 툴 5가지 - 크래빗 아카데미</title>
-<meta name="description" content="보강표, 리포트카드, 수업 PPT, 홍보물, 수업일지. 원장님 하루에서 가장 귀찮은 순간 5개를 AI 툴 하나씩으로 풀어 봤어요" />
+<meta name="description" content="상담 책자, 특강 포스터, 수업일지, 리포트카드, 학부모 문자. 원장님 하루를 AI 툴 5개로 따라가 봤어요" />
 <!-- 링크 미리보기(카카오톡 등) -->
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="크래빗 아카데미" />
 <meta property="og:title" content="원장님 퇴근을 앞당기는 AI 툴 5가지" />
-<meta property="og:description" content="보강표, 리포트카드, 수업 PPT, 홍보물, 수업일지. 원장님 하루에서 가장 귀찮은 순간 5개를 AI 툴 하나씩으로 풀어 봤어요" />
+<meta property="og:description" content="상담 책자, 특강 포스터, 수업일지, 리포트카드, 학부모 문자. 원장님 하루를 AI 툴 5개로 따라가 봤어요" />
 <meta property="og:url" content="https://craftyourhabit.github.io/crabit-academy/r/ai-tools-5" />
 <meta property="og:image" content="https://craftyourhabit.github.io/crabit-academy/assets/og/ai-tools-5.png?v=20260930" />
 <meta property="og:image:width" content="1200" />
@@ -24,13 +24,16 @@
 <style>
   /* 이 페이지 전용(.ait 스코프). 다른 아티클에는 영향이 없습니다.
      화면에 한꺼번에 보이는 요소는 영상, 한 장 요약, 오늘 5분 박스뿐이고 나머지는 접기 펼치기에 둡니다. */
+  /* 글꼴: 이 아티클 본문은 전부 Pretendard. 메인 타이틀(h1)만 엘리스체로 둡니다(article.css 전역은 그대로). */
+  .article-body.ait, .article-body.ait * { font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
   .ait { font-size: 16.5px; }
+  .ait h2 { letter-spacing: -0.02em; }
   .ait h2 { font-size: 25px; margin: 0 0 14px; }
   .ait-sec { padding-top: 60px; scroll-margin-top: 84px; }
   .ait-sec + .ait-sec { border-top: 1px solid #F0F0F2; margin-top: 60px; }
   .ait-label { display: block; font-size: 13.5px; font-weight: 700; color: #FB75BB; margin: 0 0 6px !important; }
   .ait-cap { font-size: 13.5px; color: rgba(22, 25, 42, 0.55); text-align: center; margin: -8px 0 22px !important; }
-  .ait .ait-media, .ait img.ait-shot { width: 100%; aspect-ratio: 27 / 16; object-fit: cover; border-radius: 14px; background: #F2F3F6; display: block; margin: 20px 0 16px; }
+  .ait .ait-media, .ait img.ait-shot { width: 100%; aspect-ratio: 720 / 558; object-fit: cover; border-radius: 14px; background: #F2F3F6; display: block; margin: 20px 0 16px; }
 
   /* 한 장 요약: 박스 없이 글자만 */
   .ait p.ait-sum { font-size: 18px; line-height: 1.75; font-weight: 600; margin: 0 0 24px; }
@@ -85,6 +88,24 @@
   .ait-end { font-size: 16px; }
   .ait-basis { font-size: 13.5px !important; color: rgba(22, 25, 42, 0.55); margin-top: 24px !important; }
 
+  /* 하루 흐름 시계 라벨, 화면 설명, 참고한 자료 */
+  .ait-clock { display: block; font-size: 13.5px; font-weight: 600; color: rgba(22, 25, 42, 0.5); margin: 0 0 4px !important; }
+  .ait .ait-see { display: block; font-size: 14px; color: rgba(22, 25, 42, 0.55); margin-top: 2px; }
+  .ait-ref-h { font-size: 13.5px !important; font-weight: 700; color: rgba(22, 25, 42, 0.55); margin: 22px 0 6px !important; }
+  .ait ul.ait-ref { padding-left: 18px; margin: 0; }
+  .ait ul.ait-ref li { font-size: 14px; color: rgba(22, 25, 42, 0.62); margin-bottom: 4px; }
+  .ait ul.ait-ref a { font-weight: 500; }
+
+  /* 맨 아래 소개 두 블록: 테두리 없는 옅은 면, 모바일은 세로로 */
+  .ait-about { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+  .ait-about .ab { background: #F9FAFC; border-radius: 14px; padding: 22px 22px 20px; display: flex; flex-direction: column; }
+  .ait-about .ab-h { font-size: 17px; font-weight: 700; margin: 0 0 8px !important; }
+  .ait-about .ab p { font-size: 15.5px; line-height: 1.7; }
+  .ait-about .ab-btn { margin-top: auto; align-self: flex-start; display: inline-block; text-decoration: none; background: #16192A; color: #FFFFFF !important; font-size: 15px; font-weight: 700; padding: 11px 18px; border-radius: 12px; }
+  .ait-about .ab-btn:hover { background: #333333; }
+  .ait-about .ab-btn.ghost { background: transparent; color: #16192A !important; padding-left: 0; padding-right: 0; }
+  .ait-about .ab-btn.ghost:hover { background: transparent; text-decoration: underline; text-underline-offset: 3px; }
+
   /* 모션: 스크립트가 html 에 ait-motion 을 붙였을 때만 켜집니다.
      어드민 미리보기, 스크립트 없는 환경, 모션 줄이기 설정에서는 전부 그대로 보여요. */
   .ait-motion .ait .rv { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; transition-delay: var(--d, 0s); }
@@ -94,6 +115,7 @@
 
   @media (max-width: 640px) {
     .ait h2 { font-size: 22px; }
+    .ait-about { grid-template-columns: 1fr; }
     .ait-sec { padding-top: 46px; }
     .ait-sec + .ait-sec { margin-top: 46px; }
     .ait p.ait-sum { font-size: 16.5px; }
@@ -122,13 +144,14 @@
 <nav class="toc" aria-label="목차">
   <div class="toc-h">목차</div>
   <ul>
-    <li><a href="#moments">귀찮은 순간 5개</a></li>
-    <li><a href="#t1">1. 챗GPT 워크</a></li>
-    <li><a href="#t2">2. 클로드 코워크</a></li>
-    <li><a href="#t3">3. 젠스파크 AI 슬라이드</a></li>
-    <li><a href="#t4">4. 미리캔버스 템플릿</a></li>
-    <li><a href="#t5">5. 티로 수업 녹음</a></li>
+    <li><a href="#moments">원장님 하루</a></li>
+    <li><a href="#t1">1. 젠스파크 AI 슬라이드</a></li>
+    <li><a href="#t2">2. 미리캔버스 미리클</a></li>
+    <li><a href="#t3">3. 티로 수업 녹음</a></li>
+    <li><a href="#t4">4. 클로드 코워크</a></li>
+    <li><a href="#t5">5. 챗GPT Record a skill</a></li>
     <li><a href="#common">시작하기 전에</a></li>
+    <li><a href="#about">크래빗과 올커니</a></li>
   </ul>
 </nav>
 <main class="a-wrap">
@@ -145,90 +168,88 @@
 
 <section class="ait-sec" id="moments">
 <p class="ait-label">먼저 짚어 볼게요</p>
-<h2>원장님 하루 중 가장 귀찮은 순간 5개</h2>
-<p>아래 다섯 장면 중 "어, 이거 딱 나야" 싶은 게 하나라도 있다면, 눌러서 그 툴로 바로 가 보세요. 다섯 개를 다 쓰실 필요는 없습니다.</p>
+<h2>원장님 하루, 귀찮은 순간 5개</h2>
+<p>출근해서 퇴근할 때까지, 원장님 하루를 시간 순서로 따라가 봤어요. "어, 이거 딱 나야" 싶은 장면을 눌러 그 툴로 바로 가 보세요. 다섯 개를 다 쓰실 필요는 없습니다.</p>
 <ol class="ait-moments">
-<li><a href="#t1"><span class="m-when">시험 3주 전 밤</span>학교마다 다른 시험일정 공지를 캡처해 놓고, 보강표와 안내 문자를 학교별로 따로 짜는 순간<span class="m-tool">01 챗GPT 워크 &#8594;</span></a></li>
-<li><a href="#t2"><span class="m-when">월말 마감 날</span>출결 엑셀과 성적 엑셀을 번갈아 열며 학생마다 리포트카드를 채우는 순간<span class="m-tool">02 클로드 코워크 &#8594;</span></a></li>
-<li><a href="#t3"><span class="m-when">새 단원 들어가기 전날</span>슬라이드로 보여 주면 좋겠는데, PPT 만들 시간이 없어 판서와 프린트로 버티는 순간<span class="m-tool">03 젠스파크 AI 슬라이드 &#8594;</span></a></li>
-<li><a href="#t4"><span class="m-when">특강 모집 시즌</span>챗GPT로 만든 홍보 이미지가 어딘가 "AI 느낌"이라 올리기 망설여지는 순간<span class="m-tool">04 미리캔버스 템플릿 &#8594;</span></a></li>
-<li><a href="#t5"><span class="m-when">금요일 퇴근 직전</span>이번 주 수업을 기억에 기대어 주간 리포트로 다시 쓰는 순간<span class="m-tool">05 티로 수업 녹음 &#8594;</span></a></li>
+<li><a href="#t1"><span class="m-when">오후 1:00 | 출근하고 상담 준비</span>신규 상담 때마다 학년별, 반별 커리큘럼을 말로만 설명하는 순간<span class="m-tool">01 젠스파크 AI 슬라이드 &#8594;</span></a></li>
+<li><a href="#t2"><span class="m-when">오후 3:00 | 수업 전 홍보자료 제작</span>특강 포스터 문구를 매번 처음부터 다시 쓰는 순간<span class="m-tool">02 미리캔버스 미리클 &#8594;</span></a></li>
+<li><a href="#t3"><span class="m-when">오후 4:00 | 수업 시작</span>수업이 끝난 뒤 오늘 진도와 숙제를 수업일지로 다시 적는 순간<span class="m-tool">03 티로 수업 녹음 &#8594;</span></a></li>
+<li><a href="#t4"><span class="m-when">오후 10:00 | 수업 끝</span>출결, 성적 엑셀을 번갈아 열며 학생마다 리포트카드를 채우는 순간<span class="m-tool">04 클로드 코워크 &#8594;</span></a></li>
+<li><a href="#t5"><span class="m-when">오후 10:30 | 퇴근 직전</span>리포트카드를 하나씩 붙여 학부모님 문자를 스무 번 쓰는 순간<span class="m-tool">05 챗GPT Record a skill &#8594;</span></a></li>
 </ol>
-<p class="ait-note">툴마다 영상, 한 장 요약, 오늘 5분이면 해 보는 프롬프트 하나를 먼저 보여 드려요. 준비물, 따라 하기, 활용 예시, 자주 막히는 곳, 주의점은 접어 두었으니 필요할 때 눌러 펼쳐 보세요. 개인정보와 요금 이야기는 맨 아래 <a href="#common">시작하기 전에</a>에 모았습니다.</p>
+<p class="ait-note">툴마다 영상, 한 장 요약, 오늘 5분이면 해 보는 프롬프트 하나를 먼저 보여 드려요. 준비물, 상세 따라 하기, 응용 사례, 자주 막히는 곳, 주의점은 접어 두었으니 필요할 때 눌러 펼쳐 보세요. 따라 하기는 각 서비스의 공식 도움말과 사용법 영상을 기준으로 정리했고, 출처는 칸 맨 아래에 달아 두었습니다. 개인정보와 요금 이야기는 <a href="#common">시작하기 전에</a>에 모았어요.</p>
 </section>
 
 <section class="ait-sec" id="t1">
-<p class="ait-label">01 | 챗GPT 워크</p>
-<h2>Chat 말고 Work로 바꿔 보세요</h2>
-<img class="ait-shot" src="../assets/articles/ai-tools-5/01-chatgpt-work.webp" alt="챗GPT Work에서 학교별 직전보강 안내 표와 파일이 만들어지는 예시 화면" />
+<p class="ait-clock">오후 1:00 | 출근하고 상담 준비</p>
+<p class="ait-label">01 | 젠스파크 AI 슬라이드</p>
+<h2>상담 전에 커리큘럼 책자 한 권</h2>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/01-genspark.webp" alt="젠스파크 AI 슬라이드가 커리큘럼 엑셀로 중2 반별 로드맵 책자 페이지를 만든 예시 화면" />
 <p class="ait-cap">예시 화면이에요. 실제 화면 구성은 조금 다를 수 있어요.</p>
-<p class="ait-sum">위쪽 버튼을 Chat에서 Work로 누르면<br />대답 대신 완성 파일을 만들어 줘요<br />보강표 엑셀, 안내문까지 한 번에요</p>
+<p class="ait-sum">학년별, 반별 커리큘럼만 올리면<br />한눈에 보이는 상담 책자가 나와요<br />말 대신 펼쳐서 보여 주세요</p>
 <div class="callout ait-try">
 <p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
-<p>시험일정 공지 캡처와, 이름을 지운 명단 엑셀만 있으면 됩니다. Work로 바꾼 뒤 두 파일을 올리고 아래 문장을 붙여 넣어 보세요.</p>
-<div class="ait-prompt">첨부한 시험일정 공지와 수강생 명단으로 중간고사 직전보강 안내 자료를 만들어 줘.
-1) 엑셀 시트1 '보강표': 학교별 시험일, 주말보강(시험 전 토요일 14:00-17:00), 직전보강(시험 전날 18:00-21:00)
-2) 엑셀 시트2 '안내문구': 명단의 학생 번호마다 한 줄씩, 그 학생 학교의 보강 날짜가 들어간 90자 안쪽 문자 문구. 이름 자리는 {이름}으로 비워 둘 것
-3) 문서 '학교별 안내문': 학교별로 따로 보낼 300자 안쪽 안내문
-준비물: 학교 프린트, 교과서, 오답노트. 결석 시 하루 전 연락 부탁 문구 포함.
-시험일을 읽기 어려운 학교는 추측하지 말고 '확인 필요'로 표시해 줘.
-파일을 다 만들면 멈추고, 누구에게도 보내지 마.</div>
+<p>AI Slides에서 Creative 모드와 3:4 비율을 고르고, 커리큘럼 엑셀을 입력창에 끌어다 놓은 뒤 아래 문장을 붙여 넣어 보세요. 학원 이름과 학년만 바꾸면 됩니다.</p>
+<div class="ait-prompt">첨부한 한빛수학 2026 커리큘럼 엑셀로 신규 상담용 커리큘럼 소개 책자를 만들어 줘.
+세로형 10쪽 안팎, 순서는 표지, 중1, 중2, 중3 반별 로드맵, 반 편성 기준, 상담 안내야.
+학기별 단원은 타임라인으로, 기본반과 심화반은 2열 표로 나란히 비교해 줘.
+학부모님이 한눈에 읽게 글은 짧게, 표와 그림 중심으로.
+엑셀에 없는 수강료나 실적은 지어내지 말고 [직접 입력]으로 비워 둬.</div>
 </div>
 <div class="a-toggles">
 <details class="a-toggle">
 <summary><span class="t">왜 이 툴일까요</span></summary>
 <div class="a-body">
-<p>시험 기간마다 학교별 시험일정 공지를 하나씩 보면서 보강표를 짜고, 그 표를 보며 안내 문구를 또 쓰셨죠. 챗GPT를 쓰는 원장님은 많지만, 대부분 "문장 하나 써 줘"에서 멈춰요. 답을 받아 엑셀에 옮기고 표로 다시 만드는 건 여전히 원장님 몫이었습니다.</p>
-<p>2026년 7월에 나온 ChatGPT Work는 한 걸음 더 나갑니다. 화면 위쪽 버튼을 Chat에서 Work로 바꾸면, 챗GPT가 여러 단계를 거쳐 표, 문서, 슬라이드 같은 완성 파일까지 만들어 줘요.</p>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">채팅과 무엇이 다를까요</span></summary>
-<div class="a-body">
-<p><b>채팅은 읽고 끝나는 답을 주고, Work는 고쳐 쓸 수 있는 완성 파일을 만들어 줍니다.</b> 문자 한 통, 공지 문장 다듬기는 지금처럼 채팅이 빠르고 편해요. 학교별 보강표 엑셀, 작년 설명회 자료를 올해 일정으로 바꾸는 일처럼 결과물이 파일인 일만 Work로 넘기면 됩니다.</p>
-<p><b>요금제는 확인하고 쓰세요.</b> Work는 Plus 요금제부터 웹과 휴대폰에서 열립니다. 무료 요금제는 데스크톱 앱에서만 제한적으로 써 볼 수 있어요. Work는 채팅과 사용량을 따로 세고, 작업이 클수록 빨리 닳습니다.</p>
-<p><b>첫 요청에 이것만 적어 주세요.</b> 받을 파일(엑셀, 문서), 쓸 자료, 지어내지 말 것, 그리고 "다 만들면 멈추고 보내지 말 것". 중간에 Work가 물어 오면 답하고, 완성 파일의 날짜와 숫자는 원장님이 한 번 확인합니다.</p>
+<p>신규 상담에서 원장님이 가장 길게 설명하는 건 "우리 학원은 학년별로 이렇게 가르쳐요"입니다. 커리큘럼 엑셀은 원장님 눈에는 익숙하지만 학부모님께 그대로 보여 드리기는 어렵죠.</p>
+<p>젠스파크 AI Slides는 엑셀, PDF, 워드, 파워포인트 파일을 올리면 페이지를 하나씩 채워 슬라이드를 만들어 줘요. Creative 모드에서는 3:4 같은 세로 비율을 고를 수 있어서, 발표 화면이 아니라 상담 때 펼쳐 보여 주는 책자처럼 만들 수 있습니다.</p>
 </div>
 </details>
 <details class="a-toggle">
 <summary><span class="t">준비물</span></summary>
 <div class="a-body">
 <ul>
-<li><b>요금제</b> Plus(월 $20) 이상을 추천합니다. Plus부터 웹과 휴대폰에서 쓸 수 있고, 무료와 Go 요금제는 데스크톱 앱에서만 제한적이에요. 원화 결제 금액은 공식 요금 페이지에서 확인해 주세요.</li>
-<li><b>설치할 앱</b> 없어도 됩니다. chatgpt.com 에서 바로 쓰고, 데스크톱 앱이 있으면 전환 버튼이 더 잘 보여요.</li>
-<li><b>필요한 파일</b> 학교별 시험일정 공지 캡처, 학생 번호와 학교만 남긴 명단 엑셀(이름과 연락처 열은 지운 복사본)</li>
+<li><b>요금제</b> 무료로 시작할 수 있어요. 무료는 하루 100 크레딧(평생 무료 한도 안에서)이고, 브라우저에서 발표하고 링크로 공유하는 것까지 됩니다. PDF, PPTX로 내려받기는 Plus 이상 유료 요금제예요. 한 벌에 드는 크레딧은 후기마다 달라서 가입 후 확인해 주세요.</li>
+<li><b>설치할 앱</b> 없어요. genspark.ai 에서 브라우저로 씁니다.</li>
+<li><b>필요한 파일</b> 학년별, 반별 커리큘럼 엑셀이나 PDF. 한글(hwp) 파일은 PDF로 저장해 올려 주세요.</li>
 </ul>
 </div>
 </details>
 <details class="a-toggle">
-<summary><span class="t">상세 따라 하기</span><span class="c">9단계</span></summary>
+<summary><span class="t">상세 따라 하기</span><span class="c">12단계</span></summary>
 <div class="a-body">
 <ol class="ait-steps">
-<li>chatgpt.com 또는 챗GPT 앱에 로그인합니다.</li>
-<li>화면 위쪽의 전환 버튼에서 <span class="ui">Work</span>를 누릅니다. 데스크톱 앱은 위쪽 가운데 버튼, 모바일 앱은 위쪽 드롭다운에서 고르는 방식이에요.</li>
-<li>명단 엑셀의 복사본을 만들고 이름, 연락처 열을 지웁니다. 학생 번호, 학교, 학년, 반만 남기면 충분합니다.</li>
-<li>입력창 왼쪽의 [+] 버튼을 눌러 시험일정 공지 캡처와 명단 엑셀을 올립니다. 캡처는 학교별로 한 장씩 나눠 올리면 더 정확하게 읽어요.</li>
-<li>위 프롬프트를 붙여 넣고 보냅니다.</li>
-<li>Work가 작업 계획과 진행 상황을 화면에 보여 줍니다. "두 학교 보강 시간이 겹치는데 어떻게 할까요?"처럼 되물으면 답해 주세요.</li>
-<li>완성된 파일이 대화창에 나오면 눌러서 내려받습니다. 엑셀(xlsx)로 바로 받아지는지는 처음 한 번 확인해 두세요.</li>
-<li>보강표의 시험일을 원본 공지와 한 번 대조합니다. "확인 필요"로 표시된 칸은 직접 채워요.</li>
-<li>안내 문구의 {이름} 자리를 채워, 쓰시던 문자나 알림톡 프로그램으로 보냅니다.</li>
+<li>genspark.ai 에 들어가 로그인합니다. 구글 계정으로 로그인할 수 있어요. <span class="ait-see">홈 화면이 열립니다.</span></li>
+<li>홈 화면이나 New 메뉴에서 <span class="ui">AI Slides</span>를 누릅니다. <span class="ait-see">입력창이 보이고, 그 아래에 Skills 목록이 있어요.</span></li>
+<li>입력창 위쪽에서 모드를 먼저 정합니다. 모드는 Professional과 Creative 두 가지이고, 모델은 Standard(크레딧 0.5배)와 Ultra(1배) 중에서 고릅니다. 세로 책자를 만들려면 <b>Creative</b>를 고르세요. <span class="ait-see">공식 도움말은 "프롬프트를 쓰기 전에 5초만 들여 모드를 정하라"고 안내해요.</span></li>
+<li>Creative 모드에서 비율을 <b>3:4</b>로 고릅니다. 고를 수 있는 비율은 16:9, 4:3, 1:1, 3:4, 9:16, 21:9이고, Professional 모드는 16:9만 됩니다. A4 비율은 없어서 3:4가 가장 가깝습니다. <span class="ait-see">비율 선택 칸의 정확한 위치는 화면이 다를 수 있어요.</span></li>
+<li>모드와 비율은 프로젝트를 만든 뒤에는 바꿀 수 없어요. 잘못 골랐다면 새 프로젝트로 다시 시작합니다.</li>
+<li>(선택) 입력창 아래 Skills에서 Featured나 분야별 탭을 둘러보고 마음에 드는 디자인 방향을 고릅니다. <span class="ait-see">My Skills 탭에는 내가 저장한 스킬이 모여요.</span></li>
+<li>커리큘럼 엑셀 파일을 입력창으로 끌어다 놓습니다. PDF, 워드, 엑셀, 파워포인트를 올릴 수 있어요. <span class="ait-see">입력창에 파일이 붙은 게 보입니다.</span></li>
+<li>위 5분 박스의 프롬프트를 붙여 넣고 보냅니다. 페이지 구성과 "엑셀에 없는 건 비워 두라"는 문장은 지우지 마세요.</li>
+<li>AI가 작업 공간에서 페이지를 하나씩 채웁니다. <span class="ait-see">표지, 학년별 로드맵, 반 편성 기준 순서로 썸네일이 늘어나요.</span></li>
+<li>고칠 곳은 슬라이드 위 도구 막대의 Select나 Draw로 고칩니다. Select는 요소를 눌러 AI에게 바꿔 달라고 하는 방식이고, Draw는 슬라이드에 표시를 해서 한꺼번에 고치는 방식이에요. 직접 편집기(Edit)는 Professional 모드에서만 쓸 수 있어서, Creative 책자는 AI에게 말로 고치는 게 기본입니다.</li>
+<li>반 이름, 학기별 단원, 반 편성 기준을 원본 엑셀과 한 장씩 대조합니다. [직접 입력]으로 비워 둔 칸은 원장님이 채워요.</li>
+<li>상담 때는 위쪽 <span class="ui">Present</span>를 눌러 From beginning으로 띄우거나, Share 패널에서 General Access를 "Anyone with the link"로 바꾸고 Presentation share 링크를 복사해 학부모님께 보냅니다. 파일로 남기려면 Export에서 PDF, PPTX, Google Slides 중 하나와 페이지 범위를 골라 내려받아요(유료). <span class="ait-see">Project share는 만드는 과정까지 보이니 학부모님께는 Presentation share를 쓰세요.</span></li>
 </ol>
-<p class="ait-note"><b>Work 꿀팁 3가지</b></p>
-<ul>
-<li>첫 요청에 파일 구성(시트 이름, 문서 이름)과 멈출 지점을 적어 두세요. 위 프롬프트의 마지막 줄 "다 만들면 멈추고, 보내지 마"가 그 역할을 합니다.</li>
-<li>작년 자료를 참고 파일로 올리고 "형식은 그대로, 내용만 올해 것으로 바꿔 줘"라고 하면 같은 양식으로 새 파일이 나와요. 숫자와 날짜는 한 장씩 확인합니다.</li>
-<li>시간표, 휴원일, 문자 말투 원칙을 프로젝트에 올려 두고 그 안에서 Work를 시작하면 자료를 매번 다시 올리지 않아도 됩니다. 문구 정리처럼 가벼운 일은 가벼운 모델을 고르면 사용량이 오래 가요. 다만 프로젝트 메모리를 "프로젝트 전용"으로 바꾼 곳에서는 Work가 열리지 않습니다.</li>
+<p class="ait-ref-h">참고한 자료</p>
+<ul class="ait-ref">
+<li><a href="https://www.genspark.ai/helpcenter/ai-slides" target="_blank" rel="noopener">AI Slides 도움말</a>, Genspark 공식 헬프센터</li>
+<li><a href="https://www.genspark.ai/helpcenter/membership-plans" target="_blank" rel="noopener">Membership Plans</a>, Genspark 공식 헬프센터</li>
+<li><a href="https://www.youtube.com/watch?v=Y2G3OVBw8fI" target="_blank" rel="noopener">Genspark AI Workspace Tutorial: Docs, Slides &amp; Sheets</a>, 유튜브 Genspark Products &amp; Guides</li>
+<li><a href="https://www.youtube.com/watch?v=mdGeCIjzPcs" target="_blank" rel="noopener">Genspark AI Slides Tutorial 2026 | Create AI Presentations Easily</a>, 유튜브 The Pennywise Owl</li>
 </ul>
 </div>
 </details>
 <details class="a-toggle">
-<summary><span class="t">이렇게도 써 보세요</span><span class="c">3가지</span></summary>
+<summary><span class="t">이렇게도 써 보세요</span><span class="c">5가지</span></summary>
 <div class="a-body">
+<p>파일을 올려 페이지를 채우는 방법을 익히시면, 학원에서 "한 번 정리해서 보여 줘야 하는 자료"에 그대로 옮겨 쓸 수 있어요.</p>
 <ul class="ait-uselist">
-<li><b>시험 기간</b> 학교마다 시험일이 달라 보강표를 따로 짜는 일이에요. 위 프롬프트 그대로 쓰시면 됩니다.</li>
-<li><b>월초</b> 이번 달 수업 일정표 엑셀을 올리고, 휴원일을 반영한 반별 월간 시간표 엑셀과 학부모 안내문을 같이 만들어 달라고 해 보세요.</li>
-<li><b>설명회 준비</b> 작년 설명회 안내문을 올리고 올해 날짜와 장소만 알려 주면, 올해 일정으로 바뀐 안내문 한 장이 나와요.</li>
+<li><b>학부모 설명회 자료</b> 작년 설명회 PPT와 올해 커리큘럼 엑셀을 같이 올리고, 순서는 그대로 두고 올해 내용으로 바꿔 달라고 하세요. 이때는 16:9 Professional 모드가 화면 발표에 맞아요.</li>
+<li><b>반 편성 안내 한 장</b> 반 편성 기준 표를 올려, 상담 끝에 학부모님께 드릴 반별 비교 한 장을 따로 만듭니다.</li>
+<li><b>신규 강사 온보딩 자료</b> 반 운영 원칙, 수업 흐름, 학부모 응대 기준을 적은 문서를 올려 새 선생님께 드릴 안내 자료로 만들어요. 물어볼 때마다 다시 설명하던 내용을 한 번에 넘겨 드릴 수 있습니다.</li>
+<li><b>학기별 성과 보고서</b> 학기 말에 반별 진도와 테스트 평균을 정리한 엑셀을 올려, 학부모님께 보여 드릴 학기 정리 자료를 만들어요. 학생 이름 없이 반 단위로만 씁니다.</li>
+<li><b>시험 전 오답 풀이 수업</b> 반에서 많이 틀린 문제 쪽을 스캔한 PDF로 올려, 한 문제당 2장씩 풀이 슬라이드를 만들어요. 풀이는 수업 전에 선생님이 꼭 직접 확인합니다.</li>
 </ul>
 </div>
 </details>
@@ -236,12 +257,12 @@
 <summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
 <div class="a-body">
 <dl class="ait-qa">
-<dt>위쪽에 Work 버튼이 안 보여요</dt>
-<dd>요금제부터 확인해 주세요. 웹과 휴대폰의 Work는 Plus부터 열리고, 무료 요금제는 데스크톱 앱에서만 제한적으로 보여요. 앱을 최신 버전으로 업데이트하고, 휴대폰이라면 위쪽 드롭다운을 눌러 Work가 있는지 봅니다.</dd>
-<dt>캡처 속 시험일을 잘못 읽었어요</dt>
-<dd>캡처를 학교별로 한 장씩 나눠 올리고, 프롬프트의 "확인 필요로 표시" 문장을 지우지 마세요. 공지 글을 복사할 수 있다면 캡처 대신 글을 붙여 넣는 게 가장 정확합니다.</dd>
-<dt>파일이 아니라 대화창에 표로만 답해요</dt>
-<dd>위쪽 버튼이 Work로 바뀌어 있는지 먼저 봅니다. 그다음 엑셀 파일로 내려받을 수 있게 만들어 달라고 한 줄 더 보내 보세요.</dd>
+<dt>세로 비율이 안 보여요</dt>
+<dd>Professional 모드는 16:9만 돼요. 모드를 Creative로 바꿔야 3:4가 나옵니다. 이미 만든 프로젝트는 모드를 바꿀 수 없으니 새 프로젝트로 다시 시작해 주세요.</dd>
+<dt>글자를 직접 고치고 싶은데 편집 칸이 안 열려요</dt>
+<dd>직접 편집기는 Professional 모드 전용이에요. Creative 책자는 Select로 고칠 요소를 누르고 "이 표의 2학기 단원을 도형의 성질로 바꿔 줘"처럼 말로 요청합니다.</dd>
+<dt>내려받으려니 결제 화면이 나와요</dt>
+<dd>무료 요금제는 브라우저 발표와 링크 공유까지만 돼요. 상담 때 화면으로 보여 주거나 링크를 보내는 건 무료로도 되고, 인쇄할 PDF가 필요할 때만 유료로 올리시면 됩니다.</dd>
 </dl>
 </div>
 </details>
@@ -249,9 +270,9 @@
 <summary><span class="t">주의점</span></summary>
 <div class="a-body">
 <ul>
-<li>Work는 연결한 앱에 따라 승인을 받고 메시지를 보낼 수도 있어요(Mac 앱의 메시지 플러그인). 학부모님께 가는 문자는 원장님이 확인한 뒤 나가도록, 보내기 전에 멈추게 해 두세요.</li>
-<li>명단에는 학생 번호, 학교, 학년, 반만 남기고 이름과 연락처는 지운 뒤 올립니다.</li>
-<li>보강 날짜와 시간은 보내기 전에 원장님이 한 번 더 확인해 주세요. AI가 만든 표는 초안입니다.</li>
+<li>엑셀에 없는 수강료, 합격 실적, 학생 수를 AI가 그럴듯하게 채울 수 있어요. 숫자는 원장님이 직접 넣고, 수강료는 교육청에 신고한 금액과 같은지 확인하세요.</li>
+<li>공유 링크는 링크만 있으면 누구나 볼 수 있어요. 내부 자료(강사 급여, 학생 명단)가 섞인 파일은 올리지 마세요.</li>
+<li>문제집 내용을 슬라이드로 옮겨 원내 수업에 쓰는 것과 외부에 배포하는 것은 달라요. 출판사 저작권이 있으니 공유 링크는 학원 밖으로 돌리지 않습니다.</li>
 </ul>
 </div>
 </details>
@@ -259,230 +280,73 @@
 </section>
 
 <section class="ait-sec" id="t2">
-<p class="ait-label">02 | 클로드 코워크</p>
-<h2>내 컴퓨터에 들어오는 나만의 비서</h2>
-<img class="ait-shot" src="../assets/articles/ai-tools-5/02-claude-cowork.webp" alt="클로드 코워크가 리포트카드 파일을 폴더에 만들어 둔 예시 화면" />
-<p class="ait-cap">예시 화면이에요. 결과 파일 형식은 요청과 환경에 따라 달라질 수 있어요.</p>
-<p class="ait-sum">컴퓨터 속 출결, 성적 파일을<br />퇴근 전에 맡겨 두고 퇴근하시면<br />아침엔 공유할 리포트카드가 완성돼요</p>
-<div class="callout ait-try">
-<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
-<p>퇴근 전 5분이면 됩니다. 출결, 성적, 과제 엑셀의 복사본을 담은 폴더를 Cowork에 연결하고, 아래 문장을 붙여 넣은 뒤 컴퓨터와 클로드 앱을 켜 둔 채로 퇴근하세요.</p>
-<div class="ait-prompt">연결한 폴더의 출결_10월.xlsx, 성적_중간고사.xlsx, 과제기록.xlsx로
-학생 번호마다 10월 리포트카드를 한 장씩 만들어서 '리포트카드_10월' 폴더에 저장해 줘.
-한 장에 넣을 것: 출석률, 과목별 성적 막대그래프, 과제 제출률, 선생님 코멘트 칸(비워 둘 것)
-학생 이름 자리는 {이름}으로 비워 두고, 엑셀에 없는 숫자나 평가는 지어내지 마.
-파일을 옮기거나 지우기 전에는 먼저 물어봐 줘.
-끝나면 만든 파일 목록과 숫자가 비어 있는 학생 번호를 알려 줘.</div>
-</div>
-<div class="a-toggles">
-<details class="a-toggle">
-<summary><span class="t">왜 이 툴일까요</span></summary>
-<div class="a-body">
-<p>월말마다 출결 엑셀과 성적 엑셀을 번갈아 열면서 리포트카드 만드느라 밤늦게까지 남으셨죠. AI에게 엑셀을 맡기려면 보통 파일을 하나씩 올리고, 결과를 내려받고, 다시 폴더에 정리해야 해요.</p>
-<p>클로드의 코워크(Cowork)는 반대로 AI가 내 컴퓨터 폴더에 직접 들어와 일합니다. 원장님이 허락한 폴더 안에서 출결, 성적 파일을 열어 보고, 결과 파일을 그 폴더에 저장해 둬요.</p>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">준비물</span></summary>
-<div class="a-body">
-<ul>
-<li><b>요금제</b> 유료 요금제에서만 됩니다. Pro 월 $20(연 결제 시 월 $17)부터이고, 무료 요금제에서는 쓸 수 없어요.</li>
-<li><b>설치할 앱</b> 클로드 데스크톱 앱(맥, 윈도우). claude.com/download 에서 받습니다.</li>
-<li><b>필요한 파일</b> 출결, 성적, 과제 엑셀의 복사본을 모은 폴더 하나. 학생 이름은 번호로 바꾸고, 연락처와 상담 메모는 빼 둡니다.</li>
-</ul>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">상세 따라 하기</span><span class="c">10단계</span></summary>
-<div class="a-body">
-<ol class="ait-steps">
-<li>claude.com/download 에서 맥 또는 윈도우용 데스크톱 앱을 설치하고, 유료 요금제 계정으로 로그인합니다.</li>
-<li>바탕화면에 '리포트카드_작업' 폴더를 새로 만들고, 출결, 성적, 과제 엑셀의 복사본을 넣습니다. 원본 폴더는 연결하지 않아요.</li>
-<li>복사본 엑셀에서 학생 이름 열을 번호로 바꾸고, 연락처와 상담 메모 열은 지웁니다. 파일마다 학생 번호 열 이름을 똑같이 맞춰 두면 합칠 때 실수가 줄어요.</li>
-<li>앱 화면에서 <span class="ui">Cowork</span>를 고릅니다. 앱 버전에 따라 위쪽 탭이나 왼쪽 메뉴에 있어요.</li>
-<li>입력창 근처의 폴더 선택 버튼을 눌러 '리포트카드_작업' 폴더를 연결합니다. 폴더 접근을 허락할지 묻는 창이 뜨면 허락해 주세요.</li>
-<li>퇴근 전에 위 프롬프트를 붙여 넣고 보냅니다. 처음 몇 번은 코워크가 보여 주는 작업 계획을 읽어 보고 승인하는 방식으로 써 보세요.</li>
-<li>컴퓨터가 잠자기로 들어가지 않게 전원 설정을 확인합니다. 맥은 시스템 설정의 배터리 또는 에너지 메뉴, 윈도우는 설정 &gt; 시스템 &gt; 전원에서 바꿀 수 있어요.</li>
-<li>학원 컴퓨터와 클로드 앱은 켜 둔 채로 퇴근합니다. 코워크는 앱이 열려 있을 때만 폴더에서 일해요.</li>
-<li>다음 날 아침 '리포트카드_10월' 폴더를 열고, 학생 2~3명만 원본 엑셀과 숫자를 대조합니다.</li>
-<li>선생님 코멘트 칸을 채운 뒤, 쓰시던 문자나 알림톡 프로그램으로 학부모님께 공유합니다.</li>
-</ol>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">이렇게도 써 보세요</span><span class="c">3가지</span></summary>
-<div class="a-body">
-<ul class="ait-uselist">
-<li><b>상담 주간 전</b> 출결과 과제 엑셀을 합쳐, 출석률이나 과제 제출률이 낮은 학생 번호만 '상담대상' 파일로 뽑아 달라고 해 보세요.</li>
-<li><b>학기 초</b> "최종", "최종2"가 쌓인 자료 폴더 복사본을 학년, 과목, 학교 순서로 정리시킵니다. 옮기기 전에 계획부터 보여 달라고 하면 안전해요.</li>
-<li><b>시험 기간 이벤트</b> 시험 기간에 자습실을 열고, 출석한 학생 중 추첨해 장학금을 주는 학원들이 있어요. 자습실 출석 기록 엑셀로 추첨 대상 명단을 뽑아 둘 수 있습니다.</li>
-</ul>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
-<div class="a-body">
-<dl class="ait-qa">
-<dt>Cowork 메뉴가 안 보여요</dt>
-<dd>무료 요금제에서는 나오지 않아요. 유료 요금제로 로그인했는지, 데스크톱 앱이 최신 버전인지 확인해 주세요. 내 컴퓨터 폴더를 쓰는 작업은 데스크톱 앱에서 하셔야 합니다.</dd>
-<dt>아침에 보니 작업이 중간에 멈춰 있어요</dt>
-<dd>컴퓨터가 잠자기로 들어갔거나, 앱이 닫혔거나, 코워크가 승인 질문을 띄워 놓고 기다리는 경우가 많아요. 전원 설정을 바꾸고, 애매한 건 마지막에 목록으로 알려 달라고 덧붙여 보세요. 파일을 옮기거나 지우는 작업만은 계속 먼저 묻게 두는 게 안전합니다.</dd>
-<dt>리포트카드 숫자가 원본과 달라요</dt>
-<dd>파일마다 학생 번호 열 이름이 다르면 잘못 합쳐질 수 있어요. 열 이름을 통일하고, 학생 번호 열을 기준으로 합쳐 달라고 적어 주세요. 첫 달은 꼭 2~3명을 원본과 대조합니다.</dd>
-</dl>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">주의점</span></summary>
-<div class="a-body">
-<ul>
-<li>폴더를 연결하면 그 안의 파일은 전부 클로드가 볼 수 있어요. 학생 연락처, 상담 메모가 든 파일은 폴더에서 빼고 연결하세요.</li>
-<li>리포트카드를 PDF로 받을지 엑셀로 받을지는 첫 달에 한 장만 먼저 만들어 보고 정하시는 걸 권해 드려요.</li>
-<li>처음에는 작업마다 승인하는 방식으로 쓰고, 익숙해진 뒤에 맡기는 범위를 넓힙니다.</li>
-</ul>
-</div>
-</details>
-</div>
-</section>
-
-<section class="ait-sec" id="t3">
-<p class="ait-label">03 | 젠스파크 AI 슬라이드</p>
-<h2>새 AI로 수업 PPT 제작</h2>
-<img class="ait-shot" src="../assets/articles/ai-tools-5/03-genspark-slides.webp" alt="젠스파크 AI 슬라이드가 슬라이드 구성안을 만든 예시 화면" />
-<p class="ait-cap">예시 화면이에요. 슬라이드 구성은 요청한 수업 흐름에 따라 달라집니다.</p>
-<p class="ait-sum">커리큘럼, 수업 내용, 문제집 PDF만<br />올리면 수업용 슬라이드가 바로 나와요<br />더 생동감 있고 체계적인 수업이 돼요</p>
-<div class="callout ait-try">
-<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
-<p>다음 수업 한 차시만 골라 커리큘럼과 교재 해당 쪽 PDF를 AI 슬라이드에 올리고 아래처럼 요청해 보세요. 단원과 학년만 바꿔 쓰시면 됩니다.</p>
-<div class="ait-prompt">첨부한 커리큘럼과 교재 쪽수로 중학교 2학년 수학 50분 수업용 슬라이드 10장을 만들어 줘.
-단원: 일차함수 그래프의 기울기
-순서: 지난 시간 복습 1장, 오늘의 목표 1장, 개념 설명 3장(그림, 그래프 중심), 예제 풀이 2장, 확인 문제 2장, 오늘 정리와 숙제 1장
-글자는 크게, 한 장에 핵심 문장 1개, 확인 문제는 정답을 다음 장에 따로 둬.
-교재에 없는 내용은 지어내지 말고 [직접 입력]으로 비워 둬.</div>
-</div>
-<div class="a-toggles">
-<details class="a-toggle">
-<summary><span class="t">왜 이 툴일까요</span></summary>
-<div class="a-body">
-<p>슬라이드로 보여 주면 아이들이 더 잘 따라올 것 같은데, 단원마다 PPT를 만들 시간이 없어 판서와 프린트로 버티고 계셨다면요. 젠스파크 AI 슬라이드는 커리큘럼, 수업 내용, 문제집 내용을 올리면 수업용 슬라이드를 바로 만들어 줍니다. 9월에는 슬라이드 전용으로 새로 학습한 AI 모델(Gen-1 Slides)이 기본으로 들어갔어요.</p>
-<p>슬라이드 수업은 학원마다 맞는 정도가 달라서, 여기 적은 활용법은 한 반에서 먼저 시험해 보시라는 제안으로 읽어 주세요.</p>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">준비물</span></summary>
-<div class="a-body">
-<ul>
-<li><b>요금제</b> 무료로 시작할 수 있어요. 하루 100 크레딧 안에서 만들고, 브라우저 발표와 링크 공유까지 됩니다. PPTX, PDF 내려받기는 유료 요금제이고, 가격과 한 벌에 드는 크레딧은 가입 후 확인해 주세요.</li>
-<li><b>설치할 앱</b> 없어요. genspark.ai 에서 브라우저로 씁니다.</li>
-<li><b>필요한 파일</b> 커리큘럼, 교재 해당 쪽 PDF. 한글(hwp) 파일은 PDF로 저장하고, 문제집은 해당 쪽만 스캔한 PDF가 가장 확실해요.</li>
-</ul>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">상세 따라 하기</span><span class="c">8단계</span></summary>
-<div class="a-body">
-<ol class="ait-steps">
-<li>genspark.ai 에 가입하고 로그인합니다.</li>
-<li>첫 화면의 기능 목록에서 <span class="ui">AI 슬라이드</span>를 누릅니다. 모드는 기본값 그대로 둬요.</li>
-<li>한글(hwp) 커리큘럼은 한글 프로그램의 PDF 저장으로 바꿔 둡니다. 문제집은 수업할 쪽만 스캔해 PDF 하나로 묶어 주세요.</li>
-<li>입력창의 첨부(클립 모양) 버튼을 누르거나 파일을 입력창에 끌어다 놓습니다. PDF, 워드, 엑셀, 파워포인트 파일을 올릴 수 있어요.</li>
-<li>위 프롬프트를 붙여 넣고 보냅니다. 복습, 개념, 예제, 확인 문제, 정리처럼 수업 흐름을 적을수록 결과가 안정적입니다.</li>
-<li>슬라이드가 채워지면 글자를 클릭해 바로 고치거나, 입력창에 "3번 장 예제 하나 더"처럼 말로 수정을 요청합니다.</li>
-<li>예제와 확인 문제의 정답은 수업 전에 선생님이 직접 한 번 풀어 확인해 주세요.</li>
-<li>수업 때는 발표(프레젠테이션) 버튼으로 브라우저에서 바로 띄웁니다. 유료 요금제라면 내려받기 메뉴에서 PPTX나 PDF로 받을 수 있어요.</li>
-</ol>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">이렇게도 써 보세요</span><span class="c">3가지</span></summary>
-<div class="a-body">
-<ul class="ait-uselist">
-<li><b>새 단원 첫 수업</b> 커리큘럼 한 장만 올려도 그림 중심의 개념 도입 슬라이드가 나와요.</li>
-<li><b>시험 전 오답 수업</b> 반에서 많이 틀린 문제 쪽을 스캔해 올리고, 한 문제당 2장씩 풀이 슬라이드를 만들어 달라고 해 보세요.</li>
-<li><b>학부모 설명회</b> 작년 설명회 자료를 올리고 올해 커리큘럼과 일정만 알려 주면, 설명회 슬라이드 초안이 새로 나옵니다.</li>
-</ul>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
-<div class="a-body">
-<dl class="ait-qa">
-<dt>한글(hwp) 파일이 안 올라가요</dt>
-<dd>한글 프로그램에서 PDF로 저장한 뒤 올려 주세요. 올릴 수 있는 파일은 PDF, 워드, 엑셀, 파워포인트입니다.</dd>
-<dt>내려받으려고 하니 결제 화면이 나와요</dt>
-<dd>무료 요금제는 브라우저 발표와 링크 공유까지만 돼요. 수업 때 브라우저로 바로 띄우면 무료로도 쓸 수 있고, 파일로 보관하고 싶을 때만 유료로 올리시면 됩니다.</dd>
-<dt>풀이나 수식이 틀리게 나와요</dt>
-<dd>AI가 풀이 과정을 틀리게 쓸 수 있어요. 틀린 장은 장 번호를 짚어 교재 풀이대로 고쳐 달라고 요청합니다. 수업 전에 선생님이 한 번 풀어 보는 단계는 빼지 마세요.</dd>
-</dl>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">주의점</span></summary>
-<div class="a-body">
-<ul>
-<li>문제집 내용을 슬라이드로 옮겨 원내 수업에 쓰는 것과, 그 슬라이드를 외부에 공개하거나 배포하는 건 다릅니다. 출판사 저작권이 있으니 공유 링크는 학원 밖으로 돌리지 마세요.</li>
-<li>문제집 사진(이미지)만 올려서 슬라이드가 잘 되는지는 아직 확인하지 못했어요. 지금은 PDF(스캔본)로 올리시는 걸 권해 드려요.</li>
-<li>수식과 도형 표현 품질은 과목마다 다를 수 있으니, 첫 수업은 한 반에서만 써 보세요.</li>
-</ul>
-</div>
-</details>
-</div>
-</section>
-
-<section class="ait-sec" id="t4">
-<p class="ait-label">04 | 미리캔버스 템플릿</p>
-<h2>GPT 느낌 싫다면 템플릿으로</h2>
-<img class="ait-shot" src="../assets/articles/ai-tools-5/04-miricanvas.webp" alt="미리캔버스에서 특강 안내 템플릿을 편집하고 PDF로 내려받는 예시 화면" />
+<p class="ait-clock">오후 3:00 | 수업 전 홍보자료 제작</p>
+<p class="ait-label">02 | 미리캔버스 미리클</p>
+<h2>특강 포스터 문구까지 AI가 채워요</h2>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/02-miricanvas.webp" alt="미리캔버스 특강 템플릿에 미리클 AI 라이팅으로 제목과 혜택 문구를 채운 예시 화면" />
 <p class="ait-cap">예시 화면이에요. 실제 템플릿과 메뉴 위치는 다를 수 있어요.</p>
-<p class="ait-sum">학원 홍보 카드뉴스와 포스터는<br />템플릿을 골라 빠르게 만들어요<br />문구 손질은 AI 미리클에 맡겨요</p>
+<p class="ait-sum">템플릿 하나 고르고<br />미리클에 '겨울방학 특강' 한 줄이면<br />카드뉴스와 포스터 문구가 채워져요</p>
 <div class="callout ait-try">
 <p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
-<p>"학원 홍보" 템플릿 하나만 열고, 제목 칸을 선택한 뒤 미리클 AI 라이팅에 아래 문장을 넣어 보세요. 원래 문구 자리만 우리 학원 문구로 바꾸면 됩니다.</p>
-<div class="ait-prompt">학원 홍보 포스터 제목이야. 학부모님이 한눈에 읽게 15자 안쪽으로 3개 다시 써 줘.
-과장 광고 표현, 합격률 같은 숫자는 빼 줘.
-원래 문구: 겨울방학 특강 모집합니다 예비 고1 수학</div>
+<p>특강 포스터 템플릿 하나를 열고, 편집기 왼쪽 아래 AI 버튼에서 AI 라이팅을 고른 뒤 아래 문장을 넣고 생성을 눌러 보세요.</p>
+<div class="ait-prompt">겨울방학 수학 특강, 예비 중1 대상이야. 12월 22일 개강, 4주 완성.
+학원 특강 포스터에 넣을 제목 1줄(15자 안쪽), 부제 1줄, 혜택 3줄을 써 줘.
+학부모님이 믿을 수 있는 차분한 말투로, 과장 광고 표현과 합격률 같은 숫자는 빼 줘.</div>
 </div>
 <div class="a-toggles">
 <details class="a-toggle">
 <summary><span class="t">왜 이 툴일까요</span></summary>
 <div class="a-body">
-<p>특강 모집 공지를 챗GPT 이미지로 만들었는데, 한눈에 "AI가 만든 것 같다"는 느낌이 들어 올리기 망설여지셨죠. 학부모님께 보이는 홍보물은 신뢰가 중요합니다. 미리캔버스는 디자이너가 만든 한국형 템플릿이 많아서, 템플릿을 고르고 글자만 바꾸면 AI 티가 덜 나는 카드뉴스와 포스터를 빠르게 만들 수 있어요.</p>
-<p><b>미리클은 뭔가요?</b> 미리캔버스가 2025년 4월에 내놓은 AI 기능 묶음 이름이에요. 편집 화면 안에서 AI 라이팅으로 문구를 쓰고 다듬고, AI 이미지 편집으로 배경을 지우거나 화질을 높일 수 있습니다. 채팅하듯 디자인 전체를 고쳐 주는지까지는 확인하지 못해서, 디자인은 템플릿으로 잡고 문구와 이미지 손질만 미리클에게 맡기는 조합으로 안내해요.</p>
+<p>특강 홍보물은 디자인보다 문구에서 시간이 더 걸려요. 제목을 몇 번씩 고쳐 쓰다 보면 수업 시간이 다가옵니다. 미리캔버스는 디자이너가 만든 한국형 학원 템플릿이 많아서 디자인은 템플릿에 맡기고, 문구는 미리캔버스 안의 AI 기능 묶음인 미리클(miricle)의 AI 라이팅에 맡기면 됩니다.</p>
+<p>AI 라이팅은 공식 도움말 기준으로 글감 생성, 맞춤법 검사, 내용 정돈을 해 줘요. 예전에 있던 말투 바꾸기(친근하게, 더 격식 있게)는 지금은 지원하지 않는다고 안내돼 있어서, 원하는 말투는 처음 요청에 적어 주는 게 좋습니다.</p>
 </div>
 </details>
 <details class="a-toggle">
 <summary><span class="t">준비물</span></summary>
 <div class="a-body">
 <ul>
-<li><b>요금제</b> 무료로 시작합니다. 왕관 표시 없는 템플릿과 요소는 무료예요. 미리클 AI는 무료에서 사용 횟수 제한이 있고 Pro에서는 제한 없이 쓰는데, 현재 Pro 가격은 요금제 페이지에서 확인해 주세요.</li>
+<li><b>요금제</b> 무료로 시작합니다. AI 기능은 무료가 하루 200 크레딧, Pro가 하루 1,000 크레딧이에요. 왕관 표시가 있는 템플릿은 Pro에서만 쓸 수 있고, Pro는 멤버당 월 14,900원(연 160,800원)입니다.</li>
 <li><b>설치할 앱</b> 없어요. miricanvas.com 에서 브라우저로 씁니다.</li>
-<li><b>필요한 파일</b> 학원 로고, 학원이나 수업 사진, 특강 이름과 일정, 대상, 상담 방법 문구. 학생 얼굴 사진은 학부모님 동의를 받은 것만 씁니다.</li>
+<li><b>필요한 것</b> 학원 로고, 학원이나 수업 사진, 특강 이름, 대상, 일정, 상담 방법. 학생 얼굴 사진은 학부모님 동의를 받은 것만 씁니다.</li>
 </ul>
 </div>
 </details>
 <details class="a-toggle">
-<summary><span class="t">상세 따라 하기</span><span class="c">9단계</span></summary>
+<summary><span class="t">상세 따라 하기</span><span class="c">12단계</span></summary>
 <div class="a-body">
 <ol class="ait-steps">
-<li>miricanvas.com 에 학원 업무용 이메일로 가입합니다.</li>
-<li>첫 화면 검색창에 "학원 홍보", "학원 모집", "특강 모집", "카드뉴스"처럼 용도를 검색합니다.</li>
-<li>크기를 먼저 고릅니다. 인스타 카드뉴스는 정사각형이나 세로형, 원내 포스터는 A4나 A3가 맞아요.</li>
-<li>썸네일에 왕관 표시가 없는 템플릿을 고르면 무료로 끝까지 쓸 수 있습니다.</li>
-<li>편집 화면에서 학원 이름, 전화번호, 일정 글자를 더블클릭해 바꿉니다.</li>
-<li>왼쪽 메뉴의 [업로드]에서 학원 로고와 사진을 올리고, 템플릿의 사진 자리에 끌어다 놓습니다.</li>
-<li>문구 칸을 선택하고 미리클 <span class="ui">AI 라이팅</span>을 엽니다. 글자 도구 막대나 왼쪽 AI 메뉴에 있는데, 위치는 버전에 따라 다를 수 있어요. 위 프롬프트로 제목을 다듬습니다.</li>
-<li>카드뉴스라면 페이지를 복제해 같은 디자인으로 2장, 3장을 이어서 만듭니다.</li>
-<li>오른쪽 위 [다운로드]를 눌러 카드뉴스는 PNG, 포스터는 PDF로 받습니다. 인쇄할 포스터는 인쇄용 PDF 옵션이 보이면 그걸 고르세요.</li>
+<li>miricanvas.com 오른쪽 위 <span class="ui">회원가입</span>에서 이메일로 가입하거나 네이버, 카카오, 구글 계정을 고릅니다. 이메일 가입은 인증 메일을 눌러 마무리해요. <span class="ait-see">이메일과 소셜 아이콘이 있는 가입 창이 뜹니다.</span></li>
+<li>첫 화면 오른쪽 위 <span class="ui">디자인 만들기</span>를 눌러 편집기를 엽니다. <span class="ait-see">왼쪽에 메뉴, 가운데에 빈 캔버스가 보여요.</span></li>
+<li>템플릿에서 "학원 특강", "특강 모집"처럼 용도를 찾아 썸네일을 누릅니다. 템플릿 검색 칸의 위치는 화면이 다를 수 있어요.</li>
+<li>템플릿 크기가 지금 캔버스와 다르면 썸네일의 더보기(점 세 개) 메뉴에서 "이 템플릿으로 덮어쓰기"를 고릅니다. 템플릿 크기 그대로, 여러 장짜리는 모든 페이지가 들어와요. 지금 작업하던 디자인은 덮어써지니 주의하세요.</li>
+<li>썸네일에 왕관이 있으면 Pro 전용 템플릿이에요. 무료 템플릿 안에 들어 있는 프리미엄 요소는 캔버스에 워터마크로 보이니, 지우거나 다른 요소로 바꾸면 무료로 쓸 수 있습니다.</li>
+<li>학원 이름, 날짜, 연락처 글자를 눌러 바꾸고, 학원 사진과 로고는 왼쪽 메뉴의 업로드로 올려 사진 자리에 바꿔 넣습니다. <span class="ait-see">업로드 메뉴 이름은 화면이 다를 수 있어요.</span></li>
+<li>편집기 왼쪽 아래의 <span class="ui">AI</span> 버튼을 누르고 AI 라이팅을 고릅니다. <span class="ait-see">글자 도구 막대가 아니라 왼쪽 메뉴에 있어요.</span></li>
+<li>위 5분 박스의 문장을 넣고 생성을 누릅니다. 무엇을 써야 할지 막막하면 예시 버튼으로 참고 문장을 먼저 볼 수 있어요.</li>
+<li>만들어진 문장을 눌러 다듬습니다. 공식 도움말 기준으로 맞춤법 검사와 내용 정돈을 쓸 수 있고, 직접 고쳐 써도 돼요. 문장이 캔버스에 어떻게 들어가는지는 화면에서 한 번 확인해 주세요.</li>
+<li>제목, 부제, 혜택 문장을 템플릿의 글자 칸에 맞춰 넣고 폰트, 색, 정렬로 정리합니다.</li>
+<li>카드뉴스 여러 장은 캔버스 위의 <span class="ui">페이지 복제</span>로 같은 디자인을 복사해 이어 만들고, 크기를 바꾸려면 위쪽 크기 조정 &gt; 직접 입력에서 바꿉니다. 자물쇠 아이콘으로 비율을 고정하고, 디자인 적용 방식(채우기, 맞추기, 원본 크기)을 고를 수 있어요. <span class="ait-see">크기 조정 화면은 버전에 따라 다를 수 있어요.</span></li>
+<li>오른쪽 위 <span class="ui">다운로드</span>에서 파일 형식을 고르고 다시 다운로드를 누릅니다. 카드뉴스는 PNG(웹용), 원내 포스터는 PDF(인쇄용)가 맞아요. 인쇄소에 맡길 포스터는 위쪽 "인쇄용/상품 제작"에서 비즈하우스로 바로 주문할 수 있습니다. <span class="ait-see">프리미엄 요소가 남아 있으면 "콘텐츠 구입 후 다운로드" 안내가 나와요.</span></li>
 </ol>
+<p class="ait-ref-h">참고한 자료</p>
+<ul class="ait-ref">
+<li><a href="https://help.miricanvas.com/hc/ko/articles/33349963638553" target="_blank" rel="noopener">AI 기능(프레젠테이션, 라이팅, 이미지 생성) 사용하기</a>, 미리캔버스 헬프센터</li>
+<li><a href="https://help.miricanvas.com/hc/ko/articles/32570677518617" target="_blank" rel="noopener">다운로드 가이드</a>, 미리캔버스 헬프센터</li>
+<li><a href="https://www.miricanvas.com/features/ko/ai-writing" target="_blank" rel="noopener">AI 라이팅 기능 소개</a>, 미리캔버스</li>
+<li><a href="https://www.youtube.com/watch?v=TR0Q7HzDKdI" target="_blank" rel="noopener">이 영상 하나면 미리캔버스 끝! 왕초보 올인원 패키지 (기본기부터 AI까지)</a>, 유튜브 Reveon Creative - 레브온 크리에이티브</li>
+</ul>
 </div>
 </details>
 <details class="a-toggle">
-<summary><span class="t">이렇게도 써 보세요</span><span class="c">3가지</span></summary>
+<summary><span class="t">이렇게도 써 보세요</span><span class="c">5가지</span></summary>
 <div class="a-body">
+<p>템플릿을 고르고 AI 라이팅으로 문구를 채우는 흐름을 익히시면, 학원에서 매달 돌아오는 안내물에 그대로 쓰실 수 있어요.</p>
 <ul class="ait-uselist">
-<li><b>특강 모집</b> 인스타 홍보 카드뉴스 4장을 표지(특강 이름), 이런 학생에게 필요해요, 일정과 대상, 상담 신청 방법 순서로 한 템플릿에서 이어 만들어요.</li>
-<li><b>원내, 건물 게시판</b> A4, A3 포스터 템플릿에서 반 이름과 시간표만 바꿔 신규 반 개설 포스터를 만듭니다.</li>
-<li><b>시험 기간</b> 간식 DAY나 자습실 개방 안내를 원내 포스터와 카드뉴스로 같이 만들어 두세요. 같은 디자인을 복제해 네이버 플레이스, 블로그 대표 이미지로도 씁니다.</li>
+<li><b>시험 대비 특강 안내</b> 학교별 시험 일정이 나오면 같은 템플릿에서 대상 학년과 날짜만 바꾸고, AI 라이팅으로 시험 대비 특강 제목을 새로 받아요.</li>
+<li><b>휴원 안내</b> 명절이나 학교 행사로 쉬는 날을 알리는 공지를 A4 템플릿으로 만들어 원내에 붙이고, 같은 디자인을 카드뉴스 크기로 바꿔 학부모님께도 보냅니다.</li>
+<li><b>원내 게시물</b> 시험 기간 자습실 개방, 간식 DAY처럼 원내에 붙이는 안내를 포스터 한 장으로 빠르게 만들어요.</li>
+<li><b>학원 블로그 썸네일</b> 블로그 글을 올릴 때마다 쓰는 대표 이미지를 템플릿 하나로 정해 두고, 제목 문구만 AI 라이팅으로 바꿔 넣습니다.</li>
+<li><b>신규 반 개설 모집</b> 반 이름, 시간표, 대상만 바꿔 모집 포스터와 인스타 카드뉴스를 같은 디자인으로 맞춰요.</li>
 </ul>
 </div>
 </details>
@@ -491,11 +355,11 @@
 <div class="a-body">
 <dl class="ait-qa">
 <dt>다운로드하려니 결제하라고 나와요</dt>
-<dd>왕관 표시가 있는 요소나 템플릿이 들어간 경우예요. 그 요소를 빼거나 무료 요소로 바꾸면 내려받을 수 있고, 계속 쓰실 거라면 Pro가 필요합니다.</dd>
+<dd>왕관 표시가 있는 요소가 들어간 경우예요. 그 요소를 지우거나 무료 요소로 바꾸면 내려받을 수 있습니다. 프리미엄 요소만 따로 살 수도 있지만, 산 요소는 그 디자인 문서 하나에만 적용되고 내려받은 뒤에는 환불되지 않아요.</dd>
 <dt>AI 라이팅 버튼을 못 찾겠어요</dt>
-<dd>먼저 글자 상자를 한 번 클릭해 선택해 주세요. 글자 도구 막대나 왼쪽 AI 메뉴에서 찾을 수 있어요. 무료 요금제는 사용 횟수가 정해져 있어서, 횟수를 다 쓰면 버튼이 막힐 수 있습니다.</dd>
-<dt>포스터를 인쇄하니 흐리게 나와요</dt>
-<dd>화면용 PNG 대신 PDF로 받아 주세요. 인쇄용 옵션이 보이면 그걸 고르고, 올린 사진이 너무 작지 않은지도 확인합니다. 대량 인쇄는 같은 회사의 비즈하우스로 주문할 수 있어요.</dd>
+<dd>글자 도구 막대가 아니라 편집기 왼쪽 아래 AI 버튼 안에 있어요. 무료 요금제는 하루 크레딧이 정해져 있어서, 다 쓰면 다음 날 다시 쓸 수 있습니다.</dd>
+<dt>말투를 바꾸는 버튼이 없어요</dt>
+<dd>공식 도움말 기준으로 말투 바꾸기는 지금 지원하지 않아요. 처음 요청에 "차분한 말투로", "부드러운 존댓말로"처럼 말투를 적어 주세요.</dd>
 </dl>
 </div>
 </details>
@@ -504,100 +368,109 @@
 <div class="a-body">
 <ul>
 <li>미리캔버스 템플릿과 요소로 만든 디자인은 홍보물로 게시하고 인쇄해도 됩니다. 다만 요소를 다른 툴로 가져가 편집하면 저작권 문제가 생길 수 있으니 미리캔버스 편집기 안에서 편집하세요.</li>
+<li>"최고", "100% 합격" 같은 과장 표현은 AI가 넣어도 빼 주세요. 수강료를 적는다면 교육청에 신고한 금액과 같은지 확인합니다.</li>
 <li>학생 얼굴 사진은 학부모님 동의를 먼저 받으세요.</li>
-<li>수강료를 적는다면 교육청에 신고한 금액과 같은지 확인하세요.</li>
 </ul>
 </div>
 </details>
 </div>
 </section>
 
-<section class="ait-sec" id="t5">
-<p class="ait-label">05 | 티로 수업 녹음</p>
-<h2>학원 데이터화는 수업 녹음부터</h2>
-<img class="ait-shot" src="../assets/articles/ai-tools-5/05-tiro.webp" alt="티로로 수업을 녹음해 데일리 수업일지와 학부모 안내 문구가 만들어지는 예시 화면" />
-<p class="ait-cap">예시 화면이에요. 알림톡 발송은 별도 설정이 필요합니다.</p>
-<p class="ait-sum">회의 녹음처럼 수업을 받아 적는 앱이에요<br />노션, 클로드와 이으면 위클리 리포트까지<br />수업일지 알림톡 자동 발송도 만들 수 있어요</p>
+<section class="ait-sec" id="t3">
+<p class="ait-clock">오후 4:00 | 수업 시작</p>
+<p class="ait-label">03 | 티로 수업 녹음</p>
+<h2>수업은 녹음만, 일지는 알아서</h2>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/03-tiro.webp" alt="티로 수업 녹음이 끝나고 수업일지가 만들어진 뒤 공유하기에서 노션으로 보내는 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 실제 화면 구성은 조금 다를 수 있어요.</p>
+<p class="ait-sum">녹음이 끝나면 수업일지가 자동 정리돼요<br />버튼 한 번이면 노션에 저장되고<br />우리 학원 수업 기록이 매일 쌓여요</p>
 <div class="callout ait-try">
 <p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
-<p>노션도 클로드도 아직 필요 없어요. 티로의 나만의 템플릿에 아래 양식을 넣어 두고, 오늘 수업 하나만 녹음해 수업일지가 어떻게 나오는지 보세요.</p>
-<div class="ait-prompt">아래 형식으로 정리해 줘.
-반: / 날짜: / 교재와 단원: / 쪽수:
-1. 오늘 진도
-2. 핵심 개념 3줄
-3. 학생들이 자주 틀리거나 질문한 부분
-4. 숙제: 범위와 제출일
-5. 다음 수업 예고
-6. 학부모 안내용 3줄 요약(반 전체 기준, 학생 개인 이름과 평가는 빼고)
-녹음에 없는 내용은 지어내지 말고 비워 둬.</div>
+<p>티로의 템플릿 관리에서 "수업일지" 템플릿을 만들고, 예시 문서 섹션에 아래처럼 실제 수업일지 한 편을 붙여 넣어 두세요. 티로가 이 모양을 보고 다음 녹음부터 같은 형식으로 정리합니다.</p>
+<div class="ait-prompt">중2A 수학 수업일지 | 10월 14일
+오늘 진도: 일차함수 기울기
+숙제: 쎈 B단계 112~118쪽, 다음 수업 전까지
+특이사항: 7번, 12번 학생 개념 보충 필요
+다음 시간: y절편과 그래프</div>
 </div>
 <div class="a-toggles">
 <details class="a-toggle">
 <summary><span class="t">왜 이 툴일까요</span></summary>
 <div class="a-body">
-<p>티로는 회의를 녹음하면 실시간으로 받아 적고 회의록까지 만들어 주는 AI 녹음 앱이에요. 이걸 수업에 쓰면 이야기가 달라집니다.</p>
-<p>학원 데이터화라고 하면 출결과 성적부터 떠올리지만, 정작 수업에서 무엇을 가르쳤고 아이들이 어디서 막혔는지는 선생님 머릿속에만 남아요. 이 기록이 없으면 수업일지도, 주간 리포트도, 학부모님 상담도 매번 기억에 기대어 새로 써야 합니다. 수업을 녹음해 두면 수업일지, 노션 기록, 클로드가 쓰는 위클리 리포트, 알림톡까지 같은 기록 하나에서 이어져요. 학원 데이터화의 시작이 결국 수업 녹음인 이유입니다.</p>
+<p>원장님들이 가장 많이 꼽는 반복 업무가 "수업 끝나고 쓰는 학생별 기록"입니다. 수업보다 수업 끝난 뒤가 더 길다는 말이 나올 정도예요. 티로는 회의를 받아 적어 회의록을 만드는 AI 녹음 앱인데, 이걸 수업에 쓰면 녹음만 하고 일지는 티로가 정리하게 할 수 있습니다.</p>
+<p>핵심은 폴더 자동화예요. 반마다 폴더를 만들고 "수업일지" 템플릿을 걸어 두면, 그 폴더에서 녹음한 수업은 기록이 끝날 때 수업일지가 자동으로 만들어집니다. 노션 저장은 지금은 [공유하기] 버튼을 한 번 눌러야 해요. 티로에서 노션 자동 전송은 새로 설정할 수 없고, 자동 전송은 Slack만 됩니다.</p>
 </div>
 </details>
 <details class="a-toggle">
 <summary><span class="t">준비물</span></summary>
 <div class="a-body">
 <ul>
-<li><b>요금제</b> 티로는 가입 후 3주 무료 체험(최대 300분, 노트당 50분)이고, 이후 Lite 월 8,900원부터예요. 나만의 템플릿은 Lite부터 씁니다. 노션은 개인 무료로 시작하고, 클로드 노션 커넥터가 무료에서 되는지는 연결 화면에서 확인해 주세요.</li>
-<li><b>설치할 앱</b> 티로 휴대폰 앱(녹음), 티로 웹이나 데스크톱 앱(노션 보내기), 노션, 클로드</li>
-<li><b>필요한 것</b> 수업 녹음 안내 공지, 노션 "수업일지" 데이터베이스. 알림톡까지 가려면 학원 카카오톡 채널(비즈니스 인증)과 솔라피 계정이 필요해요.</li>
+<li><b>요금제</b> 가입하면 무료 체험 100분을 주고, 3주 안에 과제 4개(첫 노트, 캘린더 연결, 데스크톱 앱, 모바일 앱)를 하면 최대 300분까지 늘어나요. 체험 중에는 노트 하나가 50분을 넘으면 내용이 흐리게 가려지고, 120분이 넘으면 녹음이 멈춥니다. 유료는 라이트 월 $7(월 300분)부터이고, 나만의 템플릿은 라이트부터 쓸 수 있어요. 원화 금액은 결제 화면에서 확인해 주세요.</li>
+<li><b>설치할 앱</b> 티로 휴대폰 앱이나 데스크톱 앱(녹음), 티로 웹이나 데스크톱 앱(템플릿 관리, 노션 보내기), 노션</li>
+<li><b>필요한 것</b> 수업 녹음 안내 공지, 노션 "수업일지" 데이터베이스, 실제 수업일지 한 편(템플릿 예시용)</li>
 </ul>
 </div>
 </details>
 <details class="a-toggle">
-<summary><span class="t">상세 따라 하기</span><span class="c">10단계</span></summary>
+<summary><span class="t">상세 따라 하기</span><span class="c">13단계</span></summary>
 <div class="a-body">
 <ol class="ait-steps">
-<li class="stage">녹음과 데일리 수업일지(티로)</li>
-<li>tiro.ooo 에 가입하고 휴대폰에 티로 앱을 설치합니다. 교실에 노트북이 없으면 휴대폰 앱이 편해요.</li>
-<li>나만의 템플릿에 위 데일리 수업일지 양식을 넣어 둡니다. 나만의 템플릿은 Lite 요금제부터 쓸 수 있어요.</li>
-<li>수업을 시작할 때 녹음 버튼을 누르고, 끝나면 기록을 종료합니다. 요약과 함께 수업일지 문서가 만들어집니다.</li>
-<li class="stage">수업일지를 노션으로 보내기</li>
-<li>노션에 '수업일지' 데이터베이스를 하나 만듭니다. 속성은 날짜, 반, 선생님 정도면 충분해요.</li>
-<li>티로 웹이나 데스크톱 앱에서 노트를 열고 <span class="ui">공유하기</span> &#8594; <span class="ui">Notion</span>을 누릅니다. 처음 한 번은 노션 계정으로 로그인해 연동해요. 설정 &gt; 연동 관리에서 미리 해 둘 수도 있습니다.</li>
-<li>보낼 곳으로 수업일지 데이터베이스를 고르면 새 항목으로 들어갑니다. 보낼 내용에서 요약과 수업일지 문서를 체크해 주세요.</li>
-<li class="stage">노션과 클로드로 위클리 리포트</li>
-<li>claude.ai 또는 클로드 앱에서 설정 &gt; 커넥터로 들어가 Notion을 연결하고, 수업일지 데이터베이스가 있는 페이지에 접근을 허락합니다.</li>
-<li>새 대화의 입력창 [+] &gt; 커넥터에서 Notion이 켜져 있는지 확인합니다.</li>
-<li>금요일 수업이 끝나면 클로드에게 노션 수업일지에서 이번 주 반 항목을 읽어 위클리 리포트를 써 달라고 요청합니다. 이번 주 배운 내용, 핵심 개념, 반 전체가 어려워한 부분, 숙제, 다음 주 진도 순서로, 수업일지에 없는 내용과 학생 개인 이름은 빼 달라고 하면 됩니다.</li>
-<li>노션에 저장된 위클리 리포트를 읽어 보고, 비어 있는 요일이 없는지 확인한 뒤 학부모님께 공유합니다.</li>
+<li class="stage">처음 한 번 설정</li>
+<li>tiro.ooo 에서 구글, 마이크로소프트 계정이나 이메일로 가입합니다. 결제 수단은 필요 없어요. <span class="ait-see">마지막 안내 화면에 [바로 노트 만들기] 버튼이 보입니다.</span></li>
+<li>다운로드 페이지에서 데스크톱 앱(윈도우, 맥)을 받고, 휴대폰은 앱스토어나 구글 플레이에서 받습니다. 같은 계정으로 로그인하면 기기마다 노트가 동기화돼요.</li>
+<li>사이드바 PRIVATE 영역에 반 이름으로 폴더를 만듭니다(예: 중2A 수학). 폴더 옆 [⋯] &gt; [폴더 설정]에서 "중2 A반 수학 수업"처럼 설명을 적어 두면 AI가 맥락으로 씁니다. <span class="ait-see">새 폴더 버튼의 정확한 이름은 화면에서 확인해 주세요.</span></li>
+<li>웹이나 데스크톱 앱에서 사이드바 프로필 메뉴의 <span class="ui">템플릿 관리</span>를 엽니다. 템플릿은 휴대폰에서 만들거나 고칠 수 없어요.</li>
+<li>새 템플릿 이름을 "수업일지"로 정하고 섹션을 만듭니다. 섹션 제목(오늘 진도, 숙제, 특이사항, 다음 시간)은 문서에 그대로 들어가고, 섹션마다 Q&amp;A, 액션 아이템, 예시 문서, 일반 텍스트 중 하나를 고릅니다. 예시 문서 섹션에는 위 5분 박스처럼 실제 일지 원문을 붙여 넣어요. 링크(노션 주소 포함)는 읽지 못합니다. <span class="ait-see">티로 라이브러리의 "강의 노트"를 [내 템플릿으로 복제]해 고쳐 써도 됩니다.</span></li>
+<li>저장 범위를 [개인]으로 골라 저장합니다. 저장하면 휴대폰 앱 템플릿 목록에도 바로 나타나요.</li>
+<li>반 폴더 옆 [⋯] &gt; [폴더 설정] &gt; <span class="ui">자동화 설정</span> 탭에서 맞춤문서로 "수업일지"를 고릅니다. 템플릿은 노트 하나씩이 아니라 폴더 단위로만 걸 수 있어요.</li>
+<li class="stage">매 수업</li>
+<li>반 폴더를 연 상태에서 새 노트를 시작합니다. 웹과 데스크톱은 [실시간 기록 시작](Cmd 또는 Ctrl + N), 휴대폰은 새 노트 화면에서 [실시간 기록] 모드를 고른 뒤 [실시간 기록 시작]을 누릅니다. 휴대폰 기본값은 오프라인 녹음 모드예요. <span class="ait-see">시작하면 빨간 버튼이 음성 파형으로 바뀝니다. 폴더 안에서 시작해야 자동화가 걸리니 첫날 한 번 확인해 주세요.</span></li>
+<li>(선택) 시작 전 [맥락 입력] 칸에 오늘 단원명을 적어 두면 받아쓰기가 더 정확해져요.</li>
+<li>쉬는 시간에는 [녹음 일시정지]와 [녹음 재개]를 쓰고, 수업이 끝나면 [기록 종료]를 누릅니다. 한 번 종료한 노트는 이어서 기록할 수 없어요. 휴대폰은 화면을 잠가도 녹음이 이어집니다.</li>
+<li>노트의 [문서] 버튼을 눌러 자동으로 만들어진 "수업일지"를 확인합니다. 진도와 숙제, 특이사항 학생 번호가 맞는지 보고 필요하면 고쳐요. <span class="ait-see">문서가 안 보이면 새로고침해 보세요.</span></li>
+<li class="stage">노션에 저장</li>
+<li>노션에 "수업일지" 데이터베이스를 하나 만들어 둡니다(속성은 날짜, 반, 선생님 정도). 티로 웹이나 데스크톱 앱에서 노트의 <span class="ui">공유하기</span> &gt; Notion을 누르면, 처음 한 번은 노션 연동 화면이 열려요. [설정] &gt; [연동 관리]에서 미리 연결해 둘 수도 있습니다.</li>
+<li>보낼 곳 검색창에서 수업일지 데이터베이스를 고르고, 담을 내용(요약, 스크립트, 생성 문서)을 체크해 보냅니다. 데이터베이스를 고르면 새 항목으로 들어가요. <span class="ait-see">생성 문서는 "수업일지 (한국어)"처럼 표시되고, 페이지가 검색되지 않으면 데이터베이스를 대상으로 고르라고 안내돼 있어요.</span></li>
 </ol>
-<p class="ait-note">티로에서 노션으로 기록이 끝날 때마다 자동으로 보내는 설정은 2026년 9월 말 티로 안내 기준으로 새로 만들 수 없어요(자동 전송은 Slack만). 그래서 공유하기 한 번은 직접 눌러 주셔야 합니다. 휴대폰 앱에서는 노션 보내기가 안 되니 웹이나 데스크톱 앱에서 해 주세요.</p>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">더 나아가기: 티로 바로 읽기와 알림톡</span><span class="c">선택</span></summary>
-<div class="a-body">
-<p><b>클로드가 티로 노트를 바로 읽게</b> 노션을 거치지 않고 연결할 수도 있어요. 클로드 커넥터 화면에서 Add custom connector를 누르고 이름은 Tiro, 주소는 https://mcp.tiro.ooo/mcp 를 넣은 뒤 티로 계정으로 로그인하면 됩니다. 다만 선생님들과 기록을 함께 쌓고 보기에는 노션이 편합니다.</p>
-<p><b>솔라피 알림톡</b> 수업이 끝나면 오늘 진도와 숙제를 학부모님께 알림톡으로 보내는 학원이 많죠. 이 발송을 솔라피(Solapi)로 자동화할 수 있지만 준비가 필요합니다. 학원 카카오톡 채널을 비즈니스 인증하고, solapi.com 에서 채널을 연동한 뒤, 알림톡 템플릿을 등록해 카카오 검수를 받아야 해요. 알림톡은 승인받은 템플릿으로만 보낼 수 있고, 진도와 숙제는 바뀌는 칸(변수)으로 넣습니다.</p>
-<p>처음 한 달은 반자동을 권해 드려요. 클로드에게 오늘 수업일지로 반별 진도, 숙제, 다음 수업 표를 만들어 달라고 하고, 원장님이 확인한 뒤 솔라피에서 보내는 방식입니다. 완전 자동 발송은 솔라피 API 연결을 따로 만들어야 하고, 수업 안내가 검수를 통과하는지와 변수 길이 제한은 템플릿 등록 화면에서 먼저 확인해 주세요.</p>
-</div>
-</details>
-<details class="a-toggle">
-<summary><span class="t">이렇게도 써 보세요</span><span class="c">3가지</span></summary>
-<div class="a-body">
-<ul class="ait-uselist">
-<li><b>매주 금요일</b> 일주일 치 수업일지를 클로드가 반별 위클리 리포트로 한 번에 정리합니다.</li>
-<li><b>상담 전</b> 노션 수업일지에서 최근 4주 동안 그 반이 어려워한 단원만 모아 달라고 하면, 기억 대신 기록으로 상담 자료를 준비할 수 있어요.</li>
-<li><b>선생님 교체, 대강</b> 지난 수업일지를 그대로 넘겨 드리면 진도와 막힌 부분이 한 번에 전달됩니다.</li>
+<p class="ait-note">노션 보내기는 휴대폰 앱에서는 안 되고, 기록 중에도 쓸 수 없어요. 수업이 끝난 뒤 웹이나 데스크톱 앱에서 해 주세요.</p>
+<p class="ait-ref-h">참고한 자료</p>
+<ul class="ait-ref">
+<li><a href="https://docs.tiro.ooo/ko/guide/automation/folders" target="_blank" rel="noopener">폴더 자동화</a>, 티로 공식 문서</li>
+<li><a href="https://docs.tiro.ooo/ko/guide/notes/templates" target="_blank" rel="noopener">템플릿</a>, 티로 공식 문서</li>
+<li><a href="https://docs.tiro.ooo/ko/guide/sharing/integrations" target="_blank" rel="noopener">내보내기(Notion)</a>, 티로 공식 문서</li>
+<li><a href="https://www.youtube.com/watch?v=c2GMXU_Eats" target="_blank" rel="noopener">Tiro 제품 소개 | AI 회의록 핵심 기능 4가지</a>, 유튜브 티로 공식 채널</li>
 </ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">이렇게도 써 보세요</span><span class="c">5가지</span></summary>
+<div class="a-body">
+<p>폴더마다 템플릿을 걸어 두는 방법을 익히시면, 수업 말고도 "말로 하고 나중에 글로 정리하던 일"에 그대로 옮겨 쓸 수 있어요. 녹음할 때는 상대에게 먼저 알리는 게 기본입니다.</p>
+<ul class="ait-uselist">
+<li><b>상담 녹음으로 상담일지</b> "상담" 폴더에 상담일지 템플릿(상담 내용, 학부모 요청, 약속한 것, 다음 연락일)을 걸어 둡니다. 녹음 동의를 받은 상담만 녹음하면, 기억에만 의존하던 상담 기록이 남아요.</li>
+<li><b>강사 회의록</b> "강사 회의" 폴더에 회의록 템플릿을 걸고, 액션 아이템 섹션으로 누가 무엇을 언제까지 할지 정리합니다. 따로 확인하지 않아도 할 일이 한 장에 남아요.</li>
+<li><b>학부모 설명회 Q&amp;A 정리</b> 설명회를 녹음하고 Q&amp;A 섹션 템플릿으로 학부모님 질문과 답을 정리합니다. 다음 설명회 자료와 자주 묻는 질문을 만들 때 그대로 써요.</li>
+<li><b>매주 반별 위클리 리포트</b> 노션에 쌓인 한 주 수업일지를 클로드에게 읽혀 반별 위클리 리포트로 묶습니다. 아래 "더 나아가기" 칸에 연결 방법이 있어요.</li>
+<li><b>선생님 교체와 대강 인수인계</b> 반 폴더에 쌓인 수업일지를 그대로 넘겨 드리면 진도와 막힌 부분이 한 번에 전달됩니다.</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">더 나아가기: 클로드와 위클리 리포트</span><span class="c">선택</span></summary>
+<div class="a-body">
+<p>클로드 설정 &gt; 커넥터에서 Notion을 연결하면, 금요일에 "노션 수업일지에서 이번 주 중2A 항목을 읽어 위클리 리포트를 써 줘"라고 요청할 수 있어요. 수업일지에 없는 내용과 학생 개인 이름은 빼 달라고 함께 적어 주세요.</p>
+<p>노션을 거치지 않고 클로드가 티로 노트를 바로 읽게 할 수도 있습니다. 클로드 커넥터 화면에서 Add custom connector를 누르고 주소 https://mcp.tiro.ooo/mcp 를 넣은 뒤 티로 계정으로 로그인하면 돼요. 다만 선생님들과 기록을 함께 쌓고 보기에는 노션이 편합니다.</p>
 </div>
 </details>
 <details class="a-toggle">
 <summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
 <div class="a-body">
 <dl class="ait-qa">
+<dt>녹음을 끝냈는데 수업일지가 안 생겨요</dt>
+<dd>반 폴더 밖에서 노트를 시작했을 가능성이 커요. 폴더 자동화는 그 폴더에서 만든 노트에 적용됩니다. [폴더 설정] &gt; [자동화 설정]에서 맞춤문서가 골라져 있는지도 확인해 주세요. 노트의 [문서]에서 템플릿을 골라 다시 만들 수도 있어요.</dd>
 <dt>공유하기를 눌러도 Notion이 안 보여요</dt>
-<dd>휴대폰 앱에서는 노션 보내기가 안 돼요. 티로 웹이나 데스크톱 앱에서 노트를 열어 주세요. 그래도 안 보이면 설정 &gt; 연동 관리에서 노션 연동부터 해 둡니다.</dd>
-<dt>90분 수업이 중간에 끊겼어요</dt>
-<dd>무료 체험은 노트당 50분까지만 기록돼요. 쉬는 시간을 기준으로 두 번 나눠 녹음하거나, 유료 요금제로 올리면 됩니다.</dd>
-<dt>클로드가 노션 수업일지를 못 찾아요</dt>
-<dd>노션을 연결할 때 수업일지 데이터베이스가 있는 페이지에 접근을 허락했는지 확인해 주세요. 입력창 [+] &gt; 커넥터에서 Notion이 켜져 있는지, 요청 속 데이터베이스 이름이 노션과 똑같은지도 봅니다.</dd>
+<dd>휴대폰 앱에서는 노션 보내기가 안 돼요. 웹이나 데스크톱 앱에서 노트를 열고, 그래도 안 보이면 [설정] &gt; [연동 관리]에서 노션부터 연결합니다.</dd>
+<dt>90분 수업 녹음이 흐리게 가려졌어요</dt>
+<dd>무료 체험은 노트 하나가 50분을 넘으면 내용이 가려지고, 120분이 넘으면 녹음이 멈춰요. 쉬는 시간 기준으로 나눠 녹음하거나 유료로 올리세요. 유료는 노트당 최대 5시간까지 됩니다.</dd>
 </dl>
 </div>
 </details>
@@ -605,9 +478,220 @@
 <summary><span class="t">주의점</span></summary>
 <div class="a-body">
 <ul>
-<li>녹음 전에 녹음한다는 사실을 먼저 알리세요. 수업 녹음은 학원 공지로 학생과 학부모님께 안내하는 게 안전합니다.</li>
-<li>수업 중 학생 이름이 그대로 기록돼요. 노션과 알림톡으로 넘기기 전에 다른 학생 이름이 섞이지 않았는지 확인하세요.</li>
-<li>알림톡은 잘못 보내면 되돌릴 수 없어요. 처음 한 달은 사람이 한 번 보고 보내는 반자동으로 운영해 보세요.</li>
+<li>녹음 전에 녹음한다는 사실을 먼저 알리세요. 수업 녹음은 학원 공지로 학생과 학부모님께 안내하고, 상담 녹음은 그때마다 동의를 받습니다.</li>
+<li>수업 중 학생 이름이 그대로 기록돼요. 노션으로 보내거나 학부모님께 공유하기 전에 다른 학생 이름이 섞이지 않았는지 확인하세요.</li>
+<li>노션 수업일지 데이터베이스의 공유 범위를 확인해 주세요. 공개 링크로 열어 두면 학생 기록이 밖으로 보일 수 있어요.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t4">
+<p class="ait-clock">오후 10:00 | 수업 끝</p>
+<p class="ait-label">04 | 클로드 코워크</p>
+<h2>리포트카드 20장, 알아서 완성</h2>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/04-claude-cowork.webp" alt="클로드 코워크가 출결, 성적, 과제 파일을 읽고 리포트카드 PDF 20개를 폴더에 저장한 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 결과 파일 형식은 요청과 환경에 따라 달라질 수 있어요.</p>
+<p class="ait-sum">컴퓨터 속 출결, 성적 파일로<br />학생별 리포트카드를 만들어<br />폴더에 차곡차곡 저장해 둬요</p>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>수업이 끝나면 출결, 성적, 과제 엑셀의 복사본을 담은 폴더를 코워크에 연결하고 아래 문장을 붙여 넣으세요. 작업 계획을 확인하고 실행을 허락하면, 정리하시는 동안 리포트카드가 폴더에 쌓여요.</p>
+<div class="ait-prompt">연결한 폴더의 출결_10월.xlsx, 성적_중간고사.xlsx, 과제기록.xlsx로
+중2 학생 번호마다 10월 리포트카드를 한 장씩 PDF로 만들어서 '리포트카드_10월' 폴더에 저장해 줘.
+한 장에 넣을 것: 출석률, 과목별 성적 막대그래프, 과제 제출률, 선생님 코멘트 칸(비워 둘 것)
+학생 이름 자리는 {이름}으로 비워 두고, 엑셀에 없는 숫자나 평가는 지어내지 마.
+시작하기 전에 계획부터 보여 주고, 파일을 옮기거나 지우기 전에는 먼저 물어봐 줘.
+끝나면 만든 파일 목록과 숫자가 비어 있는 학생 번호를 알려 줘.</div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">왜 이 툴일까요</span></summary>
+<div class="a-body">
+<p>월말 리포트는 원생 수만큼 쌓여요. AI에게 엑셀을 맡기려면 보통 파일을 하나씩 올리고, 결과를 내려받고, 다시 폴더에 정리해야 합니다. 클로드 코워크는 반대로 원장님이 허락한 폴더 안에 들어와 출결, 성적 파일을 직접 열어 보고, 결과 파일을 그 폴더에 저장해 둬요.</p>
+<p>밤새 맡겨 둘 필요는 없습니다. 수업이 끝나고 다른 정리를 하시는 동안 돌려 두면 돼요. 진행 상황은 화면에서 단계별로 보이고, 끝나면 무엇을 만들었는지 요약이 나옵니다.</p>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">준비물</span></summary>
+<div class="a-body">
+<ul>
+<li><b>요금제</b> 유료 요금제(Pro, Max, Team, Enterprise)에서만 됩니다. Pro는 월 $20(연 결제 시 월 $17), Max는 월 $100부터예요. 여러 단계 작업이라 일반 질문보다 사용량을 많이 씁니다.</li>
+<li><b>설치할 앱</b> 클로드 데스크톱 앱(맥, 윈도우). claude.com/download 에서 받아요. 내 컴퓨터 폴더를 쓰는 작업은 데스크톱 앱이 열려 있는 동안에만 됩니다.</li>
+<li><b>필요한 파일</b> 출결, 성적, 과제 엑셀의 복사본을 모은 폴더 하나. 학생 이름은 번호로 바꾸고 연락처와 상담 메모는 빼 둡니다.</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">12단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li>claude.com/download 에서 윈도우나 맥용 설치 파일을 받아 실행합니다. <span class="ait-see">실행하면 나머지 파일을 알아서 받아 설치를 마쳐요.</span></li>
+<li>앱에서 [시작하기]를 누르고 클로드 계정이나 구글 계정으로 로그인합니다. 처음에 단축키와 메뉴 막대 설정이 나오면 [계속]을 눌러요.</li>
+<li>바탕화면에 '리포트카드_작업' 폴더를 만들고 출결, 성적, 과제 엑셀의 복사본을 넣습니다. 학생 이름 열은 번호로 바꾸고, 파일마다 학생 번호 열 이름을 똑같이 맞춰 두면 합칠 때 실수가 줄어요.</li>
+<li>코워크로 바꿉니다. 공식 도움말은 입력창 왼쪽 아래에서 Cowork를 고른다고 안내하고, 화면에 따라 창 위쪽에 Chat, Cowork, Code 탭으로 보이기도 해요. <span class="ait-see">최근 바뀐 새 클로드 화면에서는 클로드가 대화로 답할지 작업을 할지 알아서 정해서, 이 선택 단계가 없을 수 있어요.</span></li>
+<li>입력창 아래에서 폴더를 연결합니다. 화면에 따라 "Work in a Folder"로 보여요. 폴더 선택 창에서 '리포트카드_작업' 폴더를 고릅니다. 일과 관련된 가장 작은 폴더를 고르는 게 안전해요.</li>
+<li>이 폴더의 파일을 읽고, 고치고, 지워도 되는지 묻는 권한 창이 뜨면 허용합니다. 한 번만 허용할 수도 있고 Always Allow를 고를 수도 있어요. <span class="ait-see">클로드는 연결한 폴더 안에서만 읽고 쓰고, 그 밖은 건드리지 않습니다.</span></li>
+<li>승인 방식을 고릅니다. Manually approve(읽기와 쓰기 모두 매번 확인), Automatically approve(읽기는 자동, 쓰기와 지우기는 클로드가 판단), Skip all approvals(모두 자동) 세 가지예요. 처음에는 Manually approve로 지켜보세요.</li>
+<li>위 5분 박스의 프롬프트를 붙여 넣고 보냅니다.</li>
+<li>클로드가 보여 주는 작업 계획을 읽고, 맞으면 실행을 허락합니다. 계획 승인 버튼 이름은 화면에서 확인해 주세요.</li>
+<li>오른쪽 사이드바에서 진행 상황을 봅니다. 어떤 파일을 열고 어떤 판단을 했는지 단계마다 보여요. Manually approve 모드에서는 동작마다 허락을 묻고, 파일을 지우기 전에는 반드시 허락 창(Allow)이 뜹니다.</li>
+<li>끝나면 결과 요약이 나와요. 만든 파일은 Artifacts 창에서 눌러 미리 볼 수 있고, '리포트카드_10월' 폴더에도 저장돼 있습니다. PDF로 나왔는지 첫 장으로 확인해 주세요.</li>
+<li>학생 2~3명만 원본 엑셀과 숫자를 대조하고, 선생님 코멘트 칸을 채운 뒤 학부모님께 공유합니다. 공유 문자는 다음 섹션의 챗GPT 스킬로 이어서 준비할 수 있어요.</li>
+</ol>
+<p class="ait-note">로컬 폴더 작업은 데스크톱 앱이 열려 있고 인터넷이 연결된 동안에만 됩니다. 수업 끝나고 컴퓨터 앞에서 바로 돌리면 이 조건이 자연스럽게 맞아요.</p>
+<p class="ait-ref-h">참고한 자료</p>
+<ul class="ait-ref">
+<li><a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork" target="_blank" rel="noopener">Get started with Claude Cowork</a>, Anthropic 공식 고객지원</li>
+<li><a href="https://support.claude.com/en/articles/13364135-use-claude-cowork-safely" target="_blank" rel="noopener">Use Claude Cowork safely</a>, Anthropic 공식 고객지원</li>
+<li><a href="https://www.iexceller.com/myxls/ti-con/t0081/claude-cowork-features-and-setup-guide/" target="_blank" rel="noopener">클로드 코워크란? 핵심 기능부터 윈도우 설치까지</a>, 엑셀러 권현욱</li>
+<li><a href="https://www.youtube.com/watch?v=z9rdrNrkvDY" target="_blank" rel="noopener">Learn 80% of Claude Cowork in Under 20 Minutes</a>, 유튜브 Jeff Su</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">이렇게도 써 보세요</span><span class="c">5가지</span></summary>
+<div class="a-body">
+<p>폴더를 연결해 엑셀을 읽히고 결과 파일을 저장받는 방법을 익히시면, 학원에서 "여러 시트를 오가며 손으로 합치던 일"에 그대로 쓸 수 있어요.</p>
+<ul class="ait-uselist">
+<li><b>시험 결과 분석표</b> 채점 엑셀을 넣어 두고, 문항별 정답률과 반별 평균, 정답률이 낮은 문항 3개를 정리한 분석표를 같은 폴더에 저장받아요. 퇴근 후 채점 엑셀 정리를 줄일 수 있습니다.</li>
+<li><b>미납 현황 정리</b> 수납 엑셀 복사본에서 이번 달 미납 학생 번호와 금액, 미납 개월 수를 표로 뽑아 둡니다. 안내 문구는 원장님이 직접 다듬어 보내세요.</li>
+<li><b>흩어진 자료 폴더 정리</b> "최종", "최종2"가 쌓인 자료 폴더 복사본을 학년, 과목, 학교 순서로 나눠 정리시켜요. 옮기기 전에 계획부터 보여 달라고 하면 안전합니다.</li>
+<li><b>상담 대상 추리기</b> 출결과 과제 엑셀을 합쳐 출석률이나 과제 제출률이 낮은 학생 번호만 '상담대상' 파일로 뽑아 상담 주간을 준비해요.</li>
+<li><b>시험 기간 자습실 출석 추첨</b> 시험 기간에 자습실을 열고 출석한 학생 중 추첨해 장학금을 주는 학원들이 있어요. 출석 기록 엑셀로 추첨 대상 명단을 뽑아 둡니다.</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>Cowork 선택이 안 보여요</dt>
+<dd>무료 요금제에서는 쓸 수 없어요. 유료 요금제로 로그인했는지 먼저 봅니다. 새 클로드 화면에서는 선택 단계 없이 바로 작업을 맡기면 되니, 폴더를 연결하고 요청을 보내 보세요.</dd>
+<dt>작업이 중간에 멈춰 있어요</dt>
+<dd>Manually approve 모드라면 클로드가 허락을 기다리는 중일 때가 많아요. 화면의 허락 요청을 확인해 주세요. 앱을 닫거나 컴퓨터가 잠들면 세션은 남아 있어도 내 컴퓨터 파일에는 접근하지 못합니다.</dd>
+<dt>리포트카드 숫자가 원본과 달라요</dt>
+<dd>파일마다 학생 번호 열 이름이 다르면 잘못 합쳐질 수 있어요. 열 이름을 통일하고 "학생 번호 열을 기준으로 합쳐 줘"라고 적어 주세요. 첫 달은 꼭 2~3명을 원본과 대조합니다.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span></summary>
+<div class="a-body">
+<ul>
+<li>폴더를 연결하면 그 안의 파일은 전부 클로드가 볼 수 있어요. 학생 연락처, 상담 메모, 수납 정보가 든 파일은 폴더에서 빼고 연결하세요.</li>
+<li>Skip all approvals는 지우기까지 묻지 않고 진행할 수 있어요. 학원 자료에서는 Manually approve나 Automatically approve를 권해 드립니다.</li>
+<li>리포트카드는 초안이에요. 코멘트와 숫자는 원장님이 확인한 뒤 공유합니다.</li>
+</ul>
+</div>
+</details>
+</div>
+</section>
+
+<section class="ait-sec" id="t5">
+<p class="ait-clock">오후 10:30 | AI 비서들 덕분에 빠른 퇴근!</p>
+<p class="ait-label">05 | 챗GPT Record a skill</p>
+<h2>한 번 보여 주면, 다음부턴 GPT가 해요</h2>
+<img class="ait-shot" src="../assets/articles/ai-tools-5/05-chatgpt-skill.webp" alt="챗GPT 스킬이 리포트카드 PDF를 붙인 학부모님 문자 초안 20개를 만들고 확인 후 보내기에서 멈춘 예시 화면" />
+<p class="ait-cap">예시 화면이에요. 실제 화면 구성은 조금 다를 수 있어요.</p>
+<p class="ait-sum">리포트카드 붙인 학부모 문자를 한 번 녹화하면<br />다음부터는 GPT가 그대로 따라 해요<br />원장님은 확인하고 보내기만 하세요</p>
+<div class="callout ait-try">
+<p class="ait-try-h">오늘 5분이면 해 보는 첫 한 가지</p>
+<p>1번 학생 문자를 한 번 녹화해 "리포트카드 문자" 스킬로 저장했다면, 새 Work 대화에서 @를 눌러 스킬을 고르고 아래 문장을 보내 보세요. 바뀌는 값만 알려 주면 같은 순서로 따라 합니다.</p>
+<div class="ait-prompt">리포트카드 문자 스킬로 1번부터 20번 학생까지 학부모님 문자 초안을 만들어 줘.
+바뀌는 값은 학생 번호와 '리포트카드_10월' 폴더의 리포트카드_번호.pdf야.
+문자마다 해당 학생 PDF를 첨부하고, 내용은 녹화한 1번 문자와 같은 형식으로.
+보내기 전에 모두 멈추고, 받는 분과 첨부 파일이 맞는지 나한테 목록으로 보여 줘.</div>
+</div>
+<div class="a-toggles">
+<details class="a-toggle">
+<summary><span class="t">왜 이 툴일까요</span></summary>
+<div class="a-body">
+<p>리포트카드를 만들었다고 끝이 아니에요. 학생마다 PDF를 찾아 붙이고, 같은 안내 문구를 스무 번 쓰는 일이 남습니다. 챗GPT 맥 데스크톱 앱의 Record &amp; Replay는 원장님이 맥에서 한 번 해 보이는 과정을 녹화해 "스킬"로 만들어 둬요. 다음부터는 바뀌는 값(학생 번호, 파일)만 알려 주면 챗GPT가 컴퓨터 사용(Computer Use) 기능으로 같은 순서를 따라 합니다.</p>
+<p>메뉴에서는 Record a skill로 보이고, Work 모드 안의 기능이에요. 2026년 6월에 나왔고, 출시 때 EEA, 영국, 스위스는 제외됐지만 한국은 쓸 수 있습니다.</p>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">알아 두면 좋은 점: 채팅과 Work</span></summary>
+<div class="a-body">
+<p><b>채팅은 읽고 끝나는 답을 주고, Work는 고쳐 쓸 수 있는 완성 파일과 작업을 해 줍니다.</b> 문자 한 통 다듬기는 지금처럼 채팅이 빠르고 편해요. 여러 파일을 열고 붙이는 반복 작업만 Work와 스킬로 넘기면 됩니다.</p>
+<p><b>요금제</b> Work와 Codex는 무료부터 모든 요금제에 들어 있고 사용량을 함께 써요. 무료와 Go는 데스크톱 앱에서 제한적으로(순차 제공), Plus부터 웹과 휴대폰에서도 열립니다. Record &amp; Replay에만 따로 붙는 요금제 제한은 공식 문서에 없어요. Work는 채팅과 사용량을 따로 세고, 작업이 클수록 빨리 닳습니다.</p>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">준비물</span></summary>
+<div class="a-body">
+<ul>
+<li><b>요금제</b> 챗GPT 계정(무료도 데스크톱 Work를 제한적으로 쓸 수 있어요). 넉넉하게 쓰려면 Plus를 권해 드려요.</li>
+<li><b>설치할 앱</b> 맥용 챗GPT 데스크톱 앱(chatgpt.com/download). Record &amp; Replay는 맥 전용이고 Computer Use 기능이 켜져 있어야 해요. 메시지 앱으로 문자를 보내는 Apple Messages 플러그인은 애플 실리콘 맥에서만 됩니다.</li>
+<li><b>필요한 것</b> 리포트카드 PDF가 든 폴더, 학생 번호와 학부모님 연락처를 이어 둔 연락처나 대화방. 녹화 연습은 가짜 이름과 연습용 PDF로 하세요.</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">상세 따라 하기</span><span class="c">14단계</span></summary>
+<div class="a-body">
+<ol class="ait-steps">
+<li class="stage">처음 한 번 설정</li>
+<li>chatgpt.com/download 에서 맥용 데스크톱 앱을 받아 설치하고 로그인합니다. 이미 있다면 최신 버전으로 업데이트해요.</li>
+<li>입력창 위 전환 버튼에서 <span class="ui">Work</span>를 켭니다. <span class="ait-see">Chat과 Work 중 Work가 선택돼 있어야 해요.</span></li>
+<li>Plugins &gt; Computer Use로 들어가 Install plugin(또는 Enable)을 누르고, Computer Use 서버와 스킬 토글을 켭니다. Try now로 한 번 시험해 볼 수 있어요.</li>
+<li>맥이 권한을 물으면 화면 기록(Screen Recording)과 손쉬운 사용(Accessibility)을 허용합니다. 챗GPT가 화면을 보지 못하거나 앱을 조작하지 못하면 시스템 설정 &gt; 개인정보 보호 및 보안에서 두 항목을 확인해 주세요. <span class="ait-see">목록에는 "Codex Computer Use"로 보여요.</span></li>
+<li class="stage">한 번 보여 주고 스킬로 저장</li>
+<li>Plugins에서 + 메뉴를 열고 <span class="ui">Record a skill</span>을 고릅니다. <span class="ait-see">입력창에 추천 문장이 미리 채워져요.</span></li>
+<li>그 문장에 하려는 일과 바뀌는 값을 적어 보냅니다. 예: "학부모님 문자에 리포트카드 PDF를 첨부해 보내는 일. 바뀌는 값은 학생 번호와 파일".</li>
+<li>준비가 되면 녹화 권한 요청을 승인합니다.</li>
+<li>맥에서 1번 학생 일을 직접 한 번 해 보입니다. '리포트카드_10월' 폴더를 열고, 1번 PDF를 고르고, 메시지 창에 안내 문구를 쓰고, PDF를 첨부해요. 짧고 끝까지, 민감하지 않은 연습용 자료로 해 주세요.</li>
+<li>메뉴 막대나 화면 위에 뜬 표시에서 녹화를 멈추거나, 대화창에 "다 했어"라고 알립니다. <span class="ait-see">녹화 중 표시의 모양은 공식 문서에 자세히 나와 있지 않아요.</span></li>
+<li>챗GPT가 녹화를 보고 스킬 초안을 만듭니다. 언제 쓰는지, 필요한 입력, 단계, 결과 확인 방법이 정리돼 있어요. 이름은 "리포트카드 문자"로 해 달라고 하고, "보내기 전에 멈추기", 문자 말투 같은 규칙을 덧붙여 다듬습니다.</li>
+<li class="stage">다음부터 실행</li>
+<li>새 Work 대화에서 @를 입력해 "리포트카드 문자" 스킬을 고르고, 위 5분 박스의 문장을 보냅니다. 스킬 설명과 맞는 일을 말로 설명해도 알아서 찾아 써요.</li>
+<li>챗GPT가 같은 순서로 폴더와 파일을 열고 문자 초안을 채웁니다. 앱마다 쓰기 허락을 물으면 확인하고 허락해 주세요.</li>
+<li>메시지 플러그인으로 보낼 때는 받는 분과 내용을 원장님이 승인해야 보내져요. Allow once로 한 건씩 확인하고, Always allow sending to this chat은 켜지 않는 걸 권합니다. Full access 모드에서는 발송 확인 창이 안 뜨는 문제가 알려져 있으니 Ask for approval 모드로 쓰세요.</li>
+<li>나중에 건별 확인을 되살리려면 Settings &gt; Computer use에서 Messages 옆 Manage &gt; Always allowed to send에서 휴지통 아이콘을 눌러 지웁니다.</li>
+</ol>
+<p class="ait-note">한 번 실행으로 20명을 끝까지 안정적으로 반복하는지는 공식 문서에 나와 있지 않아요. 처음에는 5명 정도로 나눠 실행해 보시는 걸 권해 드려요.</p>
+<p class="ait-ref-h">참고한 자료</p>
+<ul class="ait-ref">
+<li><a href="https://learn.chatgpt.com/docs/extend/record-and-replay" target="_blank" rel="noopener">Record &amp; Replay</a>, ChatGPT Learn(OpenAI 공식)</li>
+<li><a href="https://learn.chatgpt.com/docs/computer-use" target="_blank" rel="noopener">Computer Use</a>, ChatGPT Learn(OpenAI 공식)</li>
+<li><a href="https://learn.chatgpt.com/docs/plugins" target="_blank" rel="noopener">Plugins(Apple Messages)</a>, ChatGPT Learn(OpenAI 공식)</li>
+<li><a href="https://www.youtube.com/watch?v=ZK3JhU73W18" target="_blank" rel="noopener">Record &amp; Replay in Codex</a>, 유튜브 OpenAI(Codex 화면 기준 영상이지만 흐름은 같아요)</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">이렇게도 써 보세요</span><span class="c">4가지</span></summary>
+<div class="a-body">
+<p>한 번 보여 주고 스킬로 저장하는 방법을 익히시면, 학원에서 "같은 순서로 매일 반복하는 연락"을 스킬로 만들어 둘 수 있어요. 보내기는 언제나 원장님 확인 뒤에 합니다.</p>
+<ul class="ait-uselist">
+<li><b>결석생 연락</b> 출결 화면에서 오늘 결석생 번호를 확인하고 학부모님께 안부와 보강 안내 문자를 쓰는 과정을 한 번 녹화해 두면, 매일 결석생 문자 초안을 준비시킬 수 있어요.</li>
+<li><b>신규 문의 답장</b> 새 문의가 오면 수업 안내 자료를 열어 상담 가능 시간과 함께 답장 초안을 쓰는 과정을 스킬로 만들어요. 밤에 쌓인 문의에 답장 초안부터 받아 두는 용도입니다.</li>
+<li><b>주간 공지 발송 준비</b> 시간표 변경, 특강, 시험 일정 공지를 반별 대화방에 올릴 문구와 첨부 파일로 준비하는 과정을 녹화해, 매주 같은 순서로 초안을 만들게 합니다.</li>
+<li><b>미납 안내 문자 초안</b> 코워크로 정리한 미납 현황표를 보고 학생 번호별 안내 문자 초안을 쓰는 과정을 스킬로 만들어요. 민감한 안내라 말투와 금액은 원장님이 한 건씩 확인합니다.</li>
+</ul>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">자주 막히는 곳과 해결</span><span class="c">3가지</span></summary>
+<div class="a-body">
+<dl class="ait-qa">
+<dt>Record a skill 메뉴가 안 보여요</dt>
+<dd>맥 데스크톱 앱에서 Work가 켜져 있는지, Computer Use 플러그인이 설치되고 켜져 있는지 확인해 주세요. 윈도우와 웹, 휴대폰에서는 Record &amp; Replay를 쓸 수 없어요.</dd>
+<dt>챗GPT가 화면을 못 보거나 클릭을 못 해요</dt>
+<dd>맥 시스템 설정 &gt; 개인정보 보호 및 보안에서 화면 기록과 손쉬운 사용에 "Codex Computer Use"가 켜져 있는지 봅니다. 맥의 보안 창이나 관리자 암호 입력은 챗GPT가 대신하지 못해요.</dd>
+<dt>문자를 보낼 때 확인 창이 안 떠요</dt>
+<dd>Full access 모드에서 알려진 문제예요. Ask for approval 모드로 바꾸고, Always allowed to send에 등록된 대화방이 있다면 지워 주세요.</dd>
+</dl>
+</div>
+</details>
+<details class="a-toggle">
+<summary><span class="t">주의점</span></summary>
+<div class="a-body">
+<ul>
+<li>발송 전 확인은 꼭 남겨 두세요. 건별 승인을 끄면 마지막으로 확인할 기회가 사라집니다. 받는 분과 첨부 PDF가 같은 학생인지 한 건씩 봐요.</li>
+<li>녹화하는 동안 챗GPT는 화면 내용을 봐요. 녹화와 실행 때는 다른 학생 정보, 수납 화면, 메신저 대화창을 닫아 두고, 연습은 가짜 이름과 연습용 PDF로 합니다.</li>
+<li>리포트카드는 학생 개인정보예요. 학부모님 연락처와 PDF가 엇갈리지 않게, 학생 번호와 파일 이름 규칙을 먼저 맞춰 두세요.</li>
 </ul>
 </div>
 </details>
@@ -620,13 +704,30 @@
 <ul>
 <li>학생 실명, 연락처, 주민번호, 주소, 성적, 상담 내용은 AI에 그대로 넣지 않습니다. 이름은 번호로 바꿔도 결과는 같아요.</li>
 <li>각 서비스 설정의 데이터 메뉴에서 내 대화가 AI 학습에 쓰이는지 확인하고, 원치 않으면 꺼 두세요.</li>
-<li>소개한 기능은 대부분 유료 요금제부터예요. 무료로 2주쯤 써 보고, 매일 여는 툴 하나만 유료로 올리세요.</li>
-<li>클로드 코워크는 학원 컴퓨터와 클로드 앱을 켜 둔 상태에서만 작업합니다. 맡겨 두고 퇴근하실 때 컴퓨터를 끄지 마세요.</li>
+<li>소개한 기능은 대부분 유료 요금제에서 제대로 열려요. 무료로 먼저 써 보고, 매일 여는 툴 하나만 유료로 올리세요.</li>
+<li>학부모님께 가는 문자와 파일은 언제나 원장님이 확인한 뒤 나가게 해 두세요.</li>
 <li>AI가 만든 문장과 숫자는 초안입니다. 날짜, 금액, 학교 이름은 보내기 전에 한 번 더 확인해 주세요.</li>
 </ul>
 <p class="ait-end">다섯 개 중 하나만 이번 주에 써 보셔도 충분합니다. 제일 귀찮았던 일이 하나 줄어들면, 그다음 툴은 훨씬 쉽게 붙어요.</p>
 <p class="ait-end">인스타그램 <a href="https://www.instagram.com/hyunji.crabit/" target="_blank" rel="noopener">@hyunji.crabit</a>에서 '원장님 칼퇴지킴이'로 매주 연재해요.</p>
-<p class="ait-basis">이 글의 기능과 요금은 2026년 9월 30일 각 서비스 공식 자료 기준이에요. 버튼 이름과 위치, 요금제는 자주 바뀌니 결제 전에 공식 페이지를 한 번 더 확인해 주세요.</p>
+<p class="ait-basis">이 글의 기능과 요금은 2026년 10월 1일 각 서비스 공식 도움말 기준이에요. 버튼 이름과 위치, 요금제는 자주 바뀌니 결제 전에 공식 페이지를 한 번 더 확인해 주세요.</p>
+</section>
+
+<section class="ait-sec" id="about">
+<p class="ait-label">함께 만드는 사람들</p>
+<h2>크래빗과 올커니를 소개할게요</h2>
+<div class="ait-about">
+<div class="ab">
+<p class="ab-h">크래빗</p>
+<p>크래빗은 학원 원장님과 학생을 잇는 서비스예요. 지금 학원 1,350곳, 학생 9만 명이 크래빗을 쓰고 있습니다. 크래빗 아카데미에서는 원장님 업무에 바로 쓰는 자료와 강의를 나눠요.</p>
+<a class="ab-btn ghost" href="../resources">다른 자료 더 보기 &#8594;</a>
+</div>
+<div class="ab">
+<p class="ab-h">올커니 커뮤니티</p>
+<p>올커니는 원장님들을 위한 커뮤니티예요. 금요일마다 열리는 Black Friday 강의를 비롯해 무료와 유료 강의가 자주 열립니다. 들어오셔서 편하게 둘러보시다가, 마음에 드는 강의를 콕 집어 들어 보세요. 올커니 강의는 원장님들 만족도가 높아요.</p>
+<a class="ab-btn" href="#olkeoni-link-tbd" data-track="outbound-olkeoni" data-utm="utm_source=crabit-academy&amp;utm_medium=article&amp;utm_campaign=ai-tools-5&amp;utm_content=olkeoni-cta">올커니 커뮤니티 들어가기</a>
+</div>
+</div>
 </section>
 
 <!-- @admin:body:end -->

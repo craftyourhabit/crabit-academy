@@ -78,7 +78,7 @@ const RESOURCES = [
     id: "ai-tools-5",
     category: "인사이트",
     title: "원장님 퇴근을 앞당기는 AI 툴 5가지",
-    sub: "보강표, 리포트카드, 수업 PPT, 홍보물, 수업일지. 귀찮은 순간 5개를 AI 툴 하나씩으로 풀어 봤어요",
+    sub: "상담 책자, 특강 포스터, 수업일지, 리포트카드, 학부모 문자. 원장님 하루를 AI 툴 5개로 따라가 봤어요",
     thumb: "assets/thumbs/hero/ai-tools-5.svg",
     access: "public",
     href: "r/ai-tools-5"

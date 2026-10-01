@@ -106,13 +106,6 @@
   .ait-about .ab-btn.ghost { background: transparent; color: #16192A !important; padding-left: 0; padding-right: 0; }
   .ait-about .ab-btn.ghost:hover { background: transparent; text-decoration: underline; text-underline-offset: 3px; }
 
-  /* 모션: 스크립트가 html 에 ait-motion 을 붙였을 때만 켜집니다.
-     어드민 미리보기, 스크립트 없는 환경, 모션 줄이기 설정에서는 전부 그대로 보여요. */
-  .ait-motion .ait .rv { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; transition-delay: var(--d, 0s); }
-  .ait-motion .ait .rv.in { opacity: 1; transform: none; }
-  .ait-motion .ait ol.ait-steps > li::before { background: #E8E9ED; color: rgba(22, 25, 42, 0.45); transition: background .35s ease, color .35s ease; transition-delay: calc(var(--i, 0) * 0.2s + 0.15s); }
-  .ait-motion .ait ol.ait-steps.in > li::before { background: #FB75BB; color: #FFFFFF; }
-
   @media (max-width: 640px) {
     .ait h2 { font-size: 22px; }
     .ait-about { grid-template-columns: 1fr; }
@@ -121,9 +114,6 @@
     .ait p.ait-sum { font-size: 16.5px; }
     .ait .callout.ait-try { padding: 16px 18px; }
     .ait-prompt { font-size: 14.5px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ait-motion .ait .rv { opacity: 1; transform: none; transition: none; }
   }
 </style>
 </head>
@@ -793,25 +783,6 @@
       }
     }
 
-    // 3) 스크롤 등장 모션
-    if (reduce || !canIO) return;
-    document.documentElement.classList.add('ait-motion');
-    var targets = [];
-    root.querySelectorAll('.ait-sec > h2, .ait-media, img.ait-shot, .ait-sum, .callout, .ait-moments > li, .a-toggles').forEach(function (el) {
-      el.classList.add('rv'); targets.push(el);
-    });
-    root.querySelectorAll('.ait-moments > li').forEach(function (el) {
-      var i = Array.prototype.indexOf.call(el.parentNode.children, el);
-      el.style.setProperty('--d', (i * 0.08) + 's');
-    });
-    root.querySelectorAll('ol.ait-steps').forEach(function (ol) {
-      Array.prototype.forEach.call(ol.children, function (li, i) { li.style.setProperty('--i', i); });
-      targets.push(ol);
-    });
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-    targets.forEach(function (t) { io.observe(t); });
   })();
 
   // 오른쪽 목차: 지금 읽는 섹션 표시

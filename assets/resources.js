@@ -77,7 +77,7 @@ const RESOURCES = [
   {
     id: "ai-tools-5",
     category: "인사이트",
-    title: "원장님 퇴근을 앞당기는 AI 툴 5가지",
+    title: "원장님 퇴근 시간 앞당기는 AI 비서 5명 고용하기",
     sub: "상담 책자, 특강 포스터, 수업일지, 리포트카드, 학부모 문자. 원장님 하루를 AI 툴 5개로 따라가 봤어요",
     thumb: "assets/thumbs/hero/ai-tools-5.svg",
     access: "public",

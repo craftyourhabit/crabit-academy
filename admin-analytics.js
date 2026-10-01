@@ -676,10 +676,10 @@ function anSheetRow(l) {
   if (!local || qs.get("mock") !== "1") return;
 
   const mockLinks = [
-    { id: "m1", created_at: "2026-10-01T03:00:00Z", name: "[인스타 캡션] 10.01 AI 툴 5가지 아티클 링크", target_kind: "article", target_label: "원장님 퇴근을 앞당기는 AI 툴 5가지",
+    { id: "m1", created_at: "2026-10-01T03:00:00Z", name: "[인스타 캡션] 10.01 AI 툴 5가지 아티클 링크", target_kind: "article", target_label: "원장님 퇴근 시간 앞당기는 AI 비서 5명 고용하기",
       base_url: AN_SITE + "r/ai-tools-5", utm_source: "instagram", utm_medium: "social", utm_campaign: "ai-tools-5", utm_content: "caption",
       utm_url: AN_SITE + "r/ai-tools-5?utm_source=instagram&utm_medium=social&utm_campaign=ai-tools-5&utm_content=caption" },
-    { id: "m2", created_at: "2026-10-01T03:05:00Z", name: "[인스타 매니챗 DM] 10.01 AI 툴 5가지 아티클 링크", target_kind: "article", target_label: "원장님 퇴근을 앞당기는 AI 툴 5가지",
+    { id: "m2", created_at: "2026-10-01T03:05:00Z", name: "[인스타 매니챗 DM] 10.01 AI 툴 5가지 아티클 링크", target_kind: "article", target_label: "원장님 퇴근 시간 앞당기는 AI 비서 5명 고용하기",
       base_url: AN_SITE + "r/ai-tools-5", utm_source: "instagram", utm_medium: "social", utm_campaign: "ai-tools-5", utm_content: "manychat-dm",
       utm_url: AN_SITE + "r/ai-tools-5?utm_source=instagram&utm_medium=social&utm_campaign=ai-tools-5&utm_content=manychat-dm" },
     { id: "m3", created_at: "2026-10-01T03:10:00Z", name: "[크래빗 아카데미 아티클] 10.01 AI 툴 5가지 올커니 입장 링크", target_kind: "external", target_label: "올커니 입장 링크",

@@ -82,6 +82,8 @@ create index if not exists academy_events_ip_idx       on public.academy_events 
 alter table public.academy_events enable row level security;
 revoke all on table public.academy_events from anon, authenticated;
 grant select on table public.academy_events to authenticated;
+-- Edge Function(track)이 service role로 기록하고 도배 제한을 세려면 필요합니다. 이 프로젝트는 새 표에 자동 grant가 없어요.
+grant select, insert on table public.academy_events to service_role;
 
 do $$
 declare p record;
